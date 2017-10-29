@@ -13,9 +13,12 @@ npm install byte-data
 ### Supports:
 - Unsigned 8-bit ints
 - Signed 16-bit ints
+- Unsigned 16-bit ints
 - Signed 24-bit ints
+- Unsigned 24-bit ints
 - Signed 32-bit ints
-- Signed 32-bit floats
+- Unsigned 32-bit ints
+- Signed 32-bit floats in the -1.0 to 1.0 range
 - Signed 64-bits floats in the -1.0 to 1.0 range
 - Strings
 
@@ -23,24 +26,26 @@ npm install byte-data
 ```
 let byteData = require('byte-data');
 
-// Take a array of numbers,
-// return a array of bytes
-byteData.floatTo8Bytes([0]);
-byteData.floatTo4Bytes([0]);
-byteData.intTo4Bytes([0]);
-byteData.intTo3Bytes([0]);
-byteData.intTo2Bytes([0]);
-byteData.uIntTo1Byte([0]);
+// Takes a array of numbers,
+// returns a flat array of bytes
+byteData.floatTo8Bytes();
+byteData.floatTo4Bytes();
+byteData.intTo4Bytes();
+byteData.intTo3Bytes();
+byteData.intTo2Bytes();
+byteData.uIntTo1Byte();
 
-// from bytes
-// Take a array of bytess,
-// return a array of numbers
-byteData.floatFrom8Bytes([0,0,0,0,0,0,0,64]);
-byteData.intFrom4Bytes([0,0,0,0]);
-byteData.intFrom4Bytes([0,0,0,0]);
-byteData.intFrom3Bytes([0,0,0]);
-byteData.intFrom2Bytes([0,0]);
-byteData.uIntFrom1Byte([0]);
+// Takes a flat array of bytes,
+// returns a array of numbers
+byteData.floatFrom8Bytes();
+byteData.floatFrom4Bytes();
+byteData.intFrom4Bytes();
+byteData.uIntFrom4Bytes();
+byteData.intFrom3Bytes();
+byteData.uIntFrom3Bytes();
+byteData.intFrom2Bytes();
+byteData.uIntFrom2Bytes();
+byteData.uIntFrom1Byte();
 
 // Strings
 byteData.stringToBytes("ab"); // [97, 98]
