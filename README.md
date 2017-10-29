@@ -5,15 +5,12 @@ https://github.com/rochars/byte-data
 
 [![Build Status](https://travis-ci.org/rochars/byte-data.svg?branch=master)](https://travis-ci.org/rochars/byte-data) [![Build status](https://ci.appveyor.com/api/projects/status/g2ellp44s7a0kvid?svg=true)](https://ci.appveyor.com/project/rochars/byte-data) [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data)
 
-
 ## Install
-
 ```
 npm install byte-data
 ```
 
-
-## Supports:
+### Supports:
 - Unsigned 8-bit ints
 - Signed 16-bit ints
 - Signed 24-bit ints
@@ -22,9 +19,35 @@ npm install byte-data
 - Signed 64-bits floats in the -1.0 to 1.0 range
 - Strings
 
+## Use
+```
+let byteData = require('byte-data');
+
+// Take a array of numbers,
+// return a array of bytes
+byteData.floatTo8Bytes([0]);
+byteData.floatTo4Bytes([0]);
+byteData.intTo4Bytes([0]);
+byteData.intTo3Bytes([0]);
+byteData.intTo2Bytes([0]);
+byteData.uIntTo1Byte([0]);
+
+// from bytes
+// Take a array of bytess,
+// return a array of numbers
+byteData.floatFrom8Bytes([0,0,0,0,0,0,0,64]);
+byteData.intFrom4Bytes([0,0,0,0]);
+byteData.intFrom4Bytes([0,0,0,0]);
+byteData.intFrom3Bytes([0,0,0]);
+byteData.intFrom2Bytes([0,0]);
+byteData.uIntFrom1Byte([0]);
+
+// Strings
+byteData.stringToBytes("ab"); // [97, 98]
+byteData.stringFromBytes([97, 98]); //"ab";
+```
 
 ## LICENSE
-
 Copyright (c) 2017 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining

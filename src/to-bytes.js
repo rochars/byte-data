@@ -74,10 +74,10 @@ function floatTo4Bytes(numbers) {
     let bytes = [];
     while (i < len) {            
         numbers[i] = intBits.unpack(numbers[i]);
-        bytes[j++] = numbers[i];
-        bytes[j++] = numbers[i] >> 8;
-        bytes[j++] = numbers[i] >> 16;
-        bytes[j++] = numbers[i] >> 24;
+        bytes[j++] = (numbers[i]) & 0xFF;
+        bytes[j++] = (numbers[i] >> 8) & 0xFF;
+        bytes[j++] = (numbers[i] >> 16) & 0xFF;
+        bytes[j++] = (numbers[i] >> 24) & 0xFF;
         i++;
     }
     return bytes;
@@ -93,10 +93,10 @@ function intTo4Bytes(numbers) {
     let len = numbers.length;
     let bytes = [];
     while (i< len) {
-        bytes[j++] = numbers[i];
-        bytes[j++] = numbers[i] >> 8;
-        bytes[j++] = numbers[i] >> 16;
-        bytes[j++] = numbers[i] >> 24;
+        bytes[j++] = (numbers[i]) & 0xFF;
+        bytes[j++] = (numbers[i] >> 8) & 0xFF;
+        bytes[j++] = (numbers[i] >> 16) & 0xFF;
+        bytes[j++] = (numbers[i] >> 24) & 0xFF;
         i++;
     }
     return bytes;
@@ -112,9 +112,9 @@ function intTo3Bytes(numbers) {
     let len = numbers.length;
     let bytes = [];
     while (i < len) {
-        bytes[j++] = numbers[i];
-        bytes[j++] = numbers[i] >> 8;
-        bytes[j++] = numbers[i] >> 16;
+        bytes[j++] = (numbers[i]) & 0xFF;
+        bytes[j++] = (numbers[i] >> 8) & 0xFF;
+        bytes[j++] = (numbers[i] >> 16) & 0xFF;
         i++;
     }
     return bytes;
@@ -130,8 +130,8 @@ function intTo2Bytes(numbers) {
     let len = numbers.length;
     let bytes = [];
     while (i < len) {
-        bytes[j++] = numbers[i];
-        bytes[j++] = numbers[i] >> 8;
+        bytes[j++] = (numbers[i]) & 0xFF;
+        bytes[j++] = (numbers[i] >> 8) & 0xFF;
         i++;
     }
     return bytes;
