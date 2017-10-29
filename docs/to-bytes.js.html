@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: to-bytes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: to-bytes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * to-bytes: convert bytes to numbers and strings.
+ * 64-bit IEEE values must be in the -1.0 to 1.0 range.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
+
+const intBits = require("int-bits");
+
+/**
+ * Unpack a 64 bit float into two words.
+ * Thanks https://stackoverflow.com/a/16043259
+ * @param {number} value A float64 number.
+ */
+function toFloat64(value) {
+    let hiWord = 0;
+    let loWord = 0;
+    switch (value) {
+        case 0.0:
+            hiWord = 0x40000000;
+            break;
+        default:
+            if (value &lt;= 0.0) {
+                hiWord = 0x80000000;
+                value = -value;
+            }
+            let exponent = Math.floor(
+                Math.log(value) / Math.log(2));
+            let significand = Math.floor(
+                (value / Math.pow(2, exponent)) * Math.pow(2, 52));
+            loWord = significand &amp; 0xFFFFFFFF;
+            significand /= Math.pow(2, 32);
+            exponent += 1023;
+            hiWord = hiWord | (exponent &lt;&lt; 20);
+            hiWord = hiWord | (significand &amp; ~(-1 &lt;&lt; 20));
+            break;
+    }
+    return [hiWord, loWord];
+}
+
+/**
+ * Split 64 bit numbers into bytes.
+ * @param {!Array&lt;number>} numbers float64 numbers.
+ */
+function floatTo8Bytes(numbers) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i &lt; len) {
+        numbers[i] = toFloat64(numbers[i]);
+        bytes[j++] = numbers[i][1] &amp; 0xFF;
+        bytes[j++] = numbers[i][1] >> 8 &amp; 0xFF;
+        bytes[j++] = numbers[i][1] >> 16 &amp; 0xFF;
+        bytes[j++] = numbers[i][1] >> 24 &amp; 0xFF;
+        bytes[j++] = numbers[i][0] >> 32 &amp; 0xFF;
+        bytes[j++] = numbers[i][0] >> 40 &amp; 0xFF;
+        bytes[j++] = numbers[i][0] >> 48 &amp; 0xFF;
+        bytes[j++] = numbers[i][0] >> 56 &amp; 0xFF;
+        i++;
+    }
+    return bytes;
+}
+
+/**
+ * Split 32 bit float numbers into bytes.
+ * @param {!Array&lt;number>} numbers float32 numbers.
+ */
+function floatTo4Bytes(numbers) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i &lt; len) {            
+        numbers[i] = intBits.unpack(numbers[i]);
+        bytes[j++] = numbers[i];
+        bytes[j++] = numbers[i] >> 8;
+        bytes[j++] = numbers[i] >> 16;
+        bytes[j++] = numbers[i] >> 24;
+        i++;
+    }
+    return bytes;
+}
+
+/**
+ * Split 32 bit int numbers into bytes.
+ * @param {!Array&lt;number>} numbers int32 numbers.
+ */
+function intTo4Bytes(numbers) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i&lt; len) {
+        bytes[j++] = numbers[i];
+        bytes[j++] = numbers[i] >> 8;
+        bytes[j++] = numbers[i] >> 16;
+        bytes[j++] = numbers[i] >> 24;
+        i++;
+    }
+    return bytes;
+}
+
+/**
+ * Split 24 bit int numbers into bytes.
+ * @param {!Array&lt;number>} numbers int24 numbers.
+ */
+function intTo3Bytes(numbers) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i &lt; len) {
+        bytes[j++] = numbers[i];
+        bytes[j++] = numbers[i] >> 8;
+        bytes[j++] = numbers[i] >> 16;
+        i++;
+    }
+    return bytes;
+}
+
+/**
+ * Split 16 bit int numbers into bytes.
+ * @param {!Array&lt;number>} numbers int16 numbers.
+ */
+function intTo2Bytes(numbers) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i &lt; len) {
+        bytes[j++] = numbers[i];
+        bytes[j++] = numbers[i] >> 8;
+        i++;
+    }
+    return bytes;
+}
+
+/**
+ * Split unsigned 8 bit int numbers into bytes :)
+ * @param {!Array&lt;number>} numbers uInt8 numbers.
+ */
+function uIntTo1Byte(numbers) {
+    return numbers.slice();
+}
+
+/**
+ * Turn a string to an array of bytes.
+ * @param {string} string The string.
+ */
+function stringToBytes(string) {
+    let i = 0;
+    let j = 0;
+    let len = string.length;
+    let bytes = [];
+    while (i &lt; len) {
+        bytes[j++] = string.charCodeAt(i);
+        i++;
+    }
+    return bytes;
+}
+
+module.exports.floatTo8Bytes = floatTo8Bytes;
+module.exports.floatTo4Bytes = floatTo4Bytes;
+module.exports.intTo4Bytes = intTo4Bytes;
+module.exports.intTo3Bytes = intTo3Bytes;
+module.exports.intTo2Bytes = intTo2Bytes;
+module.exports.uIntTo1Byte = uIntTo1Byte;
+module.exports.stringToBytes = stringToBytes;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntTo1Byte">uIntTo1Byte</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 10:41:30 GMT-0200 (Horário brasileiro de verão)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
