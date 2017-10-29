@@ -94,7 +94,27 @@ function intFrom2Bytes(bytes) {
     let i = 0;
     let j = 0;
     while (i &lt; bytes.length) {
-        samples[j] = (bytes[1 + i] &lt;&lt; 8) | bytes[i];
+        samples[j] = (bytes[1 + i] &lt;&lt; 8) | bytes[i];        
+         // Thanks https://stackoverflow.com/a/38298413
+        if (bytes[1 + i] &amp; (1 &lt;&lt; 7)) {
+           samples[j] = 0xFFFF0000 | samples[j];
+        }           
+        j++;
+        i+=2;
+    }
+    return samples;
+}
+
+/**
+ * Read 16-bit samples from an array of bytes representing a wave file.
+ * @param {Uint8Array} bytes Wave file as an array of bytes.
+ */
+function uIntFrom2Bytes(bytes) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    while (i &lt; bytes.length) {
+        samples[j] = (bytes[1 + i] &lt;&lt; 8) | bytes[i];                 
         j++;
         i+=2;
     }
@@ -115,6 +135,31 @@ function intFrom3Bytes(bytes) {
                 bytes[1 + i] &lt;&lt; 8 |
                 bytes[i]
             );
+        if ((samples[j] &amp; 0x00800000) > 0) {
+            samples[j] = samples[j] | 0xFF000000;
+        } else {  
+            samples[j] = samples[j] &amp; 0x00FFFFFF;
+        } 
+        j++;
+        i+=3;
+    }
+    return samples;
+}
+
+/**
+ * Read 24-bit samples from an array of bytes representing a wave file.
+ * @param {Uint8Array} bytes Wave file as an array of bytes.
+ */
+function uIntFrom3Bytes(bytes) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    while (i &lt; bytes.length) {
+        samples[j] = (
+                bytes[2 + i] &lt;&lt; 16 |
+                bytes[1 + i] &lt;&lt; 8 |
+                bytes[i]
+            );
         j++;
         i+=3;
     }
@@ -126,6 +171,32 @@ function intFrom3Bytes(bytes) {
  * @param {Uint8Array} bytes Wave file as an array of bytes.
  */
 function intFrom4Bytes(bytes) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    while (i &lt; bytes.length) {
+        samples[j] = (
+                bytes[3 + i] &lt;&lt; 24 |
+                bytes[2 + i] &lt;&lt; 16 |
+                bytes[1 + i] &lt;&lt; 8 |
+                bytes[i]
+            );
+        if ((samples[j] &amp; 0x80000000) > 0) {
+            samples[j] = samples[j] | 0x00000000;
+        } else {  
+            samples[j] = samples[j] &amp; 0xFFFFFFFF;  
+        }
+        j++;
+        i+=4;
+    }
+    return samples;
+}
+
+/**
+ * Read 32-bit samples from an array of bytes representing a wave file.
+ * @param {Uint8Array} bytes Wave file as an array of bytes.
+ */
+function uIntFrom4Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
@@ -205,8 +276,11 @@ function stringFromBytes(bytes) {
 
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;
+module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
 module.exports.intFrom3Bytes = intFrom3Bytes;
+module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
+module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;
@@ -220,13 +294,13 @@ module.exports.stringFromBytes = stringFromBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntTo1Byte">uIntTo1Byte</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntTo1Byte">uIntTo1Byte</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 18:06:36 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 29 2017 19:15:19 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

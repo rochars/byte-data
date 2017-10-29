@@ -66,7 +66,27 @@ function intFrom2Bytes(bytes) {
     let i = 0;
     let j = 0;
     while (i < bytes.length) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];
+        samples[j] = (bytes[1 + i] << 8) | bytes[i];        
+         // Thanks https://stackoverflow.com/a/38298413
+        if (bytes[1 + i] & (1 << 7)) {
+           samples[j] = 0xFFFF0000 | samples[j];
+        }           
+        j++;
+        i+=2;
+    }
+    return samples;
+}
+
+/**
+ * Read 16-bit samples from an array of bytes representing a wave file.
+ * @param {Uint8Array} bytes Wave file as an array of bytes.
+ */
+function uIntFrom2Bytes(bytes) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    while (i < bytes.length) {
+        samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
         j++;
         i+=2;
     }
@@ -87,6 +107,31 @@ function intFrom3Bytes(bytes) {
                 bytes[1 + i] << 8 |
                 bytes[i]
             );
+        if ((samples[j] & 0x00800000) > 0) {
+            samples[j] = samples[j] | 0xFF000000;
+        } else {  
+            samples[j] = samples[j] & 0x00FFFFFF;
+        } 
+        j++;
+        i+=3;
+    }
+    return samples;
+}
+
+/**
+ * Read 24-bit samples from an array of bytes representing a wave file.
+ * @param {Uint8Array} bytes Wave file as an array of bytes.
+ */
+function uIntFrom3Bytes(bytes) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    while (i < bytes.length) {
+        samples[j] = (
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
         j++;
         i+=3;
     }
@@ -98,6 +143,32 @@ function intFrom3Bytes(bytes) {
  * @param {Uint8Array} bytes Wave file as an array of bytes.
  */
 function intFrom4Bytes(bytes) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    while (i < bytes.length) {
+        samples[j] = (
+                bytes[3 + i] << 24 |
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
+        if ((samples[j] & 0x80000000) > 0) {
+            samples[j] = samples[j] | 0x00000000;
+        } else {  
+            samples[j] = samples[j] & 0xFFFFFFFF;  
+        }
+        j++;
+        i+=4;
+    }
+    return samples;
+}
+
+/**
+ * Read 32-bit samples from an array of bytes representing a wave file.
+ * @param {Uint8Array} bytes Wave file as an array of bytes.
+ */
+function uIntFrom4Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
@@ -177,8 +248,11 @@ function stringFromBytes(bytes) {
 
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;
+module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
 module.exports.intFrom3Bytes = intFrom3Bytes;
+module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
+module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;
