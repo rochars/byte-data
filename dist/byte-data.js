@@ -146,8 +146,11 @@ window['stringToBytes'] = toBytes.stringToBytes;
 
 window['uIntFrom1Byte'] = fromBytes.uIntFrom1Byte;
 window['intFrom2Bytes'] = fromBytes.intFrom2Bytes;
+module.exports.uIntFrom2Bytes = fromBytes.uIntFrom2Bytes;
 window['intFrom3Bytes'] = fromBytes.intFrom3Bytes;
+module.exports.uIntFrom3Bytes = fromBytes.uIntFrom3Bytes;
 window['intFrom4Bytes'] = fromBytes.intFrom4Bytes;
+module.exports.uIntFrom4Bytes = fromBytes.uIntFrom4Bytes;
 window['floatFrom4Bytes'] = fromBytes.floatFrom4Bytes;
 window['floatFrom8Bytes'] = fromBytes.floatFrom8Bytes;
 window['stringFromBytes'] = fromBytes.stringFromBytes;
