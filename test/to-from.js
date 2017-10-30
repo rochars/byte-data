@@ -10,13 +10,11 @@ describe('to-from', function() {
         it('should turn 8 bytes to 1 64-bit float and back', function() {
             let bytes = byteData.floatTo8Bytes([0.123456789876543]);
             let num = byteData.floatFrom8Bytes(bytes)
-            console.log(num);
             assert.deepEqual([0.123456789876543], num);
         });
         it('should turn 8 bytes to 1 64-bit float and back (precision)', function() {
             let bytes = byteData.floatTo8Bytes([0.123456789876543]);
             let num = byteData.floatFrom8Bytes(bytes)
-            console.log(num);
             assert.ok(0.123456789876544 != num[0]);
         });
 

@@ -60,12 +60,24 @@ module.exports = {
               replace: "window['intFrom2Bytes']",
             },
             {
+              search: 'module.exports.uIntFrom2Bytes',
+              replace: "window['uIntFrom2Bytes']",
+            },
+            {
               search: 'module.exports.intFrom3Bytes',
               replace: "window['intFrom3Bytes']",
             },
             {
+              search: 'module.exports.uIntFrom3Bytes',
+              replace: "window['uIntFrom3Bytes']",
+            },
+            {
               search: 'module.exports.intFrom4Bytes',
               replace: "window['intFrom4Bytes']",
+            },
+            {
+              search: 'module.exports.uIntFrom4Bytes',
+              replace: "window['uIntFrom4Bytes']",
             },
             {
               search: 'module.exports.floatFrom4Bytes',

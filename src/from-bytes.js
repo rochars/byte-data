@@ -14,6 +14,9 @@ const intBits = require("int-bits");
  * @param {!Array<number>} bytes 8 bytes representing a float 64.
  */
 function decodeFloat(bytes) {
+    if (bytes.toString() == "0,0,0,0,0,0,0,0") {
+        return 0;
+    }
     let binary = "";
     let bits;
     let i = 0;
