@@ -6,6 +6,19 @@ describe('to-from', function() {
     let byteData = require('../index.js');
 
     describe('#indexOf()', function() {
+        // 18446744073709551615 int
+        it('should turn 8 bytes to 1 64-bit float and back', function() {
+            let bytes = byteData.floatTo8Bytes([0.123456789876543]);
+            let num = byteData.floatFrom8Bytes(bytes)
+            console.log(num);
+            assert.deepEqual([0.123456789876543], num);
+        });
+        it('should turn 8 bytes to 1 64-bit float and back (precision)', function() {
+            let bytes = byteData.floatTo8Bytes([0.123456789876543]);
+            let num = byteData.floatFrom8Bytes(bytes)
+            console.log(num);
+            assert.ok(0.123456789876544 != num[0]);
+        });
 
         // 32-bit / 4 bytes unsigned
         it('should turn 1 32-bit unsigned int to 4 bytes and back (0s)',

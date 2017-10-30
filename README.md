@@ -19,6 +19,7 @@ npm install byte-data
 - Signed 32-bit ints
 - Unsigned 32-bit ints
 - Signed 32-bit floats in the -1.0 to 1.0 range
+- Signed 64-bit floats in the -1.0 to 1.0 range
 - Strings
 
 ## Use
@@ -27,6 +28,7 @@ let byteData = require('byte-data');
 
 // Takes a array of numbers,
 // returns a flat array of bytes
+byteData.floatTo8Bytes();
 byteData.floatTo4Bytes();
 byteData.intTo4Bytes();
 byteData.intTo3Bytes();
@@ -35,6 +37,7 @@ byteData.uIntTo1Byte();
 
 // Takes a flat array of bytes,
 // returns a array of numbers
+byteData.floatFrom8Bytes();
 byteData.floatFrom4Bytes();
 byteData.intFrom4Bytes();
 byteData.uIntFrom4Bytes();

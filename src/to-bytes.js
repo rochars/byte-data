@@ -12,7 +12,7 @@ const intBits = require("int-bits");
  * Unpack a 64 bit float into two words.
  * Thanks https://stackoverflow.com/a/16043259
  * @param {number} value A float64 number.
- */
+ 
 function toFloat64(value) {
     let hiWord = 0;
     let loWord = 0;
@@ -38,29 +38,31 @@ function toFloat64(value) {
     }
     return [hiWord, loWord];
 }
-
+*/
 /**
  * Split 64 bit numbers into bytes.
  * @param {!Array<number>} numbers float64 numbers.
  */
 function floatTo8Bytes(numbers) {
+    /*
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
     while (i < len) {
         numbers[i] = toFloat64(numbers[i]);
-        bytes[j++] = numbers[i][1] & 0xFF;
-        bytes[j++] = numbers[i][1] >> 8 & 0xFF;
-        bytes[j++] = numbers[i][1] >> 16 & 0xFF;
-        bytes[j++] = numbers[i][1] >> 24 & 0xFF;
-        bytes[j++] = numbers[i][0] >> 32 & 0xFF;
-        bytes[j++] = numbers[i][0] >> 40 & 0xFF;
-        bytes[j++] = numbers[i][0] >> 48 & 0xFF;
-        bytes[j++] = numbers[i][0] >> 56 & 0xFF;
+        bytes[j++] = (numbers[i][1]) & 0xFF;
+        bytes[j++] = (numbers[i][1] >> 8) & 0xFF;
+        bytes[j++] = (numbers[i][1] >> 16) & 0xFF;
+        bytes[j++] = (numbers[i][1] >> 24) & 0xFF;
+        bytes[j++] = (numbers[i][0]) & 0xFF;
+        bytes[j++] = (numbers[i][0] >> 8) & 0xFF;
+        bytes[j++] = (numbers[i][0] >> 16) & 0xFF;
+        bytes[j++] = (numbers[i][0] >> 24) & 0xFF;
         i++;
     }
-    return bytes;
+    */
+    return new Uint8Array(new Float64Array(numbers).buffer);
 }
 
 /**

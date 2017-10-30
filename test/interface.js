@@ -9,7 +9,7 @@ describe('interface', function() {
 
         // to bytes
         it('should turn a 64-bit float to 8 bytes', function() {
-            assert.deepEqual(byteData.floatTo8Bytes([0]), [0,0,0,0,0,0,0,64]);
+            assert.deepEqual(byteData.floatTo8Bytes([0]), [0,0,0,0,0,0,0,0]);
         });
 
         it('should turn a 32-bit float to 8 bytes', function() {
