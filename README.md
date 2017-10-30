@@ -10,7 +10,10 @@ https://github.com/rochars/byte-data
 npm install byte-data
 ```
 
+Should work the same on Node.js and in the browser.
+
 ### Supports:
+- Signed 8-bit ints
 - Unsigned 8-bit ints
 - Signed 16-bit ints
 - Unsigned 16-bit ints
@@ -22,18 +25,27 @@ npm install byte-data
 - Signed 64-bit floats in the -1.0 to 1.0 range
 - Strings
 
-## Use
+## Example
+```javascript
+byteData.intTo4Bytes([-2147483648, 2147483647]);
+// returns [0,0,0,128,255,255,255,127]
+
+floatFrom8Bytes([75, 40, 253, 58, 221, 154, 191, 63]);
+// returns [0.123456789876543]
 ```
+
+## Use
+```javascript
 let byteData = require('byte-data');
 
-// Takes a array of numbers,
+// Takes an array of numbers,
 // returns a flat array of bytes
 byteData.floatTo8Bytes();
 byteData.floatTo4Bytes();
 byteData.intTo4Bytes();
 byteData.intTo3Bytes();
 byteData.intTo2Bytes();
-byteData.uIntTo1Byte();
+byteData.intTo1Byte();
 
 // Takes a flat array of bytes,
 // returns a array of numbers
@@ -45,11 +57,22 @@ byteData.intFrom3Bytes();
 byteData.uIntFrom3Bytes();
 byteData.intFrom2Bytes();
 byteData.uIntFrom2Bytes();
+byteData.intFrom1Byte();
 byteData.uIntFrom1Byte();
 
 // Strings
-byteData.stringToBytes("ab"); // [97, 98]
-byteData.stringFromBytes([97, 98]); //"ab";
+byteData.stringToBytes();
+byteData.stringFromBytes();
+```
+
+## Browser
+```html
+<script src="byte-data-min.js"></script>
+<script>
+    var byteStr = stringToBytes("ab"); // [97, 98]
+    var myStr = stringFromBytes([97, 98]); //"ab";
+    ...
+</script>
 ```
 
 ## LICENSE

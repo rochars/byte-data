@@ -144,11 +144,19 @@ function intTo2Bytes(numbers) {
 }
 
 /**
- * Split unsigned 8 bit int numbers into bytes :)
- * @param {!Array<number>} numbers uInt8 numbers.
+ * Split a 8 bit int numbers into bytes
+ * @param {!Array<number>} numbers int8 numbers.
  */
-function uIntTo1Byte(numbers) {
-    return numbers.slice();
+function intTo1Byte(numbers) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i < len) {
+        bytes[j++] = numbers[i] & 0xFF;
+        i++;
+    }
+    return bytes;
 }
 
 /**
@@ -172,5 +180,5 @@ module.exports.floatTo4Bytes = floatTo4Bytes;
 module.exports.intTo4Bytes = intTo4Bytes;
 module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
-module.exports.uIntTo1Byte = uIntTo1Byte;
+module.exports.intTo1Byte = intTo1Byte;
 module.exports.stringToBytes = stringToBytes;

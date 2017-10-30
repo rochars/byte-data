@@ -29,7 +29,7 @@ describe('interface', function() {
         });
 
         it('should turn a 8-bit uInt to 1 byte', function() {
-            assert.deepEqual(byteData.uIntTo1Byte([0]), [0]);
+            assert.deepEqual(byteData.intTo1Byte([0]), [0]);
         });
 
         it('should turn a string to bytes', function() {
@@ -61,6 +61,10 @@ describe('interface', function() {
 
         it('should turn 1 byte to a 8-bit uInt', function() {
             assert.deepEqual(byteData.uIntFrom1Byte([0]), [0]);
+        });
+
+        it('should turn 1 byte to a 8-bit int', function() {
+            assert.deepEqual(byteData.intFrom1Byte([255]), [-1]);
         });
 
         it('should turn bytes to a string', function() {

@@ -42,8 +42,8 @@ module.exports = {
               replace: "window['intTo2Bytes']",
             },
             {
-              search: 'module.exports.uIntTo1Byte',
-              replace: "window['uIntTo1Byte']",
+              search: 'module.exports.intTo1Byte',
+              replace: "window['intTo1Byte']",
             },
             {
               search: 'module.exports.stringToBytes',
@@ -51,6 +51,10 @@ module.exports = {
             },
 
             // from
+            {
+              search: 'module.exports.intFrom1Byte',
+              replace: "window['intFrom1Byte']",
+            },
             {
               search: 'module.exports.uIntFrom1Byte',
               replace: "window['uIntFrom1Byte']",

@@ -45,35 +45,44 @@ function decodeFloat(bytes) {
 }
 
 /**
- * Read 8-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 8-bit unsigned ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function uIntFrom1Byte(bytes) {
+    return bytes.slice();
+}
+
+/**
+ * Read 8-bit signed ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
+ */
+function intFrom1Byte(bytes) {
     let samples = [];
     let i = 0;
-    let j = 0;
     while (i < bytes.length) {
-        samples[j] = bytes[i];
-        j++;
-        i++;
+        samples[i] = bytes[i];
+        if (samples[i] > 127) {
+            samples[i] -= 256;
+        }
+        i+=1;
     }
     return samples;
 }
 
 /**
- * Read 16-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 16-bit signed ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function intFrom2Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
     while (i < bytes.length) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];        
+        samples[j] = (bytes[1 + i] << 8) | bytes[i];
          // Thanks https://stackoverflow.com/a/38298413
         if (bytes[1 + i] & (1 << 7)) {
            samples[j] = 0xFFFF0000 | samples[j];
-        }           
+        }
         j++;
         i+=2;
     }
@@ -81,8 +90,8 @@ function intFrom2Bytes(bytes) {
 }
 
 /**
- * Read 16-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 16-bit unsigned ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function uIntFrom2Bytes(bytes) {
     let samples = [];
@@ -97,8 +106,8 @@ function uIntFrom2Bytes(bytes) {
 }
 
 /**
- * Read 24-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 24-bit signed ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function intFrom3Bytes(bytes) {
     let samples = [];
@@ -122,8 +131,8 @@ function intFrom3Bytes(bytes) {
 }
 
 /**
- * Read 24-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 24-bit unsigned ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function uIntFrom3Bytes(bytes) {
     let samples = [];
@@ -142,8 +151,8 @@ function uIntFrom3Bytes(bytes) {
 }
 
 /**
- * Read 32-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 32-bit signed ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function intFrom4Bytes(bytes) {
     let samples = [];
@@ -166,8 +175,8 @@ function intFrom4Bytes(bytes) {
 }
 
 /**
- * Read 32-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 32-bit unsigned ints from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function uIntFrom4Bytes(bytes) {
     let samples = [];
@@ -188,8 +197,8 @@ function uIntFrom4Bytes(bytes) {
 }
 
 /**
- * Read 8-bit IEEE samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 8-bit IEEE numbers from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function floatFrom4Bytes(bytes) {
     let samples = [];
@@ -209,8 +218,8 @@ function floatFrom4Bytes(bytes) {
 }
 
 /**
- * Read 64-bit samples from an array of bytes representing a wave file.
- * @param {Uint8Array} bytes Wave file as an array of bytes.
+ * Read 64-bit IEEE numbers from an array of bytes.
+ * @param {Uint8Array} bytes An array of bytes.
  */
 function floatFrom8Bytes(bytes) {
     let samples = [];
@@ -248,6 +257,7 @@ function stringFromBytes(bytes) {
     return string;
 }
 
+module.exports.intFrom1Byte = intFrom1Byte;
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;
 module.exports.uIntFrom2Bytes = uIntFrom2Bytes;

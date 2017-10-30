@@ -18,9 +18,10 @@ module.exports.floatTo4Bytes = toBytes.floatTo4Bytes;
 module.exports.intTo4Bytes = toBytes.intTo4Bytes;
 module.exports.intTo3Bytes = toBytes.intTo3Bytes;
 module.exports.intTo2Bytes = toBytes.intTo2Bytes;
-module.exports.uIntTo1Byte = toBytes.uIntTo1Byte;
+module.exports.intTo1Byte = toBytes.intTo1Byte;
 module.exports.stringToBytes = toBytes.stringToBytes;
 
+module.exports.intFrom1Byte = fromBytes.intFrom1Byte;
 module.exports.uIntFrom1Byte = fromBytes.uIntFrom1Byte;
 module.exports.intFrom2Bytes = fromBytes.intFrom2Bytes;
 module.exports.uIntFrom2Bytes = fromBytes.uIntFrom2Bytes;

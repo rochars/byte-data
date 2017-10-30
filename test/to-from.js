@@ -146,24 +146,40 @@ describe('to-from', function() {
             assert.deepEqual([1], num);
         });
 
-        // 8-bit / 1 byte
+        // 8-bit / 1 byte unsigned
         it('should turn 1 8-bit unsigned int to 2 bytes and back (0s)',
                 function() {
-            let bytes = byteData.uIntTo1Byte([0]);
+            let bytes = byteData.intTo1Byte([0]);
             let num = byteData.uIntFrom1Byte(bytes);
             assert.deepEqual([0], num);
         });
         it('should turn 1 8-bit unsigned int to 2 bytes and back (max)',
                 function() {
-            let bytes = byteData.uIntTo1Byte([255]);
+            let bytes = byteData.intTo1Byte([255]);
             let num = byteData.uIntFrom1Byte(bytes);
             assert.deepEqual([255], num);
         });
         it('should turn 1 8-bit unsigned int to 1 byte and back (1)',
                 function() {
-            let bytes = byteData.uIntTo1Byte([1]);
+            let bytes = byteData.intTo1Byte([1]);
             let num = byteData.uIntFrom1Byte(bytes);
             assert.deepEqual([1], num);
+        });
+        // 8-bit / 1 byte signed
+        it('should turn 2 8-bit signed int to 2 bytes (0s)', function() {
+            let bytes = byteData.intTo1Byte([0]);
+            let num = byteData.intFrom1Byte(bytes);
+            assert.deepEqual([0], num);
+        });
+        it('should turn 2 8-bit signed int to 2 bytes (-128, 127)', function() {
+            let bytes = byteData.intTo1Byte([-128, 127]);
+            let num = byteData.intFrom1Byte(bytes);
+            assert.deepEqual([-128, 127], num);
+        });
+        it('should turn 1 8-bit signed int to 1 byte (-1)', function() {
+            let bytes = byteData.intTo1Byte([-1]);
+            let num = byteData.intFrom1Byte(bytes);
+            assert.deepEqual([-1], num);
         });
 
         // string
