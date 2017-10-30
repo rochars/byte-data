@@ -16,11 +16,7 @@ module.exports = {
         loader: 'string-replace-loader',
         query: {
           multiple: [
-            {
-              search: '%LICENSES%',
-              replace: licenses,
-            },
-            // from
+            // to
             {
               search: 'module.exports.floatTo8Bytes',
               replace: "window['floatTo8Bytes']",

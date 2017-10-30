@@ -94,40 +94,6 @@ module.exports.unpack = unpack
  * Bytes to and from numbers and strings.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
- *
- * byte-data is licensed as follows:
-
-Copyright (c) 2017 Rafael da Silva Rocha.
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-int-bits is licensed as follows:
-
-The MIT License (MIT) Copyright (c) 2015 Jam3
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  */
 
@@ -163,7 +129,6 @@ window['stringFromBytes'] = fromBytes.stringFromBytes;
 
 /*
  * to-bytes: convert bytes to numbers and strings.
- * 64-bit IEEE values must be in the -1.0 to 1.0 range.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -221,15 +186,14 @@ function floatTo8Bytes(numbers) {
             bytes[j++] = (numbers[i][1] >> 8) & 0xFF;
             bytes[j++] = (numbers[i][1] >> 16) & 0xFF;
             bytes[j++] = (numbers[i][1] >> 24) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 32) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 40) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 48) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 56) & 0xFF;
+            bytes[j++] = (numbers[i][0]) & 0xFF;
+            bytes[j++] = (numbers[i][0] >> 8) & 0xFF;
+            bytes[j++] = (numbers[i][0] >> 16) & 0xFF;
+            bytes[j++] = (numbers[i][0] >> 24) & 0xFF;
         }
         i++;
     }
     return bytes;
-    //return new Array(new Uint8Array(new Float64Array(numbers).buffer));
 }
 
 /**
@@ -353,7 +317,6 @@ module.exports.stringToBytes = stringToBytes;
 
 /*
  * from-bytes: convert bytes to numbers and strings.
- * 64-bit IEEE values must be in the -1.0 to 1.0 range.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -399,6 +362,7 @@ function decodeFloat(bytes) {
 
 /**
  * Read 8-bit unsigned ints from an array of bytes.
+ * Just return a copy of the original array.
  * @param {Uint8Array} bytes An array of bytes.
  */
 function uIntFrom1Byte(bytes) {

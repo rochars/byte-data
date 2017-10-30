@@ -1,6 +1,5 @@
 /*
  * from-bytes: convert bytes to numbers and strings.
- * 64-bit IEEE values must be in the -1.0 to 1.0 range.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -46,6 +45,7 @@ function decodeFloat(bytes) {
 
 /**
  * Read 8-bit unsigned ints from an array of bytes.
+ * Just return a copy of the original array.
  * @param {Uint8Array} bytes An array of bytes.
  */
 function uIntFrom1Byte(bytes) {

@@ -7,8 +7,11 @@ describe('to-bytes', function() {
 
     describe('#indexOf()', function() {
         // to bytes
+        // 64 bit int unsigned
+        //1456909977176 
+
         // 64-bit / 8 bytes
-        it('should turn 2 64-bit float to 16 bytes (-1, 1)', function() {
+        it('should turn 2 64-bit floats to 16 bytes (-1, 1)', function() {
             assert.deepEqual(byteData.floatTo8Bytes([1,-1]),
                 [0,0,0,0,0,0,240,63,0,0,0,0,0,0,240,191]);
         });
@@ -17,9 +20,30 @@ describe('to-bytes', function() {
             assert.deepEqual(byteData.floatTo8Bytes([0, 0]),
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
         });
-        it('should turn 1 64-bit floats to 8 bytes (1.5)', function() {
+        it('should turn 1 64-bit floats to 8 bytes (0.5)', function() {
             assert.deepEqual(byteData.floatTo8Bytes([0.5]),
                 [0,0,0,0,0,0,224,63]);
+        });
+        it('should turn 1 64-bit float to 8 bytes (-0.5)', function() {
+            assert.deepEqual(byteData.floatTo8Bytes([-0.5]),
+                [0,0,0,0,0,0,224,191]);
+        });
+        //
+        it('should turn 1 64-bit float to 8 bytes (pi)', function() {
+            assert.deepEqual(byteData.floatTo8Bytes([3.141592653589793]),
+                [24,45,68,84,251,33,9,64]);
+        });
+        it('should turn 1 64-bit float to 8 bytes (pi)', function() {
+            assert.deepEqual(byteData.floatTo8Bytes([9]),
+                [0,0,0,0,0,0,34,64]);
+        });
+        it('should turn 1 64-bit float to 8 bytes (14)', function() {
+            assert.deepEqual(byteData.floatTo8Bytes([31.41592653589793]),
+                [94,56,85,41,122,106,63,64]);
+        });
+        it('should turn 1 64-bit float to 8 bytes (1)', function() {
+            assert.deepEqual(byteData.floatTo8Bytes([314159265358979.3]),
+                [53,72,162,118,158,219,241,66]);
         });
 
         // 32-bit / 4 bytes
@@ -27,16 +51,23 @@ describe('to-bytes', function() {
             assert.deepEqual(byteData.floatTo4Bytes([0, 0]), 
                 [0,0,0,0,0,0,0,0]);
         });
+        it('should turn 1 signed 32-bit float to 4 bytes (pi)', function() {
+            assert.deepEqual(byteData.floatTo4Bytes([2.147483647]), 
+                [95,112,9,64]);
+        });
+        it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+            assert.deepEqual(byteData.floatTo4Bytes([214748364.7]), 
+                [205,204,76,77]);
+        });
 
         it('should turn 2 signed 32-bit int to 8 bytes (max range)', function() {
             assert.deepEqual(byteData.intTo4Bytes([-2147483648, 2147483647]),
                 [0,0,0,128,255,255,255,127]);
         });
-        it('should turn 2 unsigned 32-bit floats to 8 bytes (0s)', function() {
+        it('should turn 2 unsigned 32-bit ints to 8 bytes (0s)', function() {
             assert.deepEqual(byteData.intTo4Bytes([0, 0]), 
                 [0,0,0,0,0,0,0,0]);
         });
-
         it('should turn 2 unsigned 32-bit int to 8 bytes (max range)', function() {
             assert.deepEqual(byteData.intTo4Bytes([0, 4294967295]),
                 [0,0,0,0,255,255,255,255]);

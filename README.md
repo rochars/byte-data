@@ -21,8 +21,8 @@ Should work the same on Node.js and in the browser.
 - Unsigned 24-bit ints
 - Signed 32-bit ints
 - Unsigned 32-bit ints
-- Signed 32-bit floats in the -1.0 to 1.0 range
-- Signed 64-bit floats in the -1.0 to 1.0 range
+- 32-bit floats
+- 64-bit floats
 - Strings
 
 ## Example

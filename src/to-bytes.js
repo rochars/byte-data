@@ -1,6 +1,5 @@
 /*
  * to-bytes: convert bytes to numbers and strings.
- * 64-bit IEEE values must be in the -1.0 to 1.0 range.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -58,15 +57,14 @@ function floatTo8Bytes(numbers) {
             bytes[j++] = (numbers[i][1] >> 8) & 0xFF;
             bytes[j++] = (numbers[i][1] >> 16) & 0xFF;
             bytes[j++] = (numbers[i][1] >> 24) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 32) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 40) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 48) & 0xFF;
-            bytes[j++] = (numbers[i][0] >> 56) & 0xFF;
+            bytes[j++] = (numbers[i][0]) & 0xFF;
+            bytes[j++] = (numbers[i][0] >> 8) & 0xFF;
+            bytes[j++] = (numbers[i][0] >> 16) & 0xFF;
+            bytes[j++] = (numbers[i][0] >> 24) & 0xFF;
         }
         i++;
     }
     return bytes;
-    //return new Array(new Uint8Array(new Float64Array(numbers).buffer));
 }
 
 /**
