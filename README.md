@@ -27,7 +27,7 @@ Should work the same on Node.js and in the browser.
 
 ## Example
 ```javascript
-byteData.intTo4Bytes([-2147483648, 2147483647]);
+intTo4Bytes([-2147483648, 2147483647]);
 // returns [0,0,0,128,255,255,255,127]
 
 floatFrom8Bytes([75, 40, 253, 58, 221, 154, 191, 63]);
@@ -38,7 +38,7 @@ floatFrom8Bytes([75, 40, 253, 58, 221, 154, 191, 63]);
 ```javascript
 let byteData = require('byte-data');
 
-// Takes an array of numbers,
+// Takes a array of numbers,
 // returns a flat array of bytes
 byteData.floatTo8Bytes();
 byteData.floatTo4Bytes();
