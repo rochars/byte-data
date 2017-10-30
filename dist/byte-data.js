@@ -491,9 +491,7 @@ function intFrom4Bytes(bytes) {
                 bytes[1 + i] << 8 |
                 bytes[i]
             );
-        if ((samples[j] & 0x80000000) > 0) {
-            samples[j] = samples[j] | 0x00000000;
-        } else {  
+        if ((samples[j] & 0x80000000) < 0) {
             samples[j] = samples[j] & 0xFFFFFFFF;  
         }
         j++;
@@ -517,6 +515,7 @@ function uIntFrom4Bytes(bytes) {
                 bytes[1 + i] << 8 |
                 bytes[i]
             );
+        samples[j] = samples[j] >>> 0;
         j++;
         i+=4;
     }
