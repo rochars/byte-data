@@ -25,20 +25,6 @@ describe('from-bytes', function() {
                 0);
         });
 
-        /*
-        // 48 bit unsigned
-        it('should turn 6 bytes to a 48-bit int (0)', function() {
-            assert.deepEqual(byteData.uIntFrom6Bytes(
-                [0,0,0,0,0,0]),
-                [0]);
-        });
-        it('should turn 6 bytes to a 48-bit int (max)', function() {
-            //assert.deepEqual(byteData.uIntFrom6Bytes(
-            //    [255,255,255,255,255,255]),
-            //    [281474976710655]);
-        });
-        */
-
         it('should turn 8 bytes to 2 32-bit floats', function() {
             assert.deepEqual(byteData.floatFrom4Bytes(
                 [0,0,0,0,0,0,0,0]),

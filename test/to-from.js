@@ -6,7 +6,7 @@ describe('to-from', function() {
     let byteData = require('../index.js');
 
     describe('#indexOf()', function() {
-        // 18446744073709551615 int
+        
         it('should turn 8 bytes to 1 64-bit float and back (1', function() {
             let bytes = byteData.floatTo8Bytes([612345678987654.3]);
             let num = byteData.floatFrom8Bytes(bytes)
@@ -28,7 +28,6 @@ describe('to-from', function() {
             assert.ok(num[0] != 612345678987654.1);
         });
 
-
         it('should turn 8 bytes to 1 64-bit float and back', function() {
             let bytes = byteData.floatTo8Bytes([0.123456789876543]);
             let num = byteData.floatFrom8Bytes(bytes)
@@ -39,24 +38,7 @@ describe('to-from', function() {
             let num = byteData.floatFrom8Bytes(bytes)
             assert.ok(0.123456789876544 != num[0]);
         });
-        /*
-        // 48-bit / 6 bytes unsigned
-        it('should turn 1 48-bit unsigned int to 6 bytes and back (0s)',
-                function() {
-            let bytes = byteData.intTo6Bytes([0]);
-            let num = byteData.uIntFrom6Bytes(bytes);
-            assert.deepEqual([0], num);
-        });
-        it('should turn 1 48-bit unsigned int to 4 bytes and back ' +
-                '(4294967295)', function() {
-            let bytes = byteData.intTo6Bytes([281474976710655]);
-            let num = byteData.uIntFrom6Bytes(bytes);
-            assert.deepEqual([255,255,255,255,255,255], bytes);
-            //let a = 281474976710655;
-            //console.log(a);
-            assert.deepEqual(num, [281474976710655]);
-        });
-        */
+        
         // 32-bit / 4 bytes unsigned
         it('should turn 1 32-bit unsigned int to 4 bytes and back (0s)',
                 function() {

@@ -376,7 +376,8 @@ function uIntFrom1Byte(bytes) {
 function intFrom1Byte(bytes) {
     let samples = [];
     let i = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[i] = bytes[i];
         if (samples[i] > 127) {
             samples[i] -= 256;
@@ -394,7 +395,8 @@ function intFrom2Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = (bytes[1 + i] << 8) | bytes[i];
          // Thanks https://stackoverflow.com/a/38298413
         if (bytes[1 + i] & (1 << 7)) {
@@ -414,7 +416,8 @@ function uIntFrom2Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
         j++;
         i+=2;
@@ -430,7 +433,8 @@ function intFrom3Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = (
                 bytes[2 + i] << 16 |
                 bytes[1 + i] << 8 |
@@ -455,7 +459,8 @@ function uIntFrom3Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = (
                 bytes[2 + i] << 16 |
                 bytes[1 + i] << 8 |
@@ -475,7 +480,8 @@ function intFrom4Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = (
                 bytes[3 + i] << 24 |
                 bytes[2 + i] << 16 |
@@ -499,7 +505,8 @@ function uIntFrom4Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = (
                 bytes[3 + i] << 24 |
                 bytes[2 + i] << 16 |
@@ -521,7 +528,8 @@ function floatFrom4Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = intBits.pack(
                 bytes[3 + i] << 24 |
                 bytes[2 + i] << 16 |
@@ -542,7 +550,8 @@ function floatFrom8Bytes(bytes) {
     let samples = [];
     let i = 0;
     let j = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         samples[j] = decodeFloat([
                 bytes[i],
                 bytes[1 + i],
@@ -567,7 +576,8 @@ function floatFrom8Bytes(bytes) {
 function stringFromBytes(bytes) {
     let string = "";
     let i = 0;
-    while (i < bytes.length) {
+    let len = bytes.length;
+    while (i < len) {
         string += String.fromCharCode(bytes[i]);
         i++;
     }    

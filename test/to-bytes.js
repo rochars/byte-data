@@ -6,9 +6,6 @@ describe('to-bytes', function() {
     let byteData = require('../index.js');
 
     describe('#indexOf()', function() {
-        // to bytes
-        // 64 bit int unsigned
-        //1456909977176 
 
         // 64-bit / 8 bytes
         it('should turn 2 64-bit floats to 16 bytes (-1, 1)', function() {
