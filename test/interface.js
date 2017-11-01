@@ -70,5 +70,17 @@ describe('interface', function() {
         it('should turn bytes to a string', function() {
             assert.deepEqual(byteData.stringFromBytes([97, 98]), "ab");
         });
+
+        it('should find the "ab" among the junk', function() {
+            let index = byteData.findString([1, 0, 1, 100, 97, 98, 2, 2, 0], "ab");
+            assert.equal(index, 4);
+            //assert.deepEqual(byteData.stringFromBytes([97, 98]), "ab");
+        });
+
+        it('should return -1 if the string is not found', function() {
+            let index = byteData.findString([1, 0, 1, 100, 95, 98, 2, 2, 0], "ab");
+            assert.equal(index, -1);
+            //assert.deepEqual(byteData.stringFromBytes([97, 98]), "ab");
+        });
     });
 });

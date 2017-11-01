@@ -91,6 +91,10 @@ module.exports = {
               search: 'module.exports.stringFromBytes',
               replace: "window['stringFromBytes']",
             },
+            {
+              search: 'module.exports.findString',
+              replace: "window['findString']",
+            },
           ]
         }
       }

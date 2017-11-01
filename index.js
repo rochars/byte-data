@@ -11,8 +11,27 @@
 let toBytes = require('./src/to-bytes');
 let fromBytes = require('./src/from-bytes');
 
+/**
+ * Find and return the start offset of some string.
+ * Will return the start offset of the first occurrence found.
+ * @param {Uint8Array} bytes Array of bytes.
+ * @param {string} chunk Some string to look for.
+ * @return {number} The start offset of the data chunk.
+ */
+function findString(bytes, chunk) {
+    let found = "";
+    for (let i = 0; i < bytes.length; i++) {
+        found = fromBytes.stringFromBytes(bytes.slice(i, i + chunk.length));
+        if (found == chunk) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 module.exports.floatTo8Bytes = toBytes.floatTo8Bytes;
 module.exports.floatTo4Bytes = toBytes.floatTo4Bytes;
+module.exports.intTo5Bytes = toBytes.intTo5Bytes;
 module.exports.intTo4Bytes = toBytes.intTo4Bytes;
 module.exports.intTo3Bytes = toBytes.intTo3Bytes;
 module.exports.intTo2Bytes = toBytes.intTo2Bytes;
@@ -30,3 +49,5 @@ module.exports.uIntFrom4Bytes = fromBytes.uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = fromBytes.floatFrom4Bytes;
 module.exports.floatFrom8Bytes = fromBytes.floatFrom8Bytes;
 module.exports.stringFromBytes = fromBytes.stringFromBytes;
+
+module.exports.findString = findString;

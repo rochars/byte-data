@@ -63,6 +63,11 @@ byteData.uIntFrom1Byte();
 // Strings
 byteData.stringToBytes();
 byteData.stringFromBytes();
+byteData.findString();
+
+// Look for some string and return the
+// start offset of its first occurrence
+let offset = byteData.findString(bytes, "chunk");
 ```
 
 ## Browser
