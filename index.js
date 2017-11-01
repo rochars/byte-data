@@ -6,17 +6,14 @@
  * 
  */
 
-// TODO: 48-bit
-
 let toBytes = require('./src/to-bytes');
 let fromBytes = require('./src/from-bytes');
 
 /**
  * Find and return the start offset of some string.
- * Will return the start offset of the first occurrence found.
  * @param {Uint8Array} bytes Array of bytes.
  * @param {string} chunk Some string to look for.
- * @return {number} The start offset of the data chunk.
+ * @return {number} The start offset of the first occurrence found.
  */
 function findString(bytes, chunk) {
     let found = "";

@@ -97,17 +97,14 @@ module.exports.unpack = unpack
  * 
  */
 
-// TODO: 48-bit
-
 let toBytes = __webpack_require__(2);
 let fromBytes = __webpack_require__(3);
 
 /**
  * Find and return the start offset of some string.
- * Will return the start offset of the first occurrence found.
  * @param {Uint8Array} bytes Array of bytes.
  * @param {string} chunk Some string to look for.
- * @return {number} The start offset of the data chunk.
+ * @return {number} The start offset of the first occurrence found.
  */
 function findString(bytes, chunk) {
     let found = "";
@@ -184,6 +181,7 @@ function toFloat64(value) {
 /**
  * Split 64 bit numbers into bytes.
  * @param {!Array<number>} numbers float64 numbers.
+ * @return {Uint8Array} the bytes.
  */
 function floatTo8Bytes(numbers) {
     let i = 0;
@@ -214,12 +212,13 @@ function floatTo8Bytes(numbers) {
         }
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 /**
  * Split 32 bit float numbers into bytes.
  * @param {!Array<number>} numbers float32 numbers.
+ * @return {Uint8Array} the bytes.
  */
 function floatTo4Bytes(numbers) {
     let i = 0;
@@ -234,12 +233,13 @@ function floatTo4Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 24) & 0xFF;
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 /**
  * Split 32 bit int numbers into bytes.
  * @param {!Array<number>} numbers int32 numbers.
+ * @return {Uint8Array} the bytes.
  */
 function intTo4Bytes(numbers) {
     let i = 0;
@@ -253,12 +253,13 @@ function intTo4Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 24) & 0xFF;
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 /**
  * Split 24 bit int numbers into bytes.
  * @param {!Array<number>} numbers int24 numbers.
+ * @return {Uint8Array} the bytes.
  */
 function intTo3Bytes(numbers) {
     let i = 0;
@@ -271,12 +272,13 @@ function intTo3Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 16) & 0xFF;
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 /**
  * Split 16 bit int numbers into bytes.
  * @param {!Array<number>} numbers int16 numbers.
+ * @return {Uint8Array} the bytes.
  */
 function intTo2Bytes(numbers) {
     let i = 0;
@@ -288,12 +290,13 @@ function intTo2Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 8) & 0xFF;
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 /**
  * Split a 8 bit int numbers into bytes
  * @param {!Array<number>} numbers int8 numbers.
+ * @return {Uint8Array} the bytes.
  */
 function intTo1Byte(numbers) {
     let i = 0;
@@ -304,12 +307,13 @@ function intTo1Byte(numbers) {
         bytes[j++] = numbers[i] & 0xFF;
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 /**
  * Turn a string to an array of bytes.
  * @param {string} string The string.
+ * @return {Uint8Array} the bytes.
  */
 function stringToBytes(string) {
     let i = 0;
@@ -320,7 +324,7 @@ function stringToBytes(string) {
         bytes[j++] = string.charCodeAt(i);
         i++;
     }
-    return bytes;
+    return new Uint8Array(bytes);
 }
 
 module.exports.floatTo8Bytes = floatTo8Bytes;
@@ -385,14 +389,16 @@ function decodeFloat(bytes) {
  * Read 8-bit unsigned ints from an array of bytes.
  * Just return a copy of the original array.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes) {
-    return bytes.slice();
+    return [].slice.call(bytes);
 }
 
 /**
  * Read 8-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom1Byte(bytes) {
     let samples = [];
@@ -411,6 +417,7 @@ function intFrom1Byte(bytes) {
 /**
  * Read 16-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes) {
     let samples = [];
@@ -432,6 +439,7 @@ function intFrom2Bytes(bytes) {
 /**
  * Read 16-bit unsigned ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom2Bytes(bytes) {
     let samples = [];
@@ -449,6 +457,7 @@ function uIntFrom2Bytes(bytes) {
 /**
  * Read 24-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom3Bytes(bytes) {
     let samples = [];
@@ -475,6 +484,7 @@ function intFrom3Bytes(bytes) {
 /**
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes) {
     let samples = [];
@@ -496,6 +506,7 @@ function uIntFrom3Bytes(bytes) {
 /**
  * Read 32-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom4Bytes(bytes) {
     let samples = [];
@@ -521,6 +532,7 @@ function intFrom4Bytes(bytes) {
 /**
  * Read 32-bit unsigned ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes) {
     let samples = [];
@@ -544,6 +556,7 @@ function uIntFrom4Bytes(bytes) {
 /**
  * Read 8-bit IEEE numbers from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes) {
     let samples = [];
@@ -566,6 +579,7 @@ function floatFrom4Bytes(bytes) {
 /**
  * Read 64-bit IEEE numbers from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes) {
     let samples = [];
@@ -592,7 +606,7 @@ function floatFrom8Bytes(bytes) {
 /**
  * Convert an array of bytes to a string.
  * @param {Uint8Array} bytes An array of bytes.
- * @returns {string} The string.
+ * @return {string} The string.
  */
 function stringFromBytes(bytes) {
     let string = "";

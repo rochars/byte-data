@@ -47,14 +47,16 @@ function decodeFloat(bytes) {
  * Read 8-bit unsigned ints from an array of bytes.
  * Just return a copy of the original array.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes) {
-    return bytes.slice();
+    return [].slice.call(bytes);
 }
 
 /**
  * Read 8-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom1Byte(bytes) {
     let samples = [];
@@ -73,6 +75,7 @@ function intFrom1Byte(bytes) {
 /**
  * Read 16-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes) {
     let samples = [];
@@ -94,6 +97,7 @@ function intFrom2Bytes(bytes) {
 /**
  * Read 16-bit unsigned ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom2Bytes(bytes) {
     let samples = [];
@@ -111,6 +115,7 @@ function uIntFrom2Bytes(bytes) {
 /**
  * Read 24-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom3Bytes(bytes) {
     let samples = [];
@@ -137,6 +142,7 @@ function intFrom3Bytes(bytes) {
 /**
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes) {
     let samples = [];
@@ -158,6 +164,7 @@ function uIntFrom3Bytes(bytes) {
 /**
  * Read 32-bit signed ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function intFrom4Bytes(bytes) {
     let samples = [];
@@ -183,6 +190,7 @@ function intFrom4Bytes(bytes) {
 /**
  * Read 32-bit unsigned ints from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes) {
     let samples = [];
@@ -206,6 +214,7 @@ function uIntFrom4Bytes(bytes) {
 /**
  * Read 8-bit IEEE numbers from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes) {
     let samples = [];
@@ -228,6 +237,7 @@ function floatFrom4Bytes(bytes) {
 /**
  * Read 64-bit IEEE numbers from an array of bytes.
  * @param {Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes) {
     let samples = [];
@@ -254,7 +264,7 @@ function floatFrom8Bytes(bytes) {
 /**
  * Convert an array of bytes to a string.
  * @param {Uint8Array} bytes An array of bytes.
- * @returns {string} The string.
+ * @return {string} The string.
  */
 function stringFromBytes(bytes) {
     let string = "";
