@@ -3,7 +3,6 @@
  * Bytes to and from numbers and strings.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
- * 
  */
 
 let toBytes = require('./src/to-bytes');
@@ -11,7 +10,7 @@ let fromBytes = require('./src/from-bytes');
 
 /**
  * Find and return the start offset of some string.
- * @param {Uint8Array} bytes Array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes Array of bytes.
  * @param {string} chunk Some string to look for.
  * @return {number} The start offset of the first occurrence found.
  */

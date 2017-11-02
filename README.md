@@ -38,8 +38,9 @@ floatFrom8Bytes([75, 40, 253, 58, 221, 154, 191, 63]);
 ```javascript
 let byteData = require('byte-data');
 
-// Take a array of numbers,
-// return a Uint8Array of bytes
+// numbers to bytes, all:
+// @param {!Array<number>} numbers The numbers.
+// @return {!Array<number>} the bytes.
 bytes = byteData.floatTo8Bytes(numbers);
 bytes = byteData.floatTo4Bytes(numbers);
 bytes = byteData.intTo4Bytes(numbers);
@@ -47,8 +48,9 @@ bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
 
-// Take a Uint8Array of bytes,
-// return a array of numbers
+// numbers from bytes, all:
+// @param {!Array<number>|Uint8Array} bytes An array of bytes.
+// @return {!Array<number>} The numbers.
 numbers = byteData.floatFrom8Bytes(bytes);
 numbers = byteData.floatFrom4Bytes(bytes);
 numbers = byteData.intFrom4Bytes(bytes);
@@ -60,12 +62,12 @@ numbers = byteData.uIntFrom2Bytes(bytes);
 numbers = byteData.intFrom1Byte(bytes);
 numbers = byteData.uIntFrom1Byte(bytes);
 
-// Strings
+// strings
 bytes = byteData.stringToBytes(string);
 string = byteData.stringFromBytes(bytes);
 
-// Look for some string and return the
-// start offset of its first occurrence
+// look for some string and return the start offset
+// of its first occurrence
 let index = byteData.findString(bytes, "chunk");
 ```
 

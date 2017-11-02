@@ -2,7 +2,6 @@
  * to-bytes: convert bytes to numbers and strings.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
- *
  */
 
 const intBits = require("int-bits");
@@ -34,7 +33,7 @@ function toFloat64(value) {
 /**
  * Split 64 bit numbers into bytes.
  * @param {!Array<number>} numbers float64 numbers.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function floatTo8Bytes(numbers) {
     let i = 0;
@@ -65,13 +64,13 @@ function floatTo8Bytes(numbers) {
         }
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 /**
  * Split 32 bit float numbers into bytes.
  * @param {!Array<number>} numbers float32 numbers.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function floatTo4Bytes(numbers) {
     let i = 0;
@@ -86,13 +85,13 @@ function floatTo4Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 24) & 0xFF;
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 /**
  * Split 32 bit int numbers into bytes.
  * @param {!Array<number>} numbers int32 numbers.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function intTo4Bytes(numbers) {
     let i = 0;
@@ -106,13 +105,13 @@ function intTo4Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 24) & 0xFF;
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 /**
  * Split 24 bit int numbers into bytes.
  * @param {!Array<number>} numbers int24 numbers.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function intTo3Bytes(numbers) {
     let i = 0;
@@ -125,13 +124,13 @@ function intTo3Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 16) & 0xFF;
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 /**
  * Split 16 bit int numbers into bytes.
  * @param {!Array<number>} numbers int16 numbers.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function intTo2Bytes(numbers) {
     let i = 0;
@@ -143,13 +142,13 @@ function intTo2Bytes(numbers) {
         bytes[j++] = (numbers[i] >> 8) & 0xFF;
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 /**
  * Split a 8 bit int numbers into bytes
  * @param {!Array<number>} numbers int8 numbers.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function intTo1Byte(numbers) {
     let i = 0;
@@ -160,13 +159,13 @@ function intTo1Byte(numbers) {
         bytes[j++] = numbers[i] & 0xFF;
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 /**
  * Turn a string to an array of bytes.
  * @param {string} string The string.
- * @return {Uint8Array} the bytes.
+ * @return {!Array<number>} the bytes.
  */
 function stringToBytes(string) {
     let i = 0;
@@ -177,7 +176,7 @@ function stringToBytes(string) {
         bytes[j++] = string.charCodeAt(i);
         i++;
     }
-    return new Uint8Array(bytes);
+    return bytes;
 }
 
 module.exports.floatTo8Bytes = floatTo8Bytes;

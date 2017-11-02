@@ -2,7 +2,6 @@
  * from-bytes: convert bytes to numbers and strings.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
- *
  */
 
 const intBits = require("int-bits");
@@ -46,7 +45,7 @@ function decodeFloat(bytes) {
 /**
  * Read 8-bit unsigned ints from an array of bytes.
  * Just return a copy of the original array.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes) {
@@ -55,7 +54,7 @@ function uIntFrom1Byte(bytes) {
 
 /**
  * Read 8-bit signed ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function intFrom1Byte(bytes) {
@@ -74,7 +73,7 @@ function intFrom1Byte(bytes) {
 
 /**
  * Read 16-bit signed ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes) {
@@ -96,7 +95,7 @@ function intFrom2Bytes(bytes) {
 
 /**
  * Read 16-bit unsigned ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom2Bytes(bytes) {
@@ -114,7 +113,7 @@ function uIntFrom2Bytes(bytes) {
 
 /**
  * Read 24-bit signed ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function intFrom3Bytes(bytes) {
@@ -141,7 +140,7 @@ function intFrom3Bytes(bytes) {
 
 /**
  * Read 24-bit unsigned ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes) {
@@ -163,7 +162,7 @@ function uIntFrom3Bytes(bytes) {
 
 /**
  * Read 32-bit signed ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function intFrom4Bytes(bytes) {
@@ -189,7 +188,7 @@ function intFrom4Bytes(bytes) {
 
 /**
  * Read 32-bit unsigned ints from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes) {
@@ -213,7 +212,7 @@ function uIntFrom4Bytes(bytes) {
 
 /**
  * Read 8-bit IEEE numbers from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes) {
@@ -236,7 +235,7 @@ function floatFrom4Bytes(bytes) {
 
 /**
  * Read 64-bit IEEE numbers from an array of bytes.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes) {
@@ -263,7 +262,7 @@ function floatFrom8Bytes(bytes) {
 
 /**
  * Convert an array of bytes to a string.
- * @param {Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {string} The string.
  */
 function stringFromBytes(bytes) {
