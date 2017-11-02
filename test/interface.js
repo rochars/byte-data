@@ -9,6 +9,10 @@ describe('interface', function() {
 
         // to bytes
         it('should turn a 64-bit float to 8 bytes', function() {
+            assert.deepEqual(byteData.doubleTo8Bytes([0]), [0,0,0,0,0,0,0,0]);
+        });
+
+        it('should turn a 64-bit float to 8 bytes', function() {
             assert.deepEqual(byteData.floatTo8Bytes([0]), [0,0,0,0,0,0,0,0]);
         });
 
@@ -41,6 +45,9 @@ describe('interface', function() {
             // [0,0,0,0,0,0,0,64] == -0
             assert.deepEqual(byteData.floatFrom8Bytes([0,0,0,0,0,0,0,0]), [0]);
             assert.deepEqual(byteData.floatFrom8Bytes([0,0,0,0,0,0,0,64]), [0]);
+        });
+        it('should turn 8 bytes to 64-bit a float', function() {
+            assert.deepEqual(byteData.doubleFrom8Bytes([0,0,0,0,0,0,0,0]), [0]);
         });
 
         it('should turn 8 bytes to a 32-bit float', function() {

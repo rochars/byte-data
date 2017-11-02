@@ -63,34 +63,49 @@ function toFloat64(value) {
  * @param {!Array&lt;number>} numbers float64 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
-function floatTo8Bytes(numbers) {
+function floatTo8Bytes(numbers, base=10) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    while (i &lt; len) {
-        // fix the -0 bug
-        if (numbers[i] == 0) {
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-            bytes[j++] = 0;
-        }else {
-            numbers[i] = toFloat64(numbers[i]);
-            bytes[j++] = (numbers[i][1]) &amp; 0xFF;
-            bytes[j++] = (numbers[i][1] >> 8) &amp; 0xFF;
-            bytes[j++] = (numbers[i][1] >> 16) &amp; 0xFF;
-            bytes[j++] = (numbers[i][1] >> 24) &amp; 0xFF;
-            bytes[j++] = (numbers[i][0]) &amp; 0xFF;
-            bytes[j++] = (numbers[i][0] >> 8) &amp; 0xFF;
-            bytes[j++] = (numbers[i][0] >> 16) &amp; 0xFF;
-            bytes[j++] = (numbers[i][0] >> 24) &amp; 0xFF;
+    if (base == 10) {
+        while (i &lt; len) {
+            // 0s should not be signed by default
+            if (numbers[i] == 0) {
+                bytes = bytes.concat([0,0,0,0,0,0,0,0]);
+                j+=8;
+            } else {
+                numbers[i] = toFloat64(numbers[i]);
+                bytes[j++] = numbers[i][1] &amp; 0xFF;
+                bytes[j++] = numbers[i][1] >>> 8 &amp; 0xFF;
+                bytes[j++] = numbers[i][1] >>> 16 &amp; 0xFF;
+                bytes[j++] = numbers[i][1] >>> 24 &amp; 0xFF;
+                bytes[j++] = numbers[i][0] &amp; 0xFF;
+                bytes[j++] = numbers[i][0] >>> 8 &amp; 0xFF;
+                bytes[j++] = numbers[i][0] >>> 16 &amp; 0xFF;
+                bytes[j++] = numbers[i][0] >>> 24 &amp; 0xFF;
+            }
+            i++;
         }
-        i++;
+    } else if (base == 16) {
+        while (i &lt; len) {
+            // 0s should not be signed by default
+            if (numbers[i] == 0) {
+                bytes = bytes.concat([0,0,0,0,0,0,0,0]);
+                j+=8;
+            }else {
+                numbers[i] = toFloat64(numbers[i]);
+                bytes[j++] = (numbers[i][1] &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][1] >>> 8 &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][1] >>> 16 &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][1] >>> 24 &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][0] &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][0] >>> 8 &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][0] >>> 16 &amp; 0xFF).toString(16);
+                bytes[j++] = (numbers[i][0] >>> 24 &amp; 0xFF).toString(16);
+            }
+            i++;
+        }
     }
     return bytes;
 }
@@ -100,18 +115,95 @@ function floatTo8Bytes(numbers) {
  * @param {!Array&lt;number>} numbers float32 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
-function floatTo4Bytes(numbers) {
+function floatTo4Bytes(numbers, base=10) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    while (i &lt; len) {            
-        numbers[i] = intBits.unpack(numbers[i]);
-        bytes[j++] = (numbers[i]) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 8) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 16) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 24) &amp; 0xFF;
-        i++;
+    if (base == 10) {
+        while (i &lt; len) {            
+            numbers[i] = intBits.unpack(numbers[i]);
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 24 &amp; 0xFF;
+            i++;
+        }
+    } else if (base == 16) {
+        while (i &lt; len) {            
+            numbers[i] = intBits.unpack(numbers[i]);
+            bytes[j++] = ((numbers[i]) &amp; 0xFF).toString(16);
+            bytes[j++] = ((numbers[i] >>> 8) &amp; 0xFF).toString(16);
+            bytes[j++] = ((numbers[i] >>> 16) &amp; 0xFF).toString(16);
+            bytes[j++] = ((numbers[i] >>> 24) &amp; 0xFF).toString(16);
+            i++;
+        }
+    }
+    return bytes;
+}
+
+/**
+ * Split 48 bit int numbers into 6 bytes.
+ * @param {!Array&lt;number>} numbers.
+ * @return {!Array&lt;number>} the bytes.
+ */
+function intTo6Bytes(numbers, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    if (base == 10) {
+        while (i&lt; len) {
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
+            bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
+            bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
+            bytes[j++] = numbers[i] / 0x10000000000 &amp; 0xFF;
+            i++;
+        }
+    } else if (base == 16) {
+        while (i&lt; len) {
+            bytes[j++] = (numbers[i] &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >> 8 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >> 16 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >> 24 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] / 0x100000000 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] / 0x10000000000 &amp; 0xFF).toString(16);
+            i++;
+        }
+    }
+    return bytes;
+}
+
+/**
+ * Split 40 bit int numbers into 5 bytes.
+ * @param {!Array&lt;number>} numbers.
+ * @return {!Array&lt;number>} the bytes.
+ */
+function intTo5Bytes(numbers, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    if (base == 10) {
+        while (i&lt; len) {
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
+            bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
+            bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
+            i++;
+        }
+    } else if (base == 16) {
+        while (i&lt; len) {
+            bytes[j++] = (numbers[i] &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >> 8 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >> 16 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >> 24 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] / 0x100000000 &amp; 0xFF).toString(16);
+            i++;
+        }
     }
     return bytes;
 }
@@ -121,17 +213,27 @@ function floatTo4Bytes(numbers) {
  * @param {!Array&lt;number>} numbers int32 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
-function intTo4Bytes(numbers) {
+function intTo4Bytes(numbers, base=10) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    while (i&lt; len) {
-        bytes[j++] = (numbers[i]) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 8) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 16) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 24) &amp; 0xFF;
-        i++;
+    if (base == 10) {
+        while (i&lt; len) {
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 24 &amp; 0xFF;
+            i++;
+        }
+    } else if (base == 16) {
+        while (i&lt; len) {
+            bytes[j++] = (numbers[i] &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >>> 16 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >>> 24 &amp; 0xFF).toString(16);
+            i++;
+        }
     }
     return bytes;
 }
@@ -141,17 +243,26 @@ function intTo4Bytes(numbers) {
  * @param {!Array&lt;number>} numbers int24 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
-function intTo3Bytes(numbers) {
+function intTo3Bytes(numbers, base=10) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = (numbers[i]) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 8) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 16) &amp; 0xFF;
-        i++;
-    }
+    if (base == 10) {
+        while (i &lt; len) {
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
+            i++;
+        }
+    } else if (base == 16) {
+        while (i &lt; len) {
+            bytes[j++] = (numbers[i] &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >>> 16 &amp; 0xFF).toString(16);
+            i++;
+        }
+    }  
     return bytes;
 }
 
@@ -160,15 +271,23 @@ function intTo3Bytes(numbers) {
  * @param {!Array&lt;number>} numbers int16 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
-function intTo2Bytes(numbers) {
+function intTo2Bytes(numbers, base=10) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = (numbers[i]) &amp; 0xFF;
-        bytes[j++] = (numbers[i] >> 8) &amp; 0xFF;
-        i++;
+    if (base == 10) {
+        while (i &lt; len) {
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+            i++;
+        }
+    } else if (base == 16) {
+        while (i &lt; len) {
+            bytes[j++] = (numbers[i] &amp; 0xFF).toString(16);
+            bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(16);
+            i++;
+        }
     }
     return bytes;
 }
@@ -178,14 +297,21 @@ function intTo2Bytes(numbers) {
  * @param {!Array&lt;number>} numbers int8 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
-function intTo1Byte(numbers) {
+function intTo1Byte(numbers, base=10) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        i++;
+    if (base == 10) {
+        while (i &lt; len) {
+            bytes[j++] = numbers[i] &amp; 0xFF;
+            i++;
+        }
+    }else if (base == 16) {
+        while (i &lt; len) {
+            bytes[j++] = (numbers[i] &amp; 0xFF).toString(16);
+            i++;
+        }
     }
     return bytes;
 }
@@ -195,20 +321,29 @@ function intTo1Byte(numbers) {
  * @param {string} string The string.
  * @return {!Array&lt;number>} the bytes.
  */
-function stringToBytes(string) {
+function stringToBytes(string, base=10) {
     let i = 0;
     let j = 0;
     let len = string.length;
     let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = string.charCodeAt(i);
-        i++;
+    if (base == 10) {
+        while (i &lt; len) {
+            bytes[j++] = string.charCodeAt(i);
+            i++;
+        }
+    } else if (base == 16) {
+        while (i &lt; len) {
+            bytes[j++] = string.charCodeAt(i).toString(16);
+            i++;
+        }
     }
     return bytes;
 }
 
 module.exports.floatTo8Bytes = floatTo8Bytes;
 module.exports.floatTo4Bytes = floatTo4Bytes;
+module.exports.intTo6Bytes = intTo6Bytes;
+module.exports.intTo5Bytes = intTo5Bytes;
 module.exports.intTo4Bytes = intTo4Bytes;
 module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
@@ -224,13 +359,13 @@ module.exports.stringToBytes = stringToBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 02 2017 02:11:12 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 02 2017 08:29:13 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

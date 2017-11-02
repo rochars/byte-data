@@ -19,11 +19,23 @@ module.exports = {
             // to
             {
               search: 'module.exports.floatTo8Bytes',
+              replace: "window['doubleTo8Bytes']",
+            },
+            {
+              search: 'module.exports.floatTo8Bytes',
               replace: "window['floatTo8Bytes']",
             },
             {
               search: 'module.exports.floatTo4Bytes',
               replace: "window['floatTo4Bytes']",
+            },
+            {
+              search: 'module.exports.intTo6Bytes',
+              replace: "window['intTo6Bytes']",
+            },
+            {
+              search: 'module.exports.intTo5Bytes',
+              replace: "window['intTo5Bytes']",
             },
             {
               search: 'module.exports.intTo4Bytes',

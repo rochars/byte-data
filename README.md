@@ -3,7 +3,7 @@ Bytes to and from numbers and strings.
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
-[![Build Status](https://travis-ci.org/rochars/byte-data.svg?branch=master)](https://travis-ci.org/rochars/byte-data) [![Build status](https://ci.appveyor.com/api/projects/status/g2ellp44s7a0kvid?svg=true)](https://ci.appveyor.com/project/rochars/byte-data) [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data)
+[![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data)
 
 ## Install
 ```
@@ -11,6 +11,12 @@ npm install byte-data
 ```
 
 Should work the same on Node.js and in the browser.
+
+Bytes are little-endian.
+
+Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
+
+**byte-data** functions always return regular **arrays**.
 
 ### Supports:
 - Signed 8-bit ints
@@ -38,20 +44,25 @@ floatFrom8Bytes([75, 40, 253, 58, 221, 154, 191, 63]);
 ```javascript
 let byteData = require('byte-data');
 
-// numbers to bytes, all:
-// @param {!Array<number>} numbers The numbers.
-// @return {!Array<number>} the bytes.
-bytes = byteData.floatTo8Bytes(numbers);
+/**
+ * numbers to bytes, all:
+ * @param {!Array<number>} numbers The numbers.
+ * @param {number} base Base 10 or 16. If ommited defaults to 10.
+ * @return {!Array<number>} the bytes.
+ */
+bytes = byteData.doubleTo8Bytes(numbers);
 bytes = byteData.floatTo4Bytes(numbers);
 bytes = byteData.intTo4Bytes(numbers);
 bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
 
-// numbers from bytes, all:
-// @param {!Array<number>|Uint8Array} bytes An array of bytes.
-// @return {!Array<number>} The numbers.
-numbers = byteData.floatFrom8Bytes(bytes);
+/**
+ * numbers from bytes, all:
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @return {!Array<number>} The numbers.
+ */
+numbers = byteData.doubleFrom8Bytes(bytes);
 numbers = byteData.floatFrom4Bytes(bytes);
 numbers = byteData.intFrom4Bytes(bytes);
 numbers = byteData.uIntFrom4Bytes(bytes);
@@ -67,8 +78,44 @@ bytes = byteData.stringToBytes(string);
 string = byteData.stringFromBytes(bytes);
 
 // look for some string and return the start offset
-// of its first occurrence
-let index = byteData.findString(bytes, "chunk");
+// of its first occurrence in the buffer 
+index = byteData.findString(bytes, "chunk");
+```
+
+Bytes are returned in base 10 by default. To get hex values:
+```javascript
+byteData.floatTo8Bytes([-1], 16)
+//['0','0','0','0','0','0','f0','bf']
+```
+
+### Python struct.pack VS Node.js byte-data
+```javascript
+//struct.pack('<c', "a")
+byteData.stringToBytes("a", 16);
+
+//struct.pack('<b', -1)
+byteData.intTo1Byte([-1], 16);
+
+//struct.pack('<B', 1)
+byteData.intTo1Byte([1], 16);
+
+//struct.pack('<h', -1)
+byteData.intTo2Bytes([-1], 16);
+
+//struct.pack('<H', 1)
+byteData.intTo2Bytes([765], 16);
+
+//struct.pack('<i', -2147483648)
+byteData.intTo4Bytes([-2147483648], 16);
+
+//struct.pack('<I', -2147483648)
+byteData.intTo4Bytes([4294967295]);
+
+//struct.pack('<f', -1)
+byteData.floatTo4Bytes([-1], -1);
+
+//struct.pack('<d', -1)
+byteData.doubleTo8Bytes([-1], -1);
 ```
 
 ## Browser

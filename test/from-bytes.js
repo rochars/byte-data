@@ -11,6 +11,16 @@ describe('from-bytes', function() {
                 [75,40,253,58,221,154,191,63])[0],
                 0.123456789876543);
         });
+        it('should turn 8 bytes to 1 64-bit float (Uint8Array)', function() {
+            assert.equal(byteData.floatFrom8Bytes(
+                new Uint8Array([75,40,253,58,221,154,191,63]))[0],
+                0.123456789876543);
+        });
+        it('should turn 8 bytes to 1 64-bit float (Buffer)', function() {
+            assert.equal(byteData.floatFrom8Bytes(
+                new Buffer.from([75,40,253,58,221,154,191,63]))[0],
+                0.123456789876543);
+        });
         it('should turn 8 bytes to 1 64-bit float', function() {
             assert.equal(byteData.floatFrom8Bytes(
                 [0,0,0,0,0,0,0,0])[0].toFixed(20),
@@ -25,6 +35,7 @@ describe('from-bytes', function() {
                 0);
         });
 
+        // 32
         it('should turn 8 bytes to 2 32-bit floats', function() {
             assert.deepEqual(byteData.floatFrom4Bytes(
                 [0,0,0,0,0,0,0,0]),
