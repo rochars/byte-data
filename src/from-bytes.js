@@ -47,28 +47,28 @@ function decodeFloat(bytes) {
  * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
  * @return {!Array<number>} The numbers.
  */
-function intFromNibble(nibbles) {
+function intFromNibble(nibbles, base=10) {
     let samples = [];
     let i = 0;
     let len = nibbles.length;
-    while (i < len) {
-        samples[i] = nibbles[i];
-        if (samples[i] > 7) {
-            samples[i] -= 16;
+    if (base == 10) {
+        while (i < len) {
+            samples[i] = nibbles[i];
+            if (samples[i] > 7) {
+                samples[i] -= 16;
+            }
+            i+=1;
         }
-        i+=1;
+    } else {
+        while (i < len) {
+            samples[i] = parseInt(nibbles[i], base);
+            if (samples[i] > 7) {
+                samples[i] -= 16;
+            }
+            i+=1;
+        }
     }
     return samples;
-}
-
-/**
- * Read 4-bit unsigned ints from an array of nibbles.
- * Just return a copy of the original array.
- * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
- * @return {!Array<number>} The numbers.
- */
-function uIntFromNibble(nibbles) {
-    return uIntFrom1Byte(nibbles);
 }
 
 /**
@@ -77,8 +77,19 @@ function uIntFromNibble(nibbles) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom1Byte(bytes) {
-    return [].slice.call(bytes);
+function uIntFrom1Byte(bytes, base=10) {
+    if (base == 10) {
+        return [].slice.call(bytes);
+    } else {
+        let samples = [];
+        let i = 0;
+        let len = bytes.length;
+        while (i < len) {
+            samples[i] = parseInt(bytes[i], base);
+            i++;
+        }
+        return samples;
+    }
 }
 
 /**
@@ -86,39 +97,62 @@ function uIntFrom1Byte(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function intFrom1Byte(bytes) {
+function intFrom1Byte(bytes, base=10) {
     let samples = [];
     let i = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[i] = bytes[i];
-        if (samples[i] > 127) {
-            samples[i] -= 256;
+    if (base==10) {
+        while (i < len) {
+            samples[i] = bytes[i];
+            if (samples[i] > 127) {
+                samples[i] -= 256;
+            }
+            i+=1;
         }
-        i+=1;
+    } else {
+        while (i < len) {
+            samples[i] = parseInt(bytes[i], base);
+            if (samples[i] > 127) {
+                samples[i] -= 256;
+            }
+            i+=1;
+        }
     }
     return samples;
 }
 
 /**
  * Read 16-bit signed ints from an array of bytes.
+ * Thanks https://stackoverflow.com/a/38298413
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function intFrom2Bytes(bytes) {
+function intFrom2Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];
-         // Thanks https://stackoverflow.com/a/38298413
-        if (bytes[1 + i] & (1 << 7)) {
-           samples[j] = 0xFFFF0000 | samples[j];
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = (bytes[1 + i] << 8) | bytes[i];
+            if (bytes[1 + i] & (1 << 7)) {
+               samples[j] = 0xFFFF0000 | samples[j];
+            }
+            j++;
+            i+=2;
+        }    
+    } else {
+        while (i < len) {
+            samples[j] = (parseInt(bytes[1 + i], base) << 8) |
+                parseInt(bytes[i], base);
+            if (parseInt(bytes[1 + i], base) & (1 << 7)) {
+               samples[j] = 0xFFFF0000 | samples[j];
+            }
+            j++;
+            i+=2;
         }
-        j++;
-        i+=2;
     }
+    
     return samples;
 }
 
@@ -127,16 +161,26 @@ function intFrom2Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom2Bytes(bytes) {
+function uIntFrom2Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
-        j++;
-        i+=2;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
+            j++;
+            i+=2;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = (parseInt(bytes[1 + i], base) << 8) | 
+                parseInt(bytes[i], base);
+            j++;
+            i+=2;
+        }
     }
+    
     return samples;
 }
 
@@ -145,25 +189,43 @@ function uIntFrom2Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function intFrom3Bytes(bytes) {
+function intFrom3Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = (
-                bytes[2 + i] << 16 |
-                bytes[1 + i] << 8 |
-                bytes[i]
-            );
-        if ((samples[j] & 0x00800000) > 0) {
-            samples[j] = samples[j] | 0xFF000000;
-        } else {  
-            samples[j] = samples[j] & 0x00FFFFFF;
-        } 
-        j++;
-        i+=3;
+    if (base==10) {
+        while (i < len) {
+            samples[j] = (
+                    bytes[2 + i] << 16 |
+                    bytes[1 + i] << 8 |
+                    bytes[i]
+                );
+            if ((samples[j] & 0x00800000) > 0) {
+                samples[j] = samples[j] | 0xFF000000;
+            } else {  
+                samples[j] = samples[j] & 0x00FFFFFF;
+            } 
+            j++;
+            i+=3;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = (
+                    parseInt(bytes[2 + i], base) << 16 |
+                    parseInt(bytes[1 + i], base) << 8 |
+                    parseInt(bytes[i], base)
+                );
+            if ((samples[j] & 0x00800000) > 0) {
+                samples[j] = samples[j] | 0xFF000000;
+            } else {  
+                samples[j] = samples[j] & 0x00FFFFFF;
+            } 
+            j++;
+            i+=3;
+        }
     }
+    
     return samples;
 }
 
@@ -172,20 +234,33 @@ function intFrom3Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom3Bytes(bytes) {
+function uIntFrom3Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = (
-                bytes[2 + i] << 16 |
-                bytes[1 + i] << 8 |
-                bytes[i]
-            );
-        j++;
-        i+=3;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = (
+                    bytes[2 + i] << 16 |
+                    bytes[1 + i] << 8 |
+                    bytes[i]
+                );
+            j++;
+            i+=3;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = (
+                    parseInt(bytes[2 + i], base) << 16 |
+                    parseInt(bytes[1 + i], base) << 8 |
+                    parseInt(bytes[i], base)
+                );
+            j++;
+            i+=3;
+        }
     }
+    
     return samples;
 }
 
@@ -194,24 +269,41 @@ function uIntFrom3Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function intFrom4Bytes(bytes) {
+function intFrom4Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = (
-                bytes[3 + i] << 24 |
-                bytes[2 + i] << 16 |
-                bytes[1 + i] << 8 |
-                bytes[i]
-            );
-        if ((samples[j] & 0x80000000) < 0) {
-            samples[j] = samples[j] & 0xFFFFFFFF;  
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = (
+                    bytes[3 + i] << 24 |
+                    bytes[2 + i] << 16 |
+                    bytes[1 + i] << 8 |
+                    bytes[i]
+                );
+            if ((samples[j] & 0x80000000) < 0) {
+                samples[j] = samples[j] & 0xFFFFFFFF;  
+            }
+            j++;
+            i+=4;
         }
-        j++;
-        i+=4;
+    } else {
+        while (i < len) {
+            samples[j] = (
+                    parseInt(bytes[3 + i], base) << 24 |
+                    parseInt(bytes[2 + i], base) << 16 |
+                    parseInt(bytes[1 + i], base) << 8 |
+                    parseInt(bytes[i], base)
+                );
+            if ((samples[j] & 0x80000000) < 0) {
+                samples[j] = samples[j] & 0xFFFFFFFF;  
+            }
+            j++;
+            i+=4;
+        }
     }
+    
     return samples;
 }
 
@@ -220,21 +312,35 @@ function intFrom4Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom4Bytes(bytes) {
+function uIntFrom4Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = (
-                bytes[3 + i] << 24 |
-                bytes[2 + i] << 16 |
-                bytes[1 + i] << 8 |
-                bytes[i]
-            );
-        samples[j] = samples[j] >>> 0;
-        j++;
-        i+=4;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = (
+                    bytes[3 + i] << 24 |
+                    bytes[2 + i] << 16 |
+                    bytes[1 + i] << 8 |
+                    bytes[i]
+                );
+            samples[j] = samples[j] >>> 0;
+            j++;
+            i+=4;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = (
+                    parseInt(bytes[3 + i], base) << 24 |
+                    parseInt(bytes[2 + i], base) << 16 |
+                    parseInt(bytes[1 + i], base) << 8 |
+                    parseInt(bytes[i], base)
+                );
+            samples[j] = samples[j] >>> 0;
+            j++;
+            i+=4;
+        }
     }
     return samples;
 }
@@ -244,20 +350,33 @@ function uIntFrom4Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function floatFrom4Bytes(bytes) {
+function floatFrom4Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = intBits.pack(
-                bytes[3 + i] << 24 |
-                bytes[2 + i] << 16 |
-                bytes[1 + i] << 8 |
-                bytes[i]
-            );
-        j++;
-        i+=4;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = intBits.pack(
+                    bytes[3 + i] << 24 |
+                    bytes[2 + i] << 16 |
+                    bytes[1 + i] << 8 |
+                    bytes[i]
+                );
+            j++;
+            i+=4;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = intBits.pack(
+                    parseInt(bytes[3 + i], base) << 24 |
+                    parseInt(bytes[2 + i], base) << 16 |
+                    parseInt(bytes[1 + i], base) << 8 |
+                    parseInt(bytes[i], base)
+                );
+            j++;
+            i+=4;
+        }
     }
     return samples;
 }
@@ -267,25 +386,43 @@ function floatFrom4Bytes(bytes) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-function floatFrom8Bytes(bytes) {
+function floatFrom8Bytes(bytes, base=10) {
     let samples = [];
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    while (i < len) {
-        samples[j] = decodeFloat([
-                bytes[i],
-                bytes[1 + i],
-                bytes[2 + i],
-                bytes[3 + i],
-                bytes[4 + i],
-                bytes[5 + i],
-                bytes[6 + i],
-                bytes[7 + i]
-            ]);
-        j++;
-        i+=8;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = decodeFloat([
+                    bytes[i],
+                    bytes[1 + i],
+                    bytes[2 + i],
+                    bytes[3 + i],
+                    bytes[4 + i],
+                    bytes[5 + i],
+                    bytes[6 + i],
+                    bytes[7 + i]
+                ]);
+            j++;
+            i+=8;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = decodeFloat([
+                    parseInt(bytes[i], base),
+                    parseInt(bytes[i + 1], base),
+                    parseInt(bytes[i + 2], base),
+                    parseInt(bytes[i + 3], base),
+                    parseInt(bytes[i + 4], base),
+                    parseInt(bytes[i + 5], base),
+                    parseInt(bytes[i + 6], base),
+                    parseInt(bytes[i + 7], base),
+                ]);
+            j++;
+            i+=8;
+        }
     }
+    
     return samples;
 }
 
@@ -305,7 +442,7 @@ function stringFromBytes(bytes) {
     return string;
 }
 module.exports.intFromNibble = intFromNibble;
-module.exports.uIntFromNibble = uIntFromNibble;
+module.exports.uIntFromNibble = uIntFrom1Byte;
 module.exports.intFrom1Byte = intFrom1Byte;
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;

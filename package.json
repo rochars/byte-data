@@ -9,16 +9,13 @@
     "byte",
     "array",
     "int",
-    "float",
-    "double",
     "char",
     "string",
     "nibble",
     "8-bit",
     "16-bit",
     "24-bit",
-    "32-bit",
-    "64-bit"
+    "32-bit"
   ],
   "repository": {
     "type": "git",

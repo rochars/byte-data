@@ -3,14 +3,15 @@ Bytes to and from numbers and strings.
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
-[![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+[![Build Status](https://travis-ci.org/rochars/byte-data.svg?branch=master)](https://travis-ci.org/rochars/byte-data) [![Build status](https://ci.appveyor.com/api/projects/status/g2ellp44s7a0kvid?svg=true)](https://ci.appveyor.com/project/rochars/byte-data) [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![Stability](https://img.shields.io/badge/stability-experimental-red.svg)](https://www.npmjs.com/package/byte-data) 
+
 
 ## Install
 ```
 npm install byte-data
 ```
 
-Should work the same on Node.js and in the browser.
+For Node.js and the browser.
 
 Bytes are little-endian.
 
@@ -29,20 +30,17 @@ Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 - Unsigned 24-bit ints
 - Signed 32-bit ints
 - Unsigned 32-bit ints
-- 32-bit float
-- 64-bit double
 - Strings
 
-Byte-reading functions only accept **arrays of decimal numbers** as input.
-Byte-writing functions can output the bytes represented as **decimals**, **hex** and **binaries**. Decimal is assumed by default.
+The bytes can be **decimals**, **hex** and **binaries**. Decimal is assumed by default.
 
 ## Example
 ```javascript
 intTo4Bytes([-2147483648, 2147483647]);
 // returns [0,0,0,128,255,255,255,127]
 
-floatFrom8Bytes([75, 40, 253, 58, 221, 154, 191, 63]);
-// returns [0.123456789876543]
+intFrom4Bytes([0,0,0,128,255,255,255,127]);
+// returns [-2147483648, 2147483647]
 ```
 
 ## Use
@@ -55,8 +53,6 @@ let byteData = require('byte-data');
  * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
  * @return {!Array<number>} the bytes.
  */
-bytes = byteData.doubleTo8Bytes(numbers);
-bytes = byteData.floatTo4Bytes(numbers);
 bytes = byteData.intTo4Bytes(numbers);
 bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
@@ -68,8 +64,6 @@ bytes = byteData.intToNibble(numbers);
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {!Array<number>} The numbers.
  */
-numbers = byteData.doubleFrom8Bytes(bytes);
-numbers = byteData.floatFrom4Bytes(bytes);
 numbers = byteData.intFrom4Bytes(bytes);
 numbers = byteData.uIntFrom4Bytes(bytes);
 numbers = byteData.intFrom3Bytes(bytes);
@@ -98,8 +92,8 @@ byteData.intTo4Bytes([-2147483648]);
 
 To get hex values:
 ```javascript
-byteData.doubleTo8Bytes([-1], 16)
-//['0','0','0','0','0','0','f0','bf']
+byteData.intTo4Bytes([-2147483648], 16)
+//["0", "0","0","80",]
 ```
 
 To get binaries:
@@ -136,12 +130,6 @@ byteData.intTo4Bytes([-2147483648], 16);
 
 //struct.pack('<I', 4294967295)
 byteData.intTo4Bytes([4294967295], 16);
-
-//struct.pack('<f', 0.5)
-byteData.floatTo4Bytes([0.5], 16);
-
-//struct.pack('<d', 0.5)
-byteData.doubleTo8Bytes([0.5], 16);
 ```
 
 ## Browser
