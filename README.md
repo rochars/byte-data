@@ -112,7 +112,32 @@ byteData.intToNibbles([6], 2)
 //["0110"]
 ```
 
-### Python struct.pack VS Node.js byte-data
+### Pack your nibbles
+
+Packing nibbles:
+```javascript
+byteData.packNibbles([15,15,1,4,1,15]);
+//[255,20,31]);
+```
+This will pack 2 nibbles into one byte.
+
+Unpacking nibbles:
+```javascript
+byteData.unpackNibbles([255,20,31]);
+//[15,15,1,4,1,15]
+```
+
+## Browser
+```html
+<script src="byte-data-min.js"></script>
+<script>
+    let byteString = stringToBytes("ab"); // [97, 98]
+    let myString = stringFromBytes([97, 98]); //"ab";
+    ...
+</script>
+```
+
+## Python struct.pack VS Node.js byte-data
 ```javascript
 //struct.pack('<c', "a")
 byteData.stringToBytes("a", 16);
@@ -134,16 +159,6 @@ byteData.intTo4Bytes([-2147483648], 16);
 
 //struct.pack('<I', 4294967295)
 byteData.intTo4Bytes([4294967295], 16);
-```
-
-## Browser
-```html
-<script src="byte-data-min.js"></script>
-<script>
-    var byteStr = stringToBytes("ab"); // [97, 98]
-    var myStr = stringFromBytes([97, 98]); //"ab";
-    ...
-</script>
 ```
 
 ## LICENSE

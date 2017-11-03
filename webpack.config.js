@@ -16,7 +16,7 @@ module.exports = {
         loader: 'string-replace-loader',
         query: {
           multiple: [
-            // to
+            // to 
             {
               search: 'module.exports.doubleTo8Bytes',
               replace: "window['doubleTo8Bytes']",
@@ -123,6 +123,14 @@ module.exports = {
               search: 'module.exports.findString',
               replace: "window['findString']",
             },
+            {
+              search: 'module.exports.packNibbles',
+              replace: "window['packNibbles']",
+            }, 
+            {
+              search: 'module.exports.unpackNibbles',
+              replace: "window['unpackNibbles']",
+            }
           ]
         }
       }
