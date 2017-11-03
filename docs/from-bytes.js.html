@@ -71,8 +71,26 @@ function decodeFloat(bytes) {
 }
 
 /**
+ * Read numbers from a array of booleans.
+ * @param {!Array&lt;number>|Uint8Array} booleans An array of booleans.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array&lt;number>} The numbers.
+ */
+function fromBoolean(booleans, base=10) {
+    let samples = [];
+    let i = 0;
+    let len = booleans.length;
+    while (i &lt; len) {
+        samples[i] = parseInt(parseInt(booleans[i], base), 2);
+        i++;
+    }
+    return samples;
+}
+
+/**
  * Read 4-bit signed ints from an array of nibbles.
  * @param {!Array&lt;number>|Uint8Array} nibbles An array of nibbles.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function intFromNibble(nibbles, base=10) {
@@ -85,7 +103,7 @@ function intFromNibble(nibbles, base=10) {
             if (samples[i] > 7) {
                 samples[i] -= 16;
             }
-            i+=1;
+            i++;
         }
     } else {
         while (i &lt; len) {
@@ -93,7 +111,7 @@ function intFromNibble(nibbles, base=10) {
             if (samples[i] > 7) {
                 samples[i] -= 16;
             }
-            i+=1;
+            i++;
         }
     }
     return samples;
@@ -103,6 +121,7 @@ function intFromNibble(nibbles, base=10) {
  * Read 8-bit unsigned ints from an array of bytes.
  * Just return a copy of the original array.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom1Byte(bytes, base=10) {
@@ -123,6 +142,7 @@ function uIntFrom1Byte(bytes, base=10) {
 /**
  * Read 8-bit signed ints from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom1Byte(bytes, base=10) {
@@ -135,7 +155,7 @@ function intFrom1Byte(bytes, base=10) {
             if (samples[i] > 127) {
                 samples[i] -= 256;
             }
-            i+=1;
+            i++;
         }
     } else {
         while (i &lt; len) {
@@ -143,7 +163,7 @@ function intFrom1Byte(bytes, base=10) {
             if (samples[i] > 127) {
                 samples[i] -= 256;
             }
-            i+=1;
+            i++;
         }
     }
     return samples;
@@ -153,6 +173,7 @@ function intFrom1Byte(bytes, base=10) {
  * Read 16-bit signed ints from an array of bytes.
  * Thanks https://stackoverflow.com/a/38298413
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom2Bytes(bytes, base=10) {
@@ -187,6 +208,7 @@ function intFrom2Bytes(bytes, base=10) {
 /**
  * Read 16-bit unsigned ints from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom2Bytes(bytes, base=10) {
@@ -215,6 +237,7 @@ function uIntFrom2Bytes(bytes, base=10) {
 /**
  * Read 24-bit signed ints from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom3Bytes(bytes, base=10) {
@@ -260,6 +283,7 @@ function intFrom3Bytes(bytes, base=10) {
 /**
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom3Bytes(bytes, base=10) {
@@ -295,6 +319,7 @@ function uIntFrom3Bytes(bytes, base=10) {
 /**
  * Read 32-bit signed ints from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom4Bytes(bytes, base=10) {
@@ -338,6 +363,7 @@ function intFrom4Bytes(bytes, base=10) {
 /**
  * Read 32-bit unsigned ints from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom4Bytes(bytes, base=10) {
@@ -376,6 +402,7 @@ function uIntFrom4Bytes(bytes, base=10) {
 /**
  * Read 8-bit IEEE numbers from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function floatFrom4Bytes(bytes, base=10) {
@@ -412,6 +439,7 @@ function floatFrom4Bytes(bytes, base=10) {
 /**
  * Read 64-bit IEEE numbers from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array&lt;number>} The numbers.
  */
 function floatFrom8Bytes(bytes, base=10) {
@@ -459,16 +487,25 @@ function floatFrom8Bytes(bytes, base=10) {
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
  * @return {string} The string.
  */
-function stringFromBytes(bytes) {
+function stringFromBytes(bytes, base=10) {
     let string = "";
     let i = 0;
     let len = bytes.length;
-    while (i &lt; len) {
-        string += String.fromCharCode(bytes[i]);
-        i++;
-    }    
+    if (base == 10) {
+        while (i &lt; len) {
+            string += String.fromCharCode(bytes[i]);
+            i++;
+        }
+    } else {
+        while (i &lt; len) {
+            string += String.fromCharCode(parseInt(bytes[i], base));
+            i++;
+        }
+    }
     return string;
 }
+
+module.exports.fromBoolean = fromBoolean;
 module.exports.intFromNibble = intFromNibble;
 module.exports.uIntFromNibble = uIntFrom1Byte;
 module.exports.intFrom1Byte = intFrom1Byte;
@@ -492,13 +529,13 @@ module.exports.stringFromBytes = stringFromBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 03 2017 01:05:13 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 03 2017 02:19:24 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

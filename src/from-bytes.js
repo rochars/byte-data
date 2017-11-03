@@ -43,8 +43,26 @@ function decodeFloat(bytes) {
 }
 
 /**
+ * Read numbers from a array of booleans.
+ * @param {!Array<number>|Uint8Array} booleans An array of booleans.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function fromBoolean(booleans, base=10) {
+    let samples = [];
+    let i = 0;
+    let len = booleans.length;
+    while (i < len) {
+        samples[i] = parseInt(parseInt(booleans[i], base), 2);
+        i++;
+    }
+    return samples;
+}
+
+/**
  * Read 4-bit signed ints from an array of nibbles.
  * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFromNibble(nibbles, base=10) {
@@ -57,7 +75,7 @@ function intFromNibble(nibbles, base=10) {
             if (samples[i] > 7) {
                 samples[i] -= 16;
             }
-            i+=1;
+            i++;
         }
     } else {
         while (i < len) {
@@ -65,7 +83,7 @@ function intFromNibble(nibbles, base=10) {
             if (samples[i] > 7) {
                 samples[i] -= 16;
             }
-            i+=1;
+            i++;
         }
     }
     return samples;
@@ -75,6 +93,7 @@ function intFromNibble(nibbles, base=10) {
  * Read 8-bit unsigned ints from an array of bytes.
  * Just return a copy of the original array.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes, base=10) {
@@ -95,6 +114,7 @@ function uIntFrom1Byte(bytes, base=10) {
 /**
  * Read 8-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFrom1Byte(bytes, base=10) {
@@ -107,7 +127,7 @@ function intFrom1Byte(bytes, base=10) {
             if (samples[i] > 127) {
                 samples[i] -= 256;
             }
-            i+=1;
+            i++;
         }
     } else {
         while (i < len) {
@@ -115,7 +135,7 @@ function intFrom1Byte(bytes, base=10) {
             if (samples[i] > 127) {
                 samples[i] -= 256;
             }
-            i+=1;
+            i++;
         }
     }
     return samples;
@@ -125,6 +145,7 @@ function intFrom1Byte(bytes, base=10) {
  * Read 16-bit signed ints from an array of bytes.
  * Thanks https://stackoverflow.com/a/38298413
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes, base=10) {
@@ -159,6 +180,7 @@ function intFrom2Bytes(bytes, base=10) {
 /**
  * Read 16-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom2Bytes(bytes, base=10) {
@@ -187,6 +209,7 @@ function uIntFrom2Bytes(bytes, base=10) {
 /**
  * Read 24-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFrom3Bytes(bytes, base=10) {
@@ -232,6 +255,7 @@ function intFrom3Bytes(bytes, base=10) {
 /**
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes, base=10) {
@@ -267,6 +291,7 @@ function uIntFrom3Bytes(bytes, base=10) {
 /**
  * Read 32-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFrom4Bytes(bytes, base=10) {
@@ -310,6 +335,7 @@ function intFrom4Bytes(bytes, base=10) {
 /**
  * Read 32-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes, base=10) {
@@ -348,6 +374,7 @@ function uIntFrom4Bytes(bytes, base=10) {
 /**
  * Read 8-bit IEEE numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes, base=10) {
@@ -384,6 +411,7 @@ function floatFrom4Bytes(bytes, base=10) {
 /**
  * Read 64-bit IEEE numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes, base=10) {
@@ -431,16 +459,25 @@ function floatFrom8Bytes(bytes, base=10) {
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @return {string} The string.
  */
-function stringFromBytes(bytes) {
+function stringFromBytes(bytes, base=10) {
     let string = "";
     let i = 0;
     let len = bytes.length;
-    while (i < len) {
-        string += String.fromCharCode(bytes[i]);
-        i++;
-    }    
+    if (base == 10) {
+        while (i < len) {
+            string += String.fromCharCode(bytes[i]);
+            i++;
+        }
+    } else {
+        while (i < len) {
+            string += String.fromCharCode(parseInt(bytes[i], base));
+            i++;
+        }
+    }
     return string;
 }
+
+module.exports.fromBoolean = fromBoolean;
 module.exports.intFromNibble = intFromNibble;
 module.exports.uIntFromNibble = uIntFrom1Byte;
 module.exports.intFrom1Byte = intFrom1Byte;

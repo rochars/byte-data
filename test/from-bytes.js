@@ -243,9 +243,46 @@ describe('from-bytes', function() {
         });
 
 
+        // booleans
+        it('should turn 1 boolean bin to 1 number (1)', function() {
+            assert.deepEqual(byteData.fromBoolean(['1'], 2),
+                [1]);
+        });
+        it('should turn 1 boolean hex to 1 number (1)', function() {
+            assert.deepEqual(byteData.fromBoolean([1], 16),
+                [1]);
+        });
+        it('should turn 1 value to 1 booolean decimal (1)', function() {
+            assert.deepEqual(byteData.fromBoolean([1]),
+                [1]);
+        });
+        it('should turn 1 value to 1 booolean bin (0)', function() {
+            assert.deepEqual(byteData.fromBoolean(['0'], 2),
+                [0]);
+        });
+        it('should turn 1 value to 1 booolean hex (0)', function() {
+            assert.deepEqual(byteData.fromBoolean(['0'], 16),
+                [0]);
+        });
+        it('should turn 1 value to 1 booolean decimal (0)', function() {
+            assert.deepEqual(byteData.fromBoolean([0]),
+                [0]);
+        });
+
+
         it('should turn bytes to a string', function() {
             assert.deepEqual(byteData.stringFromBytes(
                 [97, 98]),
+                "ab");
+        });
+        it('should turn hex bytes to a string', function() {
+            assert.deepEqual(byteData.stringFromBytes(
+                ["61", "62"], 16),
+                "ab");
+        });
+        it('should turn bin bytes to a string', function() {
+            assert.deepEqual(byteData.stringFromBytes(
+                ["01100001", "01100010"], 2),
                 "ab");
         });
     });

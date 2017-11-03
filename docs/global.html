@@ -239,7 +239,7 @@
     
 
     
-    <h4 class="name" id="floatFrom4Bytes"><span class="type-signature"></span>floatFrom4Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="floatFrom4Bytes"><span class="type-signature"></span>floatFrom4Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -273,6 +273,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -301,8 +303,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -343,7 +378,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line353">line 353</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line380">line 380</a>
     </li></ul></dd>
     
 
@@ -399,7 +434,7 @@
     
 
     
-    <h4 class="name" id="floatFrom8Bytes"><span class="type-signature"></span>floatFrom8Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="floatFrom8Bytes"><span class="type-signature"></span>floatFrom8Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -433,6 +468,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -461,8 +498,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -503,7 +573,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line389">line 389</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line417">line 417</a>
     </li></ul></dd>
     
 
@@ -660,7 +730,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line104">line 104</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -817,7 +887,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line44">line 44</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -873,7 +943,202 @@
     
 
     
-    <h4 class="name" id="intFrom1Byte"><span class="type-signature"></span>intFrom1Byte<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="fromBoolean"><span class="type-signature"></span>fromBoolean<span class="signature">(booleans, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Read numbers from a array of booleans.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>booleans</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">!Array.&lt;number></span>
+|
+
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">An array of booleans.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The numbers.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="intFrom1Byte"><span class="type-signature"></span>intFrom1Byte<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -907,6 +1172,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -935,8 +1202,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -977,7 +1277,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line100">line 100</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -1033,7 +1333,7 @@
     
 
     
-    <h4 class="name" id="intFrom2Bytes"><span class="type-signature"></span>intFrom2Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="intFrom2Bytes"><span class="type-signature"></span>intFrom2Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -1067,6 +1367,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1095,8 +1397,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -1137,7 +1472,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line130">line 130</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -1193,7 +1528,7 @@
     
 
     
-    <h4 class="name" id="intFrom3Bytes"><span class="type-signature"></span>intFrom3Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="intFrom3Bytes"><span class="type-signature"></span>intFrom3Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -1227,6 +1562,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1255,8 +1592,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -1297,7 +1667,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line192">line 192</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line215">line 215</a>
     </li></ul></dd>
     
 
@@ -1353,7 +1723,7 @@
     
 
     
-    <h4 class="name" id="intFrom4Bytes"><span class="type-signature"></span>intFrom4Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="intFrom4Bytes"><span class="type-signature"></span>intFrom4Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -1387,6 +1757,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1415,8 +1787,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -1457,7 +1862,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line272">line 272</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line297">line 297</a>
     </li></ul></dd>
     
 
@@ -1513,7 +1918,7 @@
     
 
     
-    <h4 class="name" id="intFromNibble"><span class="type-signature"></span>intFromNibble<span class="signature">(nibbles)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="intFromNibble"><span class="type-signature"></span>intFromNibble<span class="signature">(nibbles, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -1547,6 +1952,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1575,8 +1982,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of nibbles.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -1617,7 +2057,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line50">line 50</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -1774,7 +2214,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line310">line 310</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line317">line 317</a>
     </li></ul></dd>
     
 
@@ -1931,7 +2371,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line282">line 282</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line289">line 289</a>
     </li></ul></dd>
     
 
@@ -2088,7 +2528,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line251">line 251</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line258">line 258</a>
     </li></ul></dd>
     
 
@@ -2245,7 +2685,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line217">line 217</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line224">line 224</a>
     </li></ul></dd>
     
 
@@ -2402,7 +2842,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line180">line 180</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -2559,7 +2999,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line140">line 140</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line147">line 147</a>
     </li></ul></dd>
     
 
@@ -2623,7 +3063,7 @@
 
 
 <div class="description">
-    Split a 4-bit int numbers into a nibbles.
+    4-bit int numbers into a nibbles.
 </div>
 
 
@@ -2716,7 +3156,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line335">line 335</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line342">line 342</a>
     </li></ul></dd>
     
 
@@ -2761,6 +3201,187 @@
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="padding"><span class="type-signature"></span>padding<span class="signature">(bytes<span class="signature-attributes">non-null</span>, base, index)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Padding for binary strings.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bytes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bytes as binary strings.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The base.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The byte to to pad.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2876,7 +3497,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line434">line 434</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line462">line 462</a>
     </li></ul></dd>
     
 
@@ -3033,7 +3654,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line363">line 363</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line395">line 395</a>
     </li></ul></dd>
     
 
@@ -3061,6 +3682,198 @@
         
 <div class="param-desc">
     the bytes.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toBoolean"><span class="type-signature"></span>toBoolean<span class="signature">(values<span class="signature-attributes">non-null</span>, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Values to boolean form.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>values</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Array of numbers.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line371">line 371</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the booleans.
 </div>
 
 
@@ -3190,7 +4003,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line20">line 20</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -3224,7 +4037,7 @@
     
 
     
-    <h4 class="name" id="uIntFrom1Byte"><span class="type-signature"></span>uIntFrom1Byte<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="uIntFrom1Byte"><span class="type-signature"></span>uIntFrom1Byte<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -3258,6 +4071,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -3286,8 +4101,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -3328,7 +4176,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line80">line 80</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line99">line 99</a>
     </li></ul></dd>
     
 
@@ -3384,7 +4232,7 @@
     
 
     
-    <h4 class="name" id="uIntFrom2Bytes"><span class="type-signature"></span>uIntFrom2Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="uIntFrom2Bytes"><span class="type-signature"></span>uIntFrom2Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -3418,6 +4266,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -3446,8 +4296,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -3488,7 +4371,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line164">line 164</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line186">line 186</a>
     </li></ul></dd>
     
 
@@ -3544,7 +4427,7 @@
     
 
     
-    <h4 class="name" id="uIntFrom3Bytes"><span class="type-signature"></span>uIntFrom3Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="uIntFrom3Bytes"><span class="type-signature"></span>uIntFrom3Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -3578,6 +4461,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -3606,8 +4491,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -3648,7 +4566,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line237">line 237</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line261">line 261</a>
     </li></ul></dd>
     
 
@@ -3704,7 +4622,7 @@
     
 
     
-    <h4 class="name" id="uIntFrom4Bytes"><span class="type-signature"></span>uIntFrom4Bytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="uIntFrom4Bytes"><span class="type-signature"></span>uIntFrom4Bytes<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -3738,6 +4656,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -3766,8 +4686,41 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last">The base. Defaults to 10.</td>
         </tr>
 
     
@@ -3808,7 +4761,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line315">line 315</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line341">line 341</a>
     </li></ul></dd>
     
 
@@ -3874,13 +4827,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 03 2017 01:05:13 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 03 2017 02:19:24 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

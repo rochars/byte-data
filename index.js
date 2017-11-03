@@ -39,6 +39,7 @@ module.exports.intTo3Bytes = toBytes.intTo3Bytes;
 module.exports.intTo2Bytes = toBytes.intTo2Bytes;
 module.exports.intTo1Byte = toBytes.intTo1Byte;
 module.exports.intToNibble = toBytes.intToNibble;
+module.exports.toBoolean = toBytes.toBoolean;
 
 module.exports.floatFrom8Bytes = fromBytes.floatFrom8Bytes;
 module.exports.doubleFrom8Bytes = fromBytes.floatFrom8Bytes;
@@ -53,3 +54,4 @@ module.exports.intFrom1Byte = fromBytes.intFrom1Byte;
 module.exports.uIntFrom1Byte = fromBytes.uIntFrom1Byte;
 module.exports.intFromNibble = fromBytes.intFromNibble;
 module.exports.uIntFromNibble = fromBytes.uIntFromNibble;
+module.exports.fromBoolean = fromBytes.fromBoolean;

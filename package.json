@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Bytes to and from numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -11,6 +11,7 @@
     "int",
     "char",
     "string",
+    "boolean",
     "nibble",
     "8-bit",
     "16-bit",

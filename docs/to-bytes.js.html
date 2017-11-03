@@ -34,9 +34,16 @@
 
 const intBits = require("int-bits");
 
-function padding(bytes, base, i) {
-    if (base == 2 &amp;&amp; bytes[i].length &lt; 8) {
-        bytes[i] = new Array((9 - bytes[i].length)).join("0")  + bytes[i];
+/**
+ * Padding for binary strings.
+ * @param {!Array&lt;string>} bytes The bytes as binary strings.
+ * @param {number} base The base.
+ * @param {number} index The byte to to pad.
+ */
+function padding(bytes, base, index) {
+    if (base == 2 &amp;&amp; bytes[index].length &lt; 8) {
+        bytes[index] = 
+            new Array((9 - bytes[index].length)).join("0")  + bytes[index];
     }
 }
 
@@ -356,7 +363,7 @@ function intTo1Byte(numbers, base=10) {
 }
 
 /**
- * Split a 4-bit int numbers into a nibbles.
+ * 4-bit int numbers into a nibbles.
  * @param {!Array&lt;number>} numbers int8 numbers.
  * @return {!Array&lt;number>} the bytes.
  */
@@ -381,6 +388,31 @@ function intToNibble(numbers, base=10) {
         }
     }
     return bytes;
+}
+
+/**
+ * Values to boolean form.
+ * @param {!Array&lt;number>} values Array of numbers.
+ * @param {number} base The base.
+ * @return {!Array&lt;number>} the booleans.
+ */
+function toBoolean(values, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = values.length;
+    let booleans = [];
+    if (base == 10) {
+        while (i &lt; len) {
+            booleans[j++] = values[i] ? 1 : 0;
+            i++;
+        }
+    } else {
+        while (i &lt; len) {
+            booleans[j++] = values[i] ? "1" : "0";
+            i++;
+        }
+    }
+    return booleans;
 }
 
 /**
@@ -417,6 +449,7 @@ module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
 module.exports.intTo1Byte = intTo1Byte;
 module.exports.intToNibble = intToNibble;
+module.exports.toBoolean = toBoolean;
 module.exports.stringToBytes = stringToBytes;
 </code></pre>
         </article>
@@ -428,13 +461,13 @@ module.exports.stringToBytes = stringToBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 03 2017 01:05:13 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 03 2017 02:19:24 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

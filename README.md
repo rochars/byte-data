@@ -19,7 +19,10 @@ Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 
 **byte-data** functions always return regular **arrays**.
 
+Bytes can be represented as **numbers** or as **hex** and **binary** strings both in the input and the output. Decimal is assumed by default in both cases.
+
 ### Supports:
+- booleans
 - Signed nibbles
 - Unsigned nibbles
 - Signed 8-bit ints
@@ -31,8 +34,6 @@ Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 - Signed 32-bit ints
 - Unsigned 32-bit ints
 - Strings
-
-The bytes can be **decimals**, **hex** and **binaries**. Decimal is assumed by default.
 
 ## Example
 ```javascript
@@ -58,6 +59,7 @@ bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
 bytes = byteData.intToNibble(numbers);
+bytes = byteData.toBoolean(numbers);
 
 /**
  * numbers from bytes, all:
@@ -74,6 +76,7 @@ numbers = byteData.intFrom1Byte(bytes);
 numbers = byteData.uIntFrom1Byte(bytes);
 numbers = byteData.intFromNibble(bytes);
 numbers = byteData.uIntFromNibble(bytes);
+numbers = byteData.fromBoolean(bytes);
 
 // strings
 bytes = byteData.stringToBytes(string);

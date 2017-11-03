@@ -6,9 +6,16 @@
 
 const intBits = require("int-bits");
 
-function padding(bytes, base, i) {
-    if (base == 2 && bytes[i].length < 8) {
-        bytes[i] = new Array((9 - bytes[i].length)).join("0")  + bytes[i];
+/**
+ * Padding for binary strings.
+ * @param {!Array<string>} bytes The bytes as binary strings.
+ * @param {number} base The base.
+ * @param {number} index The byte to to pad.
+ */
+function padding(bytes, base, index) {
+    if (base == 2 && bytes[index].length < 8) {
+        bytes[index] = 
+            new Array((9 - bytes[index].length)).join("0")  + bytes[index];
     }
 }
 
@@ -328,7 +335,7 @@ function intTo1Byte(numbers, base=10) {
 }
 
 /**
- * Split a 4-bit int numbers into a nibbles.
+ * 4-bit int numbers into a nibbles.
  * @param {!Array<number>} numbers int8 numbers.
  * @return {!Array<number>} the bytes.
  */
@@ -353,6 +360,31 @@ function intToNibble(numbers, base=10) {
         }
     }
     return bytes;
+}
+
+/**
+ * Values to boolean form.
+ * @param {!Array<number>} values Array of numbers.
+ * @param {number} base The base.
+ * @return {!Array<number>} the booleans.
+ */
+function toBoolean(values, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = values.length;
+    let booleans = [];
+    if (base == 10) {
+        while (i < len) {
+            booleans[j++] = values[i] ? 1 : 0;
+            i++;
+        }
+    } else {
+        while (i < len) {
+            booleans[j++] = values[i] ? "1" : "0";
+            i++;
+        }
+    }
+    return booleans;
 }
 
 /**
@@ -389,4 +421,5 @@ module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
 module.exports.intTo1Byte = intTo1Byte;
 module.exports.intToNibble = intToNibble;
+module.exports.toBoolean = toBoolean;
 module.exports.stringToBytes = stringToBytes;
