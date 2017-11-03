@@ -64,6 +64,7 @@ bytes = byteData.toBoolean(numbers);
 /**
  * numbers from bytes, all:
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 numbers = byteData.intFrom4Bytes(bytes);

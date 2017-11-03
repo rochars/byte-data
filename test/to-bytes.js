@@ -78,6 +78,10 @@ describe('to-bytes', function() {
         });
 
         // 40 bit
+        it('should turn 5 bytes (hex) to 1 signed 40-bit int  (max range)', function() {
+            assert.deepEqual(byteData.intTo5Bytes([549755813887], 16),
+                ["ff","ff","ff","ff","7f"]);
+        });
         it('should turn 1 signed 40-bit int to 5 bytes (hex) (max range)', function() {
             assert.deepEqual(byteData.intTo5Bytes([-549755813888], 16),
                 ["0","0","0","0","80"]);

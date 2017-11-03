@@ -23,19 +23,19 @@ describe('from-bytes', function() {
         });
         it('should turn 8 bytes to 1 64-bit float', function() {
             assert.equal(byteData.floatFrom8Bytes(
-                [0,0,0,0,0,0,0,0])[0].toFixed(20),
+                [0,0,0,0,0,0,0,0])[0].toFixed(15),
                 0);
         });
         it('should turn 16 bytes to 2 64-bit floats', function() {
             assert.equal(byteData.floatFrom8Bytes(
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])[0].toFixed(20),
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])[0].toFixed(15),
                 0);
             assert.equal(byteData.floatFrom8Bytes(
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])[1].toFixed(20),
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])[1].toFixed(15),
                 0);
         });
 
-        /*
+        
         it('should turn 8 bytes bin to 1 64-bit float', function() {
             assert.equal(byteData.floatFrom8Bytes(
                 [
@@ -47,9 +47,11 @@ describe('from-bytes', function() {
                     "00000000",
                     "00000000",
                     "00000000"
-                ], 2)[0].toFixed(20),
+                ], 2)[0].toFixed(15),
                 0);
         });
+        
+
         it('should turn 8 bytes bin to 1 64-bit float', function() {
             assert.equal(byteData.floatFrom8Bytes(
                 [
@@ -61,39 +63,71 @@ describe('from-bytes', function() {
                     "10011010",
                     "10111111",
                     "00111111"
-                ], 2)[0].toFixed(20),
+                ], 2)[0].toFixed(15),
                 0.123456789876543);
         });
+        
         
         // 32
         it('should turn 4 bytes bin to 1 32-bit float', function() {
             assert.deepEqual(byteData.floatFrom4Bytes(
-                ["01011111","01110000","00001001","01000000"], 2),
-                [2.147483647]);
+                ["01011111","01110000","00001001","01000000"], 2)[0].toFixed(7),
+                2.1474836);
         });
+        
         it('should turn 4 bytes hex to 1 32-bit float', function() {
             assert.deepEqual(byteData.floatFrom4Bytes(
-                ["5f","70","9","40"], 16),
-                [2.147483647]);
+                ["5f","70","9","40"], 16)[0].toFixed(7),
+                2.1474836);
         });
-        it('should turn 1 32-bit float to 4 bytes (pi)', function() {
+        it('should turn 1 32-bit float to 4 bytes', function() {
             assert.deepEqual(
-                byteData.floatFrom4Bytes([95,112,9,64]),
-                [2.147483647]
-            );
+                byteData.floatFrom4Bytes([95,112,9,64])[0].toFixed(7),
+                2.1474836);
         });
         it('should turn 8 bytes to 2 32-bit floats', function() {
             assert.deepEqual(byteData.floatFrom4Bytes(
                 [0,0,0,0,0,0,0,0]),
                 [0,0]);
         });
+        
+        /*
+        // 40 bit
+        it('should turn 5 bytes (hex) to 1 signed 40-bit int  (549755813887)', function() {
+            assert.deepEqual(byteData.uIntFrom5Bytes(["0","0","0","ff","ff"], 16),
+                [65535]);
+        });
+        it('should turn 5 bytes (hex) to 1 signed 40-bit int  (549755813887)', function() {
+            assert.deepEqual(byteData.uIntFrom5Bytes(["ff","ff","ff","ff","7f"], 16),
+                [549755813887]);
+        });
+        //500000000080
+        it('should turn 5 bytes (bin) to 1 signed 40-bit int  (549755813887)', function() {
+            //assert.deepEqual(byteData.uIntFrom5Bytes(["01110100", "01101010", "01010010", "10001000", "01010000"], 2),
+            assert.deepEqual(byteData.uIntFrom5Bytes(["01010000", "10001000", "01010010",  "01101010",  "01110100" ], 2),
+                [500000000080]);
+        });
+        it('should turn 5 bytes to 1 signed 40-bit int  (549755813887)', function() {
+            //assert.deepEqual(byteData.uIntFrom5Bytes(["01110100", "01101010", "01010010", "10001000", "01010000"], 2),
+            assert.deepEqual(byteData.uIntFrom5Bytes([80, 136, 82,  106,  116 ], 2),
+                [500000000080]);
+        });
+
+        it('should turn 5 bytes (dec) to 1 unsigned 40-bit int (max range)', function() {
+            assert.deepEqual(byteData.uIntFrom5Bytes(["ff","ff","ff","ff","ff"], 16),
+                [1099511627775]);
+        });
+        it('should turn 5 bytes (bin) to 1 unsigned 40-bit int (max range)', function() {
+            assert.deepEqual(byteData.uIntFrom5Bytes([255,255,255,255,255]),
+                [1099511627775]);
+        });
         */
-        it('should turn 8 bytes to 2 32-bit ints', function() {
+
+        it('should turn 8 bytes to 2 32-bit ints (0s)', function() {
             assert.deepEqual(byteData.intFrom4Bytes(
                 [0,0,0,0,0,0,0,0]),
                 [0,0]);
         });
-
 
         it('should turn 8 bytes bin to 2 32-bit ints (max range)', function() {
             assert.deepEqual(byteData.intFrom4Bytes(
@@ -182,6 +216,11 @@ describe('from-bytes', function() {
             assert.deepEqual(byteData.uIntFrom1Byte(
                 ["0","ff"], 16),
                 [0, 255]);
+        });
+        it('should turn 1 hex byte to a 8-bit int (max range)', function() {
+            assert.deepEqual(byteData.intFrom1Byte(
+                ["ff","7f"], 16),
+                [-1, 127]);
         });
         it('should turn 1 hex byte to a 8-bit int (max range)', function() {
             assert.deepEqual(byteData.intFrom1Byte(

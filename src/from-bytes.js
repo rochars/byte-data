@@ -372,7 +372,7 @@ function uIntFrom4Bytes(bytes, base=10) {
 }
 
 /**
- * Read 8-bit IEEE numbers from an array of bytes.
+ * Read 32-bit IEEE numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
@@ -409,7 +409,7 @@ function floatFrom4Bytes(bytes, base=10) {
 }
 
 /**
- * Read 64-bit IEEE numbers from an array of bytes.
+ * Read 64-bit numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
