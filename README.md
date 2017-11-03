@@ -98,7 +98,7 @@ byteData.intTo4Bytes([-2147483648]);
 
 To get hex values:
 ```javascript
-byteData.floatTo8Bytes([-1], 16)
+byteData.doubleTo8Bytes([-1], 16)
 //['0','0','0','0','0','0','f0','bf']
 ```
 

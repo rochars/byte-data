@@ -18,7 +18,7 @@ module.exports = {
           multiple: [
             // to
             {
-              search: 'module.exports.floatTo8Bytes',
+              search: 'module.exports.doubleTo8Bytes',
               replace: "window['doubleTo8Bytes']",
             },
             {
@@ -54,11 +54,23 @@ module.exports = {
               replace: "window['intTo1Byte']",
             },
             {
+              search: 'module.exports.intToNibble',
+              replace: "window['intToNibble']",
+            },
+            {
               search: 'module.exports.stringToBytes',
               replace: "window['stringToBytes']",
             },
 
             // from
+            {
+              search: 'module.exports.intFromNibble',
+              replace: "window['intFromNibble']",
+            },
+            {
+              search: 'module.exports.uIntFromNibble',
+              replace: "window['uIntFromNibble']",
+            },
             {
               search: 'module.exports.intFrom1Byte',
               replace: "window['intFrom1Byte']",
@@ -98,6 +110,10 @@ module.exports = {
             {
               search: 'module.exports.floatFrom8Bytes',
               replace: "window['floatFrom8Bytes']",
+            },
+            {
+              search: 'module.exports.doubleFrom8Bytes',
+              replace: "window['doubleFrom8Bytes']",
             },
             {
               search: 'module.exports.stringFromBytes',

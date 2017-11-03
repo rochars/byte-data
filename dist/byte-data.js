@@ -120,8 +120,8 @@ window['findString'] = findString;
 window['stringToBytes'] = toBytes.stringToBytes;
 window['stringFromBytes'] = fromBytes.stringFromBytes;
 
-module.exports.doubleTo8Bytes = toBytes.floatTo8Bytes;
 window['doubleTo8Bytes'] = toBytes.floatTo8Bytes;
+window['floatTo8Bytes'] = toBytes.floatTo8Bytes;
 window['floatTo4Bytes'] = toBytes.floatTo4Bytes;
 window['intTo6Bytes'] = toBytes.intTo6Bytes;
 window['intTo5Bytes'] = toBytes.intTo5Bytes;
@@ -129,10 +129,10 @@ window['intTo4Bytes'] = toBytes.intTo4Bytes;
 window['intTo3Bytes'] = toBytes.intTo3Bytes;
 window['intTo2Bytes'] = toBytes.intTo2Bytes;
 window['intTo1Byte'] = toBytes.intTo1Byte;
-module.exports.intToNibble = toBytes.intToNibble;
+window['intToNibble'] = toBytes.intToNibble;
 
 window['floatFrom8Bytes'] = fromBytes.floatFrom8Bytes;
-module.exports.doubleFrom8Bytes = fromBytes.floatFrom8Bytes;
+window['doubleFrom8Bytes'] = fromBytes.floatFrom8Bytes;
 window['intFrom4Bytes'] = fromBytes.intFrom4Bytes;
 window['uIntFrom4Bytes'] = fromBytes.uIntFrom4Bytes;
 window['floatFrom4Bytes'] = fromBytes.floatFrom4Bytes;
@@ -142,8 +142,8 @@ window['intFrom2Bytes'] = fromBytes.intFrom2Bytes;
 window['uIntFrom2Bytes'] = fromBytes.uIntFrom2Bytes;
 window['intFrom1Byte'] = fromBytes.intFrom1Byte;
 window['uIntFrom1Byte'] = fromBytes.uIntFrom1Byte;
-module.exports.intFromNibble = fromBytes.intFromNibble;
-module.exports.uIntFromNibble = fromBytes.uIntFromNibble;
+window['intFromNibble'] = fromBytes.intFromNibble;
+window['uIntFromNibble'] = fromBytes.uIntFromNibble;
 
 
 /***/ }),

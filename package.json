@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Bytes to and from numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -13,6 +13,7 @@
     "double",
     "char",
     "string",
+    "nibble",
     "8-bit",
     "16-bit",
     "24-bit",
@@ -33,7 +34,6 @@
     "build": "npm run lint && npm test && npm run bundle && npm run compile && npm run doc"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
     "codecov": "^3.0.0",
     "google-closure-compiler-js": "^20170910.0.1",
     "jsdoc": "~3.5.5",
