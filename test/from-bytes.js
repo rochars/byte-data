@@ -65,6 +65,29 @@ describe('from-bytes', function() {
                 [0,0]);
         });
 
+
+
+        it('should turn 1 nibble to a 4-bit uInt', function() {
+            assert.deepEqual(byteData.uIntFromNibble(
+                [0]),
+                [0]);
+        });
+        it('should turn 1 nibble to a 4-bit uInt', function() {
+            assert.deepEqual(byteData.uIntFromNibble(
+                [15]),
+                [15]);
+        });
+        it('should turn 1 nibble to a 4-bit uInt', function() {
+            assert.deepEqual(byteData.intFromNibble(
+                [15]),
+                [-1]);
+        });
+        it('should turn 2 nibbles to a 4-bit uInts', function() {
+            assert.deepEqual(byteData.uIntFromNibble(
+                [0,1]),
+                [0,1]);
+        });
+
         it('should turn bytes to a string', function() {
             assert.deepEqual(byteData.stringFromBytes(
                 [97, 98]),

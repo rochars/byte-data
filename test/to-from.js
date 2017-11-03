@@ -74,7 +74,7 @@ describe('to-from', function() {
             let num = byteData.intFrom4Bytes(bytes);
             assert.deepEqual([0], num);
         });
-        it('should turn 2 32-bit signed int to 4 bytes and back ' +
+        it('should turn 2 32-bit signed int to 8 bytes and back ' +
             '(-2147483648, 2147483647)', function() {
             let bytes = byteData.intTo4Bytes([-2147483648, 2147483647]);
             let num = byteData.intFrom4Bytes(bytes);
@@ -114,7 +114,7 @@ describe('to-from', function() {
             let num = byteData.intFrom3Bytes(bytes);
             assert.deepEqual([0], num);
         });
-        it('should turn 2 24-bit signed int to 3 bytes and back ' +
+        it('should turn 2 24-bit signed int to 6 bytes and back ' +
             '(-8388608, 8388607)', function() {
             let bytes = byteData.intTo3Bytes([-8388608, 8388607]);
             let num = byteData.intFrom3Bytes(bytes);
@@ -153,7 +153,7 @@ describe('to-from', function() {
             let num = byteData.intFrom2Bytes(bytes);
             assert.deepEqual([0], num);
         });
-        it('should turn 2 16-bit signed int to 2 bytes and back ' +
+        it('should turn 2 16-bit signed int to 4 bytes and back ' +
             '(-32768, 32767)',
                 function() {
             let bytes = byteData.intTo2Bytes([-32768, 32767]);
@@ -168,13 +168,13 @@ describe('to-from', function() {
         });
 
         // 8-bit / 1 byte unsigned
-        it('should turn 1 8-bit unsigned int to 2 bytes and back (0s)',
+        it('should turn 1 8-bit unsigned int to 1 byte and back (0s)',
                 function() {
             let bytes = byteData.intTo1Byte([0]);
             let num = byteData.uIntFrom1Byte(bytes);
             assert.deepEqual([0], num);
         });
-        it('should turn 1 8-bit unsigned int to 2 bytes and back (max)',
+        it('should turn 1 8-bit unsigned int to 1 byte and back (max)',
                 function() {
             let bytes = byteData.intTo1Byte([255]);
             let num = byteData.uIntFrom1Byte(bytes);
@@ -200,6 +200,42 @@ describe('to-from', function() {
         it('should turn 1 8-bit signed int to 1 byte (-1)', function() {
             let bytes = byteData.intTo1Byte([-1]);
             let num = byteData.intFrom1Byte(bytes);
+            assert.deepEqual([-1], num);
+        });
+
+        // 8-bit / 1 byte unsigned
+        it('should turn 1 4-bit unsigned int to 1 nibbles and back (0s)',
+                function() {
+            let bytes = byteData.intToNibble([0]);
+            let num = byteData.uIntFromNibble(bytes);
+            assert.deepEqual([0], num);
+        });
+        it('should turn 1 4-bit unsigned int to 1 nibbles and back (max)',
+                function() {
+            let bytes = byteData.intToNibble([15]);
+            let num = byteData.uIntFromNibble(bytes);
+            assert.deepEqual([15], num);
+        });
+        it('should turn 1 4-bit unsigned int to 1 nibble and back (1)',
+                function() {
+            let bytes = byteData.intToNibble([1]);
+            let num = byteData.uIntFromNibble(bytes);
+            assert.deepEqual([1], num);
+        });
+        // 4-bit / 1 byte signed
+        it('should turn 1 4-bit signed int to 1 nibbles (0s)', function() {
+            let bytes = byteData.intToNibble([0]);
+            let num = byteData.intFromNibble(bytes);
+            assert.deepEqual([0], num);
+        });
+        it('should turn 2 4-bit signed int to 2 nibbles (-8, 7)', function() {
+            let bytes = byteData.intToNibble([-8, 7]);
+            let num = byteData.intFromNibble(bytes);
+            assert.deepEqual([-8, 7], num);
+        });
+        it('should turn 1 4-bit signed int to a nibble (-1)', function() {
+            let bytes = byteData.intToNibble([-1]);
+            let num = byteData.intFromNibble(bytes);
             assert.deepEqual([-1], num);
         });
 

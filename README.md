@@ -3,7 +3,7 @@ Bytes to and from numbers and strings.
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
-[![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data)
+[![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
 ## Install
 ```
@@ -19,6 +19,8 @@ Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 **byte-data** functions always return regular **arrays**.
 
 ### Supports:
+- Signed nibbles
+- Unsigned nibbles
 - Signed 8-bit ints
 - Unsigned 8-bit ints
 - Signed 16-bit ints
@@ -27,9 +29,12 @@ Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 - Unsigned 24-bit ints
 - Signed 32-bit ints
 - Unsigned 32-bit ints
-- 32-bit floats
-- 64-bit floats
+- 32-bit float
+- 64-bit double
 - Strings
+
+Byte-reading functions only accept **arrays of decimal numbers** as input.
+Byte-writing functions can output the bytes represented as **decimals**, **hex** and **binaries**. Decimal is assumed by default.
 
 ## Example
 ```javascript
@@ -47,7 +52,7 @@ let byteData = require('byte-data');
 /**
  * numbers to bytes, all:
  * @param {!Array<number>} numbers The numbers.
- * @param {number} base Base 10 or 16. If ommited defaults to 10.
+ * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
  * @return {!Array<number>} the bytes.
  */
 bytes = byteData.doubleTo8Bytes(numbers);
@@ -56,6 +61,7 @@ bytes = byteData.intTo4Bytes(numbers);
 bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
+bytes = byteData.intToNibble(numbers);
 
 /**
  * numbers from bytes, all:
@@ -72,6 +78,8 @@ numbers = byteData.intFrom2Bytes(bytes);
 numbers = byteData.uIntFrom2Bytes(bytes);
 numbers = byteData.intFrom1Byte(bytes);
 numbers = byteData.uIntFrom1Byte(bytes);
+numbers = byteData.intFromNibble(bytes);
+numbers = byteData.uIntFromNibble(bytes);
 
 // strings
 bytes = byteData.stringToBytes(string);
@@ -82,10 +90,28 @@ string = byteData.stringFromBytes(bytes);
 index = byteData.findString(bytes, "chunk");
 ```
 
-Bytes are returned in base 10 by default. To get hex values:
+Bytes are returned in base 10 by default.
+```javascript
+byteData.intTo4Bytes([-2147483648]);
+// returns [0,0,0,128]
+```
+
+To get hex values:
 ```javascript
 byteData.floatTo8Bytes([-1], 16)
 //['0','0','0','0','0','0','f0','bf']
+```
+
+To get binaries:
+```javascript
+byteData.intTo4Bytes([-2147483648], 2)
+//["00000000", "00000000","00000000","10000000",]
+```
+
+Binary nibbles:
+```javascript
+byteData.intToNibbles([6], 2)
+//["0110"]
 ```
 
 ### Python struct.pack VS Node.js byte-data
@@ -103,19 +129,19 @@ byteData.intTo1Byte([1], 16);
 byteData.intTo2Bytes([-1], 16);
 
 //struct.pack('<H', 1)
-byteData.intTo2Bytes([765], 16);
+byteData.intTo2Bytes([1], 16);
 
 //struct.pack('<i', -2147483648)
 byteData.intTo4Bytes([-2147483648], 16);
 
-//struct.pack('<I', -2147483648)
-byteData.intTo4Bytes([4294967295]);
+//struct.pack('<I', 4294967295)
+byteData.intTo4Bytes([4294967295], 16);
 
-//struct.pack('<f', -1)
-byteData.floatTo4Bytes([-1], -1);
+//struct.pack('<f', 0.5)
+byteData.floatTo4Bytes([0.5], 16);
 
-//struct.pack('<d', -1)
-byteData.doubleTo8Bytes([-1], -1);
+//struct.pack('<d', 0.5)
+byteData.doubleTo8Bytes([0.5], 16);
 ```
 
 ## Browser

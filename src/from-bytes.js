@@ -43,6 +43,35 @@ function decodeFloat(bytes) {
 }
 
 /**
+ * Read 4-bit signed ints from an array of nibbles.
+ * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
+ * @return {!Array<number>} The numbers.
+ */
+function intFromNibble(nibbles) {
+    let samples = [];
+    let i = 0;
+    let len = nibbles.length;
+    while (i < len) {
+        samples[i] = nibbles[i];
+        if (samples[i] > 7) {
+            samples[i] -= 16;
+        }
+        i+=1;
+    }
+    return samples;
+}
+
+/**
+ * Read 4-bit unsigned ints from an array of nibbles.
+ * Just return a copy of the original array.
+ * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
+ * @return {!Array<number>} The numbers.
+ */
+function uIntFromNibble(nibbles) {
+    return uIntFrom1Byte(nibbles);
+}
+
+/**
  * Read 8-bit unsigned ints from an array of bytes.
  * Just return a copy of the original array.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
@@ -275,7 +304,8 @@ function stringFromBytes(bytes) {
     }    
     return string;
 }
-
+module.exports.intFromNibble = intFromNibble;
+module.exports.uIntFromNibble = uIntFromNibble;
 module.exports.intFrom1Byte = intFrom1Byte;
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;

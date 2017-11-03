@@ -122,7 +122,16 @@ describe('to-bytes', function() {
                 [0,0,0,0,255,255,255,255]);
         });
 
-        it('should turn 1 signed 32-bit int to 4 bytes hex (max range)', function() {
+        it('should turn 1 signed 32-bit int to 4 bytes bin (min range)', function() {
+            assert.deepEqual(byteData.intTo4Bytes([-2147483648], 2),
+                ["00000000", "00000000","00000000","10000000",]);
+        });
+        it('should turn 1 signed 32-bit int to 4 bytes bin (max range)', function() {
+            assert.deepEqual(byteData.intTo4Bytes([2147483647], 2),
+                ["11111111","11111111","11111111","01111111"]);
+        });
+
+        it('should turn 1 signed 32-bit int to 4 bytes bin (max range)', function() {
             assert.deepEqual(byteData.intTo4Bytes([-2147483648], 16),
                 ["0","0","0","80"]);
         });
@@ -242,6 +251,44 @@ describe('to-bytes', function() {
         it('should turn 1 8-bit signed int to 1 byte hex (-1)', function() {
             assert.deepEqual(byteData.intTo1Byte([127], 16),
                 ['7f']);
+        });
+        it('should turn 1 8-bit signed int to 1 byte hex (-1)', function() {
+            assert.deepEqual(byteData.intTo1Byte([-128], 16),
+                ['80']);
+        });
+
+        // 4-bit / half byte byte signed
+        it('should turn 2 4-bit signed int to 2 nibbles (0s)', function() {
+            assert.deepEqual(byteData.intToNibble([0, 0]),
+                [0, 0]);
+        });
+        it('should turn 2 4-bit signed int to 2 bytes (-8, 7)', function() {
+            assert.deepEqual(byteData.intToNibble([-8, 7]),
+                [8, 7]);
+        });
+        it('should turn 1 4-bit signed int to 1 nibble (-1)', function() {
+            assert.deepEqual(byteData.intToNibble([-1]),
+                [15]);
+        });
+        it('should turn 1 4-bit signed int to 1 nibble (-1, 5)', function() {
+            assert.deepEqual(byteData.intToNibble([-1, 5]),
+                [15, 5]);
+        });
+        it('should turn 1 4-bit signed int to 1 nibble hex (-1)', function() {
+            assert.deepEqual(byteData.intToNibble([-1], 16),
+                ['f']);
+        });
+        it('should turn 1 4-bit signed int to 1 nibble hex (-8)', function() {
+            assert.deepEqual(byteData.intToNibble([-8], 16),
+                ['8']);
+        });
+        it('should turn 1 4-bit signed int to 1 nibble hex (7)', function() {
+            assert.deepEqual(byteData.intToNibble([7], 16),
+                ['7']);
+        });
+        it('should turn 1 4-bit signed int to 1 nibble bin (6)', function() {
+            assert.deepEqual(byteData.intToNibble([6], 2),
+                ['0110']);
         });
 
         // string

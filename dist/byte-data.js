@@ -129,6 +129,7 @@ window['intTo4Bytes'] = toBytes.intTo4Bytes;
 window['intTo3Bytes'] = toBytes.intTo3Bytes;
 window['intTo2Bytes'] = toBytes.intTo2Bytes;
 window['intTo1Byte'] = toBytes.intTo1Byte;
+module.exports.intToNibble = toBytes.intToNibble;
 
 window['floatFrom8Bytes'] = fromBytes.floatFrom8Bytes;
 module.exports.doubleFrom8Bytes = fromBytes.floatFrom8Bytes;
@@ -141,6 +142,8 @@ window['intFrom2Bytes'] = fromBytes.intFrom2Bytes;
 window['uIntFrom2Bytes'] = fromBytes.uIntFrom2Bytes;
 window['intFrom1Byte'] = fromBytes.intFrom1Byte;
 window['uIntFrom1Byte'] = fromBytes.uIntFrom1Byte;
+module.exports.intFromNibble = fromBytes.intFromNibble;
+module.exports.uIntFromNibble = fromBytes.uIntFromNibble;
 
 
 /***/ }),
@@ -154,6 +157,12 @@ window['uIntFrom1Byte'] = fromBytes.uIntFrom1Byte;
  */
 
 const intBits = __webpack_require__(0);
+
+function padding(bytes, base, i) {
+    if (base == 2 && bytes[i].length < 8) {
+        bytes[i] = new Array((9 - bytes[i].length)).join("0")  + bytes[i];
+    }
+}
 
 /**
  * Unpack a 64 bit float into two words.
@@ -208,7 +217,7 @@ function floatTo8Bytes(numbers, base=10) {
             }
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i < len) {
             // 0s should not be signed by default
             if (numbers[i] == 0) {
@@ -216,14 +225,22 @@ function floatTo8Bytes(numbers, base=10) {
                 j+=8;
             }else {
                 numbers[i] = toFloat64(numbers[i]);
-                bytes[j++] = (numbers[i][1] & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][1] >>> 8 & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][1] >>> 16 & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][1] >>> 24 & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][0] & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][0] >>> 8 & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][0] >>> 16 & 0xFF).toString(16);
-                bytes[j++] = (numbers[i][0] >>> 24 & 0xFF).toString(16);
+                bytes[j++] = (numbers[i][1] & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][1] >>> 8 & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][1] >>> 16 & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][1] >>> 24 & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][0] & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][0] >>> 8 & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][0] >>> 16 & 0xFF).toString(base);
+                padding(bytes, base, j-1);
+                bytes[j++] = (numbers[i][0] >>> 24 & 0xFF).toString(base);
+                padding(bytes, base, j-1);
             }
             i++;
         }
@@ -250,13 +267,17 @@ function floatTo4Bytes(numbers, base=10) {
             bytes[j++] = numbers[i] >>> 24 & 0xFF;
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i < len) {            
             numbers[i] = intBits.unpack(numbers[i]);
-            bytes[j++] = ((numbers[i]) & 0xFF).toString(16);
-            bytes[j++] = ((numbers[i] >>> 8) & 0xFF).toString(16);
-            bytes[j++] = ((numbers[i] >>> 16) & 0xFF).toString(16);
-            bytes[j++] = ((numbers[i] >>> 24) & 0xFF).toString(16);
+            bytes[j++] = ((numbers[i]) & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = ((numbers[i] >>> 8) & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = ((numbers[i] >>> 16) & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = ((numbers[i] >>> 24) & 0xFF).toString(base);
+            padding(bytes, base, j-1);
             i++;
         }
     }
@@ -283,14 +304,20 @@ function intTo6Bytes(numbers, base=10) {
             bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i< len) {
-            bytes[j++] = (numbers[i] & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >> 16 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >> 24 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] / 0x100000000 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] / 0x10000000000 & 0xFF).toString(16);
+            bytes[j++] = (numbers[i] & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >> 16 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >> 24 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] / 0x100000000 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] / 0x10000000000 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
             i++;
         }
     }
@@ -316,13 +343,18 @@ function intTo5Bytes(numbers, base=10) {
             bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i< len) {
-            bytes[j++] = (numbers[i] & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >> 16 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >> 24 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] / 0x100000000 & 0xFF).toString(16);
+            bytes[j++] = (numbers[i] & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >> 16 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >> 24 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] / 0x100000000 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
             i++;
         }
     }
@@ -340,19 +372,23 @@ function intTo4Bytes(numbers, base=10) {
     let len = numbers.length;
     let bytes = [];
     if (base == 10) {
-        while (i< len) {
+        while (i < len) {
             bytes[j++] = numbers[i] & 0xFF;
             bytes[j++] = numbers[i] >>> 8 & 0xFF;
             bytes[j++] = numbers[i] >>> 16 & 0xFF;
             bytes[j++] = numbers[i] >>> 24 & 0xFF;
             i++;
         }
-    } else if (base == 16) {
-        while (i< len) {
-            bytes[j++] = (numbers[i] & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >>> 24 & 0xFF).toString(16);
+    } else {
+        while (i < len) {
+            bytes[j++] = (numbers[i] & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >>> 24 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
             i++;
         }
     }
@@ -376,11 +412,14 @@ function intTo3Bytes(numbers, base=10) {
             bytes[j++] = numbers[i] >>> 16 & 0xFF;
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i < len) {
-            bytes[j++] = (numbers[i] & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(16);
+            bytes[j++] = (numbers[i] & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
             i++;
         }
     }  
@@ -403,10 +442,12 @@ function intTo2Bytes(numbers, base=10) {
             bytes[j++] = numbers[i] >>> 8 & 0xFF;
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i < len) {
-            bytes[j++] = (numbers[i] & 0xFF).toString(16);
-            bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(16);
+            bytes[j++] = (numbers[i] & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
+            padding(bytes, base, j-1);
             i++;
         }
     }
@@ -428,9 +469,38 @@ function intTo1Byte(numbers, base=10) {
             bytes[j++] = numbers[i] & 0xFF;
             i++;
         }
-    }else if (base == 16) {
+    } else {
         while (i < len) {
-            bytes[j++] = (numbers[i] & 0xFF).toString(16);
+            bytes[j++] = (numbers[i] & 0xFF).toString(base);
+            padding(bytes, base, j-1);
+            i++;
+        }
+    }
+    return bytes;
+}
+
+/**
+ * Split a 4-bit int numbers into a nibbles.
+ * @param {!Array<number>} numbers int8 numbers.
+ * @return {!Array<number>} the bytes.
+ */
+function intToNibble(numbers, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    if (base == 10) {
+        while (i < len) {
+            bytes[j++] = numbers[i] & 0xF;
+            i++;
+        }
+    } else {
+        while (i < len) {
+            bytes[j++] = (numbers[i] & 0xF).toString(base);
+            padding(bytes, base, j-1);
+            if (base == 2) {
+                bytes[j-1] = bytes[j-1].slice(4,8);
+            }
             i++;
         }
     }
@@ -450,11 +520,12 @@ function stringToBytes(string, base=10) {
     if (base == 10) {
         while (i < len) {
             bytes[j++] = string.charCodeAt(i);
+            padding(bytes, base, j-1);
             i++;
         }
-    } else if (base == 16) {
+    } else {
         while (i < len) {
-            bytes[j++] = string.charCodeAt(i).toString(16);
+            bytes[j++] = string.charCodeAt(i).toString(base);
             i++;
         }
     }
@@ -469,6 +540,7 @@ module.exports.intTo4Bytes = intTo4Bytes;
 module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
 module.exports.intTo1Byte = intTo1Byte;
+module.exports.intToNibble = intToNibble;
 module.exports.stringToBytes = stringToBytes;
 
 
@@ -518,6 +590,35 @@ function decodeFloat(bytes) {
     let doubleValue = sign * significand *
         Math.pow(2, parseInt(binary.substr(1, 11), 2) - 1023);
     return doubleValue === 2 ? 0 : doubleValue;
+}
+
+/**
+ * Read 4-bit signed ints from an array of nibbles.
+ * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
+ * @return {!Array<number>} The numbers.
+ */
+function intFromNibble(nibbles) {
+    let samples = [];
+    let i = 0;
+    let len = nibbles.length;
+    while (i < len) {
+        samples[i] = nibbles[i];
+        if (samples[i] > 7) {
+            samples[i] -= 16;
+        }
+        i+=1;
+    }
+    return samples;
+}
+
+/**
+ * Read 4-bit unsigned ints from an array of nibbles.
+ * Just return a copy of the original array.
+ * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
+ * @return {!Array<number>} The numbers.
+ */
+function uIntFromNibble(nibbles) {
+    return uIntFrom1Byte(nibbles);
 }
 
 /**
@@ -753,7 +854,8 @@ function stringFromBytes(bytes) {
     }    
     return string;
 }
-
+module.exports.intFromNibble = intFromNibble;
+module.exports.uIntFromNibble = uIntFromNibble;
 module.exports.intFrom1Byte = intFrom1Byte;
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;
