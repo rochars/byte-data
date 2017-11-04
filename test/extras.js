@@ -27,6 +27,11 @@ describe('extras', function() {
         packed = byteData.packNibbles(original)
         assert.deepEqual(packed.length, original.length / 2);
     });
+    it('should pad when packing a uneven number of nibbles', function() {
+        let original = [15,15,1,4,1,15,1];
+        packed = byteData.packNibbles(original)
+        assert.deepEqual(packed, [255,20,31,16]); // 1 => 0001 => 00010000 = 16
+    });
 
     // unpackNibbles
     it('should unpack one nibbles as two byte', function() {
@@ -44,5 +49,9 @@ describe('extras', function() {
     it('should pack a stream of bytes into a stream of nibbles', function() {
         unpacked = byteData.unpackNibbles([255,20,31])
         assert.deepEqual(unpacked, [15,15,1,4,1,15]);
+    });
+    it('should read a padding zero when unpacking a uneven number of nibbles', function() {
+        unpacked = byteData.unpackNibbles([255,20,31,16])
+        assert.deepEqual(unpacked, [15,15,1,4,1,15,1,0]);
     });
 });

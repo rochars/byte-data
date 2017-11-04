@@ -126,6 +126,9 @@ function packNibbles(nibbles) {
     let i = 0;
     let j = 0;
     let len = nibbles.length;
+    if (len % 2) {
+        nibbles.push(0);
+    }
     while (i < len) {
         packed[j++] = parseInt(
             nibbles[i].toString(16) + nibbles[i+1].toString(16), 16);
