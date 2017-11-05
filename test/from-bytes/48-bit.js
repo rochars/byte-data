@@ -64,7 +64,7 @@ describe('48-bit from bytes', function() {
     it('should turn 6 bytes (bin) to 1 unsigned 48-bit int (max 48-bit range)',
             function() {
         assert.deepEqual(byteData.uIntFrom6Bytes(
-            [255,255,255,255,255,0]),
+            [255,255,255,255,255, 0]),
             [1099511627775]);
     });
 

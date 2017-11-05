@@ -36,7 +36,105 @@ describe('to-from', function() {
         let num = byteData.floatFrom8Bytes(bytes)
         assert.ok(0.123456789876544 != num[0]);
     });
-    
+
+    // 48-bit
+    it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo6Bytes([1]);
+        let num = byteData.intFrom6Bytes(bytes)
+        assert.equal(1, num[0]);
+    });
+    it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo6Bytes([11]);
+        let num = byteData.intFrom6Bytes(bytes)
+        assert.equal(11, num[0]);
+    });
+    it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo6Bytes([0]);
+        let num = byteData.intFrom6Bytes(bytes)
+        assert.equal(0, num[0]);
+    });
+    it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo6Bytes([281474976710655]);
+        let num = byteData.uIntFrom6Bytes(bytes)
+        assert.equal(281474976710655, num[0]);
+    });
+    it('should turn 6 bytes (hex) to 1 signed 48-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo6Bytes([140737488355327]);
+        let num = byteData.intFrom6Bytes(bytes);
+        assert.equal(140737488355327, num[0]);
+    });
+    it('should turn 6 bytes (hex) to 1 signed 48-bit int  (min range)',
+            function() {
+        let bytes = byteData.intTo6Bytes([-140737488355328]);
+        console.log(bytes);
+        let num = byteData.intFrom6Bytes(bytes);
+        assert.equal(-140737488355328, num[0]);
+    });
+
+    // 40-bit
+    it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (1)',
+            function() {
+        let bytes = byteData.intTo5Bytes([1]);
+        let num = byteData.intFrom5Bytes(bytes)
+        assert.equal(1, num[0]);
+    });
+    it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (11)',
+            function() {
+        let bytes = byteData.intTo5Bytes([11]);
+        let num = byteData.intFrom5Bytes(bytes)
+        assert.equal(11, num[0]);
+    });
+    it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (0)',
+            function() {
+        let bytes = byteData.intTo5Bytes([0]);
+        let num = byteData.intFrom5Bytes(bytes)
+        assert.equal(0, num[0]);
+    });
+    it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo5Bytes([1099511627775]);
+        let num = byteData.uIntFrom5Bytes(bytes)
+        assert.equal(1099511627775, num[0]);
+    });
+    it('should turn 5 bytes (hex) to 1 signed 40-bit int  (max range)',
+            function() {
+        let bytes = byteData.intTo5Bytes([549755813887]);
+        let num = byteData.intFrom5Bytes(bytes);
+        assert.equal(549755813887, num[0]);
+    });
+    it('should turn 5 bytes (hex) to 1 signed 40-bit int  (min range)',
+            function() {
+        let bytes = byteData.intTo5Bytes([-549755813888]);
+        let num = byteData.intFrom5Bytes(bytes);
+        assert.equal(-549755813888, num[0]);
+    });
+
+
+    // 32 bit float
+    it('should turn 1 32-bit unsigned float to 4 bytes and back (0s)',
+            function() {
+        let bytes = byteData.floatTo4Bytes([0]);
+        let num = byteData.floatFrom4Bytes(bytes);
+        assert.deepEqual([0], num);
+    });
+    it('should turn 1 32-bit unsigned float to 4 bytes and back (1)',
+            function() {
+        let bytes = byteData.floatTo4Bytes([1]);
+        let num = byteData.floatFrom4Bytes(bytes);
+        assert.deepEqual([1], num);
+    });
+    it('should turn 1 32-bit unsigned float to 4 bytes and back (0.1234567)',
+            function() {
+        let bytes = byteData.floatTo4Bytes([0.1234567]);
+        let num = byteData.floatFrom4Bytes(bytes);
+        assert.deepEqual(0.1234567, num[0].toFixed(7));
+    });
+
     // 32-bit / 4 bytes unsigned
     it('should turn 1 32-bit unsigned int to 4 bytes and back (0s)',
             function() {
@@ -235,6 +333,35 @@ describe('to-from', function() {
         let bytes = byteData.intToNibble([-1]);
         let num = byteData.intFromNibble(bytes);
         assert.deepEqual([-1], num);
+    });
+
+    // 2-bit / 1 byte signed
+    it('should turn 1 2-bit signed int to 1 crumb (0s)', function() {
+        let crumbs = byteData.toCrumb([0]);
+        let num = byteData.intFromCrumb(crumbs);
+        assert.deepEqual([0], num);
+    });
+    it('should turn 2 2-bit signed int to 2 crumb (-2, 1)', function() {
+        let crumbs = byteData.toCrumb([-2, 1]);
+        let num = byteData.intFromCrumb(crumbs);
+        assert.deepEqual([-2, 1], num);
+    });
+    it('should turn 1 2-bit signed int to a crumb (-1)', function() {
+        let crumbs = byteData.toCrumb([-1]);
+        let num = byteData.intFromCrumb(crumbs);
+        assert.deepEqual([-1], num);
+    });
+
+    // 1-bit
+    it('should turn 1-bit int to boolean (0s)', function() {
+        let bool = byteData.toBoolean([0]);
+        let num = byteData.fromBoolean(bool);
+        assert.deepEqual([0], num);
+    });
+    it('should turn 1-bit int to boolean (1)', function() {
+        let bool = byteData.toBoolean([1]);
+        let num = byteData.fromBoolean(bool);
+        assert.deepEqual([1], num);
     });
 
     // string

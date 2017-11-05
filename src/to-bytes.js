@@ -138,7 +138,7 @@ function intTo6Bytes(numbers, base=10) {
     let len = numbers.length;
     let bytes = [];
     if (base == 10) {
-        while (i< len) {
+        while (i < len) {
             bytes[j++] = numbers[i] & 0xFF;
             bytes[j++] = numbers[i] >> 8 & 0xFF;
             bytes[j++] = numbers[i] >> 16 & 0xFF;
@@ -148,7 +148,7 @@ function intTo6Bytes(numbers, base=10) {
             i++;
         }
     } else {
-        while (i< len) {
+        while (i < len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
             helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(base);

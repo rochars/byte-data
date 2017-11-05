@@ -455,11 +455,11 @@ function uIntFrom5Bytes(bytes, base=10) {
     if (base == 10) {
         while (i < len) {
             samples[j] = parseInt(
-                    bytes[4 + i].toString(2) +
-                    bytes[3 + i].toString(2) +
-                    bytes[2 + i].toString(2) +
-                    bytes[1 + i].toString(2) +
-                    bytes[i].toString(2), 2);
+                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[i].toString(2), 2), 2);
             j++;
             i+=5;
         }
@@ -494,11 +494,11 @@ function intFrom5Bytes(bytes, base=10) {
     if (base == 10) {
         while (i < len) {
             samples[j] = parseInt(
-                    bytes[4 + i].toString(2) +
-                    bytes[3 + i].toString(2) +
-                    bytes[2 + i].toString(2) +
-                    bytes[1 + i].toString(2) +
-                    bytes[i].toString(2), 2);
+                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[i].toString(2), 2), 2);
             if (samples[i] > 549755813887) {
                 samples[i] -= 1099511627776;
             }
@@ -522,11 +522,6 @@ function intFrom5Bytes(bytes, base=10) {
     }
     return samples;
 }
-
-
-
-
-
 
 /**
  * Read 48-bit unsigned ints from an array of bytes.
@@ -544,12 +539,12 @@ function uIntFrom6Bytes(bytes, base=10) {
     if (base == 10) {
         while (i < len) {
             samples[j] = parseInt(
-                    bytes[5 + i].toString(2) +
-                    bytes[4 + i].toString(2) +
-                    bytes[3 + i].toString(2) +
-                    bytes[2 + i].toString(2) +
-                    bytes[1 + i].toString(2) +
-                    bytes[i].toString(2), 2);
+                    helpers.bytePadding(bytes[5 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[i].toString(2) ,2), 2);
             j++;
             i+=6;
         }
@@ -570,7 +565,7 @@ function uIntFrom6Bytes(bytes, base=10) {
 }
 
 /**
- * Read 40-bit unsigned ints from an array of bytes.
+ * Read 48-bit unsigned ints from an array of bytes.
  * TODO: This is implementation is slower than other bytes.
  *       Find an alternative.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
@@ -586,12 +581,12 @@ function intFrom6Bytes(bytes, base=10) {
     if (base == 10) {
         while (i < len) {
             samples[j] = parseInt(
-                    bytes[5 + i].toString(2) +
-                    bytes[4 + i].toString(2) +
-                    bytes[3 + i].toString(2) +
-                    bytes[2 + i].toString(2) +
-                    bytes[1 + i].toString(2) +
-                    bytes[i].toString(2), 2);
+                    helpers.bytePadding(bytes[5 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                    helpers.bytePadding(bytes[i].toString(2), 2), 2);
             if (samples[i] > 140737488355327) {
                 samples[i] -= 281474976710656;
             }
@@ -616,12 +611,6 @@ function intFrom6Bytes(bytes, base=10) {
     }
     return samples;
 }
-
-
-
-
-
-
 
 /**
  * Read 64-bit numbers from an array of bytes.
