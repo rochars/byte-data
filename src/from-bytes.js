@@ -34,9 +34,7 @@ function intFromCrumb(crumbs, base=10) {
     let samples = [];
     let i = 0;
     let len = crumbs.length;
-    if (base != 10) {
-        helpers.bytesToInt(crumbs, base);   
-    }
+    helpers.bytesToInt(crumbs, base);   
     while (i < len) {
         samples[i] = crumbs[i];
         if (samples[i] > 1) {
@@ -57,9 +55,7 @@ function intFromNibble(nibbles, base=10) {
     let samples = [];
     let i = 0;
     let len = nibbles.length;
-    if (base != 10) {
-        helpers.bytesToInt(nibbles, base);   
-    }
+        helpers.bytesToInt(nibbles, base);
     while (i < len) {
         samples[i] = nibbles[i];
         if (samples[i] > 7) {
@@ -102,9 +98,7 @@ function intFrom1Byte(bytes, base=10) {
     let samples = [];
     let i = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[i] = bytes[i];
         if (samples[i] > 127) {
@@ -127,9 +121,7 @@ function intFrom2Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = (bytes[1 + i] << 8) | bytes[i];
         if (bytes[1 + i] & (1 << 7)) {
@@ -152,9 +144,7 @@ function uIntFrom2Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);   
     while (i < len) {
         samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
         j++;
@@ -174,9 +164,7 @@ function intFrom3Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = (
                 bytes[2 + i] << 16 |
@@ -205,9 +193,7 @@ function uIntFrom3Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = (
                 bytes[2 + i] << 16 |
@@ -231,9 +217,7 @@ function intFrom4Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = (
                 bytes[3 + i] << 24 |
@@ -261,9 +245,7 @@ function uIntFrom4Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = (
                 bytes[3 + i] << 24 |
@@ -289,9 +271,7 @@ function floatFrom4Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = intBits.pack(
                 bytes[3 + i] << 24 |
@@ -318,9 +298,7 @@ function uIntFrom5Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = parseInt(
                 helpers.bytePadding(bytes[4 + i].toString(2), 2) +
@@ -347,9 +325,7 @@ function intFrom5Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = parseInt(
                 helpers.bytePadding(bytes[4 + i].toString(2), 2) +
@@ -379,9 +355,7 @@ function uIntFrom6Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = parseInt(
                 helpers.bytePadding(bytes[5 + i].toString(2), 2) +
@@ -410,9 +384,7 @@ function intFrom6Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = parseInt(
                 helpers.bytePadding(bytes[5 + i].toString(2), 2) +
@@ -441,9 +413,7 @@ function floatFrom8Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base != 10) {
-        helpers.bytesToInt(bytes, base);   
-    }
+    helpers.bytesToInt(bytes, base);
     while (i < len) {
         samples[j] = helpers.decodeFloat([
                 bytes[i],

@@ -136,14 +136,34 @@ function bytePadding(byte, base) {
  * @param {number} base The base.
  */
 function bytesToInt(bytes, base) {
-    let i = 0;
-    let len = bytes.length;
-    while(i < len) {
-        bytes[i] = parseInt(bytes[i], base);
-        i++;
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while(i < len) {
+            bytes[i] = parseInt(bytes[i], base);
+            i++;
+        }
     }
 }
 
+/**
+ * Turn bytes to base.
+ * @param {!Array<string>|!Array<number>} bytes The bytes.
+ * @param {number} base The base.
+ */
+function bytesToBase(bytes, base) {
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while (i < len) {
+            bytes[i] = bytes[i].toString(base);
+            padding(bytes, base, i);
+            i++;
+        }
+    }
+}
+
+module.exports.bytesToBase = bytesToBase;
 module.exports.bytesToInt = bytesToInt;
 module.exports.decodeFloat = decodeFloat;
 module.exports.toFloat64 = toFloat64;

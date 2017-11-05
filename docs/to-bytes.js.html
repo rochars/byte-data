@@ -45,53 +45,25 @@ function floatTo8Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {
-            // 0s should not be signed by default
-            if (numbers[i] == 0) {
-                bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-                j+=8;
-            } else {
-                numbers[i] = helpers.toFloat64(numbers[i]);
-                bytes[j++] = numbers[i][1] &amp; 0xFF;
-                bytes[j++] = numbers[i][1] >>> 8 &amp; 0xFF;
-                bytes[j++] = numbers[i][1] >>> 16 &amp; 0xFF;
-                bytes[j++] = numbers[i][1] >>> 24 &amp; 0xFF;
-                bytes[j++] = numbers[i][0] &amp; 0xFF;
-                bytes[j++] = numbers[i][0] >>> 8 &amp; 0xFF;
-                bytes[j++] = numbers[i][0] >>> 16 &amp; 0xFF;
-                bytes[j++] = numbers[i][0] >>> 24 &amp; 0xFF;
-            }
-            i++;
+    while (i &lt; len) {
+        // 0s should not be signed by default
+        if (numbers[i] == 0) {
+            bytes = bytes.concat([0,0,0,0,0,0,0,0]);
+            j+=8;
+        } else {
+            numbers[i] = helpers.toFloat64(numbers[i]);
+            bytes[j++] = numbers[i][1] &amp; 0xFF;
+            bytes[j++] = numbers[i][1] >>> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i][1] >>> 16 &amp; 0xFF;
+            bytes[j++] = numbers[i][1] >>> 24 &amp; 0xFF;
+            bytes[j++] = numbers[i][0] &amp; 0xFF;
+            bytes[j++] = numbers[i][0] >>> 8 &amp; 0xFF;
+            bytes[j++] = numbers[i][0] >>> 16 &amp; 0xFF;
+            bytes[j++] = numbers[i][0] >>> 24 &amp; 0xFF;
         }
-    } else {
-        while (i &lt; len) {
-            // 0s should not be signed by default
-            if (numbers[i] == 0) {
-                bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-                j+=8;
-            }else {
-                numbers[i] = helpers.toFloat64(numbers[i]);
-                bytes[j++] = (numbers[i][1] &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][1] >>> 8 &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][1] >>> 16 &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][1] >>> 24 &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][0] &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][0] >>> 8 &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][0] >>> 16 &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-                bytes[j++] = (numbers[i][0] >>> 24 &amp; 0xFF).toString(base);
-                helpers.padding(bytes, base, j-1);
-            }
-            i++;
-        }
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -105,29 +77,15 @@ function floatTo4Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {            
-            numbers[i] = intBits.unpack(numbers[i]);
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 24 &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i &lt; len) {            
-            numbers[i] = intBits.unpack(numbers[i]);
-            bytes[j++] = ((numbers[i]) &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = ((numbers[i] >>> 8) &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = ((numbers[i] >>> 16) &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = ((numbers[i] >>> 24) &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
+    while (i &lt; len) {            
+        numbers[i] = intBits.unpack(numbers[i]);
+        bytes[j++] = numbers[i] &amp; 0xFF;
+        bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+        bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
+        bytes[j++] = numbers[i] >>> 24 &amp; 0xFF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -141,33 +99,17 @@ function intTo6Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
-            bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
-            bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
-            bytes[j++] = numbers[i] / 0x10000000000 &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i &lt; len) {
-            bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >> 8 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >> 16 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >> 24 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] / 0x100000000 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] / 0x10000000000 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
+
+    while (i &lt; len) {
+        bytes[j++] = numbers[i] &amp; 0xFF;
+        bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
+        bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
+        bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
+        bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
+        bytes[j++] = numbers[i] / 0x10000000000 &amp; 0xFF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -181,30 +123,15 @@ function intTo5Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i&lt; len) {
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
-            bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
-            bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i&lt; len) {
-            bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >> 8 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >> 16 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >> 24 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] / 0x100000000 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
+    while (i&lt; len) {
+        bytes[j++] = numbers[i] &amp; 0xFF;
+        bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
+        bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
+        bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
+        bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -218,27 +145,18 @@ function intTo4Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 24 &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i &lt; len) {
-            bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >>> 16 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >>> 24 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
+    while (i &lt; len) {
+        bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
+        helpers.padding(bytes, base, j-1);
+        bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(base);
+        helpers.padding(bytes, base, j-1);
+        bytes[j++] = (numbers[i] >>> 16 &amp; 0xFF).toString(base);
+        helpers.padding(bytes, base, j-1);
+        bytes[j++] = (numbers[i] >>> 24 &amp; 0xFF).toString(base);
+        helpers.padding(bytes, base, j-1);
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -252,24 +170,13 @@ function intTo3Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i &lt; len) {
-            bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >>> 16 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
-    }  
+    while (i &lt; len) {
+        bytes[j++] = numbers[i] &amp; 0xFF;
+        bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+        bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
+        i++;
+    }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -283,21 +190,12 @@ function intTo2Bytes(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i &lt; len) {
-            bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
+    while (i &lt; len) {
+        bytes[j++] = numbers[i] &amp; 0xFF;
+        bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -311,18 +209,11 @@ function intTo1Byte(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i &lt; len) {
-            bytes[j++] = numbers[i] &amp; 0xFF;
-            i++;
-        }
-    } else {
-        while (i &lt; len) {
-            bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
+    while (i &lt; len) {
+        bytes[j++] = numbers[i] &amp; 0xFF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
@@ -464,7 +355,7 @@ module.exports.stringToBytes = stringToBytes;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 05 2017 07:15:54 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 05 2017 07:31:23 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>
