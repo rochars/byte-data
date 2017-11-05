@@ -362,19 +362,13 @@ function toCrumb(values, base=10) {
     let j = 0;
     let len = values.length;
     let bytes = [];
-    //let sign = {
-    //    '-1' : 3,
-    //    '-2' : 2
-    //};
     if (base == 10) {
         while (i < len) {
-            //bytes[j++] = values[i] >= 0 ? values[i] : sign[values[i]];
             bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
             i++;
         }
     } else {
         while (i < len) {
-            //let v = values[i] >= 0 ? values[i] : sign[values[i]];
             let v = values[i] < 0 ? values[i] + 4 : values[i];
             bytes[j++] = (v).toString(base);
             helpers.padding(bytes, base, j-1);

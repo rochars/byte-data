@@ -259,6 +259,8 @@ module.exports.toBoolean = toBytes.toBoolean;
 
 window['floatFrom8Bytes'] = fromBytes.floatFrom8Bytes;
 window['doubleFrom8Bytes'] = fromBytes.floatFrom8Bytes;
+module.exports.intFrom6Bytes = fromBytes.intFrom6Bytes;
+module.exports.uIntFrom6Bytes = fromBytes.uIntFrom6Bytes;
 module.exports.intFrom5Bytes = fromBytes.intFrom5Bytes;
 window['uIntFrom5Bytes'] = fromBytes.uIntFrom5Bytes;
 window['intFrom4Bytes'] = fromBytes.intFrom4Bytes;
@@ -645,19 +647,13 @@ function toCrumb(values, base=10) {
     let j = 0;
     let len = values.length;
     let bytes = [];
-    //let sign = {
-    //    '-1' : 3,
-    //    '-2' : 2
-    //};
     if (base == 10) {
         while (i < len) {
-            //bytes[j++] = values[i] >= 0 ? values[i] : sign[values[i]];
             bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
             i++;
         }
     } else {
         while (i < len) {
-            //let v = values[i] >= 0 ? values[i] : sign[values[i]];
             let v = values[i] < 0 ? values[i] + 4 : values[i];
             bytes[j++] = (v).toString(base);
             helpers.padding(bytes, base, j-1);
@@ -1264,6 +1260,106 @@ function intFrom5Bytes(bytes, base=10) {
     return samples;
 }
 
+
+
+
+
+
+/**
+ * Read 48-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function uIntFrom6Bytes(bytes, base=10) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = parseInt(
+                    bytes[5 + i].toString(2) +
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            j++;
+            i+=6;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[5 + i], base) +
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            j++;
+            i+=6;
+        }
+    }
+    return samples;
+}
+
+/**
+ * Read 40-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function intFrom6Bytes(bytes, base=10) {
+    // 281474976710656
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = parseInt(
+                    bytes[5 + i].toString(2) +
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            if (samples[i] > 140737488355327) {
+                samples[i] -= 281474976710656;
+            }
+            j++;
+            i+=6;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[5 + i], base) +
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            if (samples[i] > 140737488355327) {
+                samples[i] -= 281474976710656;
+            }
+            j++;
+            i+=6;
+        }
+    }
+    return samples;
+}
+
+
+
+
+
+
+
 /**
  * Read 64-bit numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
@@ -1349,6 +1445,8 @@ module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
 module.exports.intFrom5Bytes = intFrom5Bytes;
 module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
+module.exports.intFrom6Bytes = intFrom6Bytes;
+module.exports.uIntFrom6Bytes = uIntFrom6Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;
 

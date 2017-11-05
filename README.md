@@ -5,7 +5,6 @@ https://github.com/rochars/byte-data
 
 [![Build Status](https://travis-ci.org/rochars/byte-data.svg?branch=master)](https://travis-ci.org/rochars/byte-data) [![Build status](https://ci.appveyor.com/api/projects/status/g2ellp44s7a0kvid?svg=true)](https://ci.appveyor.com/project/rochars/byte-data) [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![Stability](https://img.shields.io/badge/stability-experimental-red.svg)](https://www.npmjs.com/package/byte-data) 
 
-
 ## Install
 ```
 npm install byte-data
@@ -23,20 +22,16 @@ Bytes can be represented as **numbers** or as **hex** and **binary** strings bot
 
 ### Supports:
 - booleans
-- Signed crumbs
-- Unsigned crumbs
-- Signed nibbles
-- Unsigned nibbles
-- Signed 8-bit ints
-- Unsigned 8-bit ints
-- Signed 16-bit ints
-- Unsigned 16-bit ints
-- Signed 24-bit ints
-- Unsigned 24-bit ints
-- Signed 32-bit ints
-- Unsigned 32-bit ints
-- Signed 40-bit ints
-- Unsigned 40-bit ints
+- crumbs (2-bit, signed/unsigned)
+- nibbles (4-bit, signed/unsigned)
+- 8-bit int (signed/unsigned)
+- 16-bit int (signed/unsigned)
+- 24-bit int (signed/unsigned)
+- 32-bit int (signed/unsigned)
+- 32-bit float
+- 40-bit ints (signed/unsigned)
+- 48-bit int (signed/unsigned)
+- 64-bit double
 - Strings
 
 ## Example
@@ -58,6 +53,10 @@ let byteData = require('byte-data');
  * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
  * @return {!Array<number>} the bytes.
  */
+bytes = byteData.doubleTo8Bytes(numbers);
+bytes = byteData.intTo6Bytes(numbers);
+bytes = byteData.intTo5Bytes(numbers);
+bytes = byteData.floatTo4Bytes(numbers);
 bytes = byteData.intTo4Bytes(numbers);
 bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
@@ -72,6 +71,12 @@ bytes = byteData.toBoolean(numbers);
  * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
  * @return {!Array<number>} The numbers.
  */
+numbers = byteData.doubleFrom8Bytes(bytes);
+numbers = byteData.doubleFrom8Bytes(bytes);
+numbers = byteData.intFrom6Bytes(bytes);
+numbers = byteData.uIntFrom6Bytes(bytes);
+numbers = byteData.intFrom5Bytes(bytes);
+numbers = byteData.uIntFrom5Bytes(bytes);
 numbers = byteData.intFrom4Bytes(bytes);
 numbers = byteData.uIntFrom4Bytes(bytes);
 numbers = byteData.intFrom3Bytes(bytes);
