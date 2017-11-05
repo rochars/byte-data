@@ -36,30 +36,6 @@ const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
 
 /**
- * Unpack a 64 bit float into two words.
- * Thanks https://stackoverflow.com/a/16043259
- * @param {number} value A float64 number.
- */
-function toFloat64(value) {
-    let hiWord = 0;
-    let loWord = 0;
-    if (value &lt;= 0.0) {
-        hiWord = 0x80000000;
-        value = -value;
-    }
-    let exponent = Math.floor(
-        Math.log(value) / Math.log(2));
-    let significand = Math.floor(
-        (value / Math.pow(2, exponent)) * Math.pow(2, 52));
-    loWord = significand &amp; 0xFFFFFFFF;
-    significand /= Math.pow(2, 32);
-    exponent += 1023;
-    hiWord = hiWord | (exponent &lt;&lt; 20);
-    hiWord = hiWord | (significand &amp; ~(-1 &lt;&lt; 20));
-    return [hiWord, loWord];
-}
-
-/**
  * Split 64 bit numbers into bytes.
  * @param {!Array&lt;number>} numbers float64 numbers.
  * @return {!Array&lt;number>} the bytes.
@@ -76,7 +52,7 @@ function floatTo8Bytes(numbers, base=10) {
                 bytes = bytes.concat([0,0,0,0,0,0,0,0]);
                 j+=8;
             } else {
-                numbers[i] = toFloat64(numbers[i]);
+                numbers[i] = helpers.toFloat64(numbers[i]);
                 bytes[j++] = numbers[i][1] &amp; 0xFF;
                 bytes[j++] = numbers[i][1] >>> 8 &amp; 0xFF;
                 bytes[j++] = numbers[i][1] >>> 16 &amp; 0xFF;
@@ -95,7 +71,7 @@ function floatTo8Bytes(numbers, base=10) {
                 bytes = bytes.concat([0,0,0,0,0,0,0,0]);
                 j+=8;
             }else {
-                numbers[i] = toFloat64(numbers[i]);
+                numbers[i] = helpers.toFloat64(numbers[i]);
                 bytes[j++] = (numbers[i][1] &amp; 0xFF).toString(base);
                 helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][1] >>> 8 &amp; 0xFF).toString(base);
@@ -482,13 +458,13 @@ module.exports.stringToBytes = stringToBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 05 2017 06:13:39 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 05 2017 07:15:54 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

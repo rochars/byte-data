@@ -8,42 +8,6 @@ const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
 
 /**
- * Turn an array of bytes into a float 64.
- * Thanks https://gist.github.com/kg/2192799
- * @param {!Array<number>} bytes 8 bytes representing a float 64.
- */
-function decodeFloat(bytes) {
-    if (bytes.toString() == "0,0,0,0,0,0,0,0") {
-        return 0;
-    }
-    let binary = "";
-    let bits;
-    let i = 0;
-    let bytesLength = bytes.length;
-    while(i < bytesLength) {
-        bits = bytes[i].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
-        binary = bits + binary;
-        i++;
-    }
-    let significandBin = "1" + binary.substr(1 + 11, 52);
-    let val = 1;
-    let significand = 0;
-    i = 0;
-    while (i < significandBin.length) {
-        significand += val * parseInt(significandBin.charAt(i), 10);
-        val = val / 2;
-        i++;
-    }
-    let sign = (binary.charAt(0) == "1") ? -1 : 1;
-    let doubleValue = sign * significand *
-        Math.pow(2, parseInt(binary.substr(1, 11), 2) - 1023);
-    return doubleValue === 2 ? 0 : doubleValue;
-}
-
-/**
  * Read numbers from a array of booleans.
  * @param {!Array<number>|Uint8Array} booleans An array of booleans.
  * @param {number} base The base. Defaults to 10.
@@ -70,22 +34,15 @@ function intFromCrumb(crumbs, base=10) {
     let samples = [];
     let i = 0;
     let len = crumbs.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[i] = crumbs[i];
-            if (samples[i] > 1) {
-                samples[i] -= 4;
-            }
-            i++;
+    if (base != 10) {
+        helpers.bytesToInt(crumbs, base);   
+    }
+    while (i < len) {
+        samples[i] = crumbs[i];
+        if (samples[i] > 1) {
+            samples[i] -= 4;
         }
-    } else {
-        while (i < len) {
-            samples[i] = parseInt(crumbs[i], base);
-            if (samples[i] > 1) {
-                samples[i] -= 4;
-            }
-            i++;
-        }
+        i++;
     }
     return samples;
 }
@@ -100,22 +57,15 @@ function intFromNibble(nibbles, base=10) {
     let samples = [];
     let i = 0;
     let len = nibbles.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[i] = nibbles[i];
-            if (samples[i] > 7) {
-                samples[i] -= 16;
-            }
-            i++;
+    if (base != 10) {
+        helpers.bytesToInt(nibbles, base);   
+    }
+    while (i < len) {
+        samples[i] = nibbles[i];
+        if (samples[i] > 7) {
+            samples[i] -= 16;
         }
-    } else {
-        while (i < len) {
-            samples[i] = parseInt(nibbles[i], base);
-            if (samples[i] > 7) {
-                samples[i] -= 16;
-            }
-            i++;
-        }
+        i++;
     }
     return samples;
 }
@@ -152,22 +102,15 @@ function intFrom1Byte(bytes, base=10) {
     let samples = [];
     let i = 0;
     let len = bytes.length;
-    if (base==10) {
-        while (i < len) {
-            samples[i] = bytes[i];
-            if (samples[i] > 127) {
-                samples[i] -= 256;
-            }
-            i++;
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[i] = bytes[i];
+        if (samples[i] > 127) {
+            samples[i] -= 256;
         }
-    } else {
-        while (i < len) {
-            samples[i] = parseInt(bytes[i], base);
-            if (samples[i] > 127) {
-                samples[i] -= 256;
-            }
-            i++;
-        }
+        i++;
     }
     return samples;
 }
@@ -184,27 +127,17 @@ function intFrom2Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = (bytes[1 + i] << 8) | bytes[i];
-            if (bytes[1 + i] & (1 << 7)) {
-               samples[j] = 0xFFFF0000 | samples[j];
-            }
-            j++;
-            i+=2;
-        }    
-    } else {
-        while (i < len) {
-            samples[j] = (parseInt(bytes[1 + i], base) << 8) |
-                parseInt(bytes[i], base);
-            if (parseInt(bytes[1 + i], base) & (1 << 7)) {
-               samples[j] = 0xFFFF0000 | samples[j];
-            }
-            j++;
-            i+=2;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
     }
-    
+    while (i < len) {
+        samples[j] = (bytes[1 + i] << 8) | bytes[i];
+        if (bytes[1 + i] & (1 << 7)) {
+           samples[j] = 0xFFFF0000 | samples[j];
+        }
+        j++;
+        i+=2;
+    }
     return samples;
 }
 
@@ -219,21 +152,14 @@ function uIntFrom2Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
-            j++;
-            i+=2;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = (parseInt(bytes[1 + i], base) << 8) | 
-                parseInt(bytes[i], base);
-            j++;
-            i+=2;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
     }
-    
+    while (i < len) {
+        samples[j] = (bytes[1 + i] << 8) | bytes[i];                 
+        j++;
+        i+=2;
+    }
     return samples;
 }
 
@@ -248,38 +174,23 @@ function intFrom3Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base==10) {
-        while (i < len) {
-            samples[j] = (
-                    bytes[2 + i] << 16 |
-                    bytes[1 + i] << 8 |
-                    bytes[i]
-                );
-            if ((samples[j] & 0x00800000) > 0) {
-                samples[j] = samples[j] | 0xFF000000;
-            } else {  
-                samples[j] = samples[j] & 0x00FFFFFF;
-            } 
-            j++;
-            i+=3;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = (
-                    parseInt(bytes[2 + i], base) << 16 |
-                    parseInt(bytes[1 + i], base) << 8 |
-                    parseInt(bytes[i], base)
-                );
-            if ((samples[j] & 0x00800000) > 0) {
-                samples[j] = samples[j] | 0xFF000000;
-            } else {  
-                samples[j] = samples[j] & 0x00FFFFFF;
-            } 
-            j++;
-            i+=3;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
     }
-    
+    while (i < len) {
+        samples[j] = (
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
+        if ((samples[j] & 0x00800000) > 0) {
+            samples[j] = samples[j] | 0xFF000000;
+        } else {  
+            samples[j] = samples[j] & 0x00FFFFFF;
+        } 
+        j++;
+        i+=3;
+    }
     return samples;
 }
 
@@ -294,28 +205,18 @@ function uIntFrom3Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = (
-                    bytes[2 + i] << 16 |
-                    bytes[1 + i] << 8 |
-                    bytes[i]
-                );
-            j++;
-            i+=3;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = (
-                    parseInt(bytes[2 + i], base) << 16 |
-                    parseInt(bytes[1 + i], base) << 8 |
-                    parseInt(bytes[i], base)
-                );
-            j++;
-            i+=3;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
     }
-    
+    while (i < len) {
+        samples[j] = (
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
+        j++;
+        i+=3;
+    }
     return samples;
 }
 
@@ -330,36 +231,22 @@ function intFrom4Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = (
-                    bytes[3 + i] << 24 |
-                    bytes[2 + i] << 16 |
-                    bytes[1 + i] << 8 |
-                    bytes[i]
-                );
-            if ((samples[j] & 0x80000000) < 0) {
-                samples[j] = samples[j] & 0xFFFFFFFF;  
-            }
-            j++;
-            i+=4;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = (
-                    parseInt(bytes[3 + i], base) << 24 |
-                    parseInt(bytes[2 + i], base) << 16 |
-                    parseInt(bytes[1 + i], base) << 8 |
-                    parseInt(bytes[i], base)
-                );
-            if ((samples[j] & 0x80000000) < 0) {
-                samples[j] = samples[j] & 0xFFFFFFFF;  
-            }
-            j++;
-            i+=4;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
     }
-    
+    while (i < len) {
+        samples[j] = (
+                bytes[3 + i] << 24 |
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
+        if ((samples[j] & 0x80000000) < 0) {
+            samples[j] = samples[j] & 0xFFFFFFFF;  
+        }
+        j++;
+        i+=4;
+    }
     return samples;
 }
 
@@ -374,30 +261,19 @@ function uIntFrom4Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = (
-                    bytes[3 + i] << 24 |
-                    bytes[2 + i] << 16 |
-                    bytes[1 + i] << 8 |
-                    bytes[i]
-                );
-            samples[j] = samples[j] >>> 0;
-            j++;
-            i+=4;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = (
-                    parseInt(bytes[3 + i], base) << 24 |
-                    parseInt(bytes[2 + i], base) << 16 |
-                    parseInt(bytes[1 + i], base) << 8 |
-                    parseInt(bytes[i], base)
-                );
-            samples[j] = samples[j] >>> 0;
-            j++;
-            i+=4;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[j] = (
+                bytes[3 + i] << 24 |
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
+        samples[j] = samples[j] >>> 0;
+        j++;
+        i+=4;
     }
     return samples;
 }
@@ -413,28 +289,18 @@ function floatFrom4Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = intBits.pack(
-                    bytes[3 + i] << 24 |
-                    bytes[2 + i] << 16 |
-                    bytes[1 + i] << 8 |
-                    bytes[i]
-                );
-            j++;
-            i+=4;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = intBits.pack(
-                    parseInt(bytes[3 + i], base) << 24 |
-                    parseInt(bytes[2 + i], base) << 16 |
-                    parseInt(bytes[1 + i], base) << 8 |
-                    parseInt(bytes[i], base)
-                );
-            j++;
-            i+=4;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[j] = intBits.pack(
+                bytes[3 + i] << 24 |
+                bytes[2 + i] << 16 |
+                bytes[1 + i] << 8 |
+                bytes[i]
+            );
+        j++;
+        i+=4;
     }
     return samples;
 }
@@ -452,28 +318,18 @@ function uIntFrom5Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[i].toString(2), 2), 2);
-            j++;
-            i+=5;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[4 + i], base) +
-                    helpers.bytePadding(bytes[3 + i], base) +
-                    helpers.bytePadding(bytes[2 + i], base) +
-                    helpers.bytePadding(bytes[1 + i], base) +
-                    helpers.bytePadding(bytes[i], base), base);
-            j++;
-            i+=5;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[j] = parseInt(
+                helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[i].toString(2), 2), 2);
+        j++;
+        i+=5;
     }
     return samples;
 }
@@ -491,34 +347,21 @@ function intFrom5Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[i].toString(2), 2), 2);
-            if (samples[i] > 549755813887) {
-                samples[i] -= 1099511627776;
-            }
-            j++;
-            i+=5;
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[j] = parseInt(
+                helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[i].toString(2), 2), 2);
+        if (samples[i] > 549755813887) {
+            samples[i] -= 1099511627776;
         }
-    } else {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[4 + i], base) +
-                    helpers.bytePadding(bytes[3 + i], base) +
-                    helpers.bytePadding(bytes[2 + i], base) +
-                    helpers.bytePadding(bytes[1 + i], base) +
-                    helpers.bytePadding(bytes[i], base), base);
-            if (samples[i] > 549755813887) {
-                samples[i] -= 1099511627776;
-            }
-            j++;
-            i+=5;
-        }
+        j++;
+        i+=5;
     }
     return samples;
 }
@@ -536,30 +379,19 @@ function uIntFrom6Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[5 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[i].toString(2) ,2), 2);
-            j++;
-            i+=6;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[5 + i], base) +
-                    helpers.bytePadding(bytes[4 + i], base) +
-                    helpers.bytePadding(bytes[3 + i], base) +
-                    helpers.bytePadding(bytes[2 + i], base) +
-                    helpers.bytePadding(bytes[1 + i], base) +
-                    helpers.bytePadding(bytes[i], base), base);
-            j++;
-            i+=6;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[j] = parseInt(
+                helpers.bytePadding(bytes[5 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[i].toString(2) ,2), 2);
+        j++;
+        i+=6;
     }
     return samples;
 }
@@ -578,36 +410,22 @@ function intFrom6Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[5 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-                    helpers.bytePadding(bytes[i].toString(2), 2), 2);
-            if (samples[i] > 140737488355327) {
-                samples[i] -= 281474976710656;
-            }
-            j++;
-            i+=6;
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
+    }
+    while (i < len) {
+        samples[j] = parseInt(
+                helpers.bytePadding(bytes[5 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[4 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[3 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[2 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[1 + i].toString(2), 2) +
+                helpers.bytePadding(bytes[i].toString(2), 2), 2);
+        if (samples[i] > 140737488355327) {
+            samples[i] -= 281474976710656;
         }
-    } else {
-        while (i < len) {
-            samples[j] = parseInt(
-                    helpers.bytePadding(bytes[5 + i], base) +
-                    helpers.bytePadding(bytes[4 + i], base) +
-                    helpers.bytePadding(bytes[3 + i], base) +
-                    helpers.bytePadding(bytes[2 + i], base) +
-                    helpers.bytePadding(bytes[1 + i], base) +
-                    helpers.bytePadding(bytes[i], base), base);
-            if (samples[i] > 140737488355327) {
-                samples[i] -= 281474976710656;
-            }
-            j++;
-            i+=6;
-        }
+        j++;
+        i+=6;
     }
     return samples;
 }
@@ -623,38 +441,23 @@ function floatFrom8Bytes(bytes, base=10) {
     let i = 0;
     let j = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            samples[j] = decodeFloat([
-                    bytes[i],
-                    bytes[1 + i],
-                    bytes[2 + i],
-                    bytes[3 + i],
-                    bytes[4 + i],
-                    bytes[5 + i],
-                    bytes[6 + i],
-                    bytes[7 + i]
-                ]);
-            j++;
-            i+=8;
-        }
-    } else {
-        while (i < len) {
-            samples[j] = decodeFloat([
-                    parseInt(bytes[i], base),
-                    parseInt(bytes[i + 1], base),
-                    parseInt(bytes[i + 2], base),
-                    parseInt(bytes[i + 3], base),
-                    parseInt(bytes[i + 4], base),
-                    parseInt(bytes[i + 5], base),
-                    parseInt(bytes[i + 6], base),
-                    parseInt(bytes[i + 7], base),
-                ]);
-            j++;
-            i+=8;
-        }
+    if (base != 10) {
+        helpers.bytesToInt(bytes, base);   
     }
-    
+    while (i < len) {
+        samples[j] = helpers.decodeFloat([
+                bytes[i],
+                bytes[1 + i],
+                bytes[2 + i],
+                bytes[3 + i],
+                bytes[4 + i],
+                bytes[5 + i],
+                bytes[6 + i],
+                bytes[7 + i]
+            ]);
+        j++;
+        i+=8;
+    }    
     return samples;
 }
 

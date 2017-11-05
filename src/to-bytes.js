@@ -8,30 +8,6 @@ const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
 
 /**
- * Unpack a 64 bit float into two words.
- * Thanks https://stackoverflow.com/a/16043259
- * @param {number} value A float64 number.
- */
-function toFloat64(value) {
-    let hiWord = 0;
-    let loWord = 0;
-    if (value <= 0.0) {
-        hiWord = 0x80000000;
-        value = -value;
-    }
-    let exponent = Math.floor(
-        Math.log(value) / Math.log(2));
-    let significand = Math.floor(
-        (value / Math.pow(2, exponent)) * Math.pow(2, 52));
-    loWord = significand & 0xFFFFFFFF;
-    significand /= Math.pow(2, 32);
-    exponent += 1023;
-    hiWord = hiWord | (exponent << 20);
-    hiWord = hiWord | (significand & ~(-1 << 20));
-    return [hiWord, loWord];
-}
-
-/**
  * Split 64 bit numbers into bytes.
  * @param {!Array<number>} numbers float64 numbers.
  * @return {!Array<number>} the bytes.
@@ -48,7 +24,7 @@ function floatTo8Bytes(numbers, base=10) {
                 bytes = bytes.concat([0,0,0,0,0,0,0,0]);
                 j+=8;
             } else {
-                numbers[i] = toFloat64(numbers[i]);
+                numbers[i] = helpers.toFloat64(numbers[i]);
                 bytes[j++] = numbers[i][1] & 0xFF;
                 bytes[j++] = numbers[i][1] >>> 8 & 0xFF;
                 bytes[j++] = numbers[i][1] >>> 16 & 0xFF;
@@ -67,7 +43,7 @@ function floatTo8Bytes(numbers, base=10) {
                 bytes = bytes.concat([0,0,0,0,0,0,0,0]);
                 j+=8;
             }else {
-                numbers[i] = toFloat64(numbers[i]);
+                numbers[i] = helpers.toFloat64(numbers[i]);
                 bytes[j++] = (numbers[i][1] & 0xFF).toString(base);
                 helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][1] >>> 8 & 0xFF).toString(base);
