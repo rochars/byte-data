@@ -352,6 +352,43 @@ function intToNibble(numbers, base=10) {
 }
 
 /**
+ * Values to crumb form.
+ * @param {!Array<number>} values Array of numbers.
+ * @param {number} base The base.
+ * @return {!Array<number>} the crumbs.
+ */
+function toCrumb(values, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = values.length;
+    let bytes = [];
+    //let sign = {
+    //    '-1' : 3,
+    //    '-2' : 2
+    //};
+    if (base == 10) {
+        while (i < len) {
+            //bytes[j++] = values[i] >= 0 ? values[i] : sign[values[i]];
+            bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
+            i++;
+        }
+    } else {
+        while (i < len) {
+            //let v = values[i] >= 0 ? values[i] : sign[values[i]];
+            let v = values[i] < 0 ? values[i] + 4 : values[i];
+            bytes[j++] = (v).toString(base);
+            helpers.padding(bytes, base, j-1);
+            if (base == 2) {
+                bytes[j-1] = bytes[j-1].slice(6,8);
+            }
+            helpers.paddingCrumb(bytes, base, j-1);
+            i++;
+        }
+    }
+    return bytes;
+}
+
+/**
  * Values to boolean form.
  * @param {!Array<number>} values Array of numbers.
  * @param {number} base The base.
@@ -410,5 +447,6 @@ module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
 module.exports.intTo1Byte = intTo1Byte;
 module.exports.intToNibble = intToNibble;
+module.exports.toCrumb = toCrumb;
 module.exports.toBoolean = toBoolean;
 module.exports.stringToBytes = stringToBytes;

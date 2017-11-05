@@ -67,7 +67,7 @@ describe('40-bit from bytes', function() {
 
 
     // 40 bit signed
-    /*
+    
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (-32768)',
             function() {
         assert.deepEqual(byteData.intFrom5Bytes(
@@ -80,8 +80,8 @@ describe('40-bit from bytes', function() {
             ["1","0","ff","ff","ff"], 16),
             [-65535]);
     });
-    */
-    /*
+    
+    
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (-1)',
             function() {
         assert.deepEqual(byteData.intFrom5Bytes(
@@ -157,7 +157,7 @@ describe('40-bit from bytes', function() {
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (-12345)',
             function() {
         assert.deepEqual(byteData.intFrom5Bytes(
-            ["ff","ff","ff","ff","ff"], 16),
+            ["00","00","00","00","80"], 16),
             [-549755813888]);
     });
     it('should turn 5 bytes (bin) to 1 signed 40-bit int (65535)',
@@ -172,7 +172,7 @@ describe('40-bit from bytes', function() {
             ["ff","7f","0","0","0"], 16),
             [32767]);
     });
-    */
+    
     /*
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (min range)',
             function() {

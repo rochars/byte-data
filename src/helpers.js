@@ -40,6 +40,18 @@ function paddingNibble(nibbles, base, index) {
 }   
 
 /**
+ * Fix the size of crumbs.
+ * @param {!Array<string>} crumbs The nibble as a binary or hex string.
+ * @param {number} base The base.
+ * @param {number} index The nibble offset.
+ */
+function paddingCrumb(crumbs, base, index) {
+    if ((base == 2) && crumbs[index].length < 2) {
+        crumbs[index] = '0' + crumbs[index];
+    }
+}   
+
+/**
  * Padding with 0s for byte strings.
  * @param {string} byte The byte as a binary or hex string.
  * @param {number} base The base.
@@ -60,4 +72,5 @@ function bytePadding(byte, base) {
 
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
+module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;

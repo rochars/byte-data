@@ -23,6 +23,8 @@ Bytes can be represented as **numbers** or as **hex** and **binary** strings bot
 
 ### Supports:
 - booleans
+- Signed crumbs
+- Unsigned crumbs
 - Signed nibbles
 - Unsigned nibbles
 - Signed 8-bit ints
@@ -33,6 +35,8 @@ Bytes can be represented as **numbers** or as **hex** and **binary** strings bot
 - Unsigned 24-bit ints
 - Signed 32-bit ints
 - Unsigned 32-bit ints
+- Signed 40-bit ints
+- Unsigned 40-bit ints
 - Strings
 
 ## Example
@@ -59,6 +63,7 @@ bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
 bytes = byteData.intToNibble(numbers);
+bytes = byteData.toCrumb(numbers);
 bytes = byteData.toBoolean(numbers);
 
 /**
@@ -77,6 +82,8 @@ numbers = byteData.intFrom1Byte(bytes);
 numbers = byteData.uIntFrom1Byte(bytes);
 numbers = byteData.intFromNibble(bytes);
 numbers = byteData.uIntFromNibble(bytes);
+numbers = byteData.intFromCrumb(bytes);
+numbers = byteData.uIntFromCrumb(bytes);
 numbers = byteData.fromBoolean(bytes);
 
 // strings
@@ -91,13 +98,13 @@ index = byteData.findString(bytes, "chunk");
 Bytes are returned in base 10 by default.
 ```javascript
 byteData.intTo4Bytes([-2147483648]);
-// returns [0,0,0,128]
+// returns [0, 0, 0, 128]
 ```
 
 To get hex values:
 ```javascript
 byteData.intTo4Bytes([-2147483648], 16)
-//["0", "0","0","80",]
+//["00", "00","00","80",]
 ```
 
 To get binaries:
@@ -116,15 +123,15 @@ byteData.intToNibbles([6], 2)
 
 Packing nibbles:
 ```javascript
-byteData.packNibbles([15,15,1,4,1,15]);
-//[255,20,31]);
+byteData.packNibbles([15, 15, 1, 4, 1, 15]);
+//[255, 20, 31]);
 ```
 This will pack 2 nibbles into one byte.
 
 Unpacking nibbles:
 ```javascript
-byteData.unpackNibbles([255,20,31]);
-//[15,15,1,4,1,15]
+byteData.unpackNibbles([255, 20, 31]);
+//[15, 15, 1, 4, 1, 15]
 ```
 
 ## Browser

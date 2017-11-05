@@ -131,6 +131,18 @@ function paddingNibble(nibbles, base, index) {
 }   
 
 /**
+ * Fix the size of crumbs.
+ * @param {!Array<string>} crumbs The nibble as a binary or hex string.
+ * @param {number} base The base.
+ * @param {number} index The nibble offset.
+ */
+function paddingCrumb(crumbs, base, index) {
+    if ((base == 2) && crumbs[index].length < 2) {
+        crumbs[index] = '0' + crumbs[index];
+    }
+}   
+
+/**
  * Padding with 0s for byte strings.
  * @param {string} byte The byte as a binary or hex string.
  * @param {number} base The base.
@@ -151,6 +163,7 @@ function bytePadding(byte, base) {
 
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
+module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 
 
@@ -241,10 +254,12 @@ window['intTo3Bytes'] = toBytes.intTo3Bytes;
 window['intTo2Bytes'] = toBytes.intTo2Bytes;
 window['intTo1Byte'] = toBytes.intTo1Byte;
 window['intToNibble'] = toBytes.intToNibble;
+module.exports.toCrumb = toBytes.toCrumb;
 module.exports.toBoolean = toBytes.toBoolean;
 
 window['floatFrom8Bytes'] = fromBytes.floatFrom8Bytes;
 window['doubleFrom8Bytes'] = fromBytes.floatFrom8Bytes;
+module.exports.intFrom5Bytes = fromBytes.intFrom5Bytes;
 window['uIntFrom5Bytes'] = fromBytes.uIntFrom5Bytes;
 window['intFrom4Bytes'] = fromBytes.intFrom4Bytes;
 window['uIntFrom4Bytes'] = fromBytes.uIntFrom4Bytes;
@@ -257,6 +272,8 @@ window['intFrom1Byte'] = fromBytes.intFrom1Byte;
 window['uIntFrom1Byte'] = fromBytes.uIntFrom1Byte;
 window['intFromNibble'] = fromBytes.intFromNibble;
 window['uIntFromNibble'] = fromBytes.uIntFromNibble;
+module.exports.intFromCrumb = fromBytes.intFromCrumb;
+module.exports.uIntFromCrumb = fromBytes.uIntFromCrumb;
 module.exports.fromBoolean = fromBytes.fromBoolean;
 
 
@@ -618,6 +635,43 @@ function intToNibble(numbers, base=10) {
 }
 
 /**
+ * Values to crumb form.
+ * @param {!Array<number>} values Array of numbers.
+ * @param {number} base The base.
+ * @return {!Array<number>} the crumbs.
+ */
+function toCrumb(values, base=10) {
+    let i = 0;
+    let j = 0;
+    let len = values.length;
+    let bytes = [];
+    //let sign = {
+    //    '-1' : 3,
+    //    '-2' : 2
+    //};
+    if (base == 10) {
+        while (i < len) {
+            //bytes[j++] = values[i] >= 0 ? values[i] : sign[values[i]];
+            bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
+            i++;
+        }
+    } else {
+        while (i < len) {
+            //let v = values[i] >= 0 ? values[i] : sign[values[i]];
+            let v = values[i] < 0 ? values[i] + 4 : values[i];
+            bytes[j++] = (v).toString(base);
+            helpers.padding(bytes, base, j-1);
+            if (base == 2) {
+                bytes[j-1] = bytes[j-1].slice(6,8);
+            }
+            helpers.paddingCrumb(bytes, base, j-1);
+            i++;
+        }
+    }
+    return bytes;
+}
+
+/**
  * Values to boolean form.
  * @param {!Array<number>} values Array of numbers.
  * @param {number} base The base.
@@ -676,6 +730,7 @@ module.exports.intTo3Bytes = intTo3Bytes;
 module.exports.intTo2Bytes = intTo2Bytes;
 module.exports.intTo1Byte = intTo1Byte;
 module.exports.intToNibble = intToNibble;
+module.exports.toCrumb = toCrumb;
 module.exports.toBoolean = toBoolean;
 module.exports.stringToBytes = stringToBytes;
 
@@ -742,6 +797,36 @@ function fromBoolean(booleans, base=10) {
     while (i < len) {
         samples[i] = parseInt(parseInt(booleans[i], base), 2);
         i++;
+    }
+    return samples;
+}
+
+/**
+ * Read 2-bit signed ints from an array of crumbs.
+ * @param {!Array<number>|Uint8Array} crumbs An array of crumbs.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function intFromCrumb(crumbs, base=10) {
+    let samples = [];
+    let i = 0;
+    let len = crumbs.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[i] = crumbs[i];
+            if (samples[i] > 1) {
+                samples[i] -= 4;
+            }
+            i++;
+        }
+    } else {
+        while (i < len) {
+            samples[i] = parseInt(crumbs[i], base);
+            if (samples[i] > 1) {
+                samples[i] -= 4;
+            }
+            i++;
+        }
     }
     return samples;
 }
@@ -1135,6 +1220,51 @@ function uIntFrom5Bytes(bytes, base=10) {
 }
 
 /**
+ * Read 40-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function intFrom5Bytes(bytes, base=10) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = parseInt(
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            if (samples[i] > 549755813887) {
+                samples[i] -= 1099511627776;
+            }
+            j++;
+            i+=5;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            if (samples[i] > 549755813887) {
+                samples[i] -= 1099511627776;
+            }
+            j++;
+            i+=5;
+        }
+    }
+    return samples;
+}
+
+/**
  * Read 64-bit numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
@@ -1204,6 +1334,8 @@ function stringFromBytes(bytes, base=10) {
 }
 
 module.exports.fromBoolean = fromBoolean;
+module.exports.intFromCrumb = intFromCrumb;
+module.exports.uIntFromCrumb = uIntFrom1Byte;
 module.exports.intFromNibble = intFromNibble;
 module.exports.uIntFromNibble = uIntFrom1Byte;
 module.exports.intFrom1Byte = intFrom1Byte;
@@ -1215,6 +1347,7 @@ module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
 module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
+module.exports.intFrom5Bytes = intFrom5Bytes;
 module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;

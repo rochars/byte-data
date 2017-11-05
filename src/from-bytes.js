@@ -61,6 +61,36 @@ function fromBoolean(booleans, base=10) {
 }
 
 /**
+ * Read 2-bit signed ints from an array of crumbs.
+ * @param {!Array<number>|Uint8Array} crumbs An array of crumbs.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function intFromCrumb(crumbs, base=10) {
+    let samples = [];
+    let i = 0;
+    let len = crumbs.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[i] = crumbs[i];
+            if (samples[i] > 1) {
+                samples[i] -= 4;
+            }
+            i++;
+        }
+    } else {
+        while (i < len) {
+            samples[i] = parseInt(crumbs[i], base);
+            if (samples[i] > 1) {
+                samples[i] -= 4;
+            }
+            i++;
+        }
+    }
+    return samples;
+}
+
+/**
  * Read 4-bit signed ints from an array of nibbles.
  * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
  * @param {number} base The base. Defaults to 10.
@@ -449,6 +479,51 @@ function uIntFrom5Bytes(bytes, base=10) {
 }
 
 /**
+ * Read 40-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function intFrom5Bytes(bytes, base=10) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = parseInt(
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            if (samples[i] > 549755813887) {
+                samples[i] -= 1099511627776;
+            }
+            j++;
+            i+=5;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            if (samples[i] > 549755813887) {
+                samples[i] -= 1099511627776;
+            }
+            j++;
+            i+=5;
+        }
+    }
+    return samples;
+}
+
+/**
  * Read 64-bit numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
@@ -518,6 +593,8 @@ function stringFromBytes(bytes, base=10) {
 }
 
 module.exports.fromBoolean = fromBoolean;
+module.exports.intFromCrumb = intFromCrumb;
+module.exports.uIntFromCrumb = uIntFrom1Byte;
 module.exports.intFromNibble = intFromNibble;
 module.exports.uIntFromNibble = uIntFrom1Byte;
 module.exports.intFrom1Byte = intFrom1Byte;
@@ -529,6 +606,7 @@ module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
 module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
+module.exports.intFrom5Bytes = intFrom5Bytes;
 module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;
