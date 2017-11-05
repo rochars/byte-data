@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -87,6 +87,75 @@ module.exports.unpack = unpack
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+/*
+ * Helper functions.
+ * TODO This needs refactoring.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+/**
+ * Padding for binary strings.
+ * @param {!Array<string>} bytes The bytes as binary strings.
+ * @param {number} base The base.
+ * @param {number} index The byte to pad.
+ */
+function padding(bytes, base, index) {
+    let offset = bytes[index].length + 1;
+    if (base == 2 && bytes[index].length < 8) {
+        offset = 9;
+    }else if (base == 16) {
+        offset = 3;
+    }
+    if (bytes[index].length < offset -1) {
+        bytes[index] = 
+            new Array((offset - bytes[index].length)).join("0")  + bytes[index];    
+    }
+}
+
+/**
+ * Fix the size of nibbles.
+ * @param {!Array<string>} nibbles The nibble as a binary or hex string.
+ * @param {number} base The base.
+ * @param {number} index The nibble offset.
+ */
+function paddingNibble(nibbles, base, index) {
+    if (base == 2 && nibbles[index].length < 4) {
+        nibbles[index] = 
+            new Array((5 - nibbles[index].length)).join("0")  + nibbles[index];
+    } else if(base == 16 && nibbles[index].length == 2 && nibbles[index][0] == "0") {
+        nibbles[index] = nibbles[index][1];
+    }
+}   
+
+/**
+ * Padding with 0s for byte strings.
+ * @param {string} byte The byte as a binary or hex string.
+ * @param {number} base The base.
+ * @returns {string} The padded byte.
+ */
+function bytePadding(byte, base) {
+    let offset = byte.length + 1;
+    if (base == 2) {
+        offset = 9;
+    } else if (base == 16) {
+        offset = 3;   
+    }
+    if (byte.length < offset -1) {
+        byte = new Array((offset - byte.length)).join("0")  + byte;
+    }
+    return byte;
+}
+
+module.exports.padding = padding;
+module.exports.paddingNibble = paddingNibble;
+module.exports.bytePadding = bytePadding;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -96,8 +165,8 @@ module.exports.unpack = unpack
  * https://github.com/rochars/byte-data
  */
 
-let toBytes = __webpack_require__(2);
-let fromBytes = __webpack_require__(3);
+let toBytes = __webpack_require__(3);
+let fromBytes = __webpack_require__(4);
 
 /**
  * Find and return the start offset of some string.
@@ -176,6 +245,7 @@ module.exports.toBoolean = toBytes.toBoolean;
 
 window['floatFrom8Bytes'] = fromBytes.floatFrom8Bytes;
 window['doubleFrom8Bytes'] = fromBytes.floatFrom8Bytes;
+window['uIntFrom5Bytes'] = fromBytes.uIntFrom5Bytes;
 window['intFrom4Bytes'] = fromBytes.intFrom4Bytes;
 window['uIntFrom4Bytes'] = fromBytes.uIntFrom4Bytes;
 window['floatFrom4Bytes'] = fromBytes.floatFrom4Bytes;
@@ -191,7 +261,7 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -201,19 +271,7 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
  */
 
 const intBits = __webpack_require__(0);
-
-/**
- * Padding for binary strings.
- * @param {!Array<string>} bytes The bytes as binary strings.
- * @param {number} base The base.
- * @param {number} index The byte to to pad.
- */
-function padding(bytes, base, index) {
-    if (base == 2 && bytes[index].length < 8) {
-        bytes[index] = 
-            new Array((9 - bytes[index].length)).join("0")  + bytes[index];
-    }
-}
+const helpers = __webpack_require__(1);
 
 /**
  * Unpack a 64 bit float into two words.
@@ -277,21 +335,21 @@ function floatTo8Bytes(numbers, base=10) {
             }else {
                 numbers[i] = toFloat64(numbers[i]);
                 bytes[j++] = (numbers[i][1] & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][1] >>> 8 & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][1] >>> 16 & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][1] >>> 24 & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][0] & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][0] >>> 8 & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][0] >>> 16 & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
                 bytes[j++] = (numbers[i][0] >>> 24 & 0xFF).toString(base);
-                padding(bytes, base, j-1);
+                helpers.padding(bytes, base, j-1);
             }
             i++;
         }
@@ -322,13 +380,13 @@ function floatTo4Bytes(numbers, base=10) {
         while (i < len) {            
             numbers[i] = intBits.unpack(numbers[i]);
             bytes[j++] = ((numbers[i]) & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = ((numbers[i] >>> 8) & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = ((numbers[i] >>> 16) & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = ((numbers[i] >>> 24) & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }
@@ -358,17 +416,17 @@ function intTo6Bytes(numbers, base=10) {
     } else {
         while (i< len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 16 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 24 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] / 0x100000000 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] / 0x10000000000 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }
@@ -397,15 +455,15 @@ function intTo5Bytes(numbers, base=10) {
     } else {
         while (i< len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 8 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 16 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >> 24 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] / 0x100000000 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }
@@ -433,13 +491,13 @@ function intTo4Bytes(numbers, base=10) {
     } else {
         while (i < len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >>> 24 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }
@@ -466,11 +524,11 @@ function intTo3Bytes(numbers, base=10) {
     } else {
         while (i < len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }  
@@ -496,9 +554,9 @@ function intTo2Bytes(numbers, base=10) {
     } else {
         while (i < len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }
@@ -523,7 +581,7 @@ function intTo1Byte(numbers, base=10) {
     } else {
         while (i < len) {
             bytes[j++] = (numbers[i] & 0xFF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     }
@@ -548,10 +606,11 @@ function intToNibble(numbers, base=10) {
     } else {
         while (i < len) {
             bytes[j++] = (numbers[i] & 0xF).toString(base);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             if (base == 2) {
                 bytes[j-1] = bytes[j-1].slice(4,8);
             }
+            helpers.paddingNibble(bytes, base, j-1);
             i++;
         }
     }
@@ -596,7 +655,7 @@ function stringToBytes(string, base=10) {
     if (base == 10) {
         while (i < len) {
             bytes[j++] = string.charCodeAt(i);
-            padding(bytes, base, j-1);
+            helpers.padding(bytes, base, j-1);
             i++;
         }
     } else {
@@ -622,7 +681,7 @@ module.exports.stringToBytes = stringToBytes;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -632,6 +691,7 @@ module.exports.stringToBytes = stringToBytes;
  */
 
 const intBits = __webpack_require__(0);
+const helpers = __webpack_require__(1);
 
 /**
  * Turn an array of bytes into a float 64.
@@ -1036,6 +1096,45 @@ function floatFrom4Bytes(bytes, base=10) {
 }
 
 /**
+ * Read 40-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function uIntFrom5Bytes(bytes, base=10) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = parseInt(
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            j++;
+            i+=5;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            j++;
+            i+=5;
+        }
+    }
+    return samples;
+}
+
+/**
  * Read 64-bit numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
@@ -1116,6 +1215,7 @@ module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
 module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
+module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;
 

@@ -33,6 +33,7 @@
  */
 
 const intBits = require("int-bits");
+const helpers = require("../src/helpers.js");
 
 /**
  * Turn an array of bytes into a float 64.
@@ -437,6 +438,45 @@ function floatFrom4Bytes(bytes, base=10) {
 }
 
 /**
+ * Read 40-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array&lt;number>} The numbers.
+ */
+function uIntFrom5Bytes(bytes, base=10) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i &lt; len) {
+            samples[j] = parseInt(
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            j++;
+            i+=5;
+        }
+    } else {
+        while (i &lt; len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            j++;
+            i+=5;
+        }
+    }
+    return samples;
+}
+
+/**
  * Read 64-bit numbers from an array of bytes.
  * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
@@ -517,6 +557,7 @@ module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
 module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
+module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;
 </code></pre>
@@ -529,13 +570,13 @@ module.exports.stringFromBytes = stringFromBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#decodeFloat">decodeFloat</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Nov 04 2017 20:10:51 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 05 2017 01:45:07 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

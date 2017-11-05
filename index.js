@@ -85,6 +85,7 @@ module.exports.toBoolean = toBytes.toBoolean;
 
 module.exports.floatFrom8Bytes = fromBytes.floatFrom8Bytes;
 module.exports.doubleFrom8Bytes = fromBytes.floatFrom8Bytes;
+module.exports.uIntFrom5Bytes = fromBytes.uIntFrom5Bytes;
 module.exports.intFrom4Bytes = fromBytes.intFrom4Bytes;
 module.exports.uIntFrom4Bytes = fromBytes.uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = fromBytes.floatFrom4Bytes;

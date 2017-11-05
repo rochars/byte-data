@@ -5,6 +5,7 @@
  */
 
 const intBits = require("int-bits");
+const helpers = require("../src/helpers.js");
 
 /**
  * Turn an array of bytes into a float 64.
@@ -409,6 +410,45 @@ function floatFrom4Bytes(bytes, base=10) {
 }
 
 /**
+ * Read 40-bit unsigned ints from an array of bytes.
+ * TODO: This is implementation is slower than other bytes.
+ *       Find an alternative.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function uIntFrom5Bytes(bytes, base=10) {
+    let samples = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    if (base == 10) {
+        while (i < len) {
+            samples[j] = parseInt(
+                    bytes[4 + i].toString(2) +
+                    bytes[3 + i].toString(2) +
+                    bytes[2 + i].toString(2) +
+                    bytes[1 + i].toString(2) +
+                    bytes[i].toString(2), 2);
+            j++;
+            i+=5;
+        }
+    } else {
+        while (i < len) {
+            samples[j] = parseInt(
+                    helpers.bytePadding(bytes[4 + i], base) +
+                    helpers.bytePadding(bytes[3 + i], base) +
+                    helpers.bytePadding(bytes[2 + i], base) +
+                    helpers.bytePadding(bytes[1 + i], base) +
+                    helpers.bytePadding(bytes[i], base), base);
+            j++;
+            i+=5;
+        }
+    }
+    return samples;
+}
+
+/**
  * Read 64-bit numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
@@ -489,5 +529,6 @@ module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
 module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = floatFrom4Bytes;
+module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
 module.exports.floatFrom8Bytes = floatFrom8Bytes;
 module.exports.stringFromBytes = stringFromBytes;

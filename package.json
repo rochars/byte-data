@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Bytes to and from numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -26,7 +26,7 @@
   },
   "scripts": {
     "lint": "jshint index.js && jshint src",
-    "test": "nyc ./node_modules/mocha/bin/_mocha",
+    "test": "nyc ./node_modules/mocha/bin/_mocha --recursive",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "bundle": "webpack",
     "compile": "google-closure-compiler-js dist/byte-data.js > dist/byte-data-min.js --compilationLevel ADVANCED",

@@ -104,6 +104,10 @@ module.exports = {
               replace: "window['uIntFrom4Bytes']",
             },
             {
+              search: 'module.exports.uIntFrom5Bytes',
+              replace: "window['uIntFrom5Bytes']",
+            },
+            {
               search: 'module.exports.floatFrom4Bytes',
               replace: "window['floatFrom4Bytes']",
             },
