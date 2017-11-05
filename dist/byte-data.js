@@ -67,28 +67,6 @@
 /* 0 */
 /***/ (function(module, exports) {
 
-var int8 = new Int8Array(4)
-var int32 = new Int32Array(int8.buffer, 0, 1)
-var float32 = new Float32Array(int8.buffer, 0, 1)
-
-function pack(i) {
-    int32[0] = i
-    return float32[0]
-}
-
-function unpack(f) {
-    float32[0] = f
-    return int32[0]
-}
-
-module.exports = pack
-module.exports.pack = pack
-module.exports.unpack = unpack
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
 /*
  * Helper functions.
  * TODO This needs refactoring.
@@ -265,6 +243,28 @@ module.exports.bytePadding = bytePadding;
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+var int8 = new Int8Array(4)
+var int32 = new Int32Array(int8.buffer, 0, 1)
+var float32 = new Float32Array(int8.buffer, 0, 1)
+
+function pack(i) {
+    int32[0] = i
+    return float32[0]
+}
+
+function unpack(f) {
+    float32[0] = f
+    return int32[0]
+}
+
+module.exports = pack
+module.exports.pack = pack
+module.exports.unpack = unpack
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -386,8 +386,8 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
  * https://github.com/rochars/byte-data
  */
 
-const intBits = __webpack_require__(0);
-const helpers = __webpack_require__(1);
+const intBits = __webpack_require__(1);
+const helpers = __webpack_require__(0);
 
 /**
  * Split 64 bit numbers into bytes.
@@ -705,8 +705,20 @@ module.exports.stringToBytes = stringToBytes;
  * https://github.com/rochars/byte-data
  */
 
-const intBits = __webpack_require__(0);
-const helpers = __webpack_require__(1);
+const intBits = __webpack_require__(1);
+const helpers = __webpack_require__(0);
+const reader = __webpack_require__(5);
+
+const maxBitDepth = {
+    2: 4,
+    4: 16,
+    8: 256,
+    16: 65536,
+    24: 16777216,
+    32: 4294967296,
+    40: 1099511627776,
+    48: 281474976710656
+};
 
 /**
  * Read numbers from a array of booleans.
@@ -718,11 +730,19 @@ function fromBoolean(booleans, base=10) {
     let samples = [];
     let i = 0;
     let len = booleans.length;
+    helpers.bytesToInt(booleans, base);
     while (i < len) {
-        samples[i] = parseInt(parseInt(booleans[i], base), 2);
+        samples[i] = parseInt(booleans[i], 2);
         i++;
     }
     return samples;
+}
+
+function signed(number, bitDepth) {
+    if (number > parseInt(maxBitDepth[bitDepth] / 2, 10) - 1) {
+        number -= maxBitDepth[bitDepth];
+    }
+    return number;
 }
 
 /**
@@ -737,10 +757,7 @@ function intFromCrumb(crumbs, base=10) {
     let len = crumbs.length;
     helpers.bytesToInt(crumbs, base);   
     while (i < len) {
-        samples[i] = crumbs[i];
-        if (samples[i] > 1) {
-            samples[i] -= 4;
-        }
+        samples[i] = signed(crumbs[i], 2);
         i++;
     }
     return samples;
@@ -756,12 +773,9 @@ function intFromNibble(nibbles, base=10) {
     let samples = [];
     let i = 0;
     let len = nibbles.length;
-        helpers.bytesToInt(nibbles, base);
+    helpers.bytesToInt(nibbles, base);
     while (i < len) {
-        samples[i] = nibbles[i];
-        if (samples[i] > 7) {
-            samples[i] -= 16;
-        }
+        samples[i] = signed(nibbles[i], 4);
         i++;
     }
     return samples;
@@ -775,18 +789,8 @@ function intFromNibble(nibbles, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes, base=10) {
-    if (base == 10) {
-        return [].slice.call(bytes);
-    } else {
-        let samples = [];
-        let i = 0;
-        let len = bytes.length;
-        while (i < len) {
-            samples[i] = parseInt(bytes[i], base);
-            i++;
-        }
-        return samples;
-    }
+    helpers.bytesToInt(bytes, base);
+    return [].slice.call(bytes);
 }
 
 /**
@@ -801,10 +805,7 @@ function intFrom1Byte(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[i] = bytes[i];
-        if (samples[i] > 127) {
-            samples[i] -= 256;
-        }
+        samples[i] = signed(bytes[i], 8);
         i++;
     }
     return samples;
@@ -824,10 +825,9 @@ function intFrom2Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];
-        if (bytes[1 + i] & (1 << 7)) {
-           samples[j] = 0xFFFF0000 | samples[j];
-        }
+        samples[j] = (bytes[1 + i] << 8) |
+                bytes[i];
+        samples[j] = signed(samples[j], 16);
         j++;
         i+=2;
     }
@@ -867,12 +867,8 @@ function intFrom3Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read24Bit(bytes, i);
-        if ((samples[j] & 0x00800000) > 0) {
-            samples[j] = samples[j] | 0xFF000000;
-        } else {  
-            samples[j] = samples[j] & 0x00FFFFFF;
-        } 
+        samples[j] = reader.read24Bit(bytes, i);
+        samples[j] = signed(samples[j], 24);
         j++;
         i+=3;
     }
@@ -892,7 +888,7 @@ function uIntFrom3Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read24Bit(bytes, i);
+        samples[j] = reader.read24Bit(bytes, i);
         j++;
         i+=3;
     }
@@ -912,10 +908,8 @@ function intFrom4Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read32Bit(bytes, i);
-        if ((samples[j] & 0x80000000) < 0) {
-            samples[j] = samples[j] & 0xFFFFFFFF;  
-        }
+        samples[j] = reader.read32Bit(bytes, i);
+        samples[j] = signed(samples[j], 32);
         j++;
         i+=4;
     }
@@ -935,7 +929,7 @@ function uIntFrom4Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read32Bit(bytes, i);
+        samples[j] = reader.read32Bit(bytes, i);
         samples[j] = samples[j] >>> 0;
         j++;
         i+=4;
@@ -956,7 +950,7 @@ function floatFrom4Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = intBits.pack(read32Bit(bytes, i));
+        samples[j] = intBits.pack(reader.read32Bit(bytes, i));
         j++;
         i+=4;
     }
@@ -978,7 +972,7 @@ function uIntFrom5Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read40Bit(bytes, i);
+        samples[j] = reader.read40Bit(bytes, i);
         j++;
         i+=5;
     }
@@ -1000,10 +994,8 @@ function intFrom5Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read40Bit(bytes, i);
-        if (samples[i] > 549755813887) {
-            samples[i] -= 1099511627776;
-        }
+        samples[j] = reader.read40Bit(bytes, i);
+        samples[j] = signed(samples[j], 40);
         j++;
         i+=5;
     }
@@ -1025,7 +1017,7 @@ function uIntFrom6Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read48Bit(bytes, i);
+        samples[j] = reader.read48Bit(bytes, i);
         j++;
         i+=6;
     }
@@ -1048,10 +1040,8 @@ function intFrom6Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read48Bit(bytes, i);
-        if (samples[i] > 140737488355327) {
-            samples[i] -= 281474976710656;
-        }
+        samples[j] = reader.read48Bit(bytes, i);
+        samples[j] = signed(samples[j], 48);
         j++;
         i+=6;
     }
@@ -1096,19 +1086,47 @@ function stringFromBytes(bytes, base=10) {
     let string = "";
     let i = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            string += String.fromCharCode(bytes[i]);
-            i++;
-        }
-    } else {
-        while (i < len) {
-            string += String.fromCharCode(parseInt(bytes[i], base));
-            i++;
-        }
+    helpers.bytesToInt(bytes, base);
+    while (i < len) {
+        string += String.fromCharCode(bytes[i]);
+        i++;
     }
     return string;
 }
+
+module.exports.fromBoolean = fromBoolean;
+module.exports.intFromCrumb = intFromCrumb;
+module.exports.uIntFromCrumb = uIntFrom1Byte;
+module.exports.intFromNibble = intFromNibble;
+module.exports.uIntFromNibble = uIntFrom1Byte;
+module.exports.intFrom1Byte = intFrom1Byte;
+module.exports.uIntFrom1Byte = uIntFrom1Byte;
+module.exports.intFrom2Bytes = intFrom2Bytes;
+module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
+module.exports.intFrom3Bytes = intFrom3Bytes;
+module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
+module.exports.intFrom4Bytes = intFrom4Bytes;
+module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
+module.exports.floatFrom4Bytes = floatFrom4Bytes;
+module.exports.intFrom5Bytes = intFrom5Bytes;
+module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
+module.exports.intFrom6Bytes = intFrom6Bytes;
+module.exports.uIntFrom6Bytes = uIntFrom6Bytes;
+module.exports.floatFrom8Bytes = floatFrom8Bytes;
+module.exports.stringFromBytes = stringFromBytes;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Function to read data from arrays of bytes.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+let helpers = __webpack_require__(0);
 
 /**
  * Read 1 24-bit int from from bytes.
@@ -1116,10 +1134,9 @@ function stringFromBytes(bytes, base=10) {
  * @param {number} i The index to start reading.
  */
 function read24Bit(bytes, i) {
-    return ( bytes[2 + i] << 16 |
+    return bytes[2 + i] << 16 |
             bytes[1 + i] << 8 |
-            bytes[i]
-        );
+            bytes[i];
 }
 
 /**
@@ -1128,11 +1145,10 @@ function read24Bit(bytes, i) {
  * @param {number} i The index to start reading.
  */
 function read32Bit(bytes, i) {
-    return (bytes[3 + i] << 24 |
-            bytes[2 + i] << 16 |
-            bytes[1 + i] << 8 |
-            bytes[i]
-        );
+    return bytes[3 + i] << 24 |
+        bytes[2 + i] << 16 |
+        bytes[1 + i] << 8 |
+        bytes[i];
 }
 
 /**
@@ -1164,26 +1180,10 @@ function read48Bit(bytes, i) {
         helpers.bytePadding(bytes[i].toString(2) ,2), 2);
 }
 
-module.exports.fromBoolean = fromBoolean;
-module.exports.intFromCrumb = intFromCrumb;
-module.exports.uIntFromCrumb = uIntFrom1Byte;
-module.exports.intFromNibble = intFromNibble;
-module.exports.uIntFromNibble = uIntFrom1Byte;
-module.exports.intFrom1Byte = intFrom1Byte;
-module.exports.uIntFrom1Byte = uIntFrom1Byte;
-module.exports.intFrom2Bytes = intFrom2Bytes;
-module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
-module.exports.intFrom3Bytes = intFrom3Bytes;
-module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
-module.exports.intFrom4Bytes = intFrom4Bytes;
-module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
-module.exports.floatFrom4Bytes = floatFrom4Bytes;
-module.exports.intFrom5Bytes = intFrom5Bytes;
-module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
-module.exports.intFrom6Bytes = intFrom6Bytes;
-module.exports.uIntFrom6Bytes = uIntFrom6Bytes;
-module.exports.floatFrom8Bytes = floatFrom8Bytes;
-module.exports.stringFromBytes = stringFromBytes;
+module.exports.read24Bit = read24Bit;
+module.exports.read32Bit = read32Bit;
+module.exports.read40Bit = read40Bit;
+module.exports.read48Bit = read48Bit;
 
 
 /***/ })

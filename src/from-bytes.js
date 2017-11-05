@@ -6,6 +6,18 @@
 
 const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
+const reader = require("../src/read-bytes.js");
+
+const maxBitDepth = {
+    2: 4,
+    4: 16,
+    8: 256,
+    16: 65536,
+    24: 16777216,
+    32: 4294967296,
+    40: 1099511627776,
+    48: 281474976710656
+};
 
 /**
  * Read numbers from a array of booleans.
@@ -17,11 +29,19 @@ function fromBoolean(booleans, base=10) {
     let samples = [];
     let i = 0;
     let len = booleans.length;
+    helpers.bytesToInt(booleans, base);
     while (i < len) {
-        samples[i] = parseInt(parseInt(booleans[i], base), 2);
+        samples[i] = parseInt(booleans[i], 2);
         i++;
     }
     return samples;
+}
+
+function signed(number, bitDepth) {
+    if (number > parseInt(maxBitDepth[bitDepth] / 2, 10) - 1) {
+        number -= maxBitDepth[bitDepth];
+    }
+    return number;
 }
 
 /**
@@ -36,10 +56,7 @@ function intFromCrumb(crumbs, base=10) {
     let len = crumbs.length;
     helpers.bytesToInt(crumbs, base);   
     while (i < len) {
-        samples[i] = crumbs[i];
-        if (samples[i] > 1) {
-            samples[i] -= 4;
-        }
+        samples[i] = signed(crumbs[i], 2);
         i++;
     }
     return samples;
@@ -55,12 +72,9 @@ function intFromNibble(nibbles, base=10) {
     let samples = [];
     let i = 0;
     let len = nibbles.length;
-        helpers.bytesToInt(nibbles, base);
+    helpers.bytesToInt(nibbles, base);
     while (i < len) {
-        samples[i] = nibbles[i];
-        if (samples[i] > 7) {
-            samples[i] -= 16;
-        }
+        samples[i] = signed(nibbles[i], 4);
         i++;
     }
     return samples;
@@ -74,18 +88,8 @@ function intFromNibble(nibbles, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes, base=10) {
-    if (base == 10) {
-        return [].slice.call(bytes);
-    } else {
-        let samples = [];
-        let i = 0;
-        let len = bytes.length;
-        while (i < len) {
-            samples[i] = parseInt(bytes[i], base);
-            i++;
-        }
-        return samples;
-    }
+    helpers.bytesToInt(bytes, base);
+    return [].slice.call(bytes);
 }
 
 /**
@@ -100,10 +104,7 @@ function intFrom1Byte(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[i] = bytes[i];
-        if (samples[i] > 127) {
-            samples[i] -= 256;
-        }
+        samples[i] = signed(bytes[i], 8);
         i++;
     }
     return samples;
@@ -123,10 +124,9 @@ function intFrom2Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];
-        if (bytes[1 + i] & (1 << 7)) {
-           samples[j] = 0xFFFF0000 | samples[j];
-        }
+        samples[j] = (bytes[1 + i] << 8) |
+                bytes[i];
+        samples[j] = signed(samples[j], 16);
         j++;
         i+=2;
     }
@@ -166,12 +166,8 @@ function intFrom3Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read24Bit(bytes, i);
-        if ((samples[j] & 0x00800000) > 0) {
-            samples[j] = samples[j] | 0xFF000000;
-        } else {  
-            samples[j] = samples[j] & 0x00FFFFFF;
-        } 
+        samples[j] = reader.read24Bit(bytes, i);
+        samples[j] = signed(samples[j], 24);
         j++;
         i+=3;
     }
@@ -191,7 +187,7 @@ function uIntFrom3Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read24Bit(bytes, i);
+        samples[j] = reader.read24Bit(bytes, i);
         j++;
         i+=3;
     }
@@ -211,10 +207,8 @@ function intFrom4Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read32Bit(bytes, i);
-        if ((samples[j] & 0x80000000) < 0) {
-            samples[j] = samples[j] & 0xFFFFFFFF;  
-        }
+        samples[j] = reader.read32Bit(bytes, i);
+        samples[j] = signed(samples[j], 32);
         j++;
         i+=4;
     }
@@ -234,7 +228,7 @@ function uIntFrom4Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read32Bit(bytes, i);
+        samples[j] = reader.read32Bit(bytes, i);
         samples[j] = samples[j] >>> 0;
         j++;
         i+=4;
@@ -255,7 +249,7 @@ function floatFrom4Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = intBits.pack(read32Bit(bytes, i));
+        samples[j] = intBits.pack(reader.read32Bit(bytes, i));
         j++;
         i+=4;
     }
@@ -277,7 +271,7 @@ function uIntFrom5Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read40Bit(bytes, i);
+        samples[j] = reader.read40Bit(bytes, i);
         j++;
         i+=5;
     }
@@ -299,10 +293,8 @@ function intFrom5Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read40Bit(bytes, i);
-        if (samples[i] > 549755813887) {
-            samples[i] -= 1099511627776;
-        }
+        samples[j] = reader.read40Bit(bytes, i);
+        samples[j] = signed(samples[j], 40);
         j++;
         i+=5;
     }
@@ -324,7 +316,7 @@ function uIntFrom6Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read48Bit(bytes, i);
+        samples[j] = reader.read48Bit(bytes, i);
         j++;
         i+=6;
     }
@@ -347,10 +339,8 @@ function intFrom6Bytes(bytes, base=10) {
     let len = bytes.length;
     helpers.bytesToInt(bytes, base);
     while (i < len) {
-        samples[j] = read48Bit(bytes, i);
-        if (samples[i] > 140737488355327) {
-            samples[i] -= 281474976710656;
-        }
+        samples[j] = reader.read48Bit(bytes, i);
+        samples[j] = signed(samples[j], 48);
         j++;
         i+=6;
     }
@@ -395,72 +385,12 @@ function stringFromBytes(bytes, base=10) {
     let string = "";
     let i = 0;
     let len = bytes.length;
-    if (base == 10) {
-        while (i < len) {
-            string += String.fromCharCode(bytes[i]);
-            i++;
-        }
-    } else {
-        while (i < len) {
-            string += String.fromCharCode(parseInt(bytes[i], base));
-            i++;
-        }
+    helpers.bytesToInt(bytes, base);
+    while (i < len) {
+        string += String.fromCharCode(bytes[i]);
+        i++;
     }
     return string;
-}
-
-/**
- * Read 1 24-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to start reading.
- */
-function read24Bit(bytes, i) {
-    return ( bytes[2 + i] << 16 |
-            bytes[1 + i] << 8 |
-            bytes[i]
-        );
-}
-
-/**
- * Read 1 32-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to start reading.
- */
-function read32Bit(bytes, i) {
-    return (bytes[3 + i] << 24 |
-            bytes[2 + i] << 16 |
-            bytes[1 + i] << 8 |
-            bytes[i]
-        );
-}
-
-/**
- * Read 1 40-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to start reading.
- */
-function read40Bit(bytes, i) {
-    return parseInt(
-        helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[i].toString(2), 2), 2);
-}
-
-/**
- * Read 1 48-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to start reading.
- */
-function read48Bit(bytes, i) {
-    return parseInt(
-        helpers.bytePadding(bytes[5 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[i].toString(2) ,2), 2);
 }
 
 module.exports.fromBoolean = fromBoolean;
