@@ -106,7 +106,7 @@ function paddingNibble(nibbles, base, index) {
  * @param {number} index The nibble offset.
  */
 function paddingCrumb(crumbs, base, index) {
-    if ((base == 2) && crumbs[index].length < 2) {
+    if ((base == 2 || base == 16) && crumbs[index].length < 2) {
         crumbs[index] = '0' + crumbs[index];
     }
 }   
@@ -150,14 +150,15 @@ function bytesToInt(bytes, base) {
  * Turn bytes to base.
  * @param {!Array<string>|!Array<number>} bytes The bytes.
  * @param {number} base The base.
+ * @param {Function} padFunction The function to use for padding.
  */
-function bytesToBase(bytes, base) {
+function bytesToBase(bytes, base, padFunction=padding) {
     if (base != 10) {
         let i = 0;
         let len = bytes.length;
         while (i < len) {
             bytes[i] = bytes[i].toString(base);
-            padding(bytes, base, i);
+            padFunction(bytes, base, i);
             i++;
         }
     }

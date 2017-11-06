@@ -199,22 +199,11 @@ function intToNibble(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i < len) {
-            bytes[j++] = numbers[i] & 0xF;
-            i++;
-        }
-    } else {
-        while (i < len) {
-            bytes[j++] = (numbers[i] & 0xF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            if (base == 2) {
-                bytes[j-1] = bytes[j-1].slice(4,8);
-            }
-            helpers.paddingNibble(bytes, base, j-1);
-            i++;
-        }
+    while (i < len) {
+        bytes[j++] = numbers[i] & 0xF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base, helpers.paddingNibble);
     return bytes;
 }
 
@@ -229,23 +218,11 @@ function toCrumb(values, base=10) {
     let j = 0;
     let len = values.length;
     let bytes = [];
-    if (base == 10) {
-        while (i < len) {
-            bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
-            i++;
-        }
-    } else {
-        while (i < len) {
-            let v = values[i] < 0 ? values[i] + 4 : values[i];
-            bytes[j++] = (v).toString(base);
-            helpers.padding(bytes, base, j-1);
-            if (base == 2) {
-                bytes[j-1] = bytes[j-1].slice(6,8);
-            }
-            helpers.paddingCrumb(bytes, base, j-1);
-            i++;
-        }
+    while (i < len) {
+        bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
+        i++;
     }
+    helpers.bytesToBase(bytes, base, helpers.paddingCrumb);
     return bytes;
 }
 
@@ -260,17 +237,11 @@ function toBoolean(values, base=10) {
     let j = 0;
     let len = values.length;
     let booleans = [];
-    if (base == 10) {
-        while (i < len) {
-            booleans[j++] = values[i] ? 1 : 0;
-            i++;
-        }
-    } else {
-        while (i < len) {
-            booleans[j++] = values[i] ? "1" : "0";
-            i++;
-        }
+    while (i < len) {
+        booleans[j++] = values[i] ? 1 : 0;
+        i++;
     }
+    helpers.bytesToBase(booleans, base, function(){});
     return booleans;
 }
 
@@ -284,18 +255,12 @@ function stringToBytes(string, base=10) {
     let j = 0;
     let len = string.length;
     let bytes = [];
-    if (base == 10) {
-        while (i < len) {
-            bytes[j++] = string.charCodeAt(i);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
-    } else {
-        while (i < len) {
-            bytes[j++] = string.charCodeAt(i).toString(base);
-            i++;
-        }
+    while (i < len) {
+        bytes[j++] = string.charCodeAt(i);
+        helpers.padding(bytes, base, j-1);
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 

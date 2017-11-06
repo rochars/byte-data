@@ -175,7 +175,7 @@ function paddingNibble(nibbles, base, index) {
  * @param {number} index The nibble offset.
  */
 function paddingCrumb(crumbs, base, index) {
-    if ((base == 2) && crumbs[index].length < 2) {
+    if ((base == 2 || base == 16) && crumbs[index].length < 2) {
         crumbs[index] = '0' + crumbs[index];
     }
 }   
@@ -219,14 +219,15 @@ function bytesToInt(bytes, base) {
  * Turn bytes to base.
  * @param {!Array<string>|!Array<number>} bytes The bytes.
  * @param {number} base The base.
+ * @param {Function} padFunction The function to use for padding.
  */
-function bytesToBase(bytes, base) {
+function bytesToBase(bytes, base, padFunction=padding) {
     if (base != 10) {
         let i = 0;
         let len = bytes.length;
         while (i < len) {
             bytes[i] = bytes[i].toString(base);
-            padding(bytes, base, i);
+            padFunction(bytes, base, i);
             i++;
         }
     }
@@ -594,22 +595,11 @@ function intToNibble(numbers, base=10) {
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-    if (base == 10) {
-        while (i < len) {
-            bytes[j++] = numbers[i] & 0xF;
-            i++;
-        }
-    } else {
-        while (i < len) {
-            bytes[j++] = (numbers[i] & 0xF).toString(base);
-            helpers.padding(bytes, base, j-1);
-            if (base == 2) {
-                bytes[j-1] = bytes[j-1].slice(4,8);
-            }
-            helpers.paddingNibble(bytes, base, j-1);
-            i++;
-        }
+    while (i < len) {
+        bytes[j++] = numbers[i] & 0xF;
+        i++;
     }
+    helpers.bytesToBase(bytes, base, helpers.paddingNibble);
     return bytes;
 }
 
@@ -624,23 +614,11 @@ function toCrumb(values, base=10) {
     let j = 0;
     let len = values.length;
     let bytes = [];
-    if (base == 10) {
-        while (i < len) {
-            bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
-            i++;
-        }
-    } else {
-        while (i < len) {
-            let v = values[i] < 0 ? values[i] + 4 : values[i];
-            bytes[j++] = (v).toString(base);
-            helpers.padding(bytes, base, j-1);
-            if (base == 2) {
-                bytes[j-1] = bytes[j-1].slice(6,8);
-            }
-            helpers.paddingCrumb(bytes, base, j-1);
-            i++;
-        }
+    while (i < len) {
+        bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
+        i++;
     }
+    helpers.bytesToBase(bytes, base, helpers.paddingCrumb);
     return bytes;
 }
 
@@ -655,17 +633,11 @@ function toBoolean(values, base=10) {
     let j = 0;
     let len = values.length;
     let booleans = [];
-    if (base == 10) {
-        while (i < len) {
-            booleans[j++] = values[i] ? 1 : 0;
-            i++;
-        }
-    } else {
-        while (i < len) {
-            booleans[j++] = values[i] ? "1" : "0";
-            i++;
-        }
+    while (i < len) {
+        booleans[j++] = values[i] ? 1 : 0;
+        i++;
     }
+    helpers.bytesToBase(booleans, base, function(){});
     return booleans;
 }
 
@@ -679,18 +651,12 @@ function stringToBytes(string, base=10) {
     let j = 0;
     let len = string.length;
     let bytes = [];
-    if (base == 10) {
-        while (i < len) {
-            bytes[j++] = string.charCodeAt(i);
-            helpers.padding(bytes, base, j-1);
-            i++;
-        }
-    } else {
-        while (i < len) {
-            bytes[j++] = string.charCodeAt(i).toString(base);
-            i++;
-        }
+    while (i < len) {
+        bytes[j++] = string.charCodeAt(i);
+        helpers.padding(bytes, base, j-1);
+        i++;
     }
+    helpers.bytesToBase(bytes, base);
     return bytes;
 }
 
