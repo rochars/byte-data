@@ -17,6 +17,12 @@ describe('48-bit from bytes', function() {
             ["ff","ff","ff","ff","ff","ff"], 16),
             [281474976710655]);
     });
+    it('should turn 5 bytes (hex) to 0 unsigned 48-bit int (not enough bytes)',
+            function() {
+        assert.deepEqual(byteData.uIntFrom6Bytes(
+            ["ff","ff","ff","ff","ff"], 16),
+            []);
+    });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (max range)',
             function() {
         assert.deepEqual(byteData.intFrom6Bytes(

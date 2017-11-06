@@ -25,6 +25,11 @@ describe('24-bit from bytes', function() {
             ["00000000","00000000","00000000","11111111","11111111","11111111","11111111"], 2),
             [0,16777215]);
     });
+    it('should turn 2 bytes bin to 0 24-bit uInts (not enough bytes)', function() {
+        assert.deepEqual(byteData.uIntFrom3Bytes(
+            ["11111111","11111111"], 2),
+            []);
+    });
     it('should turn 6 bytes hex to 2 24-bit ints (max range)', function() {
         assert.deepEqual(byteData.intFrom3Bytes(
             ["0","0","80", "ff","ff","7f"], 16),

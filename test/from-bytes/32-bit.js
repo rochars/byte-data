@@ -17,6 +17,11 @@ describe('32-bit from bytes', function() {
             ["5f","70","9","40"], 16)[0].toFixed(7),
             2.1474836);
     });
+    it('should turn 3 bytes hex to 0 32-bit float (not enough bytes)', function() {
+        assert.deepEqual(byteData.floatFrom4Bytes(
+            ["5f","70","9"], 16),
+            []);
+    });
     it('should turn 1 32-bit float to 4 bytes', function() {
         assert.deepEqual(
             byteData.floatFrom4Bytes([95,112,9,64])[0].toFixed(7),

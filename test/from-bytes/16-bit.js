@@ -25,6 +25,11 @@ describe('16-bit from bytes', function() {
             ["00000000","00000000","11111111","11111111","11111111"], 2),
             [0, 65535]);
     });
+    it('should turn 1 byte bin to 0 16-bit uInts (not enough bytes)', function() {
+        assert.deepEqual(byteData.uIntFrom2Bytes(
+            ["11111111"], 2),
+            []);
+    });
     it('should turn 4 bytes hex to 2 16-bit ints (max range)', function() {
         assert.deepEqual(byteData.intFrom2Bytes(
             ["0","80","ff","7f"], 16),

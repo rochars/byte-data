@@ -10,6 +10,10 @@ describe('64-bit from bytes', function() {
             [75,40,253,58,221,154,191,63])[0],
             0.123456789876543);
     });
+    it('should turn 7 bytes to 0 64-bit float (not enough bytes)', function() {
+        assert.deepEqual(byteData.floatFrom8Bytes([75,40,253,58,221,154,191]),
+            []);
+    });
     it('should turn 8 bytes to 1 64-bit float (Uint8Array)', function() {
         assert.equal(byteData.floatFrom8Bytes(
             new Uint8Array([75,40,253,58,221,154,191,63]))[0],
