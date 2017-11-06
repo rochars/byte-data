@@ -18,6 +18,14 @@ describe('40-bit from bytes', function() {
             ["ff","7f","0","0","0"], 16),
             [32767]);
     });
+
+    it('should turn 7 bytes (hex) to 1 unsigned 40-bit int (ignoring the extra bytes) (32767)',
+            function() {
+        assert.deepEqual(byteData.uIntFrom5Bytes(
+            ["ff","7f","0","0","0","ff","ff"], 16),
+            [32767]);
+    });
+
     it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (549755813887)',
             function() {
         assert.deepEqual(byteData.uIntFrom5Bytes(
@@ -78,6 +86,18 @@ describe('40-bit from bytes', function() {
             function() {
         assert.deepEqual(byteData.intFrom5Bytes(
             ["1","0","ff","ff","ff"], 16),
+            [-65535]);
+    });
+    it('should turn 6 bytes (hex) to 1 signed 40-bit int (ignore the extra byte) (-65535)',
+            function() {
+        assert.deepEqual(byteData.intFrom5Bytes(
+            ["1","0","ff","ff","ff","fe"], 16),
+            [-65535]);
+    });
+    it('should turn 9 bytes (hex) to 1 signed 40-bit int  (ignore the extra bytes) (-65535)',
+            function() {
+        assert.deepEqual(byteData.intFrom5Bytes(
+            ["1","0","ff","ff","ff","ff","ff","ff","ff"], 16),
             [-65535]);
     });
     

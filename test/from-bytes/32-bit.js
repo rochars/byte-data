@@ -46,6 +46,11 @@ describe('32-bit from bytes', function() {
             ["0","0","0","80", "ff","ff","ff","7f"], 16),
             [-2147483648,2147483647]);
     });
+    it('should turn 10 bytes hex to 2 32-bit ints (ignore extra bytes) (max range)', function() {
+        assert.deepEqual(byteData.intFrom4Bytes(
+            ["0","0","0","80", "ff","ff","ff","7f","ff","80"], 16),
+            [-2147483648,2147483647]);
+    });
     it('should turn 4 bytes hex to 1 32-bit ints (random negative)', function() {
         assert.deepEqual(byteData.intFrom4Bytes(
             ["e8","3","0","80"], 16),

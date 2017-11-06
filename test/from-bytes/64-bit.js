@@ -20,6 +20,11 @@ describe('64-bit from bytes', function() {
             new Buffer.from([75,40,253,58,221,154,191,63]))[0],
             0.123456789876543);
     });
+    it('should turn 9 bytes to 1 64-bit float (ignore the extra byte) (Buffer)', function() {
+        assert.equal(byteData.floatFrom8Bytes(
+            new Buffer.from([75,40,253,58,221,154,191,63,00]))[0],
+            0.123456789876543);
+    });
     it('should turn 8 bytes to 1 64-bit float', function() {
         assert.equal(byteData.floatFrom8Bytes(
             [0,0,0,0,0,0,0,0])[0].toFixed(15),

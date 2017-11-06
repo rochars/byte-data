@@ -842,8 +842,8 @@ function fromBytes(bytes, base, reader, bitDepth, signed=false) {
     let numbers = [];
     let i = 0;
     let j = 0;
-    let len = bytes.length;
     let offset = bitDepthOffsets[bitDepth];
+    let len = bytes.length - (offset -1);
     let maxBitDepthValue = maxBitDepth[bitDepth];
     helpers.bytesToInt(bytes, base);   
     if (signed) {
