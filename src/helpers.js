@@ -176,6 +176,27 @@ function signed(number, maxValue) {
     return number;
 }
 
+/**
+ * Read a group of bytes by turning it to bits.
+ * Useful for values > 32-bit, but will underperform.
+ * TODO find better alternative for > 32-bit.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @param {number} numBytes The number of bytes
+ *      (1 for 8-bit, 2 for 16-bit, etc).
+ * @return {number}
+ */
+function readBytesAsBits(bytes, i, numBytes) {
+    let j = numBytes-1;
+    let bits = "";
+    while (j >= 0) {
+        bits += bytePadding(bytes[j + i].toString(2), 2);
+        j--;
+    }
+    return parseInt(bits, 2);
+}
+
+module.exports.readBytesAsBits = readBytesAsBits;
 module.exports.signed = signed;
 module.exports.bytesToBase = bytesToBase;
 module.exports.bytesToInt = bytesToInt;

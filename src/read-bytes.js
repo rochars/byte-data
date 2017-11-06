@@ -81,12 +81,7 @@ function read32BitFloat(bytes, i) {
  * @return {number}
  */
 function read40Bit(bytes, i) {
-    return parseInt(
-        helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[i].toString(2), 2), 2);
+    return helpers.readBytesAsBits(bytes, i, 5);
 }
 
 /**
@@ -96,13 +91,7 @@ function read40Bit(bytes, i) {
  * @return {number}
  */
 function read48Bit(bytes, i) {
-    return parseInt(
-        helpers.bytePadding(bytes[5 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[4 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[3 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[2 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[1 + i].toString(2), 2) +
-        helpers.bytePadding(bytes[i].toString(2) ,2), 2);
+    return helpers.readBytesAsBits(bytes, i, 6);
 }
 
 /**
