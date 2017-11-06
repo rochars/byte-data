@@ -4,10 +4,30 @@
  * https://github.com/rochars/byte-data
  */
 
-const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
 const reader = require("../src/read-bytes.js");
 
+/**
+ * Offset for reading each bit depth.
+ * @enum {number}
+ */
+const bitDepthOffsets = {
+    1: 1,
+    2: 1,
+    4: 1,
+    8: 1,
+    16: 2,
+    24: 3,
+    32: 4,
+    40: 5,
+    48: 6,
+    64: 8,
+};
+
+/**
+ * Max value for each bit depth.
+ * @enum {number}
+ */
 const maxBitDepth = {
     2: 4,
     4: 16,
@@ -20,64 +40,67 @@ const maxBitDepth = {
 };
 
 /**
+ * Turn a array of bytes into an array of what the bytes should represent.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. 2, 10 or 16.
+ * @param {Function} reader The function to read the bytes.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} signed If readed numbers should be signed or not.
+ * @return {!Array<number>} The values represented in the bytes.
+ */
+function fromBytes(bytes, base, reader, bitDepth, signed=false) {
+    let numbers = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    let offset = bitDepthOffsets[bitDepth];
+    let maxBitDepthValue = maxBitDepth[bitDepth];
+    helpers.bytesToInt(bytes, base);   
+    if (signed) {
+        while (i < len) {
+            numbers[j] = reader(bytes, i);
+            numbers[j] = helpers.signed(numbers[j], maxBitDepthValue);
+            i += offset;
+            j++;
+        }    
+    } else {
+        while (i < len) {
+            numbers[j] = reader(bytes, i);
+            i += offset;
+            j++;
+        }    
+    }
+    return numbers;
+}
+
+/**
  * Read numbers from a array of booleans.
  * @param {!Array<number>|Uint8Array} booleans An array of booleans.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function fromBoolean(booleans, base=10) {
-    let samples = [];
-    let i = 0;
-    let len = booleans.length;
-    helpers.bytesToInt(booleans, base);
-    while (i < len) {
-        samples[i] = parseInt(booleans[i], 2);
-        i++;
-    }
-    return samples;
-}
-
-function signed(number, bitDepth) {
-    if (number > parseInt(maxBitDepth[bitDepth] / 2, 10) - 1) {
-        number -= maxBitDepth[bitDepth];
-    }
-    return number;
+    return fromBytes(booleans, base, reader.read1Bit, 1);
 }
 
 /**
  * Read 2-bit signed ints from an array of crumbs.
- * @param {!Array<number>|Uint8Array} crumbs An array of crumbs.
+ * @param {!Array<number>|Uint8Array} bytes An array of crumbs.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
-function intFromCrumb(crumbs, base=10) {
-    let samples = [];
-    let i = 0;
-    let len = crumbs.length;
-    helpers.bytesToInt(crumbs, base);   
-    while (i < len) {
-        samples[i] = signed(crumbs[i], 2);
-        i++;
-    }
-    return samples;
+function intFromCrumb(bytes, base=10) {
+    return fromBytes(bytes, base, reader.read8Bit, 2, true);
 }
 
 /**
  * Read 4-bit signed ints from an array of nibbles.
- * @param {!Array<number>|Uint8Array} nibbles An array of nibbles.
+ * @param {!Array<number>|Uint8Array} bytes An array of nibbles.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
-function intFromNibble(nibbles, base=10) {
-    let samples = [];
-    let i = 0;
-    let len = nibbles.length;
-    helpers.bytesToInt(nibbles, base);
-    while (i < len) {
-        samples[i] = signed(nibbles[i], 4);
-        i++;
-    }
-    return samples;
+function intFromNibble(bytes, base=10) {
+    return fromBytes(bytes, base, reader.read8Bit, 4, true);
 }
 
 /**
@@ -88,8 +111,7 @@ function intFromNibble(nibbles, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom1Byte(bytes, base=10) {
-    helpers.bytesToInt(bytes, base);
-    return [].slice.call(bytes);
+    return fromBytes(bytes, base, reader.read8Bit, 8);
 }
 
 /**
@@ -99,15 +121,17 @@ function uIntFrom1Byte(bytes, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom1Byte(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[i] = signed(bytes[i], 8);
-        i++;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read8Bit, 8, true);
+}
+
+/**
+ * Read 16-bit unsigned ints from an array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function uIntFrom2Bytes(bytes, base=10) {
+    return fromBytes(bytes, base, reader.read16Bit, 16);
 }
 
 /**
@@ -118,60 +142,7 @@ function intFrom1Byte(bytes, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = (bytes[1 + i] << 8) |
-                bytes[i];
-        samples[j] = signed(samples[j], 16);
-        j++;
-        i+=2;
-    }
-    return samples;
-}
-
-/**
- * Read 16-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom2Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);   
-    while (i < len) {
-        samples[j] = (bytes[1 + i] << 8) | bytes[i];
-        j++;
-        i+=2;
-    }
-    return samples;
-}
-
-/**
- * Read 24-bit signed ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function intFrom3Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read24Bit(bytes, i);
-        samples[j] = signed(samples[j], 24);
-        j++;
-        i+=3;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
 /**
@@ -181,38 +152,17 @@ function intFrom3Bytes(bytes, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read24Bit(bytes, i);
-        j++;
-        i+=3;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read24Bit, 24);
 }
 
 /**
- * Read 32-bit signed ints from an array of bytes.
+ * Read 24-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
-function intFrom4Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read32Bit(bytes, i);
-        samples[j] = signed(samples[j], 32);
-        j++;
-        i+=4;
-    }
-    return samples;
+function intFrom3Bytes(bytes, base=10) {
+    return fromBytes(bytes, base, reader.read24Bit, 24, true);
 }
 
 /**
@@ -222,158 +172,77 @@ function intFrom4Bytes(bytes, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read32Bit(bytes, i);
-        samples[j] = samples[j] >>> 0;
-        j++;
-        i+=4;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read32Bit, 32);
 }
 
 /**
- * Read 32-bit IEEE numbers from an array of bytes.
+ * Read 32-bit signed ints from an array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} base The base. Defaults to 10.
+ * @return {!Array<number>} The numbers.
+ */
+function intFrom4Bytes(bytes, base=10) {
+    return fromBytes(bytes, base, reader.read32Bit, 32, true);
+}
+
+/**
+ * Read 32-bit float numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = intBits.pack(reader.read32Bit(bytes, i));
-        j++;
-        i+=4;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read32BitFloat, 32);
 }
 
 /**
  * Read 40-bit unsigned ints from an array of bytes.
- * TODO: This is implementation is slower than other bytes.
- *       Find an alternative.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom5Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read40Bit(bytes, i);
-        j++;
-        i+=5;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read40Bit, 40);
 }
 
 /**
  * Read 40-bit unsigned ints from an array of bytes.
- * TODO: This is implementation is slower than other bytes.
- *       Find an alternative.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFrom5Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read40Bit(bytes, i);
-        samples[j] = signed(samples[j], 40);
-        j++;
-        i+=5;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read40Bit, 40, true);
 }
 
 /**
  * Read 48-bit unsigned ints from an array of bytes.
- * TODO: This is implementation is slower than other bytes.
- *       Find an alternative.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom6Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read48Bit(bytes, i);
-        j++;
-        i+=6;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read48Bit, 48);
 }
 
 /**
  * Read 48-bit unsigned ints from an array of bytes.
- * TODO: This is implementation is slower than other bytes.
- *       Find an alternative.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function intFrom6Bytes(bytes, base=10) {
-    // 281474976710656
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = reader.read48Bit(bytes, i);
-        samples[j] = signed(samples[j], 48);
-        j++;
-        i+=6;
-    }
-    return samples;
+    return fromBytes(bytes, base, reader.read48Bit, 48, true);
 }
 
 /**
- * Read 64-bit numbers from an array of bytes.
+ * Read 64-bit double precision numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
  * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes, base=10) {
-    let samples = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        samples[j] = helpers.decodeFloat([
-                bytes[i],
-                bytes[1 + i],
-                bytes[2 + i],
-                bytes[3 + i],
-                bytes[4 + i],
-                bytes[5 + i],
-                bytes[6 + i],
-                bytes[7 + i]
-            ]);
-        j++;
-        i+=8;
-    }    
-    return samples;
+    return fromBytes(bytes, base, reader.read64Bit, 64);
 }
 
 /**
@@ -382,15 +251,7 @@ function floatFrom8Bytes(bytes, base=10) {
  * @return {string} The string.
  */
 function stringFromBytes(bytes, base=10) {
-    let string = "";
-    let i = 0;
-    let len = bytes.length;
-    helpers.bytesToInt(bytes, base);
-    while (i < len) {
-        string += String.fromCharCode(bytes[i]);
-        i++;
-    }
-    return string;
+    return fromBytes(bytes, base, reader.readChar, 8).join("");
 }
 
 module.exports.fromBoolean = fromBoolean;

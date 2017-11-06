@@ -163,6 +163,19 @@ function bytesToBase(bytes, base) {
     }
 }
 
+/**
+ * Turn a unsigned number to a signed number.
+ * @param {number} number The number.
+ * @param {number} maxValue The max range for the number bit depth.
+ */
+function signed(number, maxValue) {
+    if (number > parseInt(maxValue / 2, 10) - 1) {
+        number -= maxValue;
+    }
+    return number;
+}
+
+module.exports.signed = signed;
 module.exports.bytesToBase = bytesToBase;
 module.exports.bytesToInt = bytesToInt;
 module.exports.decodeFloat = decodeFloat;
