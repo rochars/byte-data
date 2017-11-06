@@ -12,7 +12,7 @@ const helpers = require("../src/helpers.js");
  * @param {!Array<number>} numbers float64 numbers.
  * @return {!Array<number>} the bytes.
  */
-function floatTo8Bytes(numbers, base=10) {
+function floatTo8Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -36,6 +36,7 @@ function floatTo8Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 8, bigEndian);
     return bytes;
 }
 
@@ -44,7 +45,7 @@ function floatTo8Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers float32 numbers.
  * @return {!Array<number>} the bytes.
  */
-function floatTo4Bytes(numbers, base=10) {
+function floatTo4Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -58,6 +59,7 @@ function floatTo4Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 4, bigEndian);
     return bytes;
 }
 
@@ -66,12 +68,11 @@ function floatTo4Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo6Bytes(numbers, base=10) {
+function intTo6Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-
     while (i < len) {
         bytes[j++] = numbers[i] & 0xFF;
         bytes[j++] = numbers[i] >> 8 & 0xFF;
@@ -82,6 +83,7 @@ function intTo6Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 6, bigEndian);
     return bytes;
 }
 
@@ -90,7 +92,7 @@ function intTo6Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo5Bytes(numbers, base=10) {
+function intTo5Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -104,6 +106,7 @@ function intTo5Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 5, bigEndian);
     return bytes;
 }
 
@@ -112,7 +115,7 @@ function intTo5Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers int32 numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo4Bytes(numbers, base=10) {
+function intTo4Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -129,6 +132,7 @@ function intTo4Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 4, bigEndian);
     return bytes;
 }
 
@@ -137,7 +141,7 @@ function intTo4Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers int24 numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo3Bytes(numbers, base=10) {
+function intTo3Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -149,6 +153,7 @@ function intTo3Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 3, bigEndian);
     return bytes;
 }
 
@@ -157,7 +162,7 @@ function intTo3Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers int16 numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo2Bytes(numbers, base=10) {
+function intTo2Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -168,6 +173,7 @@ function intTo2Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 2, bigEndian);
     return bytes;
 }
 

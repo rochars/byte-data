@@ -196,6 +196,89 @@ function readBytesAsBits(bytes, i, numBytes) {
     return parseInt(bits, 2);
 }
 
+/**
+ * Swap the endianees of bytes in an array of bytes.
+ * TODO better implementation.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} offset The swap offset according to the bit depth.
+ *      2 for 16-bit, 3 for 24-bit, 4 for 32-bit,
+ *      5 for 40-bit, 6 for 48-bit, 8 for 64-bit
+ */
+function swapEndianess(bytes, offset) {
+    let len = bytes.length;
+    let i = 0;
+    let swap;
+    while (i < len) {
+        if (offset == 2) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+1];
+            bytes[i+1] = swap;
+        } else if(offset == 3) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+2];
+            bytes[i+2] = swap;
+        } else if(offset == 4) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+3];
+            bytes[i+3] = swap;
+            swap = bytes[i+1];
+            bytes[i+2] = bytes[i+2];
+            bytes[i+2] = swap;
+        } else if(offset == 5) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+4];
+            bytes[i+4] = swap;
+            swap = bytes[i+1];
+            bytes[i+1] = bytes[i+3];
+            bytes[i+3] = swap;
+        }
+        else if(offset == 6) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+5];
+            bytes[i+5] = swap;
+            swap = bytes[i+1];
+            bytes[i+1] = bytes[i+4];
+            bytes[i+4] = swap;
+            swap = bytes[i+2];
+            bytes[i+2] = bytes[i+3];
+            bytes[i+3] = swap;
+        }
+        else if(offset == 8) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+7];
+            bytes[i+7] = swap;
+            swap = bytes[i+1];
+            bytes[i+1] = bytes[i+6];
+            bytes[i+6] = swap;
+            swap = bytes[i+2];
+            bytes[i+2] = bytes[i+5];
+            bytes[i+5] = swap;
+            swap = bytes[i+3];
+            bytes[i+3] = bytes[i+4];
+            bytes[i+4] = swap;
+        }
+        i+=offset;
+    }
+}
+
+/**
+ * Make the resulting byte array big endian or little endian.
+ * Default is little endian.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} offset The swap offset according to the bit depth.
+ *      2 for 16-bit, 3 for 24-bit, 4 for 32-bit,
+ *      5 for 40-bit, 6 for 48-bit, 8 for 64-bit
+ * @param {boolean} bigEndian If the bytes are big endian or not.
+ */
+function endianess(bytes, offset, bigEndian) {
+    if (bigEndian) {
+        swapEndianess(bytes, offset);
+    }
+    return bytes;
+}
+
+module.exports.endianess = endianess;
+module.exports.swapEndianess = swapEndianess;
 module.exports.readBytesAsBits = readBytesAsBits;
 module.exports.signed = signed;
 module.exports.bytesToBase = bytesToBase;

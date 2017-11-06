@@ -265,6 +265,89 @@ function readBytesAsBits(bytes, i, numBytes) {
     return parseInt(bits, 2);
 }
 
+/**
+ * Swap the endianees of bytes in an array of bytes.
+ * TODO better implementation.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} offset The swap offset according to the bit depth.
+ *      2 for 16-bit, 3 for 24-bit, 4 for 32-bit,
+ *      5 for 40-bit, 6 for 48-bit, 8 for 64-bit
+ */
+function swapEndianess(bytes, offset) {
+    let len = bytes.length;
+    let i = 0;
+    let swap;
+    while (i < len) {
+        if (offset == 2) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+1];
+            bytes[i+1] = swap;
+        } else if(offset == 3) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+2];
+            bytes[i+2] = swap;
+        } else if(offset == 4) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+3];
+            bytes[i+3] = swap;
+            swap = bytes[i+1];
+            bytes[i+2] = bytes[i+2];
+            bytes[i+2] = swap;
+        } else if(offset == 5) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+4];
+            bytes[i+4] = swap;
+            swap = bytes[i+1];
+            bytes[i+1] = bytes[i+3];
+            bytes[i+3] = swap;
+        }
+        else if(offset == 6) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+5];
+            bytes[i+5] = swap;
+            swap = bytes[i+1];
+            bytes[i+1] = bytes[i+4];
+            bytes[i+4] = swap;
+            swap = bytes[i+2];
+            bytes[i+2] = bytes[i+3];
+            bytes[i+3] = swap;
+        }
+        else if(offset == 8) {
+            swap = bytes[i];
+            bytes[i] = bytes[i+7];
+            bytes[i+7] = swap;
+            swap = bytes[i+1];
+            bytes[i+1] = bytes[i+6];
+            bytes[i+6] = swap;
+            swap = bytes[i+2];
+            bytes[i+2] = bytes[i+5];
+            bytes[i+5] = swap;
+            swap = bytes[i+3];
+            bytes[i+3] = bytes[i+4];
+            bytes[i+4] = swap;
+        }
+        i+=offset;
+    }
+}
+
+/**
+ * Make the resulting byte array big endian or little endian.
+ * Default is little endian.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} offset The swap offset according to the bit depth.
+ *      2 for 16-bit, 3 for 24-bit, 4 for 32-bit,
+ *      5 for 40-bit, 6 for 48-bit, 8 for 64-bit
+ * @param {boolean} bigEndian If the bytes are big endian or not.
+ */
+function endianess(bytes, offset, bigEndian) {
+    if (bigEndian) {
+        swapEndianess(bytes, offset);
+    }
+    return bytes;
+}
+
+module.exports.endianess = endianess;
+module.exports.swapEndianess = swapEndianess;
 module.exports.readBytesAsBits = readBytesAsBits;
 module.exports.signed = signed;
 module.exports.bytesToBase = bytesToBase;
@@ -429,7 +512,7 @@ const helpers = __webpack_require__(0);
  * @param {!Array<number>} numbers float64 numbers.
  * @return {!Array<number>} the bytes.
  */
-function floatTo8Bytes(numbers, base=10) {
+function floatTo8Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -453,6 +536,7 @@ function floatTo8Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 8, bigEndian);
     return bytes;
 }
 
@@ -461,7 +545,7 @@ function floatTo8Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers float32 numbers.
  * @return {!Array<number>} the bytes.
  */
-function floatTo4Bytes(numbers, base=10) {
+function floatTo4Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -475,6 +559,7 @@ function floatTo4Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 4, bigEndian);
     return bytes;
 }
 
@@ -483,12 +568,11 @@ function floatTo4Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo6Bytes(numbers, base=10) {
+function intTo6Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
     let bytes = [];
-
     while (i < len) {
         bytes[j++] = numbers[i] & 0xFF;
         bytes[j++] = numbers[i] >> 8 & 0xFF;
@@ -499,6 +583,7 @@ function intTo6Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 6, bigEndian);
     return bytes;
 }
 
@@ -507,7 +592,7 @@ function intTo6Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo5Bytes(numbers, base=10) {
+function intTo5Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -521,6 +606,7 @@ function intTo5Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 5, bigEndian);
     return bytes;
 }
 
@@ -529,7 +615,7 @@ function intTo5Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers int32 numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo4Bytes(numbers, base=10) {
+function intTo4Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -546,6 +632,7 @@ function intTo4Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 4, bigEndian);
     return bytes;
 }
 
@@ -554,7 +641,7 @@ function intTo4Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers int24 numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo3Bytes(numbers, base=10) {
+function intTo3Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -566,6 +653,7 @@ function intTo3Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 3, bigEndian);
     return bytes;
 }
 
@@ -574,7 +662,7 @@ function intTo3Bytes(numbers, base=10) {
  * @param {!Array<number>} numbers int16 numbers.
  * @return {!Array<number>} the bytes.
  */
-function intTo2Bytes(numbers, base=10) {
+function intTo2Bytes(numbers, base=10, bigEndian=false) {
     let i = 0;
     let j = 0;
     let len = numbers.length;
@@ -585,6 +673,7 @@ function intTo2Bytes(numbers, base=10) {
         i++;
     }
     helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, 2, bigEndian);
     return bytes;
 }
 
@@ -828,9 +917,11 @@ function intFrom1Byte(bytes, base=10) {
  * Read 16-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom2Bytes(bytes, base=10) {
+function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16);
 }
 
@@ -839,9 +930,11 @@ function uIntFrom2Bytes(bytes, base=10) {
  * Thanks https://stackoverflow.com/a/38298413
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom2Bytes(bytes, base=10) {
+function intFrom2Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
@@ -849,9 +942,11 @@ function intFrom2Bytes(bytes, base=10) {
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom3Bytes(bytes, base=10) {
+function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24);
 }
 
@@ -859,9 +954,11 @@ function uIntFrom3Bytes(bytes, base=10) {
  * Read 24-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom3Bytes(bytes, base=10) {
+function intFrom3Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24, true);
 }
 
@@ -869,9 +966,11 @@ function intFrom3Bytes(bytes, base=10) {
  * Read 32-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom4Bytes(bytes, base=10) {
+function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32);
 }
 
@@ -879,9 +978,11 @@ function uIntFrom4Bytes(bytes, base=10) {
  * Read 32-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom4Bytes(bytes, base=10) {
+function intFrom4Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32, true);
 }
 
@@ -889,9 +990,11 @@ function intFrom4Bytes(bytes, base=10) {
  * Read 32-bit float numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function floatFrom4Bytes(bytes, base=10) {
+function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32BitFloat, 32);
 }
 
@@ -899,9 +1002,11 @@ function floatFrom4Bytes(bytes, base=10) {
  * Read 40-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom5Bytes(bytes, base=10) {
+function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40);
 }
 
@@ -909,9 +1014,11 @@ function uIntFrom5Bytes(bytes, base=10) {
  * Read 40-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom5Bytes(bytes, base=10) {
+function intFrom5Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40, true);
 }
 
@@ -919,9 +1026,11 @@ function intFrom5Bytes(bytes, base=10) {
  * Read 48-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom6Bytes(bytes, base=10) {
+function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48);
 }
 
@@ -929,9 +1038,11 @@ function uIntFrom6Bytes(bytes, base=10) {
  * Read 48-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom6Bytes(bytes, base=10) {
+function intFrom6Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48, true);
 }
 
@@ -939,9 +1050,11 @@ function intFrom6Bytes(bytes, base=10) {
  * Read 64-bit double precision numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function floatFrom8Bytes(bytes, base=10) {
+function floatFrom8Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 8, bigEndian);
     return fromBytes(bytes, base, reader.read64Bit, 64);
 }
 

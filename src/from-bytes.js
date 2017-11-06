@@ -127,9 +127,11 @@ function intFrom1Byte(bytes, base=10) {
  * Read 16-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom2Bytes(bytes, base=10) {
+function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16);
 }
 
@@ -138,9 +140,11 @@ function uIntFrom2Bytes(bytes, base=10) {
  * Thanks https://stackoverflow.com/a/38298413
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom2Bytes(bytes, base=10) {
+function intFrom2Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
@@ -148,9 +152,11 @@ function intFrom2Bytes(bytes, base=10) {
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom3Bytes(bytes, base=10) {
+function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24);
 }
 
@@ -158,9 +164,11 @@ function uIntFrom3Bytes(bytes, base=10) {
  * Read 24-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom3Bytes(bytes, base=10) {
+function intFrom3Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24, true);
 }
 
@@ -168,9 +176,11 @@ function intFrom3Bytes(bytes, base=10) {
  * Read 32-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom4Bytes(bytes, base=10) {
+function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32);
 }
 
@@ -178,9 +188,11 @@ function uIntFrom4Bytes(bytes, base=10) {
  * Read 32-bit signed ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom4Bytes(bytes, base=10) {
+function intFrom4Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32, true);
 }
 
@@ -188,9 +200,11 @@ function intFrom4Bytes(bytes, base=10) {
  * Read 32-bit float numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function floatFrom4Bytes(bytes, base=10) {
+function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32BitFloat, 32);
 }
 
@@ -198,9 +212,11 @@ function floatFrom4Bytes(bytes, base=10) {
  * Read 40-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom5Bytes(bytes, base=10) {
+function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40);
 }
 
@@ -208,9 +224,11 @@ function uIntFrom5Bytes(bytes, base=10) {
  * Read 40-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom5Bytes(bytes, base=10) {
+function intFrom5Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40, true);
 }
 
@@ -218,9 +236,11 @@ function intFrom5Bytes(bytes, base=10) {
  * Read 48-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function uIntFrom6Bytes(bytes, base=10) {
+function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48);
 }
 
@@ -228,9 +248,11 @@ function uIntFrom6Bytes(bytes, base=10) {
  * Read 48-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function intFrom6Bytes(bytes, base=10) {
+function intFrom6Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48, true);
 }
 
@@ -238,9 +260,11 @@ function intFrom6Bytes(bytes, base=10) {
  * Read 64-bit double precision numbers from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base The base. Defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
-function floatFrom8Bytes(bytes, base=10) {
+function floatFrom8Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 8, bigEndian);
     return fromBytes(bytes, base, reader.read64Bit, 64);
 }
 

@@ -12,15 +12,13 @@ npm install byte-data
 
 For Node.js and the browser.
 
-Bytes are little-endian.
-
 Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 
 **byte-data** functions always return regular **arrays**.
 
 Bytes can be represented as **numbers** or as **hex** and **binary** strings both in the input and the output. Decimal is assumed by default in both cases.
 
-### Supports:
+### Support:
 - booleans
 - crumbs (2-bit, signed/unsigned)
 - nibbles (4-bit, signed/unsigned)
@@ -51,6 +49,7 @@ let byteData = require('byte-data');
  * numbers to bytes, all:
  * @param {!Array<number>} numbers The numbers.
  * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} the bytes.
  */
 bytes = byteData.doubleTo8Bytes(numbers);
@@ -61,14 +60,12 @@ bytes = byteData.intTo4Bytes(numbers);
 bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
-bytes = byteData.intToNibble(numbers);
-bytes = byteData.toCrumb(numbers);
-bytes = byteData.toBoolean(numbers);
 
 /**
  * numbers from bytes, all:
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
+ * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
  * @return {!Array<number>} The numbers.
  */
 numbers = byteData.doubleFrom8Bytes(bytes);
@@ -85,11 +82,16 @@ numbers = byteData.intFrom2Bytes(bytes);
 numbers = byteData.uIntFrom2Bytes(bytes);
 numbers = byteData.intFrom1Byte(bytes);
 numbers = byteData.uIntFrom1Byte(bytes);
+
+// Booleans, crumbs and nibbles
 numbers = byteData.intFromNibble(bytes);
 numbers = byteData.uIntFromNibble(bytes);
 numbers = byteData.intFromCrumb(bytes);
 numbers = byteData.uIntFromCrumb(bytes);
 numbers = byteData.fromBoolean(bytes);
+bytes = byteData.intToNibble(numbers);
+bytes = byteData.toCrumb(numbers);
+bytes = byteData.toBoolean(numbers);
 
 // strings
 bytes = byteData.stringToBytes(string);
@@ -137,6 +139,22 @@ Unpacking nibbles:
 ```javascript
 byteData.unpackNibbles([255, 20, 31]);
 //[15, 15, 1, 4, 1, 15]
+```
+
+## Little Endian vs Big Endian
+
+Bytes are **little endian** by default.
+
+To get big endian bytes:
+```javascript
+byteData.intTo5Bytes([1], 10, true);
+//[0, 0, 0, 0, 1]
+```
+
+To read big endian bytes:
+```javascript
+byteData.intFrom3Bytes(["80","00","00","00","00","01","7f", "ff", "ff"], 16, true);
+//[-8388608, 1, 8388607]
 ```
 
 ## Browser
