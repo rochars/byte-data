@@ -126,21 +126,6 @@ byteData.intToNibbles([6], 2)
 //["0110"]
 ```
 
-### Pack your nibbles
-
-Packing nibbles:
-```javascript
-byteData.packNibbles([15, 15, 1, 4, 1, 15]);
-//[255, 20, 31]);
-```
-This will pack 2 nibbles into one byte.
-
-Unpacking nibbles:
-```javascript
-byteData.unpackNibbles([255, 20, 31]);
-//[15, 15, 1, 4, 1, 15]
-```
-
 ## Little Endian vs Big Endian
 
 Bytes are **little endian** by default.
@@ -155,6 +140,21 @@ To read big endian bytes:
 ```javascript
 byteData.intFrom3Bytes(["80","00","00","00","00","01","7f", "ff", "ff"], 16, true);
 //[-8388608, 1, 8388607]
+```
+
+### Pack your nibbles
+
+Packing nibbles:
+```javascript
+byteData.packNibbles([15, 15, 1, 4, 1, 15]);
+//[255, 20, 31]);
+```
+This will pack 2 nibbles into one byte.
+
+Unpacking nibbles:
+```javascript
+byteData.unpackNibbles([255, 20, 31]);
+//[15, 15, 1, 4, 1, 15]
 ```
 
 ## Browser

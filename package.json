@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Bytes to and from numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -26,7 +26,9 @@
     "48-bit",
     "64-bit",
     "pack",
-    "unpack"
+    "unpack",
+    "big endian",
+    "little endian"
   ],
   "repository": {
     "type": "git",

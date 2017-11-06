@@ -54,6 +54,11 @@ describe('little endiand and big endian reading', function() {
         assert.deepEqual(byteData.intFrom4Bytes([0, 0, 0, 1, 0,0, 0, 1], 10, true),
             [1, 1]);
     });
+    it('should turn 8 bytes hex to 2 32-bit ints (max range)', function() {
+        assert.deepEqual(byteData.intFrom4Bytes(
+            ["80","0","0","0", "7f","ff","ff","ff"], 16, true),
+            [-2147483648,2147483647]);
+    });
 
     // 40-bit
     it('should turn 2 40-bit unsigned ints to 10 bytes BE (0s)', function() {
@@ -67,6 +72,12 @@ describe('little endiand and big endian reading', function() {
     it('should turn 2 40-bit unsigned ints to 10 bytes BE (1s)', function() {
         assert.deepEqual(byteData.intFrom5Bytes([0, 0, 0, 0, 1, 0, 0, 0, 0, 1], 10, true),
             [1, 1]);
+    });
+    it('should turn 5 bytes (hex) to 1 unsigned 40-bit int (149515627075)',
+            function() {
+        assert.deepEqual(byteData.uIntFrom5Bytes(
+            ["22","cf","d3","6a","43"], 16, true),
+            [149515627075]);
     });
 
     // 48-bit
