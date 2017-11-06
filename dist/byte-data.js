@@ -759,8 +759,7 @@ function fromBytes(bytes, base, reader, bitDepth, signed=false) {
     helpers.bytesToInt(bytes, base);   
     if (signed) {
         while (i < len) {
-            numbers[j] = reader(bytes, i);
-            numbers[j] = helpers.signed(numbers[j], maxBitDepthValue);
+            numbers[j] = helpers.signed(reader(bytes, i), maxBitDepthValue);
             i += offset;
             j++;
         }    
