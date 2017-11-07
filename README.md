@@ -16,7 +16,7 @@ Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 
 **byte-data** functions always return regular **arrays**.
 
-Bytes can be represented as **numbers** or as **hex** and **binary** strings both in the input and the output. Decimal is assumed by default in both cases.
+Bytes can be represented as **integer numbers** or as **hex** and **binary** strings both in the input and the output. **Integer numbers** is assumed by default in both cases.
 
 ### Support:
 - booleans
