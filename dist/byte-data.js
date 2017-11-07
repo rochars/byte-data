@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -354,6 +354,52 @@ module.exports.unpack = unpack
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+/*
+ * bit-depth: Configurations based on bit depth.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+/**
+ * Offset for reading each bit depth.
+ * @enum {number}
+ */
+const bitDepthOffsets = {
+    1: 1,
+    2: 1,
+    4: 1,
+    8: 1,
+    16: 2,
+    24: 3,
+    32: 4,
+    40: 5,
+    48: 6,
+    64: 8
+};
+
+/**
+ * Max value for each bit depth.
+ * @enum {number}
+ */
+const maxBitDepth = {
+    2: 4,
+    4: 16,
+    8: 256,
+    16: 65536,
+    24: 16777216,
+    32: 4294967296,
+    40: 1099511627776,
+    48: 281474976710656
+};
+
+module.exports.bitDepthOffsets = bitDepthOffsets;
+module.exports.maxBitDepth = maxBitDepth;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -363,9 +409,9 @@ module.exports.unpack = unpack
  * https://github.com/rochars/byte-data
  */
 
-let toBytes = __webpack_require__(3);
-let fromBytes = __webpack_require__(4);
-let bitPacker = __webpack_require__(6);
+let toBytes = __webpack_require__(4);
+let fromBytes = __webpack_require__(6);
+let bitPacker = __webpack_require__(8);
 
 /**
  * Find and return the start offset of some string.
@@ -431,7 +477,7 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -442,6 +488,31 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
 
 const intBits = __webpack_require__(1);
 const helpers = __webpack_require__(0);
+const writer = __webpack_require__(5);
+const bitDepths = __webpack_require__(2);
+
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number>|string} numbers float64 numbers.
+ * @param {number} base The base, 2, 10 or 16.
+ * @param {Function} writer The function to turn the data to bytes.
+ * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {boolean} bigEndian If the the bytes should be big endian or not.
+ * @return {!Array<number>} the bytes.
+ */
+function toBytes(numbers, base, writer, bitDepth, bigEndian) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i < len) {            
+        j = writer(bytes, numbers, i, j);
+        i++;
+    }
+    helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
+    return bytes;
+}
 
 /**
  * Split 64 bit numbers into bytes.
@@ -449,31 +520,7 @@ const helpers = __webpack_require__(0);
  * @return {!Array<number>} the bytes.
  */
 function floatTo8Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        // 0s should not be signed by default
-        if (numbers[i] == 0) {
-            bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-            j+=8;
-        } else {
-            numbers[i] = helpers.toFloat64(numbers[i]);
-            bytes[j++] = numbers[i][1] & 0xFF;
-            bytes[j++] = numbers[i][1] >>> 8 & 0xFF;
-            bytes[j++] = numbers[i][1] >>> 16 & 0xFF;
-            bytes[j++] = numbers[i][1] >>> 24 & 0xFF;
-            bytes[j++] = numbers[i][0] & 0xFF;
-            bytes[j++] = numbers[i][0] >>> 8 & 0xFF;
-            bytes[j++] = numbers[i][0] >>> 16 & 0xFF;
-            bytes[j++] = numbers[i][0] >>> 24 & 0xFF;
-        }
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 8, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write64BitFloat, 64, bigEndian);
 }
 
 /**
@@ -482,21 +529,7 @@ function floatTo8Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function floatTo4Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {            
-        numbers[i] = intBits.unpack(numbers[i]);
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >>> 8 & 0xFF;
-        bytes[j++] = numbers[i] >>> 16 & 0xFF;
-        bytes[j++] = numbers[i] >>> 24 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 4, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write32BitFloat, 32, bigEndian);
 }
 
 /**
@@ -505,22 +538,7 @@ function floatTo4Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo6Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >> 8 & 0xFF;
-        bytes[j++] = numbers[i] >> 16 & 0xFF;
-        bytes[j++] = numbers[i] >> 24 & 0xFF;
-        bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-        bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 6, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write48Bit, 48, bigEndian);
 }
 
 /**
@@ -529,21 +547,7 @@ function intTo6Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo5Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i< len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >> 8 & 0xFF;
-        bytes[j++] = numbers[i] >> 16 & 0xFF;
-        bytes[j++] = numbers[i] >> 24 & 0xFF;
-        bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 5, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write40Bit, 40, bigEndian);
 }
 
 /**
@@ -552,24 +556,7 @@ function intTo5Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo4Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = (numbers[i] & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 24 & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 4, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write32Bit, 32, bigEndian);
 }
 
 /**
@@ -578,19 +565,7 @@ function intTo4Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo3Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >>> 8 & 0xFF;
-        bytes[j++] = numbers[i] >>> 16 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 3, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write24Bit, 24, bigEndian);
 }
 
 /**
@@ -599,18 +574,7 @@ function intTo3Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo2Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >>> 8 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 2, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write16Bit, 16, bigEndian);
 }
 
 /**
@@ -619,16 +583,7 @@ function intTo2Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo1Byte(numbers, base=10) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    return bytes;
+    return toBytes(numbers, base, writer.write8Bit, 8, false);
 }
 
 /**
@@ -693,17 +648,7 @@ function toBoolean(values, base=10) {
  * @return {!Array<number>} the bytes.
  */
 function stringToBytes(string, base=10) {
-    let i = 0;
-    let j = 0;
-    let len = string.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = string.charCodeAt(i);
-        helpers.padding(bytes, base, j-1);
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    return bytes;
+    return toBytes(string, base, writer.writeString, 8, false);
 }
 
 module.exports.floatTo8Bytes = floatTo8Bytes;
@@ -721,7 +666,117 @@ module.exports.stringToBytes = stringToBytes;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Function to write data as arrays of bytes.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+let helpers = __webpack_require__(0);
+const intBits = __webpack_require__(1);
+
+function write64BitFloat(bytes, numbers, i, j) {
+    // 0s should not be signed by default
+    if (numbers[i] === 0) {
+        //bytes = bytes.concat([0,0,0,0,0,0,0,0]);
+        //j += 8;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+    } else {
+        let number = helpers.toFloat64(numbers[i]);
+        bytes[j++] = number[1] & 0xFF;
+        bytes[j++] = number[1] >>> 8 & 0xFF;
+        bytes[j++] = number[1] >>> 16 & 0xFF;
+        bytes[j++] = number[1] >>> 24 & 0xFF;
+        bytes[j++] = number[0] & 0xFF;
+        bytes[j++] = number[0] >>> 8 & 0xFF;
+        bytes[j++] = number[0] >>> 16 & 0xFF;
+        bytes[j++] = number[0] >>> 24 & 0xFF;
+    }
+    return j;
+}
+
+function write48Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >> 8 & 0xFF;
+    bytes[j++] = numbers[i] >> 16 & 0xFF;
+    bytes[j++] = numbers[i] >> 24 & 0xFF;
+    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
+    bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
+    return j;
+}
+
+function write40Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >> 8 & 0xFF;
+    bytes[j++] = numbers[i] >> 16 & 0xFF;
+    bytes[j++] = numbers[i] >> 24 & 0xFF;
+    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
+    return j;
+}
+
+function write32BitFloat(bytes, numbers, i, j) {
+    numbers[i] = intBits.unpack(numbers[i]);
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+    bytes[j++] = numbers[i] >>> 24 & 0xFF;
+    return j;
+}
+
+function write32Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+    bytes[j++] = numbers[i] >>> 24 & 0xFF;
+    return j;
+}
+
+function write24Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+    return j;
+}
+
+function write16Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    return j;
+}
+
+function write8Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    return j;
+}
+
+function writeString(bytes, string, i, j) {
+    bytes[j++] = string.charCodeAt(i);
+    return j;
+}
+
+module.exports.write64BitFloat = write64BitFloat;
+module.exports.write48Bit = write48Bit;
+module.exports.write40Bit = write40Bit;
+module.exports.write32BitFloat = write32BitFloat;
+module.exports.write32Bit = write32Bit;
+module.exports.write24Bit = write24Bit;
+module.exports.write16Bit = write16Bit;
+module.exports.write8Bit = write8Bit;
+module.exports.writeString = writeString;
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -731,39 +786,8 @@ module.exports.stringToBytes = stringToBytes;
  */
 
 const helpers = __webpack_require__(0);
-const reader = __webpack_require__(5);
-
-/**
- * Offset for reading each bit depth.
- * @enum {number}
- */
-const bitDepthOffsets = {
-    1: 1,
-    2: 1,
-    4: 1,
-    8: 1,
-    16: 2,
-    24: 3,
-    32: 4,
-    40: 5,
-    48: 6,
-    64: 8,
-};
-
-/**
- * Max value for each bit depth.
- * @enum {number}
- */
-const maxBitDepth = {
-    2: 4,
-    4: 16,
-    8: 256,
-    16: 65536,
-    24: 16777216,
-    32: 4294967296,
-    40: 1099511627776,
-    48: 281474976710656
-};
+const reader = __webpack_require__(7);
+const bitDepths = __webpack_require__(2);
 
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
@@ -778,9 +802,9 @@ function fromBytes(bytes, base, reader, bitDepth, signed=false) {
     let numbers = [];
     let i = 0;
     let j = 0;
-    let offset = bitDepthOffsets[bitDepth];
+    let offset = bitDepths.bitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
-    let maxBitDepthValue = maxBitDepth[bitDepth];
+    let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
     helpers.bytesToInt(bytes, base);   
     if (signed) {
         while (i < len) {
@@ -1026,7 +1050,7 @@ module.exports.stringFromBytes = stringFromBytes;
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -1158,7 +1182,7 @@ module.exports.read64Bit = read64Bit;
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /*

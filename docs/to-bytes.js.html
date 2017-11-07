@@ -34,6 +34,31 @@
 
 const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
+const writer = require("../src/write-bytes.js");
+const bitDepths = require("../src/bit-depth.js");
+
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array&lt;number>|string} numbers float64 numbers.
+ * @param {number} base The base, 2, 10 or 16.
+ * @param {Function} writer The function to turn the data to bytes.
+ * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {boolean} bigEndian If the the bytes should be big endian or not.
+ * @return {!Array&lt;number>} the bytes.
+ */
+function toBytes(numbers, base, writer, bitDepth, bigEndian) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i &lt; len) {            
+        j = writer(bytes, numbers, i, j);
+        i++;
+    }
+    helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
+    return bytes;
+}
 
 /**
  * Split 64 bit numbers into bytes.
@@ -41,31 +66,7 @@ const helpers = require("../src/helpers.js");
  * @return {!Array&lt;number>} the bytes.
  */
 function floatTo8Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {
-        // 0s should not be signed by default
-        if (numbers[i] == 0) {
-            bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-            j+=8;
-        } else {
-            numbers[i] = helpers.toFloat64(numbers[i]);
-            bytes[j++] = numbers[i][1] &amp; 0xFF;
-            bytes[j++] = numbers[i][1] >>> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i][1] >>> 16 &amp; 0xFF;
-            bytes[j++] = numbers[i][1] >>> 24 &amp; 0xFF;
-            bytes[j++] = numbers[i][0] &amp; 0xFF;
-            bytes[j++] = numbers[i][0] >>> 8 &amp; 0xFF;
-            bytes[j++] = numbers[i][0] >>> 16 &amp; 0xFF;
-            bytes[j++] = numbers[i][0] >>> 24 &amp; 0xFF;
-        }
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 8, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write64BitFloat, 64, bigEndian);
 }
 
 /**
@@ -74,21 +75,7 @@ function floatTo8Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function floatTo4Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {            
-        numbers[i] = intBits.unpack(numbers[i]);
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-        bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
-        bytes[j++] = numbers[i] >>> 24 &amp; 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 4, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write32BitFloat, 32, bigEndian);
 }
 
 /**
@@ -97,22 +84,7 @@ function floatTo4Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function intTo6Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
-        bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
-        bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
-        bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
-        bytes[j++] = numbers[i] / 0x10000000000 &amp; 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 6, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write48Bit, 48, bigEndian);
 }
 
 /**
@@ -121,21 +93,7 @@ function intTo6Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function intTo5Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i&lt; len) {
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        bytes[j++] = numbers[i] >> 8 &amp; 0xFF;
-        bytes[j++] = numbers[i] >> 16 &amp; 0xFF;
-        bytes[j++] = numbers[i] >> 24 &amp; 0xFF;
-        bytes[j++] = numbers[i] / 0x100000000 &amp; 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 5, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write40Bit, 40, bigEndian);
 }
 
 /**
@@ -144,24 +102,7 @@ function intTo5Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function intTo4Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = (numbers[i] &amp; 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 8 &amp; 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 16 &amp; 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 24 &amp; 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 4, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write32Bit, 32, bigEndian);
 }
 
 /**
@@ -170,19 +111,7 @@ function intTo4Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function intTo3Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-        bytes[j++] = numbers[i] >>> 16 &amp; 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 3, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write24Bit, 24, bigEndian);
 }
 
 /**
@@ -191,18 +120,7 @@ function intTo3Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function intTo2Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        bytes[j++] = numbers[i] >>> 8 &amp; 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 2, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write16Bit, 16, bigEndian);
 }
 
 /**
@@ -211,16 +129,7 @@ function intTo2Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} the bytes.
  */
 function intTo1Byte(numbers, base=10) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = numbers[i] &amp; 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    return bytes;
+    return toBytes(numbers, base, writer.write8Bit, 8, false);
 }
 
 /**
@@ -285,17 +194,7 @@ function toBoolean(values, base=10) {
  * @return {!Array&lt;number>} the bytes.
  */
 function stringToBytes(string, base=10) {
-    let i = 0;
-    let j = 0;
-    let len = string.length;
-    let bytes = [];
-    while (i &lt; len) {
-        bytes[j++] = string.charCodeAt(i);
-        helpers.padding(bytes, base, j-1);
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    return bytes;
+    return toBytes(string, base, writer.writeString, 8, false);
 }
 
 module.exports.floatTo8Bytes = floatTo8Bytes;
@@ -320,13 +219,13 @@ module.exports.stringToBytes = stringToBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bitDepthOffsets">bitDepthOffsets</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#maxBitDepth">maxBitDepth</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 06 2017 23:31:33 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Nov 07 2017 03:43:04 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

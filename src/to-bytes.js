@@ -6,6 +6,31 @@
 
 const intBits = require("int-bits");
 const helpers = require("../src/helpers.js");
+const writer = require("../src/write-bytes.js");
+const bitDepths = require("../src/bit-depth.js");
+
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number>|string} numbers float64 numbers.
+ * @param {number} base The base, 2, 10 or 16.
+ * @param {Function} writer The function to turn the data to bytes.
+ * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {boolean} bigEndian If the the bytes should be big endian or not.
+ * @return {!Array<number>} the bytes.
+ */
+function toBytes(numbers, base, writer, bitDepth, bigEndian) {
+    let i = 0;
+    let j = 0;
+    let len = numbers.length;
+    let bytes = [];
+    while (i < len) {            
+        j = writer(bytes, numbers, i, j);
+        i++;
+    }
+    helpers.bytesToBase(bytes, base);
+    helpers.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
+    return bytes;
+}
 
 /**
  * Split 64 bit numbers into bytes.
@@ -13,31 +38,7 @@ const helpers = require("../src/helpers.js");
  * @return {!Array<number>} the bytes.
  */
 function floatTo8Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        // 0s should not be signed by default
-        if (numbers[i] == 0) {
-            bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-            j+=8;
-        } else {
-            numbers[i] = helpers.toFloat64(numbers[i]);
-            bytes[j++] = numbers[i][1] & 0xFF;
-            bytes[j++] = numbers[i][1] >>> 8 & 0xFF;
-            bytes[j++] = numbers[i][1] >>> 16 & 0xFF;
-            bytes[j++] = numbers[i][1] >>> 24 & 0xFF;
-            bytes[j++] = numbers[i][0] & 0xFF;
-            bytes[j++] = numbers[i][0] >>> 8 & 0xFF;
-            bytes[j++] = numbers[i][0] >>> 16 & 0xFF;
-            bytes[j++] = numbers[i][0] >>> 24 & 0xFF;
-        }
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 8, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write64BitFloat, 64, bigEndian);
 }
 
 /**
@@ -46,21 +47,7 @@ function floatTo8Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function floatTo4Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {            
-        numbers[i] = intBits.unpack(numbers[i]);
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >>> 8 & 0xFF;
-        bytes[j++] = numbers[i] >>> 16 & 0xFF;
-        bytes[j++] = numbers[i] >>> 24 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 4, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write32BitFloat, 32, bigEndian);
 }
 
 /**
@@ -69,22 +56,7 @@ function floatTo4Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo6Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >> 8 & 0xFF;
-        bytes[j++] = numbers[i] >> 16 & 0xFF;
-        bytes[j++] = numbers[i] >> 24 & 0xFF;
-        bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-        bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 6, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write48Bit, 48, bigEndian);
 }
 
 /**
@@ -93,21 +65,7 @@ function intTo6Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo5Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i< len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >> 8 & 0xFF;
-        bytes[j++] = numbers[i] >> 16 & 0xFF;
-        bytes[j++] = numbers[i] >> 24 & 0xFF;
-        bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 5, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write40Bit, 40, bigEndian);
 }
 
 /**
@@ -116,24 +74,7 @@ function intTo5Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo4Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = (numbers[i] & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 8 & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 16 & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        bytes[j++] = (numbers[i] >>> 24 & 0xFF).toString(base);
-        helpers.padding(bytes, base, j-1);
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 4, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write32Bit, 32, bigEndian);
 }
 
 /**
@@ -142,19 +83,7 @@ function intTo4Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo3Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >>> 8 & 0xFF;
-        bytes[j++] = numbers[i] >>> 16 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 3, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write24Bit, 24, bigEndian);
 }
 
 /**
@@ -163,18 +92,7 @@ function intTo3Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo2Bytes(numbers, base=10, bigEndian=false) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        bytes[j++] = numbers[i] >>> 8 & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, 2, bigEndian);
-    return bytes;
+    return toBytes(numbers, base, writer.write16Bit, 16, bigEndian);
 }
 
 /**
@@ -183,16 +101,7 @@ function intTo2Bytes(numbers, base=10, bigEndian=false) {
  * @return {!Array<number>} the bytes.
  */
 function intTo1Byte(numbers, base=10) {
-    let i = 0;
-    let j = 0;
-    let len = numbers.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = numbers[i] & 0xFF;
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    return bytes;
+    return toBytes(numbers, base, writer.write8Bit, 8, false);
 }
 
 /**
@@ -257,17 +166,7 @@ function toBoolean(values, base=10) {
  * @return {!Array<number>} the bytes.
  */
 function stringToBytes(string, base=10) {
-    let i = 0;
-    let j = 0;
-    let len = string.length;
-    let bytes = [];
-    while (i < len) {
-        bytes[j++] = string.charCodeAt(i);
-        helpers.padding(bytes, base, j-1);
-        i++;
-    }
-    helpers.bytesToBase(bytes, base);
-    return bytes;
+    return toBytes(string, base, writer.writeString, 8, false);
 }
 
 module.exports.floatTo8Bytes = floatTo8Bytes;

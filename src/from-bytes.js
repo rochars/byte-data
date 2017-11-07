@@ -6,38 +6,7 @@
 
 const helpers = require("../src/helpers.js");
 const reader = require("../src/read-bytes.js");
-
-/**
- * Offset for reading each bit depth.
- * @enum {number}
- */
-const bitDepthOffsets = {
-    1: 1,
-    2: 1,
-    4: 1,
-    8: 1,
-    16: 2,
-    24: 3,
-    32: 4,
-    40: 5,
-    48: 6,
-    64: 8,
-};
-
-/**
- * Max value for each bit depth.
- * @enum {number}
- */
-const maxBitDepth = {
-    2: 4,
-    4: 16,
-    8: 256,
-    16: 65536,
-    24: 16777216,
-    32: 4294967296,
-    40: 1099511627776,
-    48: 281474976710656
-};
+const bitDepths = require("../src/bit-depth.js");
 
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
@@ -52,9 +21,9 @@ function fromBytes(bytes, base, reader, bitDepth, signed=false) {
     let numbers = [];
     let i = 0;
     let j = 0;
-    let offset = bitDepthOffsets[bitDepth];
+    let offset = bitDepths.bitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
-    let maxBitDepthValue = maxBitDepth[bitDepth];
+    let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
     helpers.bytesToInt(bytes, base);   
     if (signed) {
         while (i < len) {
