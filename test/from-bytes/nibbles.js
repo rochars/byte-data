@@ -25,8 +25,6 @@ describe('Nibbles from bytes', function() {
             [0,1]),
             [0,1]);
     });
-
-
     it('should turn 1 nibble to a 4-bit uInt', function() {
         assert.deepEqual(byteData.uIntFromNibble(
             ["1111"], 2),
@@ -47,5 +45,9 @@ describe('Nibbles from bytes', function() {
             ["f"], 16),
             [-1]);
     });
-
+    it('should turn 1 nibble (with padding zeros) to a 4-bit int', function() {
+        assert.deepEqual(byteData.intFromNibble(
+            ["0f"], 16),
+            [-1]);
+    });
 });

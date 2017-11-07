@@ -94,8 +94,6 @@ function paddingNibble(nibbles, base, index) {
     if (base == 2 && nibbles[index].length < 4) {
         nibbles[index] = 
             new Array((5 - nibbles[index].length)).join("0")  + nibbles[index];
-    } else if(base == 16 && nibbles[index].length == 2 && nibbles[index][0] == "0") {
-        nibbles[index] = nibbles[index][1];
     }
 }   
 
@@ -198,7 +196,6 @@ function readBytesAsBits(bytes, i, numBytes) {
 
 /**
  * Swap the endianees of bytes in an array of bytes.
- * TODO better implementation.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} offset The swap offset according to the bit depth.
  *      2 for 16-bit, 3 for 24-bit, 4 for 32-bit,
@@ -207,57 +204,30 @@ function readBytesAsBits(bytes, i, numBytes) {
 function swapEndianess(bytes, offset) {
     let len = bytes.length;
     let i = 0;
-    let swap;
     while (i < len) {
-        if (offset == 2) {
-            swap = bytes[i];
-            bytes[i] = bytes[i+1];
-            bytes[i+1] = swap;
-        } else if(offset == 3) {
-            swap = bytes[i];
-            bytes[i] = bytes[i+2];
-            bytes[i+2] = swap;
-        } else if(offset == 4) {
-            swap = bytes[i];
-            bytes[i] = bytes[i+3];
-            bytes[i+3] = swap;
-            swap = bytes[i+1];
-            bytes[i+2] = bytes[i+2];
-            bytes[i+2] = swap;
-        } else if(offset == 5) {
-            swap = bytes[i];
-            bytes[i] = bytes[i+4];
-            bytes[i+4] = swap;
-            swap = bytes[i+1];
-            bytes[i+1] = bytes[i+3];
-            bytes[i+3] = swap;
-        }
-        else if(offset == 6) {
-            swap = bytes[i];
-            bytes[i] = bytes[i+5];
-            bytes[i+5] = swap;
-            swap = bytes[i+1];
-            bytes[i+1] = bytes[i+4];
-            bytes[i+4] = swap;
-            swap = bytes[i+2];
-            bytes[i+2] = bytes[i+3];
-            bytes[i+3] = swap;
-        }
-        else if(offset == 8) {
-            swap = bytes[i];
-            bytes[i] = bytes[i+7];
-            bytes[i+7] = swap;
-            swap = bytes[i+1];
-            bytes[i+1] = bytes[i+6];
-            bytes[i+6] = swap;
-            swap = bytes[i+2];
-            bytes[i+2] = bytes[i+5];
-            bytes[i+5] = swap;
-            swap = bytes[i+3];
-            bytes[i+3] = bytes[i+4];
-            bytes[i+4] = swap;
-        }
+        byteSwap(bytes, i, offset);
         i+=offset;
+    }
+}
+
+/**
+ * Swap the endianees of a unit of information in a array of bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @param {number} numBytes The number of bytes according to
+ *      the bit depth of the data.
+ */
+function byteSwap(bytes, i, numBytes) {
+    let x = 0;
+    let y = numBytes - 1;
+    let limit = parseInt(numBytes / 2, 10);
+    let swap;
+    while(x < limit) {
+        swap = bytes[i+x];
+        bytes[i+x] = bytes[i+y];
+        bytes[i+y] = swap;
+        x++;
+        y--;
     }
 }
 

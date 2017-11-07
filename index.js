@@ -7,6 +7,7 @@
 
 let toBytes = require('./src/to-bytes');
 let fromBytes = require('./src/from-bytes');
+let bitPacker = require('./src/bit-packer');
 
 /**
  * Find and return the start offset of some string.
@@ -25,47 +26,12 @@ function findString(bytes, chunk) {
     return -1;
 }
 
-/**
- * Pack 2 nibbles in 1 byte.
- * @param {!Array<number>} nibbles Array of nibbles.
- * @return {!Array<number>} Pairs of neebles packed as one byte.
- */
-function packNibbles(nibbles) {
-    let packed = [];
-    let i = 0;
-    let j = 0;
-    let len = nibbles.length;
-    if (len % 2) {
-        nibbles.push(0);
-    }
-    while (i < len) {
-        packed[j++] = parseInt(
-            nibbles[i].toString(16) + nibbles[i+1].toString(16), 16);
-        i+=2;
-    }
-    return packed;
-}
-
-/**
- * Unpack a byte into 2 nibbles.
- * @param {!Array<number>|Uint8Array} bytes Array of bytes.
- * @return {!Array<number>} The nibbles.
- */
-function unpackNibbles(bytes) {
-    let unpacked = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    while (i < len) {
-        unpacked[j++] = parseInt(bytes[i].toString(16)[0], 16);
-        unpacked[j++] = parseInt(bytes[i].toString(16)[1], 16);
-        i++;
-    }
-    return unpacked;
-}
-
-module.exports.packNibbles = packNibbles;
-module.exports.unpackNibbles = unpackNibbles;
+module.exports.packBooleans = bitPacker.packBooleans;
+module.exports.unpackBooleans = bitPacker.unpackBooleans;
+module.exports.packCrumbs = bitPacker.packCrumbs;
+module.exports.unpackCrumbs = bitPacker.unpackCrumbs;
+module.exports.packNibbles = bitPacker.packNibbles;
+module.exports.unpackNibbles = bitPacker.unpackNibbles;
 
 module.exports.findString = findString;
 module.exports.stringToBytes = toBytes.stringToBytes;
