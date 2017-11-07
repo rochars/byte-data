@@ -8,6 +8,8 @@
 let toBytes = require('./src/to-bytes');
 let fromBytes = require('./src/from-bytes');
 let bitPacker = require('./src/bit-packer');
+let writer = require('./src/write-bytes');
+let reader = require('./src/read-bytes');
 
 /**
  * Find and return the start offset of some string.
@@ -25,6 +27,28 @@ function findString(bytes, chunk) {
     }
     return -1;
 }
+
+const writers = {
+    '8': writer.write8Bit,
+    '16': writer.write16Bit,
+    '24': writer.write24Bit,
+    '32': writer.write32Bit,
+    '32f': writer.write32BitFloat,
+    '40': writer.write40Bit,
+    '48': writer.write48Bit,
+    '64': writer.write64BitFloat
+};
+
+const readers = {
+    '8': reader.read8Bit,
+    '16': reader.read16Bit,
+    '24': reader.read24Bit,
+    '32': reader.read32Bit,
+    '32f': reader.read32BitFloat,
+    '40': reader.read40Bit,
+    '48': reader.read48Bit,
+    '64': reader.read64BitFloat
+};
 
 module.exports.packBooleans = bitPacker.packBooleans;
 module.exports.unpackBooleans = bitPacker.unpackBooleans;
@@ -45,6 +69,7 @@ module.exports.intTo5Bytes = toBytes.intTo5Bytes;
 module.exports.intTo4Bytes = toBytes.intTo4Bytes;
 module.exports.intTo3Bytes = toBytes.intTo3Bytes;
 module.exports.intTo2Bytes = toBytes.intTo2Bytes;
+module.exports.floatTo2Bytes = toBytes.floatTo2Bytes;
 module.exports.intTo1Byte = toBytes.intTo1Byte;
 module.exports.intToNibble = toBytes.intToNibble;
 module.exports.toCrumb = toBytes.toCrumb;
@@ -61,6 +86,7 @@ module.exports.uIntFrom4Bytes = fromBytes.uIntFrom4Bytes;
 module.exports.floatFrom4Bytes = fromBytes.floatFrom4Bytes;
 module.exports.intFrom3Bytes = fromBytes.intFrom3Bytes;
 module.exports.uIntFrom3Bytes = fromBytes.uIntFrom3Bytes;
+module.exports.floatFrom2Bytes = fromBytes.floatFrom2Bytes;
 module.exports.intFrom2Bytes = fromBytes.intFrom2Bytes;
 module.exports.uIntFrom2Bytes = fromBytes.uIntFrom2Bytes;
 module.exports.intFrom1Byte = fromBytes.intFrom1Byte;

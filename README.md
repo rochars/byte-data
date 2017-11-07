@@ -24,12 +24,13 @@ Bytes can be represented as **numbers** or as **hex** and **binary** strings bot
 - nibbles (4-bit, signed/unsigned)
 - 8-bit int (signed/unsigned)
 - 16-bit int (signed/unsigned)
+- 16-bit half precision float
 - 24-bit int (signed/unsigned)
 - 32-bit int (signed/unsigned)
-- 32-bit float
+- 32-bit single precision float
 - 40-bit ints (signed/unsigned)
 - 48-bit int (signed/unsigned)
-- 64-bit double
+- 64-bit double precision float
 - Strings
 
 ## Example
@@ -42,6 +43,7 @@ intFrom4Bytes([0,0,0,128,255,255,255,127]);
 ```
 
 ## Use
+
 ```javascript
 let byteData = require('byte-data');
 
@@ -59,6 +61,7 @@ bytes = byteData.floatTo4Bytes(numbers);
 bytes = byteData.intTo4Bytes(numbers);
 bytes = byteData.intTo3Bytes(numbers);
 bytes = byteData.intTo2Bytes(numbers);
+bytes = byteData.floatTo2Bytes(numbers);
 bytes = byteData.intTo1Byte(numbers);
 
 /**
@@ -69,7 +72,6 @@ bytes = byteData.intTo1Byte(numbers);
  * @return {!Array<number>} The numbers.
  */
 numbers = byteData.doubleFrom8Bytes(bytes);
-numbers = byteData.doubleFrom8Bytes(bytes);
 numbers = byteData.intFrom6Bytes(bytes);
 numbers = byteData.uIntFrom6Bytes(bytes);
 numbers = byteData.intFrom5Bytes(bytes);
@@ -78,6 +80,7 @@ numbers = byteData.intFrom4Bytes(bytes);
 numbers = byteData.uIntFrom4Bytes(bytes);
 numbers = byteData.intFrom3Bytes(bytes);
 numbers = byteData.uIntFrom3Bytes(bytes);
+numbers = byteData.floatFrom2Bytes(bytes);
 numbers = byteData.intFrom2Bytes(bytes);
 numbers = byteData.uIntFrom2Bytes(bytes);
 numbers = byteData.intFrom1Byte(bytes);
@@ -155,6 +158,36 @@ Unpacking nibbles:
 ```javascript
 byteData.unpackNibbles([255, 20, 31]);
 //[15, 15, 1, 4, 1, 15]
+```
+
+### Pack your crumbs
+
+Packing crumbs:
+```javascript
+byteData.packCrumbs([3,3,3,3,1,2,3,0,1,1,0,0]);
+//[255, 108, 80]);
+```
+This will pack 4 crumbs into one byte.
+
+Unpacking crumbs:
+```javascript
+byteData.unpackCrumbs([108]);
+//[1, 2, 3, 0]
+```
+
+### Pack your booleans
+
+Packing booleans:
+```javascript
+byteData.packBooleans([0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0]);
+//[0,76]);
+```
+This will pack 8 booleans into one byte.
+
+Unpacking booleans:
+```javascript
+byteData.unpackBooleans([77]);
+//[0,1,0,0,1,1,0,1]
 ```
 
 ## Browser

@@ -169,8 +169,16 @@ function stringToBytes(string, base=10) {
     return toBytes(string, base, writer.writeString, 8, false);
 }
 
+function floatTo2Bytes(numbers, base=10, bigEndian=false) {
+    return toBytes(numbers, base, writer.write16BitFloat, 16, bigEndian);
+}
+
+module.exports.toBytes = toBytes;
+
+// old interface
 module.exports.floatTo8Bytes = floatTo8Bytes;
 module.exports.floatTo4Bytes = floatTo4Bytes;
+module.exports.floatTo2Bytes = floatTo2Bytes;
 module.exports.intTo6Bytes = intTo6Bytes;
 module.exports.intTo5Bytes = intTo5Bytes;
 module.exports.intTo4Bytes = intTo4Bytes;

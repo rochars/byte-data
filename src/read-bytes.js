@@ -104,6 +104,25 @@ function read64Bit(bytes, i) {
     return helpers.decodeFloat(bytes.slice(i,i+8));
 }
 
+function read16BitFloat(bytes, i) {
+    let nBytes = bytes.slice(i,i+2);
+    let binary = "";
+    let bits = "";
+    let j = 0;
+    let bytesLength = nBytes.length;
+    while(j < bytesLength) {
+        bits = nBytes[j].toString(2);
+        while (bits.length < 8) {
+            bits = "0" + bits;
+        }
+        //binary = bits + binary;
+        binary = binary + bits;
+        j++;
+    }
+    binary = parseInt(binary, 2);
+    return helpers.decodeFloat16(binary);
+}
+
 /**
  * Read 1 char from bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
@@ -118,6 +137,7 @@ module.exports.readChar = readChar;
 module.exports.read1Bit = read1Bit;
 module.exports.read8Bit = read8Bit;
 module.exports.read16Bit = read16Bit;
+module.exports.read16BitFloat = read16BitFloat;
 module.exports.read24Bit = read24Bit;
 module.exports.read32Bit = read32Bit;
 module.exports.read32BitFloat = read32BitFloat;

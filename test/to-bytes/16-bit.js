@@ -43,4 +43,46 @@ describe('16-bit to bytes', function() {
         assert.deepEqual(byteData.intTo2Bytes([765], 16),
             ["fd", "02"]);
     });
+
+    // 16-bit floats: 0s
+    it('should turn 2 bytes to 1 16-bit float (0)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [0]),
+            [0, 0]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (0)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [0], 16),
+            ["00", "00"]);
+    });
+    it('should turn 2 bytes bin to 1 16-bit float (0)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [0], 2),
+            ["00000000", "00000000"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (1)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [1], 16),
+            ["3c", "00"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (1/3)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [0.33325], 16),
+            ["35", "55"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (-2)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [-2], 16),
+            ["c0", "00"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [65504], 16),
+            ["7b", "ff"]);
+    });
+    it('should turn 4 bytes hex to 2 16-bit float (65504, 0.33325, extra byte)', function() {
+        assert.deepEqual(byteData.floatTo2Bytes(
+            [65504, 0.33325], 16),
+            ["7b", "ff", "35", "55"]);
+    });
 });

@@ -61,19 +61,24 @@ describe('48-bit from bytes', function() {
             ["01010000", "10001000", "01010010",  "01101010",  "01110100", "00000000" ], 2),
             [500000000080]);
     });
-    it('should turn 6 bytes (dec) to 1 unsigned 48-bit int (max 48-bit  range)',
+    it('should turn 6 bytes (dec) to 1 unsigned 48-bit int (max 40-bit  range)',
             function() {
         assert.deepEqual(byteData.uIntFrom6Bytes(
             ["ff","ff","ff","ff","ff","00"], 16),
             [1099511627775]);
     });
-    it('should turn 6 bytes (bin) to 1 unsigned 48-bit int (max 48-bit range)',
+    it('should turn 6 bytes (bin) to 1 unsigned 48-bit int (max 40-bit range)',
             function() {
         assert.deepEqual(byteData.uIntFrom6Bytes(
             [255,255,255,255,255, 0]),
             [1099511627775]);
     });
-
+    it('should turn 6 bytes (bin) to 1 unsigned 48-bit int (max 48-bit range)',
+            function() {
+        assert.deepEqual(byteData.uIntFrom6Bytes(
+            [255,255,255,255,255, 255]),
+            [281474976710655]);
+    });
 
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int (149515627075)',
             function() {

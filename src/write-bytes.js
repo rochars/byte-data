@@ -6,6 +6,7 @@
 
 let helpers = require("../src/helpers.js");
 const intBits = require("int-bits");
+const toHalf = require("../src/to-half");
 
 function write64BitFloat(bytes, numbers, i, j) {
     // 0s should not be signed by default
@@ -83,6 +84,13 @@ function write16Bit(bytes, numbers, i, j) {
     return j;
 }
 
+function write16BitFloat(bytes, numbers, i, j) {
+    numbers[i] = toHalf.toHalf(numbers[i]);
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] & 0xFF;
+    return j;
+}
+
 function write8Bit(bytes, numbers, i, j) {
     bytes[j++] = numbers[i] & 0xFF;
     return j;
@@ -100,5 +108,6 @@ module.exports.write32BitFloat = write32BitFloat;
 module.exports.write32Bit = write32Bit;
 module.exports.write24Bit = write24Bit;
 module.exports.write16Bit = write16Bit;
+module.exports.write16BitFloat = write16BitFloat;
 module.exports.write8Bit = write8Bit;
 module.exports.writeString = writeString;

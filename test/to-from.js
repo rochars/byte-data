@@ -71,7 +71,6 @@ describe('to-from', function() {
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (min range)',
             function() {
         let bytes = byteData.intTo6Bytes([-140737488355328]);
-        console.log(bytes);
         let num = byteData.intFrom6Bytes(bytes);
         assert.equal(-140737488355328, num[0]);
     });
@@ -261,6 +260,48 @@ describe('to-from', function() {
         let bytes = byteData.intTo2Bytes([1]);
         let num = byteData.intFrom2Bytes(bytes);
         assert.deepEqual([1], num);
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (0.0006)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([0.0006]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.deepEqual(0.0006, num[0].toFixed(4));
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (-0.0006)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([-0.0006]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.deepEqual(-0.0006, num[0].toFixed(4));
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (0.0106)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([0.0106]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.deepEqual(0.0106, num[0].toFixed(4));
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (-0.1006)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([-0.1006]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.deepEqual(-0.1006, num[0].toFixed(4));
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (0.00106)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([0.00106]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.deepEqual(0.00106, num[0].toFixed(5));
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (-0.01006)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([-0.01006]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.deepEqual(-0.01006, num[0].toFixed(5));
+    });
+    it('should turn 1 16-bit signed float to 2 byte and back (-0.01006 vs -0.01005)',
+            function() {
+        let bytes = byteData.floatTo2Bytes([-0.01006]);
+        let num = byteData.floatFrom2Bytes(bytes);
+        assert.ok(-0.01005 != num[0].toFixed(5));
     });
 
     // 8-bit / 1 byte unsigned

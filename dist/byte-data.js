@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -96,6 +96,20 @@ function toFloat64(value) {
     hiWord = hiWord | (exponent << 20);
     hiWord = hiWord | (significand & ~(-1 << 20));
     return [hiWord, loWord];
+}
+
+function decodeFloat16 (binary) {
+    var exponent = (binary & 0x7C00) >> 10,
+        fraction = binary & 0x03FF;
+    return (binary >> 15 ? -1 : 1) * (
+        exponent ?
+        (
+            exponent === 0x1F ?
+            fraction ? NaN : Infinity :
+            Math.pow(2, exponent - 15) * (1 + fraction / 0x400)
+        ) :
+        6.103515625e-5 * (fraction / 0x400)
+    );
 }
 
 /**
@@ -322,6 +336,7 @@ module.exports.readBytesAsBits = readBytesAsBits;
 module.exports.signed = signed;
 module.exports.bytesToBase = bytesToBase;
 module.exports.bytesToInt = bytesToInt;
+module.exports.decodeFloat16 = decodeFloat16;
 module.exports.decodeFloat = decodeFloat;
 module.exports.toFloat64 = toFloat64;
 module.exports.padding = padding;
@@ -354,6 +369,125 @@ module.exports.unpack = unpack
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Function to write data as arrays of bytes.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+let helpers = __webpack_require__(0);
+const intBits = __webpack_require__(1);
+const toHalf = __webpack_require__(7);
+
+function write64BitFloat(bytes, numbers, i, j) {
+    // 0s should not be signed by default
+    if (numbers[i] === 0) {
+        //bytes = bytes.concat([0,0,0,0,0,0,0,0]);
+        //j += 8;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+        bytes[j++] = 0;
+    } else {
+        let number = helpers.toFloat64(numbers[i]);
+        bytes[j++] = number[1] & 0xFF;
+        bytes[j++] = number[1] >>> 8 & 0xFF;
+        bytes[j++] = number[1] >>> 16 & 0xFF;
+        bytes[j++] = number[1] >>> 24 & 0xFF;
+        bytes[j++] = number[0] & 0xFF;
+        bytes[j++] = number[0] >>> 8 & 0xFF;
+        bytes[j++] = number[0] >>> 16 & 0xFF;
+        bytes[j++] = number[0] >>> 24 & 0xFF;
+    }
+    return j;
+}
+
+function write48Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >> 8 & 0xFF;
+    bytes[j++] = numbers[i] >> 16 & 0xFF;
+    bytes[j++] = numbers[i] >> 24 & 0xFF;
+    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
+    bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
+    return j;
+}
+
+function write40Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >> 8 & 0xFF;
+    bytes[j++] = numbers[i] >> 16 & 0xFF;
+    bytes[j++] = numbers[i] >> 24 & 0xFF;
+    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
+    return j;
+}
+
+function write32BitFloat(bytes, numbers, i, j) {
+    numbers[i] = intBits.unpack(numbers[i]);
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+    bytes[j++] = numbers[i] >>> 24 & 0xFF;
+    return j;
+}
+
+function write32Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+    bytes[j++] = numbers[i] >>> 24 & 0xFF;
+    return j;
+}
+
+function write24Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+    return j;
+}
+
+function write16Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    return j;
+}
+
+function write16BitFloat(bytes, numbers, i, j) {
+    numbers[i] = toHalf.toHalf(numbers[i]);
+    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+    bytes[j++] = numbers[i] & 0xFF;
+    return j;
+}
+
+function write8Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xFF;
+    return j;
+}
+
+function writeString(bytes, string, i, j) {
+    bytes[j++] = string.charCodeAt(i);
+    return j;
+}
+
+module.exports.write64BitFloat = write64BitFloat;
+module.exports.write48Bit = write48Bit;
+module.exports.write40Bit = write40Bit;
+module.exports.write32BitFloat = write32BitFloat;
+module.exports.write32Bit = write32Bit;
+module.exports.write24Bit = write24Bit;
+module.exports.write16Bit = write16Bit;
+module.exports.write16BitFloat = write16BitFloat;
+module.exports.write8Bit = write8Bit;
+module.exports.writeString = writeString;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 /*
@@ -399,7 +533,159 @@ module.exports.maxBitDepth = maxBitDepth;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Function to read data from arrays of bytes.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+let helpers = __webpack_require__(0);
+const intBits = __webpack_require__(1);
+
+/**
+ * Read 1 1-bit int from from booleans.
+ * @param {!Array<number>|Uint8Array} bytes An array of booleans.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read1Bit(bytes, i) {
+    return parseInt(bytes[i], 2);
+}
+
+// read2Bit, read4Bit == read8Bit
+
+/**
+ * Read 1 8-bit int from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read8Bit(bytes, i) {
+    return bytes[i];
+}
+
+/**
+ * Read 1 16-bit int from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read16Bit(bytes, i) {
+    return bytes[1 + i] << 8 | bytes[i];
+}
+
+/**
+ * Read 1 24-bit int from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read24Bit(bytes, i) {
+    return bytes[2 + i] << 16 |
+        bytes[1 + i] << 8 |
+        bytes[i];
+}
+
+/**
+ * Read 1 32-bit int from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read32Bit(bytes, i) {
+    return (bytes[3 + i] << 24 |
+        bytes[2 + i] << 16 |
+        bytes[1 + i] << 8 |
+        bytes[i]) >>> 0;
+}
+
+/**
+ * Read 1 32-bit float from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read32BitFloat(bytes, i) {
+    return intBits.pack(read32Bit(bytes, i));
+}
+
+/**
+ * Read 1 40-bit int from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read40Bit(bytes, i) {
+    return helpers.readBytesAsBits(bytes, i, 5);
+}
+
+/**
+ * Read 1 48-bit int from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read48Bit(bytes, i) {
+    return helpers.readBytesAsBits(bytes, i, 6);
+}
+
+/**
+ * Read 1 64-bit double from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read64Bit(bytes, i) {
+    return helpers.decodeFloat(bytes.slice(i,i+8));
+}
+
+function read16BitFloat(bytes, i) {
+    let nBytes = bytes.slice(i,i+2);
+    let binary = "";
+    let bits = "";
+    let j = 0;
+    let bytesLength = nBytes.length;
+    while(j < bytesLength) {
+        bits = nBytes[j].toString(2);
+        while (bits.length < 8) {
+            bits = "0" + bits;
+        }
+        //binary = bits + binary;
+        binary = binary + bits;
+        j++;
+    }
+    binary = parseInt(binary, 2);
+    return helpers.decodeFloat16(binary);
+}
+
+/**
+ * Read 1 char from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {string}
+ */
+function readChar(bytes, i) {
+    return String.fromCharCode(bytes[i]);
+}
+
+module.exports.readChar = readChar;
+module.exports.read1Bit = read1Bit;
+module.exports.read8Bit = read8Bit;
+module.exports.read16Bit = read16Bit;
+module.exports.read16BitFloat = read16BitFloat;
+module.exports.read24Bit = read24Bit;
+module.exports.read32Bit = read32Bit;
+module.exports.read32BitFloat = read32BitFloat;
+module.exports.read40Bit = read40Bit;
+module.exports.read48Bit = read48Bit;
+module.exports.read64Bit = read64Bit;
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -409,9 +695,11 @@ module.exports.maxBitDepth = maxBitDepth;
  * https://github.com/rochars/byte-data
  */
 
-let toBytes = __webpack_require__(4);
-let fromBytes = __webpack_require__(6);
-let bitPacker = __webpack_require__(8);
+let toBytes = __webpack_require__(6);
+let fromBytes = __webpack_require__(8);
+let bitPacker = __webpack_require__(9);
+let writer = __webpack_require__(2);
+let reader = __webpack_require__(4);
 
 /**
  * Find and return the start offset of some string.
@@ -429,6 +717,28 @@ function findString(bytes, chunk) {
     }
     return -1;
 }
+
+const writers = {
+    '8': writer.write8Bit,
+    '16': writer.write16Bit,
+    '24': writer.write24Bit,
+    '32': writer.write32Bit,
+    '32f': writer.write32BitFloat,
+    '40': writer.write40Bit,
+    '48': writer.write48Bit,
+    '64': writer.write64BitFloat
+};
+
+const readers = {
+    '8': reader.read8Bit,
+    '16': reader.read16Bit,
+    '24': reader.read24Bit,
+    '32': reader.read32Bit,
+    '32f': reader.read32BitFloat,
+    '40': reader.read40Bit,
+    '48': reader.read48Bit,
+    '64': reader.read64BitFloat
+};
 
 module.exports.packBooleans = bitPacker.packBooleans;
 module.exports.unpackBooleans = bitPacker.unpackBooleans;
@@ -449,6 +759,7 @@ window['intTo5Bytes'] = toBytes.intTo5Bytes;
 window['intTo4Bytes'] = toBytes.intTo4Bytes;
 window['intTo3Bytes'] = toBytes.intTo3Bytes;
 window['intTo2Bytes'] = toBytes.intTo2Bytes;
+module.exports.floatTo2Bytes = toBytes.floatTo2Bytes;
 window['intTo1Byte'] = toBytes.intTo1Byte;
 window['intToNibble'] = toBytes.intToNibble;
 module.exports.toCrumb = toBytes.toCrumb;
@@ -465,6 +776,7 @@ window['uIntFrom4Bytes'] = fromBytes.uIntFrom4Bytes;
 window['floatFrom4Bytes'] = fromBytes.floatFrom4Bytes;
 window['intFrom3Bytes'] = fromBytes.intFrom3Bytes;
 window['uIntFrom3Bytes'] = fromBytes.uIntFrom3Bytes;
+module.exports.floatFrom2Bytes = fromBytes.floatFrom2Bytes;
 window['intFrom2Bytes'] = fromBytes.intFrom2Bytes;
 window['uIntFrom2Bytes'] = fromBytes.uIntFrom2Bytes;
 window['intFrom1Byte'] = fromBytes.intFrom1Byte;
@@ -477,7 +789,7 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -488,8 +800,8 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
 
 const intBits = __webpack_require__(1);
 const helpers = __webpack_require__(0);
-const writer = __webpack_require__(5);
-const bitDepths = __webpack_require__(2);
+const writer = __webpack_require__(2);
+const bitDepths = __webpack_require__(3);
 
 /**
  * Turn numbers and strings to bytes.
@@ -651,8 +963,16 @@ function stringToBytes(string, base=10) {
     return toBytes(string, base, writer.writeString, 8, false);
 }
 
+function floatTo2Bytes(numbers, base=10, bigEndian=false) {
+    return toBytes(numbers, base, writer.write16BitFloat, 16, bigEndian);
+}
+
+module.exports.toBytes = toBytes;
+
+// old interface
 module.exports.floatTo8Bytes = floatTo8Bytes;
 module.exports.floatTo4Bytes = floatTo4Bytes;
+module.exports.floatTo2Bytes = floatTo2Bytes;
 module.exports.intTo6Bytes = intTo6Bytes;
 module.exports.intTo5Bytes = intTo5Bytes;
 module.exports.intTo4Bytes = intTo4Bytes;
@@ -666,117 +986,38 @@ module.exports.stringToBytes = stringToBytes;
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 7 */
+/***/ (function(module, exports) {
 
-/*
- * Function to write data as arrays of bytes.
- * Copyright (c) 2017 Rafael da Silva Rocha.
+/*!
+ * to-half: int bits of half-precision floating point values
+ * Based on:
+ * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
  * https://github.com/rochars/byte-data
  */
 
-let helpers = __webpack_require__(0);
-const intBits = __webpack_require__(1);
+var floatView = new Float32Array(1);
+var int32View = new Int32Array(floatView.buffer);
 
-function write64BitFloat(bytes, numbers, i, j) {
-    // 0s should not be signed by default
-    if (numbers[i] === 0) {
-        //bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-        //j += 8;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-    } else {
-        let number = helpers.toFloat64(numbers[i]);
-        bytes[j++] = number[1] & 0xFF;
-        bytes[j++] = number[1] >>> 8 & 0xFF;
-        bytes[j++] = number[1] >>> 16 & 0xFF;
-        bytes[j++] = number[1] >>> 24 & 0xFF;
-        bytes[j++] = number[0] & 0xFF;
-        bytes[j++] = number[0] >>> 8 & 0xFF;
-        bytes[j++] = number[0] >>> 16 & 0xFF;
-        bytes[j++] = number[0] >>> 24 & 0xFF;
+function toHalf(val) {
+    floatView[0] = val;
+    var x = int32View[0];
+    var bits = (x >> 16) & 0x8000;
+    var m = (x >> 12) & 0x07ff;
+    var e = (x >> 23) & 0xff;
+    if (e < 103) {
+        return bits;
     }
-    return j;
+    bits |= ((e - 112) << 10) | (m >> 1);
+    bits += m & 1;
+    return bits;
 }
 
-function write48Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >> 8 & 0xFF;
-    bytes[j++] = numbers[i] >> 16 & 0xFF;
-    bytes[j++] = numbers[i] >> 24 & 0xFF;
-    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-    bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
-    return j;
-}
-
-function write40Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >> 8 & 0xFF;
-    bytes[j++] = numbers[i] >> 16 & 0xFF;
-    bytes[j++] = numbers[i] >> 24 & 0xFF;
-    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-    return j;
-}
-
-function write32BitFloat(bytes, numbers, i, j) {
-    numbers[i] = intBits.unpack(numbers[i]);
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] >>> 16 & 0xFF;
-    bytes[j++] = numbers[i] >>> 24 & 0xFF;
-    return j;
-}
-
-function write32Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] >>> 16 & 0xFF;
-    bytes[j++] = numbers[i] >>> 24 & 0xFF;
-    return j;
-}
-
-function write24Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] >>> 16 & 0xFF;
-    return j;
-}
-
-function write16Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    return j;
-}
-
-function write8Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    return j;
-}
-
-function writeString(bytes, string, i, j) {
-    bytes[j++] = string.charCodeAt(i);
-    return j;
-}
-
-module.exports.write64BitFloat = write64BitFloat;
-module.exports.write48Bit = write48Bit;
-module.exports.write40Bit = write40Bit;
-module.exports.write32BitFloat = write32BitFloat;
-module.exports.write32Bit = write32Bit;
-module.exports.write24Bit = write24Bit;
-module.exports.write16Bit = write16Bit;
-module.exports.write8Bit = write8Bit;
-module.exports.writeString = writeString;
+module.exports.toHalf = toHalf;
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -786,8 +1027,8 @@ module.exports.writeString = writeString;
  */
 
 const helpers = __webpack_require__(0);
-const reader = __webpack_require__(7);
-const bitDepths = __webpack_require__(2);
+const reader = __webpack_require__(4);
+const bitDepths = __webpack_require__(3);
 
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
@@ -896,6 +1137,11 @@ function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
 function intFrom2Bytes(bytes, base=10, bigEndian=false) {
     helpers.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
+}
+
+function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 2, bigEndian);
+    return fromBytes(bytes, base, reader.read16BitFloat, 16);
 }
 
 /**
@@ -1036,6 +1282,7 @@ module.exports.intFrom1Byte = intFrom1Byte;
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;
 module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
+module.exports.floatFrom2Bytes = floatFrom2Bytes;
 module.exports.intFrom3Bytes = intFrom3Bytes;
 module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;
@@ -1050,139 +1297,7 @@ module.exports.stringFromBytes = stringFromBytes;
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- * Function to read data from arrays of bytes.
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
- */
-
-let helpers = __webpack_require__(0);
-const intBits = __webpack_require__(1);
-
-/**
- * Read 1 1-bit int from from booleans.
- * @param {!Array<number>|Uint8Array} bytes An array of booleans.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read1Bit(bytes, i) {
-    return parseInt(bytes[i], 2);
-}
-
-// read2Bit, read4Bit == read8Bit
-
-/**
- * Read 1 8-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read8Bit(bytes, i) {
-    return bytes[i];
-}
-
-/**
- * Read 1 16-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read16Bit(bytes, i) {
-    return bytes[1 + i] << 8 | bytes[i];
-}
-
-/**
- * Read 1 24-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read24Bit(bytes, i) {
-    return bytes[2 + i] << 16 |
-        bytes[1 + i] << 8 |
-        bytes[i];
-}
-
-/**
- * Read 1 32-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read32Bit(bytes, i) {
-    return (bytes[3 + i] << 24 |
-        bytes[2 + i] << 16 |
-        bytes[1 + i] << 8 |
-        bytes[i]) >>> 0;
-}
-
-/**
- * Read 1 32-bit float from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read32BitFloat(bytes, i) {
-    return intBits.pack(read32Bit(bytes, i));
-}
-
-/**
- * Read 1 40-bit int from from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read40Bit(bytes, i) {
-    return helpers.readBytesAsBits(bytes, i, 5);
-}
-
-/**
- * Read 1 48-bit int from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read48Bit(bytes, i) {
-    return helpers.readBytesAsBits(bytes, i, 6);
-}
-
-/**
- * Read 1 64-bit double from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read64Bit(bytes, i) {
-    return helpers.decodeFloat(bytes.slice(i,i+8));
-}
-
-/**
- * Read 1 char from bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {string}
- */
-function readChar(bytes, i) {
-    return String.fromCharCode(bytes[i]);
-}
-
-module.exports.readChar = readChar;
-module.exports.read1Bit = read1Bit;
-module.exports.read8Bit = read8Bit;
-module.exports.read16Bit = read16Bit;
-module.exports.read24Bit = read24Bit;
-module.exports.read32Bit = read32Bit;
-module.exports.read32BitFloat = read32BitFloat;
-module.exports.read40Bit = read40Bit;
-module.exports.read48Bit = read48Bit;
-module.exports.read64Bit = read64Bit;
-
-
-/***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 /*

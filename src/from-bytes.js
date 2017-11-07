@@ -117,6 +117,11 @@ function intFrom2Bytes(bytes, base=10, bigEndian=false) {
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
+function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
+    helpers.endianess(bytes, 2, bigEndian);
+    return fromBytes(bytes, base, reader.read16BitFloat, 16);
+}
+
 /**
  * Read 24-bit unsigned ints from an array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
@@ -255,6 +260,7 @@ module.exports.intFrom1Byte = intFrom1Byte;
 module.exports.uIntFrom1Byte = uIntFrom1Byte;
 module.exports.intFrom2Bytes = intFrom2Bytes;
 module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
+module.exports.floatFrom2Bytes = floatFrom2Bytes;
 module.exports.intFrom3Bytes = intFrom3Bytes;
 module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
 module.exports.intFrom4Bytes = intFrom4Bytes;

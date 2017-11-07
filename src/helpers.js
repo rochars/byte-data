@@ -29,6 +29,20 @@ function toFloat64(value) {
     return [hiWord, loWord];
 }
 
+function decodeFloat16 (binary) {
+    var exponent = (binary & 0x7C00) >> 10,
+        fraction = binary & 0x03FF;
+    return (binary >> 15 ? -1 : 1) * (
+        exponent ?
+        (
+            exponent === 0x1F ?
+            fraction ? NaN : Infinity :
+            Math.pow(2, exponent - 15) * (1 + fraction / 0x400)
+        ) :
+        6.103515625e-5 * (fraction / 0x400)
+    );
+}
+
 /**
  * Turn an array of bytes into a float 64.
  * Thanks https://gist.github.com/kg/2192799
@@ -253,6 +267,7 @@ module.exports.readBytesAsBits = readBytesAsBits;
 module.exports.signed = signed;
 module.exports.bytesToBase = bytesToBase;
 module.exports.bytesToInt = bytesToInt;
+module.exports.decodeFloat16 = decodeFloat16;
 module.exports.decodeFloat = decodeFloat;
 module.exports.toFloat64 = toFloat64;
 module.exports.padding = padding;
