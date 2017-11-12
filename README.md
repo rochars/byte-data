@@ -200,30 +200,6 @@ byteData.unpackBooleans([77]);
 </script>
 ```
 
-## Python struct.pack VS Node.js byte-data
-```javascript
-//struct.pack('<c', "a")
-byteData.stringToBytes("a", 16);
-
-//struct.pack('<b', -1)
-byteData.intTo1Byte([-1], 16);
-
-//struct.pack('<B', 1)
-byteData.intTo1Byte([1], 16);
-
-//struct.pack('<h', -1)
-byteData.intTo2Bytes([-1], 16);
-
-//struct.pack('<H', 1)
-byteData.intTo2Bytes([1], 16);
-
-//struct.pack('<i', -2147483648)
-byteData.intTo4Bytes([-2147483648], 16);
-
-//struct.pack('<I', 4294967295)
-byteData.intTo4Bytes([4294967295], 16);
-```
-
 ## LICENSE
 Copyright (c) 2017 Rafael da Silva Rocha.
 
