@@ -32,7 +32,8 @@
  * https://github.com/rochars/byte-data
  */
 
-const helpers = require("../src/helpers.js");
+const pad = require("../src/byte-padding.js");
+const endianess = require("../src/endianess.js");
 const reader = require("../src/read-bytes.js");
 const bitDepths = require("../src/bit-depth.js");
 
@@ -42,20 +43,20 @@ const bitDepths = require("../src/bit-depth.js");
  * @param {number} base The base. 2, 10 or 16.
  * @param {Function} reader The function to read the bytes.
  * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} signed If readed numbers should be signed or not.
+ * @param {boolean} isSigned If readed numbers should be signed or not.
  * @return {!Array&lt;number>} The values represented in the bytes.
  */
-function fromBytes(bytes, base, reader, bitDepth, signed=false) {
+function fromBytes(bytes, base, reader, bitDepth, isSigned=false) {
     let numbers = [];
     let i = 0;
     let j = 0;
     let offset = bitDepths.bitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
-    helpers.bytesToInt(bytes, base);   
-    if (signed) {
+    bytesToInt(bytes, base);   
+    if (isSigned) {
         while (i &lt; len) {
-            numbers[j] = helpers.signed(reader(bytes, i), maxBitDepthValue);
+            numbers[j] = signed(reader(bytes, i), maxBitDepthValue);
             i += offset;
             j++;
         }    
@@ -67,6 +68,34 @@ function fromBytes(bytes, base, reader, bitDepth, signed=false) {
         }    
     }
     return numbers;
+}
+
+/**
+ * Turn bytes to base 10.
+ * @param {!Array&lt;number>|Uint8Array} bytes The bytes as binary or hex strings.
+ * @param {number} base The base.
+ */
+function bytesToInt(bytes, base) {
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while(i &lt; len) {
+            bytes[i] = parseInt(bytes[i], base);
+            i++;
+        }
+    }
+}
+
+/**
+ * Turn a unsigned number to a signed number.
+ * @param {number} number The number.
+ * @param {number} maxValue The max range for the number bit depth.
+ */
+function signed(number, maxValue) {
+    if (number > parseInt(maxValue / 2, 10) - 1) {
+        number -= maxValue;
+    }
+    return number;
 }
 
 /**
@@ -128,7 +157,7 @@ function intFrom1Byte(bytes, base=10) {
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 2, bigEndian);
+    endianess.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16);
 }
 
@@ -141,12 +170,12 @@ function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom2Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 2, bigEndian);
+    endianess.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
 function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 2, bigEndian);
+    endianess.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16BitFloat, 16);
 }
 
@@ -158,7 +187,7 @@ function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 3, bigEndian);
+    endianess.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24);
 }
 
@@ -170,7 +199,7 @@ function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom3Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 3, bigEndian);
+    endianess.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24, true);
 }
 
@@ -182,7 +211,7 @@ function intFrom3Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 4, bigEndian);
+    endianess.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32);
 }
 
@@ -194,7 +223,7 @@ function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom4Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 4, bigEndian);
+    endianess.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32, true);
 }
 
@@ -206,7 +235,7 @@ function intFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 4, bigEndian);
+    endianess.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32BitFloat, 32);
 }
 
@@ -218,7 +247,7 @@ function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 5, bigEndian);
+    endianess.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40);
 }
 
@@ -230,7 +259,7 @@ function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom5Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 5, bigEndian);
+    endianess.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40, true);
 }
 
@@ -242,7 +271,7 @@ function intFrom5Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 6, bigEndian);
+    endianess.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48);
 }
 
@@ -254,7 +283,7 @@ function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function intFrom6Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 6, bigEndian);
+    endianess.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48, true);
 }
 
@@ -266,7 +295,7 @@ function intFrom6Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array&lt;number>} The numbers.
  */
 function floatFrom8Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 8, bigEndian);
+    endianess.endianess(bytes, 8, bigEndian);
     return fromBytes(bytes, base, reader.read64Bit, 64);
 }
 
@@ -310,13 +339,13 @@ module.exports.stringFromBytes = stringFromBytes;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Nov 07 2017 08:49:27 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 12 2017 02:22:21 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

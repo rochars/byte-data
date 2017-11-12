@@ -1,6 +1,6 @@
 /*!
  * byte-data
- * Bytes to and from numbers and strings.
+ * Readable data to and from bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
@@ -27,28 +27,6 @@ function findString(bytes, chunk) {
     }
     return -1;
 }
-
-const writers = {
-    '8': writer.write8Bit,
-    '16': writer.write16Bit,
-    '24': writer.write24Bit,
-    '32': writer.write32Bit,
-    '32f': writer.write32BitFloat,
-    '40': writer.write40Bit,
-    '48': writer.write48Bit,
-    '64': writer.write64BitFloat
-};
-
-const readers = {
-    '8': reader.read8Bit,
-    '16': reader.read16Bit,
-    '24': reader.read24Bit,
-    '32': reader.read32Bit,
-    '32f': reader.read32BitFloat,
-    '40': reader.read40Bit,
-    '48': reader.read48Bit,
-    '64': reader.read64BitFloat
-};
 
 module.exports.packBooleans = bitPacker.packBooleans;
 module.exports.unpackBooleans = bitPacker.unpackBooleans;

@@ -1,40 +1,27 @@
 /*
- * Function to write data as arrays of bytes.
+ * Functions to turn data into bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
 
-let helpers = require("../src/helpers.js");
+const float = require("../src/float.js");
 const intBits = require("int-bits");
 const toHalf = require("../src/to-half");
 
 function write64BitFloat(bytes, numbers, i, j) {
-    // 0s should not be signed by default
-    if (numbers[i] === 0) {
-        //bytes = bytes.concat([0,0,0,0,0,0,0,0]);
-        //j += 8;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-        bytes[j++] = 0;
-    } else {
-        let number = helpers.toFloat64(numbers[i]);
-        bytes[j++] = number[1] & 0xFF;
-        bytes[j++] = number[1] >>> 8 & 0xFF;
-        bytes[j++] = number[1] >>> 16 & 0xFF;
-        bytes[j++] = number[1] >>> 24 & 0xFF;
-        bytes[j++] = number[0] & 0xFF;
-        bytes[j++] = number[0] >>> 8 & 0xFF;
-        bytes[j++] = number[0] >>> 16 & 0xFF;
-        bytes[j++] = number[0] >>> 24 & 0xFF;
-    }
+    let number = float.toFloat64(numbers[i]);
+    bytes[j++] = number[1] & 0xFF;
+    bytes[j++] = number[1] >>> 8 & 0xFF;
+    bytes[j++] = number[1] >>> 16 & 0xFF;
+    bytes[j++] = number[1] >>> 24 & 0xFF;
+    bytes[j++] = number[0] & 0xFF;
+    bytes[j++] = number[0] >>> 8 & 0xFF;
+    bytes[j++] = number[0] >>> 16 & 0xFF;
+    bytes[j++] = number[0] >>> 24 & 0xFF;
     return j;
 }
 
+// https://github.com/majimboo/c-struct
 function write48Bit(bytes, numbers, i, j) {
     bytes[j++] = numbers[i] & 0xFF;
     bytes[j++] = numbers[i] >> 8 & 0xFF;
@@ -45,6 +32,7 @@ function write48Bit(bytes, numbers, i, j) {
     return j;
 }
 
+// https://github.com/majimboo/c-struct
 function write40Bit(bytes, numbers, i, j) {
     bytes[j++] = numbers[i] & 0xFF;
     bytes[j++] = numbers[i] >> 8 & 0xFF;

@@ -104,6 +104,351 @@
     
 
     
+    <h4 class="name" id="bytesToBase"><span class="type-signature"></span>bytesToBase<span class="signature">(bytes, base, padFunction)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Turn bytes to base.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bytes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">!Array.&lt;string></span>
+|
+
+<span class="param-type">!Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The base.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>padFunction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to use for padding.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line42">line 42</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="bytesToInt"><span class="type-signature"></span>bytesToInt<span class="signature">(bytes, base)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Turn bytes to base 10.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bytes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">!Array.&lt;number></span>
+|
+
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bytes as binary or hex strings.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The base.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line50">line 50</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="floatFrom4Bytes"><span class="type-signature"></span>floatFrom4Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
@@ -272,7 +617,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line180">line 180</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line209">line 209</a>
     </li></ul></dd>
     
 
@@ -496,7 +841,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line240">line 240</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line269">line 269</a>
     </li></ul></dd>
     
 
@@ -653,7 +998,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line49">line 49</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -810,7 +1155,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line40">line 40</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line59">line 59</a>
     </li></ul></dd>
     
 
@@ -1005,7 +1350,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line50">line 50</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -1061,7 +1406,7 @@
     
 
     
-    <h4 class="name" id="fromBytes"><span class="type-signature"></span>fromBytes<span class="signature">(bytes, base, reader, bitDepth, signed)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="fromBytes"><span class="type-signature"></span>fromBytes<span class="signature">(bytes, base, reader, bitDepth, isSigned)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -1218,7 +1563,7 @@
 
         <tr>
             
-                <td class="name"><code>signed</code></td>
+                <td class="name"><code>isSigned</code></td>
             
 
             <td class="type">
@@ -1281,7 +1626,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line20">line 20</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -1476,7 +1821,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line91">line 91</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -1700,7 +2045,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line115">line 115</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line144">line 144</a>
     </li></ul></dd>
     
 
@@ -1924,7 +2269,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line144">line 144</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line173">line 173</a>
     </li></ul></dd>
     
 
@@ -2148,7 +2493,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line168">line 168</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -2372,7 +2717,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line204">line 204</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line233">line 233</a>
     </li></ul></dd>
     
 
@@ -2596,7 +2941,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line228">line 228</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line257">line 257</a>
     </li></ul></dd>
     
 
@@ -2791,7 +3136,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line60">line 60</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line89">line 89</a>
     </li></ul></dd>
     
 
@@ -2986,7 +3331,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line70">line 70</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line99">line 99</a>
     </li></ul></dd>
     
 
@@ -3143,7 +3488,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line103">line 103</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line122">line 122</a>
     </li></ul></dd>
     
 
@@ -3300,7 +3645,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line94">line 94</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -3457,7 +3802,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line85">line 85</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -3614,7 +3959,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line76">line 76</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line95">line 95</a>
     </li></ul></dd>
     
 
@@ -3771,7 +4116,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line67">line 67</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -3928,7 +4273,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line58">line 58</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -4085,7 +4430,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line112">line 112</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -4130,6 +4475,164 @@
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="signed"><span class="type-signature"></span>signed<span class="signature">(number, maxValue)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Turn a unsigned number to a signed number.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The max range for the number bit depth.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4245,7 +4748,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line250">line 250</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line279">line 279</a>
     </li></ul></dd>
     
 
@@ -4402,7 +4905,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line168">line 168</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -4594,7 +5097,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line150">line 150</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -4846,7 +5349,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line21">line 21</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -5038,7 +5541,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line131">line 131</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -5233,7 +5736,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line81">line 81</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -5457,7 +5960,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line102">line 102</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -5681,7 +6184,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line132">line 132</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -5905,7 +6408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line156">line 156</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -6129,7 +6632,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line192">line 192</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
@@ -6353,7 +6856,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line216">line 216</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line245">line 245</a>
     </li></ul></dd>
     
 
@@ -6419,13 +6922,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Nov 07 2017 08:49:27 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 12 2017 02:22:21 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

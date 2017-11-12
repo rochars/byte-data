@@ -5,7 +5,8 @@
  */
 
 const intBits = require("int-bits");
-const helpers = require("../src/helpers.js");
+const pad = require("../src/byte-padding.js");
+const endianess = require("../src/endianess.js");
 const writer = require("../src/write-bytes.js");
 const bitDepths = require("../src/bit-depth.js");
 
@@ -27,9 +28,27 @@ function toBytes(numbers, base, writer, bitDepth, bigEndian) {
         j = writer(bytes, numbers, i, j);
         i++;
     }
-    helpers.bytesToBase(bytes, base);
-    helpers.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
+    bytesToBase(bytes, base);
+    endianess.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
     return bytes;
+}
+
+/**
+ * Turn bytes to base.
+ * @param {!Array<string>|!Array<number>} bytes The bytes.
+ * @param {number} base The base.
+ * @param {Function} padFunction The function to use for padding.
+ */
+function bytesToBase(bytes, base, padFunction=pad.padding) {
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while (i < len) {
+            bytes[i] = bytes[i].toString(base);
+            padFunction(bytes, base, i);
+            i++;
+        }
+    }
 }
 
 /**
@@ -118,7 +137,7 @@ function intToNibble(numbers, base=10) {
         bytes[j++] = numbers[i] & 0xF;
         i++;
     }
-    helpers.bytesToBase(bytes, base, helpers.paddingNibble);
+    bytesToBase(bytes, base, pad.paddingNibble);
     return bytes;
 }
 
@@ -137,7 +156,7 @@ function toCrumb(values, base=10) {
         bytes[j++] = values[i] < 0 ? values[i] + 4 : values[i];
         i++;
     }
-    helpers.bytesToBase(bytes, base, helpers.paddingCrumb);
+    bytesToBase(bytes, base, pad.paddingCrumb);
     return bytes;
 }
 
@@ -156,7 +175,7 @@ function toBoolean(values, base=10) {
         booleans[j++] = values[i] ? 1 : 0;
         i++;
     }
-    helpers.bytesToBase(booleans, base, function(){});
+    bytesToBase(booleans, base, function(){});
     return booleans;
 }
 

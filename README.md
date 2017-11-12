@@ -1,5 +1,5 @@
 # byte-data
-Bytes to and from numbers and strings.  
+Readable data to and from bytes.  
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 

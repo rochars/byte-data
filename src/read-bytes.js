@@ -1,11 +1,33 @@
 /*
- * Function to read data from arrays of bytes.
+ * Function to read data from bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
 
-let helpers = require("../src/helpers.js");
+
+let pad = require("../src/byte-padding.js");
+const float = require("../src/float.js");
 const intBits = require("int-bits");
+
+/**
+ * Read a group of bytes by turning it to bits.
+ * Useful for 40 & 48-bit, but underperform.
+ * TODO find better alternative for 40 & 48-bit.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @param {number} numBytes The number of bytes
+ *      (1 for 8-bit, 2 for 16-bit, etc).
+ * @return {number}
+ */
+function readBytesAsBits(bytes, i, numBytes) {
+    let j = numBytes-1;
+    let bits = "";
+    while (j >= 0) {
+        bits += pad.bytePadding(bytes[j + i].toString(2), 2);
+        j--;
+    }
+    return parseInt(bits, 2);
+}
 
 /**
  * Read 1 1-bit int from from booleans.
@@ -37,6 +59,30 @@ function read8Bit(bytes, i) {
  */
 function read16Bit(bytes, i) {
     return bytes[1 + i] << 8 | bytes[i];
+}
+
+/**
+ * Read 1 16-bit float from from bytes.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read16BitFloat(bytes, i) {
+    let nBytes = bytes.slice(i,i+2);
+    let binary = "";
+    let bits = "";
+    let j = 0;
+    let bytesLength = nBytes.length;
+    while(j < bytesLength) {
+        bits = nBytes[j].toString(2);
+        while (bits.length < 8) {
+            bits = "0" + bits;
+        }
+        binary = binary + bits;
+        j++;
+    }
+    binary = parseInt(binary, 2);
+    return float.decodeFloat16(binary);
 }
 
 /**
@@ -81,7 +127,7 @@ function read32BitFloat(bytes, i) {
  * @return {number}
  */
 function read40Bit(bytes, i) {
-    return helpers.readBytesAsBits(bytes, i, 5);
+    return readBytesAsBits(bytes, i, 5);
 }
 
 /**
@@ -91,7 +137,7 @@ function read40Bit(bytes, i) {
  * @return {number}
  */
 function read48Bit(bytes, i) {
-    return helpers.readBytesAsBits(bytes, i, 6);
+    return readBytesAsBits(bytes, i, 6);
 }
 
 /**
@@ -101,26 +147,7 @@ function read48Bit(bytes, i) {
  * @return {number}
  */
 function read64Bit(bytes, i) {
-    return helpers.decodeFloat(bytes.slice(i,i+8));
-}
-
-function read16BitFloat(bytes, i) {
-    let nBytes = bytes.slice(i,i+2);
-    let binary = "";
-    let bits = "";
-    let j = 0;
-    let bytesLength = nBytes.length;
-    while(j < bytesLength) {
-        bits = nBytes[j].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
-        //binary = bits + binary;
-        binary = binary + bits;
-        j++;
-    }
-    binary = parseInt(binary, 2);
-    return helpers.decodeFloat16(binary);
+    return float.decodeFloat(bytes.slice(i,i+8));
 }
 
 /**
@@ -144,3 +171,4 @@ module.exports.read32BitFloat = read32BitFloat;
 module.exports.read40Bit = read40Bit;
 module.exports.read48Bit = read48Bit;
 module.exports.read64Bit = read64Bit;
+

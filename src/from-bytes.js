@@ -4,7 +4,8 @@
  * https://github.com/rochars/byte-data
  */
 
-const helpers = require("../src/helpers.js");
+const pad = require("../src/byte-padding.js");
+const endianess = require("../src/endianess.js");
 const reader = require("../src/read-bytes.js");
 const bitDepths = require("../src/bit-depth.js");
 
@@ -14,20 +15,20 @@ const bitDepths = require("../src/bit-depth.js");
  * @param {number} base The base. 2, 10 or 16.
  * @param {Function} reader The function to read the bytes.
  * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} signed If readed numbers should be signed or not.
+ * @param {boolean} isSigned If readed numbers should be signed or not.
  * @return {!Array<number>} The values represented in the bytes.
  */
-function fromBytes(bytes, base, reader, bitDepth, signed=false) {
+function fromBytes(bytes, base, reader, bitDepth, isSigned=false) {
     let numbers = [];
     let i = 0;
     let j = 0;
     let offset = bitDepths.bitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
-    helpers.bytesToInt(bytes, base);   
-    if (signed) {
+    bytesToInt(bytes, base);   
+    if (isSigned) {
         while (i < len) {
-            numbers[j] = helpers.signed(reader(bytes, i), maxBitDepthValue);
+            numbers[j] = signed(reader(bytes, i), maxBitDepthValue);
             i += offset;
             j++;
         }    
@@ -39,6 +40,34 @@ function fromBytes(bytes, base, reader, bitDepth, signed=false) {
         }    
     }
     return numbers;
+}
+
+/**
+ * Turn bytes to base 10.
+ * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
+ * @param {number} base The base.
+ */
+function bytesToInt(bytes, base) {
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while(i < len) {
+            bytes[i] = parseInt(bytes[i], base);
+            i++;
+        }
+    }
+}
+
+/**
+ * Turn a unsigned number to a signed number.
+ * @param {number} number The number.
+ * @param {number} maxValue The max range for the number bit depth.
+ */
+function signed(number, maxValue) {
+    if (number > parseInt(maxValue / 2, 10) - 1) {
+        number -= maxValue;
+    }
+    return number;
 }
 
 /**
@@ -100,7 +129,7 @@ function intFrom1Byte(bytes, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 2, bigEndian);
+    endianess.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16);
 }
 
@@ -113,12 +142,12 @@ function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 2, bigEndian);
+    endianess.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
 function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 2, bigEndian);
+    endianess.endianess(bytes, 2, bigEndian);
     return fromBytes(bytes, base, reader.read16BitFloat, 16);
 }
 
@@ -130,7 +159,7 @@ function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 3, bigEndian);
+    endianess.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24);
 }
 
@@ -142,7 +171,7 @@ function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom3Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 3, bigEndian);
+    endianess.endianess(bytes, 3, bigEndian);
     return fromBytes(bytes, base, reader.read24Bit, 24, true);
 }
 
@@ -154,7 +183,7 @@ function intFrom3Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 4, bigEndian);
+    endianess.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32);
 }
 
@@ -166,7 +195,7 @@ function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom4Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 4, bigEndian);
+    endianess.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32Bit, 32, true);
 }
 
@@ -178,7 +207,7 @@ function intFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 4, bigEndian);
+    endianess.endianess(bytes, 4, bigEndian);
     return fromBytes(bytes, base, reader.read32BitFloat, 32);
 }
 
@@ -190,7 +219,7 @@ function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 5, bigEndian);
+    endianess.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40);
 }
 
@@ -202,7 +231,7 @@ function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom5Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 5, bigEndian);
+    endianess.endianess(bytes, 5, bigEndian);
     return fromBytes(bytes, base, reader.read40Bit, 40, true);
 }
 
@@ -214,7 +243,7 @@ function intFrom5Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 6, bigEndian);
+    endianess.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48);
 }
 
@@ -226,7 +255,7 @@ function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom6Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 6, bigEndian);
+    endianess.endianess(bytes, 6, bigEndian);
     return fromBytes(bytes, base, reader.read48Bit, 48, true);
 }
 
@@ -238,7 +267,7 @@ function intFrom6Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes, base=10, bigEndian=false) {
-    helpers.endianess(bytes, 8, bigEndian);
+    endianess.endianess(bytes, 8, bigEndian);
     return fromBytes(bytes, base, reader.read64Bit, 64);
 }
 
