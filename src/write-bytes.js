@@ -6,7 +6,6 @@
 
 const float = require("../src/float.js");
 const intBits = require("int-bits");
-const toHalf = require("../src/to-half");
 
 function write64BitFloat(bytes, numbers, i, j) {
     let number = float.toFloat64(numbers[i]);
@@ -73,7 +72,7 @@ function write16Bit(bytes, numbers, i, j) {
 }
 
 function write16BitFloat(bytes, numbers, i, j) {
-    numbers[i] = toHalf.toHalf(numbers[i]);
+    numbers[i] = float.toHalf(numbers[i]);
     bytes[j++] = numbers[i] >>> 8 & 0xFF;
     bytes[j++] = numbers[i] & 0xFF;
     return j;

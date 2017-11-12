@@ -231,7 +231,6 @@ module.exports.endianness = endianness;
 
 const float = __webpack_require__(4);
 const intBits = __webpack_require__(0);
-const toHalf = __webpack_require__(9);
 
 function write64BitFloat(bytes, numbers, i, j) {
     let number = float.toFloat64(numbers[i]);
@@ -298,7 +297,7 @@ function write16Bit(bytes, numbers, i, j) {
 }
 
 function write16BitFloat(bytes, numbers, i, j) {
-    numbers[i] = toHalf.toHalf(numbers[i]);
+    numbers[i] = float.toHalf(numbers[i]);
     bytes[j++] = numbers[i] >>> 8 & 0xFF;
     bytes[j++] = numbers[i] & 0xFF;
     return j;
@@ -418,9 +417,35 @@ function toFloat64(value) {
     return [hiWord, loWord];
 }
 
+
+let floatView = new Float32Array(1);
+let int32View = new Int32Array(floatView.buffer);
+
+/*!
+ * to-half: int bits of half-precision floating point values
+ * Based on:
+ * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
+ * https://github.com/rochars/byte-data
+ */
+function toHalf(val) {
+    floatView[0] = val;
+    let x = int32View[0];
+    let bits = (x >> 16) & 0x8000;
+    let m = (x >> 12) & 0x07ff;
+    let e = (x >> 23) & 0xff;
+    if (e < 103) {
+        return bits;
+    }
+    bits |= ((e - 112) << 10) | (m >> 1);
+    bits += m & 1;
+    return bits;
+}
+
+
 module.exports.decodeFloat16 = decodeFloat16;
 module.exports.decodeFloat = decodeFloat;
 module.exports.toFloat64 = toFloat64;
+module.exports.toHalf = toHalf;
 
 
 /***/ }),
@@ -661,8 +686,8 @@ module.exports.read64Bit = read64Bit;
  */
 
 let toBytes = __webpack_require__(8);
-let fromBytes = __webpack_require__(10);
-let bitPacker = __webpack_require__(11);
+let fromBytes = __webpack_require__(9);
+let bitPacker = __webpack_require__(10);
 let writer = __webpack_require__(3);
 let reader = __webpack_require__(6);
 
@@ -951,37 +976,6 @@ module.exports.stringToBytes = stringToBytes;
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-/*!
- * to-half: int bits of half-precision floating point values
- * Based on:
- * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
- * https://github.com/rochars/byte-data
- */
-
-var floatView = new Float32Array(1);
-var int32View = new Int32Array(floatView.buffer);
-
-function toHalf(val) {
-    floatView[0] = val;
-    var x = int32View[0];
-    var bits = (x >> 16) & 0x8000;
-    var m = (x >> 12) & 0x07ff;
-    var e = (x >> 23) & 0xff;
-    if (e < 103) {
-        return bits;
-    }
-    bits |= ((e - 112) << 10) | (m >> 1);
-    bits += m & 1;
-    return bits;
-}
-
-module.exports.toHalf = toHalf;
-
-
-/***/ }),
-/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -1316,7 +1310,7 @@ module.exports.stringFromBytes = stringFromBytes;
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports) {
 
 /*

@@ -86,6 +86,32 @@ function toFloat64(value) {
     return [hiWord, loWord];
 }
 
+
+let floatView = new Float32Array(1);
+let int32View = new Int32Array(floatView.buffer);
+
+/*!
+ * to-half: int bits of half-precision floating point values
+ * Based on:
+ * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
+ * https://github.com/rochars/byte-data
+ */
+function toHalf(val) {
+    floatView[0] = val;
+    let x = int32View[0];
+    let bits = (x >> 16) & 0x8000;
+    let m = (x >> 12) & 0x07ff;
+    let e = (x >> 23) & 0xff;
+    if (e < 103) {
+        return bits;
+    }
+    bits |= ((e - 112) << 10) | (m >> 1);
+    bits += m & 1;
+    return bits;
+}
+
+
 module.exports.decodeFloat16 = decodeFloat16;
 module.exports.decodeFloat = decodeFloat;
 module.exports.toFloat64 = toFloat64;
+module.exports.toHalf = toHalf;
