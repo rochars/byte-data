@@ -1,7 +1,7 @@
 {
   "name": "byte-data",
   "version": "0.3.2",
-  "description": "Bytes to and from numbers and strings.",
+  "description": "Readable data to and from bytes.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
@@ -60,6 +60,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
+    "endianness": "1.0.0",
     "int-bits": "1.0.0"
   },
   "main": "index.js"

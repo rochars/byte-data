@@ -169,28 +169,28 @@ module.exports.bytePadding = bytePadding;
 /***/ (function(module, exports) {
 
 /*
- * endianess: swap byte endianess.
+ * endianness: Swap byte endianness in a array of bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
+ * https://github.com/rochars/endianness
  */
 
 /**
  * Make the resulting byte array big endian or little endian.
- * Default is little endian.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} offset The swap offset according to the bit depth.
- *      2 for 16-bit, 3 for 24-bit, 4 for 32-bit,
- *      5 for 40-bit, 6 for 48-bit, 8 for 64-bit
- * @param {boolean} bigEndian If the bytes are big endian or not.
+ *  - 2 for 16-bit
+ *  - 3 for 24-bit
+ *  - 4 for 32-bit
+ *  - 5 for 40-bit
+ *  - 6 for 48-bit
+ *  - 8 for 64-bit
  */
-function endianess(bytes, offset, bigEndian) {
-    if (bigEndian) {
-        let len = bytes.length;
-        let i = 0;
-        while (i < len) {
-            byteSwap(bytes, i, offset);
-            i+=offset;
-        }
+function endianness(bytes, offset) {
+    let len = bytes.length;
+    let i = 0;
+    while (i < len) {
+        byteSwap(bytes, i, offset);
+        i+=offset;
     }
     return bytes;
 }
@@ -216,7 +216,7 @@ function byteSwap(bytes, i, numBytes) {
     }
 }
 
-module.exports.endianess = endianess;
+module.exports.endianness = endianness;
 
 
 /***/ }),
@@ -743,7 +743,7 @@ module.exports.fromBoolean = fromBytes.fromBoolean;
 
 const intBits = __webpack_require__(0);
 const pad = __webpack_require__(1);
-const endianess = __webpack_require__(2);
+const endianness = __webpack_require__(2);
 const writer = __webpack_require__(3);
 const bitDepths = __webpack_require__(5);
 
@@ -766,7 +766,9 @@ function toBytes(numbers, base, writer, bitDepth, bigEndian) {
         i++;
     }
     bytesToBase(bytes, base);
-    endianess.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, bitDepths.bitDepthOffsets[bitDepth]);
+    }
     return bytes;
 }
 
@@ -989,7 +991,7 @@ module.exports.toHalf = toHalf;
  */
 
 const pad = __webpack_require__(1);
-const endianess = __webpack_require__(2);
+const endianness = __webpack_require__(2);
 const reader = __webpack_require__(6);
 const bitDepths = __webpack_require__(5);
 
@@ -1113,7 +1115,9 @@ function intFrom1Byte(bytes, base=10) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 2, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 2);
+    }
     return fromBytes(bytes, base, reader.read16Bit, 16);
 }
 
@@ -1126,12 +1130,16 @@ function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom2Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 2, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 2);
+    }
     return fromBytes(bytes, base, reader.read16Bit, 16, true);
 }
 
 function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 2, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 2);
+    }
     return fromBytes(bytes, base, reader.read16BitFloat, 16);
 }
 
@@ -1143,7 +1151,9 @@ function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 3, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 3);
+    }
     return fromBytes(bytes, base, reader.read24Bit, 24);
 }
 
@@ -1155,7 +1165,9 @@ function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom3Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 3, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 3);
+    }
     return fromBytes(bytes, base, reader.read24Bit, 24, true);
 }
 
@@ -1167,7 +1179,9 @@ function intFrom3Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 4, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 4);
+    }
     return fromBytes(bytes, base, reader.read32Bit, 32);
 }
 
@@ -1179,7 +1193,9 @@ function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom4Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 4, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 4);
+    }
     return fromBytes(bytes, base, reader.read32Bit, 32, true);
 }
 
@@ -1191,7 +1207,9 @@ function intFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 4, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 4);
+    }
     return fromBytes(bytes, base, reader.read32BitFloat, 32);
 }
 
@@ -1203,7 +1221,9 @@ function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 5, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 5);
+    }
     return fromBytes(bytes, base, reader.read40Bit, 40);
 }
 
@@ -1215,7 +1235,9 @@ function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom5Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 5, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 5);
+    }
     return fromBytes(bytes, base, reader.read40Bit, 40, true);
 }
 
@@ -1227,7 +1249,9 @@ function intFrom5Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 6, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 6);
+    }
     return fromBytes(bytes, base, reader.read48Bit, 48);
 }
 
@@ -1239,7 +1263,9 @@ function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function intFrom6Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 6, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 6);
+    }
     return fromBytes(bytes, base, reader.read48Bit, 48, true);
 }
 
@@ -1251,7 +1277,9 @@ function intFrom6Bytes(bytes, base=10, bigEndian=false) {
  * @return {!Array<number>} The numbers.
  */
 function floatFrom8Bytes(bytes, base=10, bigEndian=false) {
-    endianess.endianess(bytes, 8, bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, 8);
+    }
     return fromBytes(bytes, base, reader.read64Bit, 64);
 }
 

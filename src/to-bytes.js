@@ -6,7 +6,7 @@
 
 const intBits = require("int-bits");
 const pad = require("../src/byte-padding.js");
-const endianess = require("../src/endianess.js");
+const endianness = require("endianness");
 const writer = require("../src/write-bytes.js");
 const bitDepths = require("../src/bit-depth.js");
 
@@ -29,7 +29,9 @@ function toBytes(numbers, base, writer, bitDepth, bigEndian) {
         i++;
     }
     bytesToBase(bytes, base);
-    endianess.endianess(bytes, bitDepths.bitDepthOffsets[bitDepth], bigEndian);
+    if (bigEndian) {
+        endianness.endianness(bytes, bitDepths.bitDepthOffsets[bitDepth]);
+    }
     return bytes;
 }
 
