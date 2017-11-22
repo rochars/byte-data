@@ -30,8 +30,9 @@ function fromBytes(bytes, bitDepth, params={}) {
     if (params.be) {
         endianness.endianness(bytes, bitDepth / 8);
     }
+    bytesToInt(bytes, base);
     return readBytes(
-        bytes, bitDepth, params.char, params.signed, params.float, base);
+        bytes, bitDepth, params.char, params.signed, params.float);
 }
 
 /**
@@ -41,17 +42,15 @@ function fromBytes(bytes, bitDepth, params={}) {
  * @param {boolean} isChar True if it is a string.
  * @param {boolean} isSigned True if the values should be signed.
  * @param {boolean} isFloat True if the values are IEEE floating point numbers.
- * @param {number} base The base, one of 2, 10 or 16.
  * @return {!Array<number>|string} The values represented in the bytes.
  */
-function readBytes(bytes, bitDepth, isChar, isSigned, isFloat, base) {
+function readBytes(bytes, bitDepth, isChar, isSigned, isFloat) {
     let numbers = [];
     let i = 0;
     let j = 0;
     let offset = bitDepths.bitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
-    bytesToInt(bytes, base);
     let bitReader = getBitReader(bitDepth, isFloat, isChar);
     let signFunction = isSigned ? signed : function(x,y){return x;};
     while (i < len) {
