@@ -7,27 +7,27 @@ describe('booleans to bytes', function() {
 
     // booleans
     it('should turn 1 value to 1 booolean bin (6)', function() {
-        assert.deepEqual(byteData.toBoolean([6], 2),
+        assert.deepEqual(byteData.toBytes([6], 1, {"base": 2}),
             ['1']);
     });
     it('should turn 1 value to 1 booolean hex (6)', function() {
-        assert.deepEqual(byteData.toBoolean([6], 16),
+        assert.deepEqual(byteData.toBytes([6], 1, {"base": 16}),
             ['1']);
     });
     it('should turn 1 value to 1 booolean decimal (6)', function() {
-        assert.deepEqual(byteData.toBoolean([6]),
+        assert.deepEqual(byteData.toBytes([6], 1, {"base": 10}),
             [1]);
     });
     it('should turn 1 value to 1 booolean bin (0)', function() {
-        assert.deepEqual(byteData.toBoolean([0], 2),
+        assert.deepEqual(byteData.toBytes([0], 1, {"base": 2}),
             ['0']);
     });
     it('should turn 1 value to 1 booolean hex (0)', function() {
-        assert.deepEqual(byteData.toBoolean([0], 16),
+        assert.deepEqual(byteData.toBytes([0], 1, {"base": 16}),
             ['0']);
     });
     it('should turn 1 value to 1 booolean decimal (0)', function() {
-        assert.deepEqual(byteData.toBoolean([0]),
+        assert.deepEqual(byteData.toBytes([0], 1, {"base": 10}),
             [0]);
     });
 });

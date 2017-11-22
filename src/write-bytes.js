@@ -7,7 +7,7 @@
 const float = require("../src/float.js");
 const intBits = require("int-bits");
 
-function write64BitFloat(bytes, numbers, i, j) {
+function write64Bit(bytes, numbers, i, j) {
     let number = float.toFloat64(numbers[i]);
     bytes[j++] = number[1] & 0xFF;
     bytes[j++] = number[1] >>> 8 & 0xFF;
@@ -83,12 +83,27 @@ function write8Bit(bytes, numbers, i, j) {
     return j;
 }
 
+function write4Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] & 0xF;
+    return j;
+}
+
+function write2Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] < 0 ? numbers[i] + 4 : numbers[i];
+    return j;
+}
+
+function write1Bit(bytes, numbers, i, j) {
+    bytes[j++] = numbers[i] ? 1 : 0;
+    return j;
+}
+
 function writeString(bytes, string, i, j) {
     bytes[j++] = string.charCodeAt(i);
     return j;
 }
 
-module.exports.write64BitFloat = write64BitFloat;
+module.exports.write64Bit = write64Bit;
 module.exports.write48Bit = write48Bit;
 module.exports.write40Bit = write40Bit;
 module.exports.write32BitFloat = write32BitFloat;
@@ -97,4 +112,7 @@ module.exports.write24Bit = write24Bit;
 module.exports.write16Bit = write16Bit;
 module.exports.write16BitFloat = write16BitFloat;
 module.exports.write8Bit = write8Bit;
+module.exports.write4Bit = write4Bit;
+module.exports.write2Bit = write2Bit;
+module.exports.write1Bit = write1Bit;
 module.exports.writeString = writeString;

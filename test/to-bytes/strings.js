@@ -7,20 +7,20 @@ describe('to-bytes', function() {
 
     // string
     it('should turn a 2 char string to bytes', function() {
-        assert.deepEqual(byteData.stringToBytes("ab"),
+        assert.deepEqual(byteData.toBytes("ab", 8, {"base":10, "char": true}),
             [97, 98]);
     });
     it('should turn a 2 char string to bytes (hex)', function() {
-        assert.deepEqual(byteData.stringToBytes("ab", 16),
+        assert.deepEqual(byteData.toBytes("ab", 8, {"base":16, "char": true}),
             ["61", "62"]);
     });
 
     it('should turn a 1 char string to bytes', function() {
-        assert.deepEqual(byteData.stringToBytes("a"),
+        assert.deepEqual(byteData.toBytes("a", 8, {"base":10, "char": true}),
             [97]);
     });
     it('should turn a 1 char string to bytes (hex)', function() {
-        assert.deepEqual(byteData.stringToBytes("a", 16),
+        assert.deepEqual(byteData.toBytes("a",  8, {"base":16, "char": true}),
             ["61"]);
     });
 });

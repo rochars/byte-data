@@ -1,4 +1,5 @@
 {
-  "bitwise": false,
-  "esversion": 6
+    "bitwise": false,
+    "esversion": 6,
+    "nonbsp": true
 }

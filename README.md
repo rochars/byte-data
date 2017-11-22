@@ -1,5 +1,5 @@
 # byte-data
-Readable data to and from bytes.  
+Readable data to and from byte buffers.  
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
@@ -14,9 +14,7 @@ For Node.js and the browser.
 
 Arguments can be **Array**, **Uint8Array** and **Buffer** objects.
 
-**byte-data** functions always return regular **arrays**.
-
-Bytes can be represented as **integer numbers** or as **hex** and **binary** strings both in the input and the output. **Integer numbers** is assumed by default in both cases.
+Bytes can be represented as **base 10 integers** or as **hex** and **binary** strings when reading and writing.
 
 ### Support:
 - booleans
@@ -35,10 +33,10 @@ Bytes can be represented as **integer numbers** or as **hex** and **binary** str
 
 ## Example
 ```javascript
-intTo4Bytes([-2147483648, 2147483647]);
+toBytes([-2147483648, 2147483647], 32);
 // returns [0,0,0,128,255,255,255,127]
 
-intFrom4Bytes([0,0,0,128,255,255,255,127]);
+fromBytes([0,0,0,128,255,255,255,127], 32, {"signed": true});
 // returns [-2147483648, 2147483647]
 ```
 
@@ -48,101 +46,37 @@ intFrom4Bytes([0,0,0,128,255,255,255,127]);
 let byteData = require('byte-data');
 
 /**
- * numbers to bytes, all:
- * @param {!Array<number>} numbers The numbers.
- * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number>|string} numbers float64 numbers.
+ * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {Object} params The params. defaults to:
+ *   - "float", defaults to false, true for floats.
+ *       "float" is available for 16, 32 and 64 bit depths.
+ *   - "base", defaults to 10, can be 2, 10 or 16
+ *   - "char", defaults to false, true for strings
+ *   - "be", defaults to false, true for big endian
  * @return {!Array<number>} the bytes.
  */
-bytes = byteData.doubleTo8Bytes(numbers);
-bytes = byteData.intTo6Bytes(numbers);
-bytes = byteData.intTo5Bytes(numbers);
-bytes = byteData.floatTo4Bytes(numbers);
-bytes = byteData.intTo4Bytes(numbers);
-bytes = byteData.intTo3Bytes(numbers);
-bytes = byteData.intTo2Bytes(numbers);
-bytes = byteData.floatTo2Bytes(numbers);
-bytes = byteData.intTo1Byte(numbers);
+bytes = toBytes(numbers, bitDepth)
 
 /**
- * numbers from bytes, all:
+ * Turn a array of bytes into an array of what the bytes should represent.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base Base 2, 10 or 16. If ommited defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {Object} params The options. They are:
+ *   - "signed", defaults to false
+ *   - "float", defaults to false, true for floats.
+ *       float is available for 16, 32 and 64 bit depths.
+ *   - "base", defaults to 10, can be 2, 10 or 16
+ *   - "char", defaults to false, true for strings
+ *   - "be", defaults to false, true for big endian
+ * @return {!Array<number>|string} The values represented in the bytes.
  */
-numbers = byteData.doubleFrom8Bytes(bytes);
-numbers = byteData.intFrom6Bytes(bytes);
-numbers = byteData.uIntFrom6Bytes(bytes);
-numbers = byteData.intFrom5Bytes(bytes);
-numbers = byteData.uIntFrom5Bytes(bytes);
-numbers = byteData.intFrom4Bytes(bytes);
-numbers = byteData.uIntFrom4Bytes(bytes);
-numbers = byteData.intFrom3Bytes(bytes);
-numbers = byteData.uIntFrom3Bytes(bytes);
-numbers = byteData.floatFrom2Bytes(bytes);
-numbers = byteData.intFrom2Bytes(bytes);
-numbers = byteData.uIntFrom2Bytes(bytes);
-numbers = byteData.intFrom1Byte(bytes);
-numbers = byteData.uIntFrom1Byte(bytes);
-
-// Booleans, crumbs and nibbles
-numbers = byteData.intFromNibble(bytes);
-numbers = byteData.uIntFromNibble(bytes);
-numbers = byteData.intFromCrumb(bytes);
-numbers = byteData.uIntFromCrumb(bytes);
-numbers = byteData.fromBoolean(bytes);
-bytes = byteData.intToNibble(numbers);
-bytes = byteData.toCrumb(numbers);
-bytes = byteData.toBoolean(numbers);
-
-// strings
-bytes = byteData.stringToBytes(string);
-string = byteData.stringFromBytes(bytes);
+values = fromBytes(bytes, bitDepth)
 
 // look for some string and return the start offset
-// of its first occurrence in the buffer 
+// of its first occurrence in the buffer, -1 if not found
 index = byteData.findString(bytes, "chunk");
-```
-
-Bytes are returned in base 10 by default.
-```javascript
-byteData.intTo4Bytes([-2147483648]);
-// returns [0, 0, 0, 128]
-```
-
-To get hex values:
-```javascript
-byteData.intTo4Bytes([-2147483648], 16)
-//["00", "00","00","80",]
-```
-
-To get binaries:
-```javascript
-byteData.intTo4Bytes([-2147483648], 2)
-//["00000000", "00000000","00000000","10000000",]
-```
-
-Binary nibbles:
-```javascript
-byteData.intToNibbles([6], 2)
-//["0110"]
-```
-
-## Little Endian vs Big Endian
-
-Bytes are **little endian** by default.
-
-To get big endian bytes:
-```javascript
-byteData.intTo5Bytes([1], 10, true);
-//[0, 0, 0, 0, 1]
-```
-
-To read big endian bytes:
-```javascript
-byteData.intFrom3Bytes(["80","00","00","00","00","01","7f", "ff", "ff"], 16, true);
-//[-8388608, 1, 8388607]
 ```
 
 ### Pack your nibbles
@@ -188,16 +122,6 @@ Unpacking booleans:
 ```javascript
 byteData.unpackBooleans([77]);
 //[0,1,0,0,1,1,0,1]
-```
-
-## Browser
-```html
-<script src="byte-data-min.js"></script>
-<script>
-    let byteString = stringToBytes("ab"); // [97, 98]
-    let myString = stringFromBytes([97, 98]); //"ab";
-    ...
-</script>
 ```
 
 ## LICENSE

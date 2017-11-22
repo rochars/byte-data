@@ -254,7 +254,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line44">line 44</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line92">line 92</a>
     </li></ul></dd>
     
 
@@ -415,7 +415,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line50">line 50</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -449,964 +449,7 @@
     
 
     
-    <h4 class="name" id="floatFrom4Bytes"><span class="type-signature"></span>floatFrom4Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 32-bit float numbers from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line223">line 223</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="floatFrom8Bytes"><span class="type-signature"></span>floatFrom8Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 64-bit double precision numbers from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line293">line 293</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="floatTo4Bytes"><span class="type-signature"></span>floatTo4Bytes<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 32 bit float numbers into bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">float32 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line70">line 70</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="floatTo8Bytes"><span class="type-signature"></span>floatTo8Bytes<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 64 bit numbers into bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">float64 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line61">line 61</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="fromBoolean"><span class="type-signature"></span>fromBoolean<span class="signature">(booleans, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read numbers from a array of booleans.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>booleans</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of booleans.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line79">line 79</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="fromBytes"><span class="type-signature"></span>fromBytes<span class="signature">(bytes, base, reader, bitDepth, isSigned)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="fromBytes"><span class="type-signature"></span>fromBytes<span class="signature">(bytes, bitDepth, params)</span><span class="type-signature"> &rarr; {!Array.&lt;number>|string}</span></h4>
     
 
     
@@ -1440,8 +483,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -1470,66 +511,8 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">The base. 2, 10 or 16.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>reader</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">The function to read the bytes.</td>
         </tr>
 
     
@@ -1551,10 +534,6 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.</td>
         </tr>
@@ -1563,13 +542,13 @@
 
         <tr>
             
-                <td class="name"><code>isSigned</code></td>
+                <td class="name"><code>params</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1578,14 +557,8 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If readed numbers should be signed or not.</td>
+            <td class="description last">The options. They are:  - "signed", defaults to false  - "float", defaults to false, true for floats.      float is available for 16, 32 and 64 bit depths.  - "base", defaults to 10, can be 2, 10 or 16  - "char", defaults to false, true for strings  - "be", defaults to false, true for big endian</td>
         </tr>
 
     
@@ -1626,7 +599,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line21">line 21</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -1664,7 +637,10 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type">!Array.&lt;number></span>
+|
+
+<span class="param-type">string</span>
 
 
     </dd>
@@ -1682,7 +658,7 @@
     
 
     
-    <h4 class="name" id="intFrom1Byte"><span class="type-signature"></span>intFrom1Byte<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="getBitReader"><span class="type-signature"></span>getBitReader<span class="signature">(bitDepth, isFloat, isChar)</span><span class="type-signature"> &rarr; {function}</span></h4>
     
 
     
@@ -1690,7 +666,7 @@
 
 
 <div class="description">
-    Read 8-bit signed ints from an array of bytes.
+    Return a function to read binary data.
 </div>
 
 
@@ -1716,8 +692,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -1728,37 +702,7 @@
 
         <tr>
             
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
+                <td class="name"><code>bitDepth</code></td>
             
 
             <td class="type">
@@ -1773,216 +717,15 @@
             
 
             
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
 
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line120">line 120</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intFrom2Bytes"><span class="type-signature"></span>intFrom2Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 16-bit signed ints from an array of bytes.Thanks https://stackoverflow.com/a/38298413
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isFloat</code></td>
             
 
             <td class="type">
@@ -1997,216 +740,15 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line146">line 146</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intFrom3Bytes"><span class="type-signature"></span>intFrom3Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 24-bit signed ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">True if the values are IEEE floating point numbers.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isChar</code></td>
             
 
             <td class="type">
@@ -2221,14 +763,8 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
+            <td class="description last">True if it is a string.</td>
         </tr>
 
     
@@ -2269,7 +805,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line181">line 181</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line80">line 80</a>
     </li></ul></dd>
     
 
@@ -2295,10 +831,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The numbers.
-</div>
-
 
 
 <dl>
@@ -2307,7 +839,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type">function</span>
 
 
     </dd>
@@ -2325,7 +857,7 @@
     
 
     
-    <h4 class="name" id="intFrom4Bytes"><span class="type-signature"></span>intFrom4Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="outputToBase"><span class="type-signature"></span>outputToBase<span class="signature">(bytes<span class="signature-attributes">non-null</span>, bitDepth, base)</span><span class="type-signature"></span></h4>
     
 
     
@@ -2333,7 +865,7 @@
 
 
 <div class="description">
-    Read 32-bit signed ints from an array of bytes.
+    Turn the output to the correct base.
 </div>
 
 
@@ -2359,7 +891,186 @@
         
 
         
-        <th>Default</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bytes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bitDepth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bitDepth of the data.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The base.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="readBytes"><span class="type-signature"></span>readBytes<span class="signature">(bytes, bitDepth, isChar, isSigned, isFloat, base)</span><span class="type-signature"> &rarr; {!Array.&lt;number>|string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Turn a array of bytes into an array of what the bytes should represent.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
         
 
         <th class="last">Description</th>
@@ -2389,10 +1100,6 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">An array of bytes.</td>
         </tr>
@@ -2401,7 +1108,7 @@
 
         <tr>
             
-                <td class="name"><code>base</code></td>
+                <td class="name"><code>bitDepth</code></td>
             
 
             <td class="type">
@@ -2416,21 +1123,15 @@
             
 
             
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
 
-            <td class="description last">The base. Defaults to 10.</td>
+            <td class="description last">The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isChar</code></td>
             
 
             <td class="type">
@@ -2445,216 +1146,15 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line209">line 209</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intFrom5Bytes"><span class="type-signature"></span>intFrom5Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 40-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">True if it is a string.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isSigned</code></td>
             
 
             <td class="type">
@@ -2669,216 +1169,15 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line251">line 251</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intFrom6Bytes"><span class="type-signature"></span>intFrom6Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 48-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">True if the values should be signed.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isFloat</code></td>
             
 
             <td class="type">
@@ -2893,180 +1192,8 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line279">line 279</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intFromCrumb"><span class="type-signature"></span>intFromCrumb<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 2-bit signed ints from an array of crumbs.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of crumbs.</td>
+            <td class="description last">True if the values are IEEE floating point numbers.</td>
         </tr>
 
     
@@ -3088,14 +1215,8 @@
             
 
             
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
 
-            <td class="description last">The base. Defaults to 10.</td>
+            <td class="description last">The base, one of 2, 10 or 16.</td>
         </tr>
 
     
@@ -3136,7 +1257,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line89">line 89</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -3163,7 +1284,7 @@
 
         
 <div class="param-desc">
-    The numbers.
+    The values represented in the bytes.
 </div>
 
 
@@ -3174,1301 +1295,10 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intFromNibble"><span class="type-signature"></span>intFromNibble<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 4-bit signed ints from an array of nibbles.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">!Array.&lt;number></span>
 |
 
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of nibbles.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line99">line 99</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intTo1Byte"><span class="type-signature"></span>intTo1Byte<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split a 8 bit int numbers into bytes
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">int8 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line124">line 124</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intTo2Bytes"><span class="type-signature"></span>intTo2Bytes<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 16 bit int numbers into bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">int16 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line115">line 115</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intTo3Bytes"><span class="type-signature"></span>intTo3Bytes<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 24 bit int numbers into bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">int24 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line106">line 106</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intTo4Bytes"><span class="type-signature"></span>intTo4Bytes<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 32 bit int numbers into bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">int32 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line97">line 97</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intTo5Bytes"><span class="type-signature"></span>intTo5Bytes<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 40 bit int numbers into 5 bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers.</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line88">line 88</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intTo6Bytes"><span class="type-signature"></span>intTo6Bytes<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Split 48 bit int numbers into 6 bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers.</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line79">line 79</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="intToNibble"><span class="type-signature"></span>intToNibble<span class="signature">(numbers<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    4-bit int numbers into a nibbles.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>numbers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">int8 numbers.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line133">line 133</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
+<span class="param-type">string</span>
 
 
     </dd>
@@ -4610,7 +1440,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line66">line 66</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -4644,516 +1474,7 @@
     
 
     
-    <h4 class="name" id="stringFromBytes"><span class="type-signature"></span>stringFromBytes<span class="signature">(bytes)</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Convert an array of bytes to a string.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line305">line 305</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The string.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="stringToBytes"><span class="type-signature"></span>stringToBytes<span class="signature">(string)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Turn a string to an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>string</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The string.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line189">line 189</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the bytes.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="toBoolean"><span class="type-signature"></span>toBoolean<span class="signature">(values<span class="signature-attributes">non-null</span>, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Values to boolean form.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>values</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">Array of numbers.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line171">line 171</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the booleans.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="toBytes"><span class="type-signature"></span>toBytes<span class="signature">(numbers, base, writer, bitDepth, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="toBytes"><span class="type-signature"></span>toBytes<span class="signature">(numbers, bitDepth, params)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -5223,52 +1544,6 @@
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The base, 2, 10 or 16.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>writer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The function to turn the data to bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>bitDepth</code></td>
             
 
@@ -5292,13 +1567,13 @@
 
         <tr>
             
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>params</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Object</span>
 
 
             
@@ -5308,7 +1583,7 @@
 
             
 
-            <td class="description last">If the the bytes should be big endian or not.</td>
+            <td class="description last">The params. defaults to:  - "float", defaults to false, true for floats.      float is available for 16, 32 and 64 bit depths.  - "base", defaults to 10, can be 2, 10 or 16  - "char", defaults to false, true for strings  - "be", defaults to false, true for big endian</td>
         </tr>
 
     
@@ -5349,7 +1624,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line22">line 22</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -5405,7 +1680,7 @@
     
 
     
-    <h4 class="name" id="toCrumb"><span class="type-signature"></span>toCrumb<span class="signature">(values<span class="signature-attributes">non-null</span>, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="writeBytes"><span class="type-signature"></span>writeBytes<span class="signature">(numbers, isChar, isFloat, isBigEndian, bitDepth)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -5413,7 +1688,7 @@
 
 
 <div class="description">
-    Values to crumb form.
+    Write values as bytes.
 </div>
 
 
@@ -5439,8 +1714,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -5451,199 +1724,7 @@
 
         <tr>
             
-                <td class="name"><code>values</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">Array of numbers.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line152">line 152</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the crumbs.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uIntFrom1Byte"><span class="type-signature"></span>uIntFrom1Byte<span class="signature">(bytes, base)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 8-bit unsigned ints from an array of bytes.Just return a copy of the original array.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
+                <td class="name"><code>numbers</code></td>
             
 
             <td class="type">
@@ -5652,7 +1733,7 @@
 <span class="param-type">!Array.&lt;number></span>
 |
 
-<span class="param-type">Uint8Array</span>
+<span class="param-type">string</span>
 
 
             
@@ -5661,243 +1742,15 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">The values.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line110">line 110</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uIntFrom2Bytes"><span class="type-signature"></span>uIntFrom2Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 16-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isChar</code></td>
             
 
             <td class="type">
@@ -5912,216 +1765,15 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line131">line 131</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uIntFrom3Bytes"><span class="type-signature"></span>uIntFrom3Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 24-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">True if it is a string.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isFloat</code></td>
             
 
             <td class="type">
@@ -6136,216 +1788,15 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line167">line 167</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uIntFrom4Bytes"><span class="type-signature"></span>uIntFrom4Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 32-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">True if it is a IEEE floating point number.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
+                <td class="name"><code>isBigEndian</code></td>
             
 
             <td class="type">
@@ -6360,187 +1811,15 @@
             
 
             
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
 
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line195">line 195</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uIntFrom5Bytes"><span class="type-signature"></span>uIntFrom5Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 40-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">True if the bytes should be big enadian.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>base</code></td>
+                <td class="name"><code>bitDepth</code></td>
             
 
             <td class="type">
@@ -6555,43 +1834,8 @@
             
 
             
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
 
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
+            <td class="description last">The bitDepth of the data.</td>
         </tr>
 
     
@@ -6632,7 +1876,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line237">line 237</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -6659,231 +1903,7 @@
 
         
 <div class="param-desc">
-    The numbers.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uIntFrom6Bytes"><span class="type-signature"></span>uIntFrom6Bytes<span class="signature">(bytes, base, bigEndian)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Read 48-bit unsigned ints from an array of bytes.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bytes</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">Uint8Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">An array of bytes.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last">The base. Defaults to 10.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bigEndian</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last">If the bytes are big endian. Defaults to false.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line265">line 265</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The numbers.
+    the bytes.
 </div>
 
 
@@ -6922,13 +1942,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#floatFrom4Bytes">floatFrom4Bytes</a></li><li><a href="global.html#floatFrom8Bytes">floatFrom8Bytes</a></li><li><a href="global.html#floatTo4Bytes">floatTo4Bytes</a></li><li><a href="global.html#floatTo8Bytes">floatTo8Bytes</a></li><li><a href="global.html#fromBoolean">fromBoolean</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#intFrom1Byte">intFrom1Byte</a></li><li><a href="global.html#intFrom2Bytes">intFrom2Bytes</a></li><li><a href="global.html#intFrom3Bytes">intFrom3Bytes</a></li><li><a href="global.html#intFrom4Bytes">intFrom4Bytes</a></li><li><a href="global.html#intFrom5Bytes">intFrom5Bytes</a></li><li><a href="global.html#intFrom6Bytes">intFrom6Bytes</a></li><li><a href="global.html#intFromCrumb">intFromCrumb</a></li><li><a href="global.html#intFromNibble">intFromNibble</a></li><li><a href="global.html#intTo1Byte">intTo1Byte</a></li><li><a href="global.html#intTo2Bytes">intTo2Bytes</a></li><li><a href="global.html#intTo3Bytes">intTo3Bytes</a></li><li><a href="global.html#intTo4Bytes">intTo4Bytes</a></li><li><a href="global.html#intTo5Bytes">intTo5Bytes</a></li><li><a href="global.html#intTo6Bytes">intTo6Bytes</a></li><li><a href="global.html#intToNibble">intToNibble</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#stringFromBytes">stringFromBytes</a></li><li><a href="global.html#stringToBytes">stringToBytes</a></li><li><a href="global.html#toBoolean">toBoolean</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toCrumb">toCrumb</a></li><li><a href="global.html#uIntFrom1Byte">uIntFrom1Byte</a></li><li><a href="global.html#uIntFrom2Bytes">uIntFrom2Bytes</a></li><li><a href="global.html#uIntFrom3Bytes">uIntFrom3Bytes</a></li><li><a href="global.html#uIntFrom4Bytes">uIntFrom4Bytes</a></li><li><a href="global.html#uIntFrom5Bytes">uIntFrom5Bytes</a></li><li><a href="global.html#uIntFrom6Bytes">uIntFrom6Bytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 12 2017 20:02:01 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Nov 22 2017 05:45:08 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -12,34 +12,81 @@ const bitDepths = require("../src/bit-depth.js");
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. 2, 10 or 16.
- * @param {Function} reader The function to read the bytes.
  * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} isSigned If readed numbers should be signed or not.
- * @return {!Array<number>} The values represented in the bytes.
+ * @param {Object} params The options. They are:
+ *   - "signed", defaults to false
+ *   - "float", defaults to false, true for floats.
+ *       float is available for 16, 32 and 64 bit depths.
+ *   - "base", defaults to 10, can be 2, 10 or 16
+ *   - "char", defaults to false, true for strings
+ *   - "be", defaults to false, true for big endian
+ * @return {!Array<number>|string} The values represented in the bytes.
  */
-function fromBytes(bytes, base, reader, bitDepth, isSigned=false) {
+function fromBytes(bytes, bitDepth, params={}) {
+    let base = 10;
+    if ("base" in params) {
+        base = params.base;
+    }
+    if (params.be) {
+        endianness.endianness(bytes, bitDepth / 8);
+    }
+    return readBytes(
+        bytes,
+        bitDepth,
+        params.char,
+        params.signed,
+        params.float,
+        base);
+}
+
+/**
+ * Turn a array of bytes into an array of what the bytes should represent.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isChar True if it is a string.
+ * @param {boolean} isSigned True if the values should be signed.
+ * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @param {number} base The base, one of 2, 10 or 16.
+ * @return {!Array<number>|string} The values represented in the bytes.
+ */
+function readBytes(bytes, bitDepth, isChar, isSigned, isFloat, base) {
     let numbers = [];
     let i = 0;
     let j = 0;
     let offset = bitDepths.bitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
-    bytesToInt(bytes, base);   
-    if (isSigned) {
-        while (i < len) {
-            numbers[j] = signed(reader(bytes, i), maxBitDepthValue);
-            i += offset;
-            j++;
-        }    
-    } else {
-        while (i < len) {
-            numbers[j] = reader(bytes, i);
-            i += offset;
-            j++;
-        }    
+    bytesToInt(bytes, base);
+    let bitReader = getBitReader(bitDepth, isFloat, isChar);
+    let signFunction = isSigned ? signed : function(x,y){return x;};
+    while (i < len) {
+        numbers[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
+        i += offset;
+        j++;
+    }
+    if (isChar) {
+        numbers = numbers.join("");
     }
     return numbers;
+}
+
+/**
+ * Return a function to read binary data.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @param {boolean} isChar True if it is a string.
+ * @return {Function}
+ */
+function getBitReader(bitDepth, isFloat, isChar) {
+    let readBitDepth = bitDepth;
+    if (bitDepth == 2 || bitDepth == 4) {
+        readBitDepth = 8;
+    }
+    if (isChar) {
+        return reader.readChar;
+    } else {
+        return reader['read' + readBitDepth + 'Bit' + (isFloat ? "Float" : "")];
+    }
 }
 
 /**
@@ -70,260 +117,4 @@ function signed(number, maxValue) {
     return number;
 }
 
-/**
- * Read numbers from a array of booleans.
- * @param {!Array<number>|Uint8Array} booleans An array of booleans.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function fromBoolean(booleans, base=10) {
-    return fromBytes(booleans, base, reader.read1Bit, 1);
-}
-
-/**
- * Read 2-bit signed ints from an array of crumbs.
- * @param {!Array<number>|Uint8Array} bytes An array of crumbs.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function intFromCrumb(bytes, base=10) {
-    return fromBytes(bytes, base, reader.read8Bit, 2, true);
-}
-
-/**
- * Read 4-bit signed ints from an array of nibbles.
- * @param {!Array<number>|Uint8Array} bytes An array of nibbles.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function intFromNibble(bytes, base=10) {
-    return fromBytes(bytes, base, reader.read8Bit, 4, true);
-}
-
-/**
- * Read 8-bit unsigned ints from an array of bytes.
- * Just return a copy of the original array.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom1Byte(bytes, base=10) {
-    return fromBytes(bytes, base, reader.read8Bit, 8);
-}
-
-/**
- * Read 8-bit signed ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @return {!Array<number>} The numbers.
- */
-function intFrom1Byte(bytes, base=10) {
-    return fromBytes(bytes, base, reader.read8Bit, 8, true);
-}
-
-/**
- * Read 16-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom2Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 2);
-    }
-    return fromBytes(bytes, base, reader.read16Bit, 16);
-}
-
-/**
- * Read 16-bit signed ints from an array of bytes.
- * Thanks https://stackoverflow.com/a/38298413
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function intFrom2Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 2);
-    }
-    return fromBytes(bytes, base, reader.read16Bit, 16, true);
-}
-
-function floatFrom2Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 2);
-    }
-    return fromBytes(bytes, base, reader.read16BitFloat, 16);
-}
-
-/**
- * Read 24-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom3Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 3);
-    }
-    return fromBytes(bytes, base, reader.read24Bit, 24);
-}
-
-/**
- * Read 24-bit signed ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function intFrom3Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 3);
-    }
-    return fromBytes(bytes, base, reader.read24Bit, 24, true);
-}
-
-/**
- * Read 32-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom4Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 4);
-    }
-    return fromBytes(bytes, base, reader.read32Bit, 32);
-}
-
-/**
- * Read 32-bit signed ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function intFrom4Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 4);
-    }
-    return fromBytes(bytes, base, reader.read32Bit, 32, true);
-}
-
-/**
- * Read 32-bit float numbers from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function floatFrom4Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 4);
-    }
-    return fromBytes(bytes, base, reader.read32BitFloat, 32);
-}
-
-/**
- * Read 40-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom5Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 5);
-    }
-    return fromBytes(bytes, base, reader.read40Bit, 40);
-}
-
-/**
- * Read 40-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function intFrom5Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 5);
-    }
-    return fromBytes(bytes, base, reader.read40Bit, 40, true);
-}
-
-/**
- * Read 48-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function uIntFrom6Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 6);
-    }
-    return fromBytes(bytes, base, reader.read48Bit, 48);
-}
-
-/**
- * Read 48-bit unsigned ints from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function intFrom6Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 6);
-    }
-    return fromBytes(bytes, base, reader.read48Bit, 48, true);
-}
-
-/**
- * Read 64-bit double precision numbers from an array of bytes.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} base The base. Defaults to 10.
- * @param {boolean} bigEndian If the bytes are big endian. Defaults to false.
- * @return {!Array<number>} The numbers.
- */
-function floatFrom8Bytes(bytes, base=10, bigEndian=false) {
-    if (bigEndian) {
-        endianness.endianness(bytes, 8);
-    }
-    return fromBytes(bytes, base, reader.read64Bit, 64);
-}
-
-/**
- * Convert an array of bytes to a string.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @return {string} The string.
- */
-function stringFromBytes(bytes, base=10) {
-    return fromBytes(bytes, base, reader.readChar, 8).join("");
-}
-
-module.exports.fromBoolean = fromBoolean;
-module.exports.intFromCrumb = intFromCrumb;
-module.exports.uIntFromCrumb = uIntFrom1Byte;
-module.exports.intFromNibble = intFromNibble;
-module.exports.uIntFromNibble = uIntFrom1Byte;
-module.exports.intFrom1Byte = intFrom1Byte;
-module.exports.uIntFrom1Byte = uIntFrom1Byte;
-module.exports.intFrom2Bytes = intFrom2Bytes;
-module.exports.uIntFrom2Bytes = uIntFrom2Bytes;
-module.exports.floatFrom2Bytes = floatFrom2Bytes;
-module.exports.intFrom3Bytes = intFrom3Bytes;
-module.exports.uIntFrom3Bytes = uIntFrom3Bytes;
-module.exports.intFrom4Bytes = intFrom4Bytes;
-module.exports.uIntFrom4Bytes = uIntFrom4Bytes;
-module.exports.floatFrom4Bytes = floatFrom4Bytes;
-module.exports.intFrom5Bytes = intFrom5Bytes;
-module.exports.uIntFrom5Bytes = uIntFrom5Bytes;
-module.exports.intFrom6Bytes = intFrom6Bytes;
-module.exports.uIntFrom6Bytes = uIntFrom6Bytes;
-module.exports.floatFrom8Bytes = floatFrom8Bytes;
-module.exports.stringFromBytes = stringFromBytes;
+module.exports.fromBytes = fromBytes;
