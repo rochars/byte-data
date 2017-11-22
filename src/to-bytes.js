@@ -30,7 +30,8 @@ function toBytes(numbers, bitDepth, params={}) {
     let isBigEndian = params.be;
     let isChar = params.char;
     let isFloat = params.float;
-    let bytes = writeBytes(numbers, isChar, isFloat, isBigEndian, bitDepth);
+    let bytes = writeBytes(numbers, isChar, isFloat, bitDepth);
+    makeBigEndian(bytes, isBigEndian, bitDepth);
     outputToBase(bytes, bitDepth, base);
     return bytes;
 }
@@ -58,11 +59,10 @@ function outputToBase(bytes, bitDepth, base) {
  * @param {!Array<number>|string} numbers The values.
  * @param {boolean} isChar True if it is a string.
  * @param {boolean} isFloat True if it is a IEEE floating point number.
- * @param {boolean} isBigEndian True if the bytes should be big enadian.
  * @param {number} bitDepth The bitDepth of the data.
  * @return {!Array<number>} the bytes.
  */
-function writeBytes(numbers, isChar, isFloat, isBigEndian, bitDepth) {
+function writeBytes(numbers, isChar, isFloat, bitDepth) {
     let bitWriter;
     if (isChar) {
         bitWriter = writer.writeString;
@@ -77,10 +77,19 @@ function writeBytes(numbers, isChar, isFloat, isBigEndian, bitDepth) {
         j = bitWriter(bytes, numbers, i, j);
         i++;
     }
+    return bytes;
+}
+
+/**
+ * Write values as bytes.
+ * @param {!Array<number>} bytes The values.
+ * @param {boolean} isBigEndian True if the bytes should be big endian.
+ * @param {number} bitDepth The bitDepth of the data.
+ */
+function makeBigEndian(bytes, isBigEndian, bitDepth) {
     if (isBigEndian) {
         endianness.endianness(bytes, bitDepths.bitDepthOffsets[bitDepth]);
     }
-    return bytes;
 }
 
 /**

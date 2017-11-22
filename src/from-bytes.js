@@ -31,12 +31,7 @@ function fromBytes(bytes, bitDepth, params={}) {
         endianness.endianness(bytes, bitDepth / 8);
     }
     return readBytes(
-        bytes,
-        bitDepth,
-        params.char,
-        params.signed,
-        params.float,
-        base);
+        bytes, bitDepth, params.char, params.signed, params.float, base);
 }
 
 /**
@@ -78,15 +73,17 @@ function readBytes(bytes, bitDepth, isChar, isSigned, isFloat, base) {
  * @return {Function}
  */
 function getBitReader(bitDepth, isFloat, isChar) {
-    let readBitDepth = bitDepth;
-    if (bitDepth == 2 || bitDepth == 4) {
-        readBitDepth = 8;
-    }
+    let bitReader;
     if (isChar) {
-        return reader.readChar;
+        bitReader = reader.readChar;
     } else {
-        return reader['read' + readBitDepth + 'Bit' + (isFloat ? "Float" : "")];
+        let method = 'read' +
+            ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
+            'Bit' +
+            (isFloat ? "Float" : "");
+        bitReader = reader[method];
     }
+    return bitReader;
 }
 
 /**

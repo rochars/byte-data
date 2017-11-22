@@ -557,8 +557,6 @@ function read1Bit(bytes, i) {
     return parseInt(bytes[i], 2);
 }
 
-// read2Bit, read4Bit == read8Bit
-
 /**
  * Read 1 8-bit int from from bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
@@ -776,7 +774,8 @@ function toBytes(numbers, bitDepth, params={}) {
     let isBigEndian = params.be;
     let isChar = params.char;
     let isFloat = params.float;
-    let bytes = writeBytes(numbers, isChar, isFloat, isBigEndian, bitDepth);
+    let bytes = writeBytes(numbers, isChar, isFloat, bitDepth);
+    makeBigEndian(bytes, isBigEndian, bitDepth);
     outputToBase(bytes, bitDepth, base);
     return bytes;
 }
@@ -804,11 +803,10 @@ function outputToBase(bytes, bitDepth, base) {
  * @param {!Array<number>|string} numbers The values.
  * @param {boolean} isChar True if it is a string.
  * @param {boolean} isFloat True if it is a IEEE floating point number.
- * @param {boolean} isBigEndian True if the bytes should be big enadian.
  * @param {number} bitDepth The bitDepth of the data.
  * @return {!Array<number>} the bytes.
  */
-function writeBytes(numbers, isChar, isFloat, isBigEndian, bitDepth) {
+function writeBytes(numbers, isChar, isFloat, bitDepth) {
     let bitWriter;
     if (isChar) {
         bitWriter = writer.writeString;
@@ -823,10 +821,19 @@ function writeBytes(numbers, isChar, isFloat, isBigEndian, bitDepth) {
         j = bitWriter(bytes, numbers, i, j);
         i++;
     }
+    return bytes;
+}
+
+/**
+ * Write values as bytes.
+ * @param {!Array<number>} bytes The values.
+ * @param {boolean} isBigEndian True if the bytes should be big endian.
+ * @param {number} bitDepth The bitDepth of the data.
+ */
+function makeBigEndian(bytes, isBigEndian, bitDepth) {
     if (isBigEndian) {
         endianness.endianness(bytes, bitDepths.bitDepthOffsets[bitDepth]);
     }
-    return bytes;
 }
 
 /**
@@ -887,12 +894,7 @@ function fromBytes(bytes, bitDepth, params={}) {
         endianness.endianness(bytes, bitDepth / 8);
     }
     return readBytes(
-        bytes,
-        bitDepth,
-        params.char,
-        params.signed,
-        params.float,
-        base);
+        bytes, bitDepth, params.char, params.signed, params.float, base);
 }
 
 /**
@@ -934,15 +936,17 @@ function readBytes(bytes, bitDepth, isChar, isSigned, isFloat, base) {
  * @return {Function}
  */
 function getBitReader(bitDepth, isFloat, isChar) {
-    let readBitDepth = bitDepth;
-    if (bitDepth == 2 || bitDepth == 4) {
-        readBitDepth = 8;
-    }
+    let bitReader;
     if (isChar) {
-        return reader.readChar;
+        bitReader = reader.readChar;
     } else {
-        return reader['read' + readBitDepth + 'Bit' + (isFloat ? "Float" : "")];
+        let method = 'read' +
+            ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
+            'Bit' +
+            (isFloat ? "Float" : "");
+        bitReader = reader[method];
     }
+    return bitReader;
 }
 
 /**

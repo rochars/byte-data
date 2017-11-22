@@ -254,7 +254,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line92">line 92</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -415,7 +415,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line97">line 97</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -805,7 +805,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line80">line 80</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -846,6 +846,187 @@
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="makeBigEndian"><span class="type-signature"></span>makeBigEndian<span class="signature">(bytes<span class="signature-attributes">non-null</span>, isBigEndian, bitDepth)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Write values as bytes.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bytes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The values.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isBigEndian</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">True if the bytes should be big endian.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bitDepth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The bitDepth of the data.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1004,7 +1185,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line44">line 44</a>
+        <a href="to-bytes.js.html">to-bytes.js</a>, <a href="to-bytes.js.html#line45">line 45</a>
     </li></ul></dd>
     
 
@@ -1257,7 +1438,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line52">line 52</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -1440,7 +1621,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line113">line 113</a>
+        <a href="from-bytes.js.html">from-bytes.js</a>, <a href="from-bytes.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -1680,7 +1861,7 @@
     
 
     
-    <h4 class="name" id="writeBytes"><span class="type-signature"></span>writeBytes<span class="signature">(numbers, isChar, isFloat, isBigEndian, bitDepth)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id="writeBytes"><span class="type-signature"></span>writeBytes<span class="signature">(numbers, isChar, isFloat, bitDepth)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
     
 
     
@@ -1790,29 +1971,6 @@
             
 
             <td class="description last">True if it is a IEEE floating point number.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>isBigEndian</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">True if the bytes should be big enadian.</td>
         </tr>
 
     
@@ -1942,13 +2100,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#makeBigEndian">makeBigEndian</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Nov 22 2017 05:45:08 GMT-0200 (Horário brasileiro de verão)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Nov 22 2017 14:20:03 GMT-0200 (Horário brasileiro de verão)
 </footer>
 
 <script> prettyPrint(); </script>

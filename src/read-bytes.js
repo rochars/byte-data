@@ -39,8 +39,6 @@ function read1Bit(bytes, i) {
     return parseInt(bytes[i], 2);
 }
 
-// read2Bit, read4Bit == read8Bit
-
 /**
  * Read 1 8-bit int from from bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
