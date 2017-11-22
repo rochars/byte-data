@@ -353,13 +353,34 @@ module.exports.writeString = writeString;
  * https://github.com/rochars/byte-data
  */
 
+function getBinary(bytes, rev=false) {
+    let binary = "";
+    let bits;
+    let i = 0;
+    let bytesLength = bytes.length;
+    while(i < bytesLength) {
+        bits = bytes[i].toString(2);
+        while (bits.length < 8) {
+            bits = "0" + bits;
+        }
+        if (rev) {
+            binary = binary + bits;
+        } else {
+            binary = bits + binary;
+        }
+        i++;
+    }
+    return binary;
+}
+
 /**
  * Turn bytes to a float 16..
  * Thanks https://stackoverflow.com/a/8796597
- * @param {number} binary 2 bytes representing a float 16.
+ * @param {number} bytes 2 bytes representing a float 16.
  */
-function decodeFloat16 (binary) {
-    var exponent = (binary & 0x7C00) >> 10,
+function decodeFloat16 (bytes) {
+    let binary = parseInt(getBinary(bytes, true), 2);
+    let exponent = (binary & 0x7C00) >> 10,
         fraction = binary & 0x03FF;
     return (binary >> 15 ? -1 : 1) * (
         exponent ?
@@ -377,26 +398,15 @@ function decodeFloat16 (binary) {
  * Thanks https://gist.github.com/kg/2192799
  * @param {!Array<number>} bytes 8 bytes representing a float 64.
  */
-function decodeFloat(bytes) {
+function decodeFloat64(bytes) {
     if (bytes.toString() == "0,0,0,0,0,0,0,0") {
         return 0;
     }
-    let binary = "";
-    let bits;
-    let i = 0;
-    let bytesLength = bytes.length;
-    while(i < bytesLength) {
-        bits = bytes[i].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
-        binary = bits + binary;
-        i++;
-    }
+    let binary = getBinary(bytes);
     let significandBin = "1" + binary.substr(1 + 11, 52);
     let val = 1;
     let significand = 0;
-    i = 0;
+    let i = 0;
     while (i < significandBin.length) {
         significand += val * parseInt(significandBin.charAt(i), 10);
         val = val / 2;
@@ -435,7 +445,6 @@ function toFloat64(value) {
     return [hiWord, loWord];
 }
 
-
 let floatView = new Float32Array(1);
 let int32View = new Int32Array(floatView.buffer);
 
@@ -459,9 +468,9 @@ function toHalf(val) {
     return bits;
 }
 
-
+module.exports.getBinary = getBinary;
 module.exports.decodeFloat16 = decodeFloat16;
-module.exports.decodeFloat = decodeFloat;
+module.exports.decodeFloat64 = decodeFloat64;
 module.exports.toFloat64 = toFloat64;
 module.exports.toHalf = toHalf;
 
@@ -584,21 +593,7 @@ function read16Bit(bytes, i) {
  * @return {number}
  */
 function read16BitFloat(bytes, i) {
-    let nBytes = bytes.slice(i,i+2);
-    let binary = "";
-    let bits = "";
-    let j = 0;
-    let bytesLength = nBytes.length;
-    while(j < bytesLength) {
-        bits = nBytes[j].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
-        binary = binary + bits;
-        j++;
-    }
-    binary = parseInt(binary, 2);
-    return float.decodeFloat16(binary);
+    return float.decodeFloat16(bytes.slice(i,i+2));
 }
 
 /**
@@ -663,7 +658,7 @@ function read48Bit(bytes, i) {
  * @return {number}
  */
 function read64Bit(bytes, i) {
-    return float.decodeFloat(bytes.slice(i,i+8));
+    return float.decodeFloat64(bytes.slice(i,i+8));
 }
 
 /**
@@ -687,7 +682,6 @@ module.exports.read32BitFloat = read32BitFloat;
 module.exports.read40Bit = read40Bit;
 module.exports.read48Bit = read48Bit;
 module.exports.read64Bit = read64Bit;
-
 
 
 /***/ }),
@@ -940,13 +934,22 @@ function getBitReader(bitDepth, isFloat, isChar) {
     if (isChar) {
         bitReader = reader.readChar;
     } else {
-        let method = 'read' +
-            ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
-            'Bit' +
-            (isFloat ? "Float" : "");
-        bitReader = reader[method];
+        bitReader = reader[getReaderFunctionName(bitDepth, isFloat)];
     }
     return bitReader;
+}
+
+/**
+ * Build a bit reading function name based on the arguments.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @return {string}
+ */
+function getReaderFunctionName(bitDepth, isFloat) {
+    return 'read' +
+        ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
+        'Bit' +
+        (isFloat ? "Float" : "");
 }
 
 /**

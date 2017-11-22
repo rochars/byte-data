@@ -66,21 +66,7 @@ function read16Bit(bytes, i) {
  * @return {number}
  */
 function read16BitFloat(bytes, i) {
-    let nBytes = bytes.slice(i,i+2);
-    let binary = "";
-    let bits = "";
-    let j = 0;
-    let bytesLength = nBytes.length;
-    while(j < bytesLength) {
-        bits = nBytes[j].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
-        binary = binary + bits;
-        j++;
-    }
-    binary = parseInt(binary, 2);
-    return float.decodeFloat16(binary);
+    return float.decodeFloat16(bytes.slice(i,i+2));
 }
 
 /**
@@ -145,7 +131,7 @@ function read48Bit(bytes, i) {
  * @return {number}
  */
 function read64Bit(bytes, i) {
-    return float.decodeFloat(bytes.slice(i,i+8));
+    return float.decodeFloat64(bytes.slice(i,i+8));
 }
 
 /**
@@ -169,4 +155,3 @@ module.exports.read32BitFloat = read32BitFloat;
 module.exports.read40Bit = read40Bit;
 module.exports.read48Bit = read48Bit;
 module.exports.read64Bit = read64Bit;
-

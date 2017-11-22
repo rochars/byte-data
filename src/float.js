@@ -4,13 +4,34 @@
  * https://github.com/rochars/byte-data
  */
 
+function getBinary(bytes, rev=false) {
+    let binary = "";
+    let bits;
+    let i = 0;
+    let bytesLength = bytes.length;
+    while(i < bytesLength) {
+        bits = bytes[i].toString(2);
+        while (bits.length < 8) {
+            bits = "0" + bits;
+        }
+        if (rev) {
+            binary = binary + bits;
+        } else {
+            binary = bits + binary;
+        }
+        i++;
+    }
+    return binary;
+}
+
 /**
  * Turn bytes to a float 16..
  * Thanks https://stackoverflow.com/a/8796597
- * @param {number} binary 2 bytes representing a float 16.
+ * @param {number} bytes 2 bytes representing a float 16.
  */
-function decodeFloat16 (binary) {
-    var exponent = (binary & 0x7C00) >> 10,
+function decodeFloat16 (bytes) {
+    let binary = parseInt(getBinary(bytes, true), 2);
+    let exponent = (binary & 0x7C00) >> 10,
         fraction = binary & 0x03FF;
     return (binary >> 15 ? -1 : 1) * (
         exponent ?
@@ -28,26 +49,15 @@ function decodeFloat16 (binary) {
  * Thanks https://gist.github.com/kg/2192799
  * @param {!Array<number>} bytes 8 bytes representing a float 64.
  */
-function decodeFloat(bytes) {
+function decodeFloat64(bytes) {
     if (bytes.toString() == "0,0,0,0,0,0,0,0") {
         return 0;
     }
-    let binary = "";
-    let bits;
-    let i = 0;
-    let bytesLength = bytes.length;
-    while(i < bytesLength) {
-        bits = bytes[i].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
-        binary = bits + binary;
-        i++;
-    }
+    let binary = getBinary(bytes);
     let significandBin = "1" + binary.substr(1 + 11, 52);
     let val = 1;
     let significand = 0;
-    i = 0;
+    let i = 0;
     while (i < significandBin.length) {
         significand += val * parseInt(significandBin.charAt(i), 10);
         val = val / 2;
@@ -86,7 +96,6 @@ function toFloat64(value) {
     return [hiWord, loWord];
 }
 
-
 let floatView = new Float32Array(1);
 let int32View = new Int32Array(floatView.buffer);
 
@@ -110,8 +119,8 @@ function toHalf(val) {
     return bits;
 }
 
-
+module.exports.getBinary = getBinary;
 module.exports.decodeFloat16 = decodeFloat16;
-module.exports.decodeFloat = decodeFloat;
+module.exports.decodeFloat64 = decodeFloat64;
 module.exports.toFloat64 = toFloat64;
 module.exports.toHalf = toHalf;

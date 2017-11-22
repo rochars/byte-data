@@ -77,13 +77,22 @@ function getBitReader(bitDepth, isFloat, isChar) {
     if (isChar) {
         bitReader = reader.readChar;
     } else {
-        let method = 'read' +
-            ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
-            'Bit' +
-            (isFloat ? "Float" : "");
-        bitReader = reader[method];
+        bitReader = reader[getReaderFunctionName(bitDepth, isFloat)];
     }
     return bitReader;
+}
+
+/**
+ * Build a bit reading function name based on the arguments.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @return {string}
+ */
+function getReaderFunctionName(bitDepth, isFloat) {
+    return 'read' +
+        ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
+        'Bit' +
+        (isFloat ? "Float" : "");
 }
 
 /**
