@@ -647,7 +647,7 @@ const bitDepths = __webpack_require__(5);
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<number>|string} numbers float64 numbers.
+ * @param {!Array<number>|string} values The data.
  * @param {number} bitDepth The desired bitDepth for the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
@@ -658,12 +658,12 @@ const bitDepths = __webpack_require__(5);
  *   - "be", defaults to false, true for big endian
  * @return {!Array<number>} the bytes.
  */
-function toBytes(numbers, bitDepth, options={}) {
+function toBytes(values, bitDepth, options={}) {
     let base = 10;
     if ("base" in options) {
         base = options.base;
     }
-    let bytes = writeBytes(numbers, options.char, options.float, bitDepth);
+    let bytes = writeBytes(values, options.char, options.float, bitDepth);
     makeBigEndian(bytes, options.be, bitDepth);
     outputToBase(bytes, bitDepth, base);
     return bytes;

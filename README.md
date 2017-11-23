@@ -45,7 +45,8 @@ console.log(
 // 0.33325
 
 // 32-bit floating point numbers to bytes represented as hexadecimal values
-let bytes = toBytes(numbers, 32, {"base": 16,  "float": true});
+toBytes([2.1474836], 32, {"base": 16,  "float": true});
+// ["5f","70","9","40"]
 
 // 32-bit signed integers to and from binary form
 byteData.toBytes([-2147483648, 2147483647], 32);
@@ -58,7 +59,7 @@ byteData.fromBytes([0,0,0,128,255,255,255,127], 32, {"signed": true});
 ```javascript
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<number>|string} numbers float64 numbers.
+ * @param {!Array<number>|string} values The data.
  * @param {number} bitDepth The desired bitDepth for the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
