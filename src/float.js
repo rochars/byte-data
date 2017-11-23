@@ -4,16 +4,14 @@
  * https://github.com/rochars/byte-data
  */
 
+const bitpacker = require('../src/bit-packer');
+
 function getBinary(bytes, rev=false) {
     let binary = "";
-    let bits;
     let i = 0;
     let bytesLength = bytes.length;
     while(i < bytesLength) {
-        bits = bytes[i].toString(2);
-        while (bits.length < 8) {
-            bits = "0" + bits;
-        }
+        let bits = bitpacker.lPadZeros(bytes[i].toString(2), 8);
         if (rev) {
             binary = binary + bits;
         } else {

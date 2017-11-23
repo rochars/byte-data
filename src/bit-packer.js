@@ -174,6 +174,7 @@ function fixByteArraySize(byteArray, numZeros) {
     }
 }
 
+module.exports.lPadZeros = lPadZeros;
 module.exports.packBooleans = packBooleans;
 module.exports.unpackBooleans = unpackBooleans;
 module.exports.packCrumbs = packCrumbs;
