@@ -454,14 +454,14 @@ function packBooleans(booleans) {
     let len = booleans.length - 7;
     while (i < len) {
         packed[j++] = parseInt(
-            lPadZeros(booleans[i].toString(2), 1) +
-            lPadZeros(booleans[i+1].toString(2), 1) +
-            lPadZeros(booleans[i+2].toString(2), 1) +
-            lPadZeros(booleans[i+3].toString(2), 1) +
-            lPadZeros(booleans[i+4].toString(2), 1) +
-            lPadZeros(booleans[i+5].toString(2), 1) +
-            lPadZeros(booleans[i+6].toString(2), 1) +
-            lPadZeros(booleans[i+7].toString(2), 1), 2);
+            booleans[i].toString(2) +
+            booleans[i+1].toString(2) +
+            booleans[i+2].toString(2) +
+            booleans[i+3].toString(2) +
+            booleans[i+4].toString(2) +
+            booleans[i+5].toString(2) +
+            booleans[i+6].toString(2) +
+            booleans[i+7].toString(2), 2);
         i+=8;
     }
     return packed;
