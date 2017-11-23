@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Readable data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
