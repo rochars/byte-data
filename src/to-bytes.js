@@ -1,5 +1,5 @@
 /*
- * to-bytes: convert bytes to numbers and strings.
+ * to-bytes: bytes to numbers and strings.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
@@ -14,24 +14,22 @@ const bitDepths = require("../src/bit-depth.js");
  * Turn numbers and strings to bytes.
  * @param {!Array<number>|string} numbers float64 numbers.
  * @param {number} bitDepth The desired bitDepth for the data.
- * @param {Object} params The params. defaults to:
+ *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
+ * @param {Object} options The options:
  *   - "float", defaults to false, true for floats.
- *       float is available for 16, 32 and 64 bit depths.
- *   - "base", defaults to 10, can be 2, 10 or 16
+ *       float is available for 16, 32 and 64-bit values.
+ *   - "base", base of the output, defaults to 10. Can be 2, 10 or 16
  *   - "char", defaults to false, true for strings
  *   - "be", defaults to false, true for big endian
  * @return {!Array<number>} the bytes.
  */
-function toBytes(numbers, bitDepth, params={}) {
+function toBytes(numbers, bitDepth, options={}) {
     let base = 10;
-    if ("base" in params) {
-        base = params.base;
+    if ("base" in options) {
+        base = options.base;
     }
-    let isBigEndian = params.be;
-    let isChar = params.char;
-    let isFloat = params.float;
-    let bytes = writeBytes(numbers, isChar, isFloat, bitDepth);
-    makeBigEndian(bytes, isBigEndian, bitDepth);
+    let bytes = writeBytes(numbers, options.char, options.float, bitDepth);
+    makeBigEndian(bytes, options.be, bitDepth);
     outputToBase(bytes, bitDepth, base);
     return bytes;
 }
@@ -39,8 +37,8 @@ function toBytes(numbers, bitDepth, params={}) {
 /**
  * Turn the output to the correct base.
  * @param {!Array<number>} bytes The bytes.
- * @param {number} bitDepth The bitDepth of the data.
- * @param {number} base The base.
+ * @param {number} bitDepth The bit depth of the data.
+ * @param {number} base The desired base for the output data.
  */
 function outputToBase(bytes, bitDepth, base) {
     if (bitDepth == 4) {

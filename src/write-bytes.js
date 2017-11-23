@@ -8,15 +8,15 @@ const float = require("../src/float.js");
 const intBits = require("int-bits");
 
 function write64Bit(bytes, numbers, i, j) {
-    let number = float.toFloat64(numbers[i]);
-    bytes[j++] = number[1] & 0xFF;
-    bytes[j++] = number[1] >>> 8 & 0xFF;
-    bytes[j++] = number[1] >>> 16 & 0xFF;
-    bytes[j++] = number[1] >>> 24 & 0xFF;
-    bytes[j++] = number[0] & 0xFF;
-    bytes[j++] = number[0] >>> 8 & 0xFF;
-    bytes[j++] = number[0] >>> 16 & 0xFF;
-    bytes[j++] = number[0] >>> 24 & 0xFF;
+    let bits = float.toFloat64(numbers[i]);
+    bytes[j++] = bits[1] & 0xFF;
+    bytes[j++] = bits[1] >>> 8 & 0xFF;
+    bytes[j++] = bits[1] >>> 16 & 0xFF;
+    bytes[j++] = bits[1] >>> 24 & 0xFF;
+    bytes[j++] = bits[0] & 0xFF;
+    bytes[j++] = bits[0] >>> 8 & 0xFF;
+    bytes[j++] = bits[0] >>> 16 & 0xFF;
+    bytes[j++] = bits[0] >>> 24 & 0xFF;
     return j;
 }
 
@@ -42,11 +42,11 @@ function write40Bit(bytes, numbers, i, j) {
 }
 
 function write32BitFloat(bytes, numbers, i, j) {
-    numbers[i] = intBits.unpack(numbers[i]);
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] >>> 16 & 0xFF;
-    bytes[j++] = numbers[i] >>> 24 & 0xFF;
+    let bits = intBits.unpack(numbers[i]);
+    bytes[j++] = bits & 0xFF;
+    bytes[j++] = bits >>> 8 & 0xFF;
+    bytes[j++] = bits >>> 16 & 0xFF;
+    bytes[j++] = bits >>> 24 & 0xFF;
     return j;
 }
 
@@ -72,9 +72,9 @@ function write16Bit(bytes, numbers, i, j) {
 }
 
 function write16BitFloat(bytes, numbers, i, j) {
-    numbers[i] = float.toHalf(numbers[i]);
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] & 0xFF;
+    let bits = float.toHalf(numbers[i]);
+    bytes[j++] = bits  >>> 8 & 0xFF;
+    bytes[j++] = bits  & 0xFF;
     return j;
 }
 

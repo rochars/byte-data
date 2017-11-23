@@ -31,17 +31,15 @@ function getBinary(bytes, rev=false) {
  */
 function decodeFloat16 (bytes) {
     let binary = parseInt(getBinary(bytes, true), 2);
-    let exponent = (binary & 0x7C00) >> 10,
-        fraction = binary & 0x03FF;
-    return (binary >> 15 ? -1 : 1) * (
-        exponent ?
-        (
-            exponent === 0x1F ?
-            fraction ? NaN : Infinity :
-            Math.pow(2, exponent - 15) * (1 + fraction / 0x400)
-        ) :
-        6.103515625e-5 * (fraction / 0x400)
-    );
+    let exponent = (binary & 0x7C00) >> 10;
+    let fraction = binary & 0x03FF;
+    let floatValue;
+    if (exponent) {
+        floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
+    } else {
+        floatValue = 6.103515625e-5 * (fraction / 0x400);
+    }
+    return  floatValue * (binary >> 15 ? -1 : 1);
 }
 
 /**
@@ -66,7 +64,7 @@ function decodeFloat64(bytes) {
     let sign = (binary.charAt(0) == "1") ? -1 : 1;
     let doubleValue = sign * significand *
         Math.pow(2, parseInt(binary.substr(1, 11), 2) - 1023);
-    return doubleValue === 2 ? 0 : doubleValue;
+    return doubleValue;
 }
 
 /**

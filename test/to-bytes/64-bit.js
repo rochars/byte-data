@@ -38,7 +38,6 @@ describe('64-bit to bytes', function() {
         assert.deepEqual(byteData.toBytes([-0.5], 64, {"base": 10}),
             [0,0,0,0,0,0,224,191]);
     });
-    //
     it('should turn 1 64-bit float to 8 bytes (pi)', function() {
         assert.deepEqual(byteData.toBytes([3.141592653589793], 64, {"base": 10}),
             [24,45,68,84,251,33,9,64]);
@@ -59,4 +58,8 @@ describe('64-bit to bytes', function() {
         assert.deepEqual(byteData.toBytes([0], 64, {"base": 16}),
             ["00","00","00","00","00","00","00","00"]);
     })
+    it('should turn 1 64-bit float to 8 bytes hex (2)', function() {
+        assert.deepEqual(byteData.toBytes([2], 64, {"base": 16}),
+            ["00","00","00","00","00","00","00","40"]);
+    });
 });

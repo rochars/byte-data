@@ -42,8 +42,6 @@ describe('64-bit from bytes', function() {
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 64)[1].toFixed(15),
             0);
     });
-
-    
     it('should turn 8 bytes bin to 1 64-bit float', function() {
         assert.equal(byteData.fromBytes(
             [
@@ -58,8 +56,6 @@ describe('64-bit from bytes', function() {
             ], 64, {"base": 2})[0].toFixed(15),
             0);
     });
-    
-
     it('should turn 8 bytes bin to 1 64-bit float', function() {
         assert.equal(byteData.fromBytes(
             [
@@ -73,5 +69,19 @@ describe('64-bit from bytes', function() {
                 "00111111"
             ], 64, {"base": 2})[0].toFixed(15),
             0.123456789876543);
+    });
+    it('should turn 8 bytes to 1 64-bit float (31.41592653589793)', function() {
+        assert.deepEqual(byteData.fromBytes([94,56,85,41,122,106,63,64], 64),
+            [31.41592653589793]);
+    });
+    it('should turn 8 bytes to 1 64-bit float (314159265358979.3)', function() {
+        assert.deepEqual(byteData.fromBytes([53,72,162,118,158,219,241,66], 64, {"base": 10}),
+            [314159265358979.3]);
+    });
+    it('should turn 8 bytes hex to 1 64-bit float (2)', function() {
+        assert.deepEqual(
+            byteData.fromBytes(
+                ["00","00","00","00","00","00","00","40"], 64, {"base": 16}),
+            [2]);
     });
 });

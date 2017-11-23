@@ -1,7 +1,7 @@
 {
   "name": "byte-data",
   "version": "0.3.4",
-  "description": "Readable data to and from bytes.",
+  "description": "Readable data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
@@ -42,7 +42,7 @@
     "test": "nyc ./node_modules/mocha/bin/_mocha --recursive",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "bundle": "webpack",
-    "compile": "google-closure-compiler-js dist/byte-data.js > dist/byte-data-min.js --compilationLevel ADVANCED",
+    "compile": "google-closure-compiler-js dist/byte-data.js > dist/byte-data-min.js --compilationLevel=ADVANCED",
     "doc": "./node_modules/.bin/jsdoc src/to-bytes.js src/from-bytes.js -d docs",
     "qa": "npm run lint && npm run test",
     "pack": "npm run bundle && npm run compile && npm run doc",
