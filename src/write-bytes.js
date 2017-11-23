@@ -9,15 +9,8 @@ const intBits = require("int-bits");
 
 function write64Bit(bytes, numbers, i, j) {
     let bits = float.toFloat64(numbers[i]);
-    bytes[j++] = bits[1] & 0xFF;
-    bytes[j++] = bits[1] >>> 8 & 0xFF;
-    bytes[j++] = bits[1] >>> 16 & 0xFF;
-    bytes[j++] = bits[1] >>> 24 & 0xFF;
-    bytes[j++] = bits[0] & 0xFF;
-    bytes[j++] = bits[0] >>> 8 & 0xFF;
-    bytes[j++] = bits[0] >>> 16 & 0xFF;
-    bytes[j++] = bits[0] >>> 24 & 0xFF;
-    return j;
+    j = write32Bit(bytes, bits, 1, j);
+    return write32Bit(bytes, bits, 0, j);
 }
 
 // https://github.com/majimboo/c-struct
