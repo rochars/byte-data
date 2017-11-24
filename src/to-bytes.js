@@ -23,7 +23,7 @@ const bitDepths = require("../src/bit-depth.js");
  *   - "be": If the values are big endian. Default is false (little endian).
  *   - "buffer": If the bytes should be returned as a Uint8Array.
  *       Default is false (bytes are returned as a regular array).
- * @return {!Array<number>|Uint8Array} the data as a byte array.
+ * @return {!Array<number>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={}) {
     let base = 10;

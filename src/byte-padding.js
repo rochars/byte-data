@@ -27,10 +27,7 @@ function bytePadding(byte, base) {
     } else if (base == 16) {
         offset = 2;
     }
-    if (byte.length < offset) {
-        byte = new Array((offset + 1 - byte.length)).join("0")  + byte;
-    }
-    return byte;
+    return lPadZeros(byte, offset);
 }
 
 /**

@@ -96,10 +96,7 @@ function bytePadding(byte, base) {
     } else if (base == 16) {
         offset = 2;
     }
-    if (byte.length < offset) {
-        byte = new Array((offset + 1 - byte.length)).join("0")  + byte;
-    }
-    return byte;
+    return lPadZeros(byte, offset);
 }
 
 /**
@@ -496,7 +493,7 @@ const bitDepths = __webpack_require__(4);
  *   - "be": If the values are big endian. Default is false (little endian).
  *   - "buffer": If the bytes should be returned as a Uint8Array.
  *       Default is false (bytes are returned as a regular array).
- * @return {!Array<number>|Uint8Array} the data as a byte array.
+ * @return {!Array<number>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={}) {
     let base = 10;
