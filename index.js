@@ -8,6 +8,7 @@
 let toBytes = require('./src/to-bytes');
 let fromBytes = require('./src/from-bytes');
 let bitPacker = require('./src/bit-packer');
+let bitDepth = require('./src/bit-depth');
 
 /**
  * Find and return the start index of some string.
@@ -39,3 +40,6 @@ module.exports.packCrumbs = bitPacker.packCrumbs;
 module.exports.unpackCrumbs = bitPacker.unpackCrumbs;
 module.exports.packNibbles = bitPacker.packNibbles;
 module.exports.unpackNibbles = bitPacker.unpackNibbles;
+
+module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
+module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;

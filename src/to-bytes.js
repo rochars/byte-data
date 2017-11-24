@@ -91,7 +91,7 @@ function writeBytes(numbers, isChar, isFloat, bitDepth) {
  */
 function makeBigEndian(bytes, isBigEndian, bitDepth) {
     if (isBigEndian) {
-        endianness.endianness(bytes, bitDepths.bitDepthOffsets[bitDepth]);
+        endianness.endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
     }
 }
 

@@ -51,9 +51,9 @@ function readBytes(bytes, bitDepth, isSigned, bitReader) {
     let values = [];
     let i = 0;
     let j = 0;
-    let offset = bitDepths.bitDepthOffsets[bitDepth];
+    let offset = bitDepths.BitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
-    let maxBitDepthValue = bitDepths.maxBitDepth[bitDepth];
+    let maxBitDepthValue = bitDepths.BitDepthMaxValues[bitDepth];
     let signFunction = isSigned ? signed : function(x,y){return x;};
     while (i < len) {
         values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);

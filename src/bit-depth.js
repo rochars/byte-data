@@ -8,7 +8,7 @@
  * Offset for reading each bit depth.
  * @enum {number}
  */
-const bitDepthOffsets = {
+const BitDepthOffsets = {
     1: 1,
     2: 1,
     4: 1,
@@ -25,7 +25,7 @@ const bitDepthOffsets = {
  * Max value for each bit depth.
  * @enum {number}
  */
-const maxBitDepth = {
+const BitDepthMaxValues = {
     2: 4,
     4: 16,
     8: 256,
@@ -36,5 +36,5 @@ const maxBitDepth = {
     48: 281474976710656
 };
 
-module.exports.bitDepthOffsets = bitDepthOffsets;
-module.exports.maxBitDepth = maxBitDepth;
+module.exports.BitDepthOffsets = BitDepthOffsets;
+module.exports.BitDepthMaxValues = BitDepthMaxValues;
