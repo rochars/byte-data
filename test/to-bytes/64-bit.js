@@ -62,4 +62,8 @@ describe('64-bit to bytes', function() {
         assert.deepEqual(byteData.toBytes([2], 64, {"base": 16}),
             ["00","00","00","00","00","00","00","40"]);
     });
+    it('should turn 1 64-bit float to 8 bytes (1)', function() {
+        assert.deepEqual(byteData.toBytes([314159265358979.3], 64, {"buffer": true}),
+            [53,72,162,118,158,219,241,66]);
+    });
 });

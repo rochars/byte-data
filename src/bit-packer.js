@@ -1,8 +1,10 @@
 /*
- * bit-packer: Pack and unpacl nibbles, crumbs and booleans into bytes.
+ * bit-packer: Pack and unpack nibbles, crumbs and booleans into bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
+
+let pad = require("../src/byte-padding.js");
 
 /**
  * Pack 2 nibbles in 1 byte.
@@ -52,14 +54,14 @@ function packCrumbs(crumbs) {
     let packed = [];
     let i = 0;
     let j = 0;
-    fixByteArraySize(crumbs, 4);
+    pad.fixByteArraySize(crumbs, 4);
     let len = crumbs.length - 3;
     while (i < len) {
         packed[j++] = parseInt(
-            lPadZeros(crumbs[i].toString(2), 2) +
-            lPadZeros(crumbs[i+1].toString(2), 2) +
-            lPadZeros(crumbs[i+2].toString(2), 2) +
-            lPadZeros(crumbs[i+3].toString(2), 2), 2);
+            pad.lPadZeros(crumbs[i].toString(2), 2) +
+            pad.lPadZeros(crumbs[i+1].toString(2), 2) +
+            pad.lPadZeros(crumbs[i+2].toString(2), 2) +
+            pad.lPadZeros(crumbs[i+3].toString(2), 2), 2);
         i+=4;
     }
     return packed;
@@ -78,7 +80,7 @@ function unpackCrumbs(crumbs) {
     let bitCrumb;
     console.log(len);
     while (i < len) {
-        bitCrumb = lPadZeros(crumbs[i].toString(2), 8);
+        bitCrumb = pad.lPadZeros(crumbs[i].toString(2), 8);
         unpacked[j++] = parseInt(bitCrumb[0] + bitCrumb[1], 2);
         unpacked[j++] = parseInt(bitCrumb[2] + bitCrumb[3], 2);
         unpacked[j++] = parseInt(bitCrumb[4] + bitCrumb[5], 2);
@@ -97,7 +99,7 @@ function packBooleans(booleans) {
     let packed = [];
     let i = 0;
     let j = 0;
-    fixByteArraySize(booleans, 8);
+    pad.fixByteArraySize(booleans, 8);
     let len = booleans.length - 7;
     while (i < len) {
         packed[j++] = parseInt(
@@ -126,7 +128,7 @@ function unpackBooleans(booleans) {
     let len = booleans.length;
     let bitBoolean;
     while (i < len) {
-        bitBoolean = lPadZeros(booleans[i].toString(2), 8);
+        bitBoolean = pad.lPadZeros(booleans[i].toString(2), 8);
         unpacked[j++] = parseInt(bitBoolean[0], 2);
         unpacked[j++] = parseInt(bitBoolean[1], 2);
         unpacked[j++] = parseInt(bitBoolean[2], 2);
@@ -140,41 +142,6 @@ function unpackBooleans(booleans) {
     return unpacked;
 }
 
-/**
- * Pad a string with zeros to the left.
- * TODO: This should support both arrays and strings.
- * @param {string} value The string (representing a binary or hex value).
- * @param {number} numZeros the max number of zeros.
- *      For 1 binary byte string it should be 8.
- */
-function lPadZeros(value, numZeros) {
-    let i = 0;
-    while (value.length < numZeros) {
-        value = '0' + value;
-    }
-    return value;
-}
-
-/**
- * Pad a array with zeros to the right.
- * @param {!Array<number>} byteArray The array.
- * @param {number} numZeros the max number of zeros.
- *      For 1 binary byte string it should be 8.
- *      TODO: better explanation of numZeros
- */
-function fixByteArraySize(byteArray, numZeros) {
-    let i = 0;
-    let fix = byteArray.length % numZeros;
-    if (fix) {
-        fix = (fix - numZeros) * -1;
-        while(i < fix) {
-            byteArray.push(0);
-            i++;
-        }
-    }
-}
-
-module.exports.lPadZeros = lPadZeros;
 module.exports.packBooleans = packBooleans;
 module.exports.unpackBooleans = unpackBooleans;
 module.exports.packCrumbs = packCrumbs;

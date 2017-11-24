@@ -11,16 +11,26 @@
  * @param {number} index The byte to pad.
  */
 function padding(bytes, base, index) {
-    let offset = bytes[index].length + 1;
-    if (base == 2 && bytes[index].length < 8) {
-        offset = 9;
-    }else if (base == 16) {
-        offset = 3;
+    bytes[index] = bytePadding(bytes[index], base);
+}
+
+/**
+ * Padding with 0s for byte strings.
+ * @param {string} byte The byte as a binary or hex string.
+ * @param {number} base The base.
+ * @returns {string} The padded byte.
+ */
+function bytePadding(byte, base) {
+    let offset = byte.length + 1;
+    if (base == 2) {
+        offset = 8;
+    } else if (base == 16) {
+        offset = 2;
     }
-    if (bytes[index].length < offset -1) {
-        bytes[index] = 
-            new Array((offset - bytes[index].length)).join("0")  + bytes[index];    
+    if (byte.length < offset) {
+        byte = new Array((offset + 1 - byte.length)).join("0")  + byte;
     }
+    return byte;
 }
 
 /**
@@ -49,25 +59,42 @@ function paddingCrumb(crumbs, base, index) {
 }   
 
 /**
- * Padding with 0s for byte strings.
- * @param {string} byte The byte as a binary or hex string.
- * @param {number} base The base.
- * @returns {string} The padded byte.
+ * Pad a string with zeros to the left.
+ * TODO: This should support both arrays and strings.
+ * @param {string} value The string (representing a binary or hex value).
+ * @param {number} numZeros the max number of zeros.
+ *      For 1 binary byte string it should be 8.
  */
-function bytePadding(byte, base) {
-    let offset = byte.length + 1;
-    if (base == 2) {
-        offset = 9;
-    } else if (base == 16) {
-        offset = 3;   
+function lPadZeros(value, numZeros) {
+    let i = 0;
+    while (value.length < numZeros) {
+        value = '0' + value;
     }
-    if (byte.length < offset -1) {
-        byte = new Array((offset - byte.length)).join("0")  + byte;
-    }
-    return byte;
+    return value;
 }
 
+/**
+ * Pad a array with zeros to the right.
+ * @param {!Array<number>} byteArray The array.
+ * @param {number} numZeros the max number of zeros.
+ *      For 1 binary byte string it should be 8.
+ *      TODO: better explanation of numZeros
+ */
+function fixByteArraySize(byteArray, numZeros) {
+    let i = 0;
+    let fix = byteArray.length % numZeros;
+    if (fix) {
+        fix = (fix - numZeros) * -1;
+        while(i < fix) {
+            byteArray.push(0);
+            i++;
+        }
+    }
+}
+
+module.exports.fixByteArraySize = fixByteArraySize;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
+module.exports.lPadZeros = lPadZeros;

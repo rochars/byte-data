@@ -60,33 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-var int8 = new Int8Array(4)
-var int32 = new Int32Array(int8.buffer, 0, 1)
-var float32 = new Float32Array(int8.buffer, 0, 1)
-
-function pack(i) {
-    int32[0] = i
-    return float32[0]
-}
-
-function unpack(f) {
-    float32[0] = f
-    return int32[0]
-}
-
-module.exports = pack
-module.exports.pack = pack
-module.exports.unpack = unpack
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 /*
@@ -102,16 +80,26 @@ module.exports.unpack = unpack
  * @param {number} index The byte to pad.
  */
 function padding(bytes, base, index) {
-    let offset = bytes[index].length + 1;
-    if (base == 2 && bytes[index].length < 8) {
-        offset = 9;
-    }else if (base == 16) {
-        offset = 3;
+    bytes[index] = bytePadding(bytes[index], base);
+}
+
+/**
+ * Padding with 0s for byte strings.
+ * @param {string} byte The byte as a binary or hex string.
+ * @param {number} base The base.
+ * @returns {string} The padded byte.
+ */
+function bytePadding(byte, base) {
+    let offset = byte.length + 1;
+    if (base == 2) {
+        offset = 8;
+    } else if (base == 16) {
+        offset = 2;
     }
-    if (bytes[index].length < offset -1) {
-        bytes[index] = 
-            new Array((offset - bytes[index].length)).join("0")  + bytes[index];    
+    if (byte.length < offset) {
+        byte = new Array((offset + 1 - byte.length)).join("0")  + byte;
     }
+    return byte;
 }
 
 /**
@@ -140,29 +128,68 @@ function paddingCrumb(crumbs, base, index) {
 }   
 
 /**
- * Padding with 0s for byte strings.
- * @param {string} byte The byte as a binary or hex string.
- * @param {number} base The base.
- * @returns {string} The padded byte.
+ * Pad a string with zeros to the left.
+ * TODO: This should support both arrays and strings.
+ * @param {string} value The string (representing a binary or hex value).
+ * @param {number} numZeros the max number of zeros.
+ *      For 1 binary byte string it should be 8.
  */
-function bytePadding(byte, base) {
-    let offset = byte.length + 1;
-    if (base == 2) {
-        offset = 9;
-    } else if (base == 16) {
-        offset = 3;   
+function lPadZeros(value, numZeros) {
+    let i = 0;
+    while (value.length < numZeros) {
+        value = '0' + value;
     }
-    if (byte.length < offset -1) {
-        byte = new Array((offset - byte.length)).join("0")  + byte;
-    }
-    return byte;
+    return value;
 }
 
+/**
+ * Pad a array with zeros to the right.
+ * @param {!Array<number>} byteArray The array.
+ * @param {number} numZeros the max number of zeros.
+ *      For 1 binary byte string it should be 8.
+ *      TODO: better explanation of numZeros
+ */
+function fixByteArraySize(byteArray, numZeros) {
+    let i = 0;
+    let fix = byteArray.length % numZeros;
+    if (fix) {
+        fix = (fix - numZeros) * -1;
+        while(i < fix) {
+            byteArray.push(0);
+            i++;
+        }
+    }
+}
+
+module.exports.fixByteArraySize = fixByteArraySize;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
+module.exports.lPadZeros = lPadZeros;
 
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+var int8 = new Int8Array(4)
+var int32 = new Int32Array(int8.buffer, 0, 1)
+var float32 = new Float32Array(int8.buffer, 0, 1)
+
+function pack(i) {
+    int32[0] = i
+    return float32[0]
+}
+
+function unpack(f) {
+    float32[0] = f
+    return int32[0]
+}
+
+module.exports = pack
+module.exports.pack = pack
+module.exports.unpack = unpack
 
 /***/ }),
 /* 2 */
@@ -229,14 +256,14 @@ module.exports.endianness = endianness;
  * https://github.com/rochars/byte-data
  */
 
-const bitpacker = __webpack_require__(4);
+const pad = __webpack_require__(0);
 
 function getBinary(bytes, rev=false) {
     let binary = "";
     let i = 0;
     let bytesLength = bytes.length;
     while(i < bytesLength) {
-        let bits = bitpacker.lPadZeros(bytes[i].toString(2), 8);
+        let bits = pad.lPadZeros(bytes[i].toString(2), 8);
         if (rev) {
             binary = binary + bits;
         } else {
@@ -352,195 +379,6 @@ module.exports.toHalf = toHalf;
 /***/ (function(module, exports) {
 
 /*
- * bit-packer: Pack and unpacl nibbles, crumbs and booleans into bytes.
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
- */
-
-/**
- * Pack 2 nibbles in 1 byte.
- * @param {!Array<number>} nibbles Array of nibbles.
- * @return {!Array<number>} Pairs of neebles packed as one byte.
- */
-function packNibbles(nibbles) {
-    let packed = [];
-    let i = 0;
-    let j = 0;
-    let len = nibbles.length;
-    if (len % 2) {
-        nibbles.push(0);
-    }
-    while (i < len) {
-        packed[j++] = parseInt(
-            nibbles[i].toString(16) + nibbles[i+1].toString(16), 16);
-        i+=2;
-    }
-    return packed;
-}
-
-/**
- * Unpack a byte into 2 nibbles.
- * @param {!Array<number>|Uint8Array} bytes Array of bytes.
- * @return {!Array<number>} The nibbles.
- */
-function unpackNibbles(bytes) {
-    let unpacked = [];
-    let i = 0;
-    let j = 0;
-    let len = bytes.length;
-    while (i < len) {
-        unpacked[j++] = parseInt(bytes[i].toString(16)[0], 16);
-        unpacked[j++] = parseInt(bytes[i].toString(16)[1], 16);
-        i++;
-    }
-    return unpacked;
-}
-
-/**
- * Pack 4 crumbs in 1 byte.
- * @param {!Array<number>} crumbs Array of crumbs.
- * @return {!Array<number>} 4 crumbs packed as one byte.
- */
-function packCrumbs(crumbs) {
-    let packed = [];
-    let i = 0;
-    let j = 0;
-    fixByteArraySize(crumbs, 4);
-    let len = crumbs.length - 3;
-    while (i < len) {
-        packed[j++] = parseInt(
-            lPadZeros(crumbs[i].toString(2), 2) +
-            lPadZeros(crumbs[i+1].toString(2), 2) +
-            lPadZeros(crumbs[i+2].toString(2), 2) +
-            lPadZeros(crumbs[i+3].toString(2), 2), 2);
-        i+=4;
-    }
-    return packed;
-}
-
-/**
- * Unpack a byte into 4 crumbs.
- * @param {!Array<number>|Uint8Array} crumbs Array of bytes.
- * @return {!Array<number>} The crumbs.
- */
-function unpackCrumbs(crumbs) {
-    let unpacked = [];
-    let i = 0;
-    let j = 0;
-    let len = crumbs.length;
-    let bitCrumb;
-    console.log(len);
-    while (i < len) {
-        bitCrumb = lPadZeros(crumbs[i].toString(2), 8);
-        unpacked[j++] = parseInt(bitCrumb[0] + bitCrumb[1], 2);
-        unpacked[j++] = parseInt(bitCrumb[2] + bitCrumb[3], 2);
-        unpacked[j++] = parseInt(bitCrumb[4] + bitCrumb[5], 2);
-        unpacked[j++] = parseInt(bitCrumb[6] + bitCrumb[7], 2);
-        i++;
-    }
-    return unpacked;
-}
-
-/**
- * Pack 8 booleans in 1 byte.
- * @param {!Array<number>} booleans Array of booleans.
- * @return {!Array<number>} 4 crumbs packed as one byte.
- */
-function packBooleans(booleans) {
-    let packed = [];
-    let i = 0;
-    let j = 0;
-    fixByteArraySize(booleans, 8);
-    let len = booleans.length - 7;
-    while (i < len) {
-        packed[j++] = parseInt(
-            booleans[i].toString(2) +
-            booleans[i+1].toString(2) +
-            booleans[i+2].toString(2) +
-            booleans[i+3].toString(2) +
-            booleans[i+4].toString(2) +
-            booleans[i+5].toString(2) +
-            booleans[i+6].toString(2) +
-            booleans[i+7].toString(2), 2);
-        i+=8;
-    }
-    return packed;
-}
-
-/**
- * Unpack a byte into 8 booleans.
- * @param {!Array<number>|Uint8Array} booleans Array of bytes.
- * @return {!Array<number>} The booleans.
- */
-function unpackBooleans(booleans) {
-    let unpacked = [];
-    let i = 0;
-    let j = 0;
-    let len = booleans.length;
-    let bitBoolean;
-    while (i < len) {
-        bitBoolean = lPadZeros(booleans[i].toString(2), 8);
-        unpacked[j++] = parseInt(bitBoolean[0], 2);
-        unpacked[j++] = parseInt(bitBoolean[1], 2);
-        unpacked[j++] = parseInt(bitBoolean[2], 2);
-        unpacked[j++] = parseInt(bitBoolean[3], 2);
-        unpacked[j++] = parseInt(bitBoolean[4], 2);
-        unpacked[j++] = parseInt(bitBoolean[5], 2);
-        unpacked[j++] = parseInt(bitBoolean[6], 2);
-        unpacked[j++] = parseInt(bitBoolean[7], 2);
-        i++;
-    }
-    return unpacked;
-}
-
-/**
- * Pad a string with zeros to the left.
- * TODO: This should support both arrays and strings.
- * @param {string} value The string (representing a binary or hex value).
- * @param {number} numZeros the max number of zeros.
- *      For 1 binary byte string it should be 8.
- */
-function lPadZeros(value, numZeros) {
-    let i = 0;
-    while (value.length < numZeros) {
-        value = '0' + value;
-    }
-    return value;
-}
-
-/**
- * Pad a array with zeros to the right.
- * @param {!Array<number>} byteArray The array.
- * @param {number} numZeros the max number of zeros.
- *      For 1 binary byte string it should be 8.
- *      TODO: better explanation of numZeros
- */
-function fixByteArraySize(byteArray, numZeros) {
-    let i = 0;
-    let fix = byteArray.length % numZeros;
-    if (fix) {
-        fix = (fix - numZeros) * -1;
-        while(i < fix) {
-            byteArray.push(0);
-            i++;
-        }
-    }
-}
-
-module.exports.lPadZeros = lPadZeros;
-module.exports.packBooleans = packBooleans;
-module.exports.unpackBooleans = unpackBooleans;
-module.exports.packCrumbs = packCrumbs;
-module.exports.unpackCrumbs = unpackCrumbs;
-module.exports.packNibbles = packNibbles;
-module.exports.unpackNibbles = unpackNibbles;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-/*
  * bit-depth: Configurations based on bit depth.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
@@ -583,7 +421,7 @@ module.exports.maxBitDepth = maxBitDepth;
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -593,9 +431,9 @@ module.exports.maxBitDepth = maxBitDepth;
  * https://github.com/rochars/byte-data
  */
 
-let toBytes = __webpack_require__(7);
-let fromBytes = __webpack_require__(9);
-let bitPacker = __webpack_require__(4);
+let toBytes = __webpack_require__(6);
+let fromBytes = __webpack_require__(8);
+let bitPacker = __webpack_require__(10);
 
 /**
  * Find and return the start index of some string.
@@ -630,7 +468,7 @@ window['unpackNibbles'] = bitPacker.unpackNibbles;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -639,24 +477,26 @@ window['unpackNibbles'] = bitPacker.unpackNibbles;
  * https://github.com/rochars/byte-data
  */
 
-const intBits = __webpack_require__(0);
-const pad = __webpack_require__(1);
+const intBits = __webpack_require__(1);
+const pad = __webpack_require__(0);
 const endianness = __webpack_require__(2);
-const writer = __webpack_require__(8);
-const bitDepths = __webpack_require__(5);
+const writer = __webpack_require__(7);
+const bitDepths = __webpack_require__(4);
 
 /**
  * Turn numbers and strings to bytes.
  * @param {!Array<number>|string} values The data.
- * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
- *   - "float", defaults to false, true for floats.
- *       float is available for 16, 32 and 64-bit values.
- *   - "base", base of the output, defaults to 10. Can be 2, 10 or 16
- *   - "char", defaults to false, true for strings
- *   - "be", defaults to false, true for big endian
- * @return {!Array<number>} the bytes.
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "buffer": If the bytes should be returned as a Uint8Array.
+ *       Default is false (bytes are returned as a regular array).
+ * @return {!Array<number>|Uint8Array} the data as a byte array.
  */
 function toBytes(values, bitDepth, options={}) {
     let base = 10;
@@ -666,6 +506,9 @@ function toBytes(values, bitDepth, options={}) {
     let bytes = writeBytes(values, options.char, options.float, bitDepth);
     makeBigEndian(bytes, options.be, bitDepth);
     outputToBase(bytes, bitDepth, base);
+    if (options.buffer) {
+        bytes = new Uint8Array(bytes);
+    }
     return bytes;
 }
 
@@ -747,7 +590,7 @@ module.exports.toBytes = toBytes;
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -757,19 +600,12 @@ module.exports.toBytes = toBytes;
  */
 
 const float = __webpack_require__(3);
-const intBits = __webpack_require__(0);
+const intBits = __webpack_require__(1);
 
 function write64Bit(bytes, numbers, i, j) {
     let bits = float.toFloat64(numbers[i]);
-    bytes[j++] = bits[1] & 0xFF;
-    bytes[j++] = bits[1] >>> 8 & 0xFF;
-    bytes[j++] = bits[1] >>> 16 & 0xFF;
-    bytes[j++] = bits[1] >>> 24 & 0xFF;
-    bytes[j++] = bits[0] & 0xFF;
-    bytes[j++] = bits[0] >>> 8 & 0xFF;
-    bytes[j++] = bits[0] >>> 16 & 0xFF;
-    bytes[j++] = bits[0] >>> 24 & 0xFF;
-    return j;
+    j = write32Bit(bytes, bits, 1, j);
+    return write32Bit(bytes, bits, 0, j);
 }
 
 // https://github.com/majimboo/c-struct
@@ -871,7 +707,7 @@ module.exports.writeString = writeString;
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -880,24 +716,23 @@ module.exports.writeString = writeString;
  * https://github.com/rochars/byte-data
  */
 
-const pad = __webpack_require__(1);
 const endianness = __webpack_require__(2);
-const reader = __webpack_require__(10);
-const bitDepths = __webpack_require__(5);
+const reader = __webpack_require__(9);
+const bitDepths = __webpack_require__(4);
 
 /**
- * Turn a array of bytes into an array of what the bytes should represent.
+ * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number>|Uint8Array} buffer An array of bytes.
- * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
- *   - "signed", defaults to false
- *   - "float", defaults to false, true for floating point numbers.
- *       float is available for 16, 32 and 64 bit depths.
- *   - "base", defaults to 10, can be 2, 10 or 16
- *   - "char", defaults to false, true for strings
- *   - "be", defaults to false, true for big endian
- * @return {!Array<number>|string} The values represented in the bytes.
+ *   - "signed": If the numbers are signed. Default is false (unsigned).
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={}) {
     let base = 10;
@@ -1002,7 +837,7 @@ module.exports.fromBytes = fromBytes;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -1012,9 +847,9 @@ module.exports.fromBytes = fromBytes;
  */
 
 
-let pad = __webpack_require__(1);
+let pad = __webpack_require__(0);
 const float = __webpack_require__(3);
-const intBits = __webpack_require__(0);
+const intBits = __webpack_require__(1);
 
 /**
  * Read a group of bytes by turning it to bits.
@@ -1162,6 +997,162 @@ module.exports.read32BitFloat = read32BitFloat;
 module.exports.read40Bit = read40Bit;
 module.exports.read48Bit = read48Bit;
 module.exports.read64Bit = read64Bit;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * bit-packer: Pack and unpack nibbles, crumbs and booleans into bytes.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+let pad = __webpack_require__(0);
+
+/**
+ * Pack 2 nibbles in 1 byte.
+ * @param {!Array<number>} nibbles Array of nibbles.
+ * @return {!Array<number>} Pairs of neebles packed as one byte.
+ */
+function packNibbles(nibbles) {
+    let packed = [];
+    let i = 0;
+    let j = 0;
+    let len = nibbles.length;
+    if (len % 2) {
+        nibbles.push(0);
+    }
+    while (i < len) {
+        packed[j++] = parseInt(
+            nibbles[i].toString(16) + nibbles[i+1].toString(16), 16);
+        i+=2;
+    }
+    return packed;
+}
+
+/**
+ * Unpack a byte into 2 nibbles.
+ * @param {!Array<number>|Uint8Array} bytes Array of bytes.
+ * @return {!Array<number>} The nibbles.
+ */
+function unpackNibbles(bytes) {
+    let unpacked = [];
+    let i = 0;
+    let j = 0;
+    let len = bytes.length;
+    while (i < len) {
+        unpacked[j++] = parseInt(bytes[i].toString(16)[0], 16);
+        unpacked[j++] = parseInt(bytes[i].toString(16)[1], 16);
+        i++;
+    }
+    return unpacked;
+}
+
+/**
+ * Pack 4 crumbs in 1 byte.
+ * @param {!Array<number>} crumbs Array of crumbs.
+ * @return {!Array<number>} 4 crumbs packed as one byte.
+ */
+function packCrumbs(crumbs) {
+    let packed = [];
+    let i = 0;
+    let j = 0;
+    pad.fixByteArraySize(crumbs, 4);
+    let len = crumbs.length - 3;
+    while (i < len) {
+        packed[j++] = parseInt(
+            pad.lPadZeros(crumbs[i].toString(2), 2) +
+            pad.lPadZeros(crumbs[i+1].toString(2), 2) +
+            pad.lPadZeros(crumbs[i+2].toString(2), 2) +
+            pad.lPadZeros(crumbs[i+3].toString(2), 2), 2);
+        i+=4;
+    }
+    return packed;
+}
+
+/**
+ * Unpack a byte into 4 crumbs.
+ * @param {!Array<number>|Uint8Array} crumbs Array of bytes.
+ * @return {!Array<number>} The crumbs.
+ */
+function unpackCrumbs(crumbs) {
+    let unpacked = [];
+    let i = 0;
+    let j = 0;
+    let len = crumbs.length;
+    let bitCrumb;
+    console.log(len);
+    while (i < len) {
+        bitCrumb = pad.lPadZeros(crumbs[i].toString(2), 8);
+        unpacked[j++] = parseInt(bitCrumb[0] + bitCrumb[1], 2);
+        unpacked[j++] = parseInt(bitCrumb[2] + bitCrumb[3], 2);
+        unpacked[j++] = parseInt(bitCrumb[4] + bitCrumb[5], 2);
+        unpacked[j++] = parseInt(bitCrumb[6] + bitCrumb[7], 2);
+        i++;
+    }
+    return unpacked;
+}
+
+/**
+ * Pack 8 booleans in 1 byte.
+ * @param {!Array<number>} booleans Array of booleans.
+ * @return {!Array<number>} 4 crumbs packed as one byte.
+ */
+function packBooleans(booleans) {
+    let packed = [];
+    let i = 0;
+    let j = 0;
+    pad.fixByteArraySize(booleans, 8);
+    let len = booleans.length - 7;
+    while (i < len) {
+        packed[j++] = parseInt(
+            booleans[i].toString(2) +
+            booleans[i+1].toString(2) +
+            booleans[i+2].toString(2) +
+            booleans[i+3].toString(2) +
+            booleans[i+4].toString(2) +
+            booleans[i+5].toString(2) +
+            booleans[i+6].toString(2) +
+            booleans[i+7].toString(2), 2);
+        i+=8;
+    }
+    return packed;
+}
+
+/**
+ * Unpack a byte into 8 booleans.
+ * @param {!Array<number>|Uint8Array} booleans Array of bytes.
+ * @return {!Array<number>} The booleans.
+ */
+function unpackBooleans(booleans) {
+    let unpacked = [];
+    let i = 0;
+    let j = 0;
+    let len = booleans.length;
+    let bitBoolean;
+    while (i < len) {
+        bitBoolean = pad.lPadZeros(booleans[i].toString(2), 8);
+        unpacked[j++] = parseInt(bitBoolean[0], 2);
+        unpacked[j++] = parseInt(bitBoolean[1], 2);
+        unpacked[j++] = parseInt(bitBoolean[2], 2);
+        unpacked[j++] = parseInt(bitBoolean[3], 2);
+        unpacked[j++] = parseInt(bitBoolean[4], 2);
+        unpacked[j++] = parseInt(bitBoolean[5], 2);
+        unpacked[j++] = parseInt(bitBoolean[6], 2);
+        unpacked[j++] = parseInt(bitBoolean[7], 2);
+        i++;
+    }
+    return unpacked;
+}
+
+module.exports.packBooleans = packBooleans;
+module.exports.unpackBooleans = unpackBooleans;
+module.exports.packCrumbs = packCrumbs;
+module.exports.unpackCrumbs = unpackCrumbs;
+module.exports.packNibbles = packNibbles;
+module.exports.unpackNibbles = unpackNibbles;
 
 
 /***/ })

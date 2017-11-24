@@ -14,8 +14,8 @@ For Node.js and the browser.
 
 ### Support:
 - booleans
-- crumbs (2-bit, signed/unsigned)
-- nibbles (4-bit, signed/unsigned)
+- 2-bit integers (signed/unsigned)
+- 4-bit integers (signed/unsigned)
 - 8-bit integers (signed/unsigned)
 - 16-bit integers (signed/unsigned)
 - 16-bit half precision floating point numbers
@@ -60,31 +60,33 @@ byteData.fromBytes([0,0,0,128,255,255,255,127], 32, {"signed": true});
 /**
  * Turn numbers and strings to bytes.
  * @param {!Array<number>|string} values The data.
- * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
- *   - "float", defaults to false, true for floats.
- *       float is available for 16, 32 and 64-bit values.
- *   - "base", base of the output, defaults to 10. Can be 2, 10 or 16
- *   - "char", defaults to false, true for strings
- *   - "be", defaults to false, true for big endian
- * @return {!Array<number>} the bytes.
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "buffer": If the bytes should be returned as a Uint8Array.
+ *       Default is false (bytes are returned as a regular array).
+ * @return {!Array<number>} the data as a byte array.
  */
 toBytes(numbers, bitDepth);
 
 /**
- * Turn a array of bytes into an array of what the bytes should represent.
+ * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number>|Uint8Array} buffer An array of bytes.
- * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
- *   - "signed", defaults to false
- *   - "float", defaults to false, true for floating point numbers.
- *       float is available for 16, 32 and 64 bit depths.
- *   - "base", defaults to 10, can be 2, 10 or 16
- *   - "char", defaults to false, true for strings
- *   - "be", defaults to false, true for big endian
- * @return {!Array<number>|string} The values represented in the bytes.
+ *   - "signed": If the numbers are signed. Default is false (unsigned).
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ * @return {!Array<number>|string}
  */
 fromBytes(buffer, bitDepth);
 

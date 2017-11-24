@@ -85,4 +85,9 @@ describe('16-bit to bytes', function() {
             [65504, 0.33325], 16, {"base": 16, "float": true}),
             ["7b", "ff", "35", "55"]);
     });
+    it('should turn 2 signed 16-bit ints to 4 bytes in a Uint8Array (max range)', function() {
+        assert.deepEqual(byteData.toBytes([-32768, 32767], 16, {"buffer": true}),
+            [0, 128, 255, 127]
+        );
+    });
 });

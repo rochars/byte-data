@@ -23,5 +23,8 @@ describe('48-bit to bytes', function() {
         assert.deepEqual(byteData.toBytes([281474976710655], 48, {"base": 10}),
             [255,255,255,255,255,255]);
     });
-
+    it('should turn 1 unsigned 48-bit int to 6 bytes (max range)', function() {
+        assert.deepEqual(byteData.toBytes([281474976710655], 48, {"buffer": true}),
+            [255,255,255,255,255,255]);
+    });
 });

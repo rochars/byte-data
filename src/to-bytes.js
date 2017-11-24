@@ -13,15 +13,17 @@ const bitDepths = require("../src/bit-depth.js");
 /**
  * Turn numbers and strings to bytes.
  * @param {!Array<number>|string} values The data.
- * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
- *   - "float", defaults to false, true for floats.
- *       float is available for 16, 32 and 64-bit values.
- *   - "base", base of the output, defaults to 10. Can be 2, 10 or 16
- *   - "char", defaults to false, true for strings
- *   - "be", defaults to false, true for big endian
- * @return {!Array<number>} the bytes.
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "buffer": If the bytes should be returned as a Uint8Array.
+ *       Default is false (bytes are returned as a regular array).
+ * @return {!Array<number>|Uint8Array} the data as a byte array.
  */
 function toBytes(values, bitDepth, options={}) {
     let base = 10;
@@ -31,6 +33,9 @@ function toBytes(values, bitDepth, options={}) {
     let bytes = writeBytes(values, options.char, options.float, bitDepth);
     makeBigEndian(bytes, options.be, bitDepth);
     outputToBase(bytes, bitDepth, base);
+    if (options.buffer) {
+        bytes = new Uint8Array(bytes);
+    }
     return bytes;
 }
 

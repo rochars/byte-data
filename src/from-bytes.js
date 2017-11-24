@@ -4,24 +4,23 @@
  * https://github.com/rochars/byte-data
  */
 
-const pad = require("../src/byte-padding.js");
 const endianness = require("endianness");
 const reader = require("../src/read-bytes.js");
 const bitDepths = require("../src/bit-depth.js");
 
 /**
- * Turn a array of bytes into an array of what the bytes should represent.
+ * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number>|Uint8Array} buffer An array of bytes.
- * @param {number} bitDepth The desired bitDepth for the data.
+ * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
- *   - "signed", defaults to false
- *   - "float", defaults to false, true for floating point numbers.
- *       float is available for 16, 32 and 64 bit depths.
- *   - "base", defaults to 10, can be 2, 10 or 16
- *   - "char", defaults to false, true for strings
- *   - "be", defaults to false, true for big endian
- * @return {!Array<number>|string} The values represented in the bytes.
+ *   - "signed": If the numbers are signed. Default is false (unsigned).
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={}) {
     let base = 10;

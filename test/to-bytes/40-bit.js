@@ -26,4 +26,8 @@ describe('40-bit to bytes', function() {
         assert.deepEqual(byteData.toBytes([1099511627775], 40, {"base": 10}),
             [255,255,255,255,255]);
     });
+    it('should turn 1 unsigned 40-bit int to 5 bytes in a Uint8Array (max range)', function() {
+        assert.deepEqual(byteData.toBytes([1099511627775], 40, {"buffer": true}),
+            [255,255,255,255,255]);
+    });
 });

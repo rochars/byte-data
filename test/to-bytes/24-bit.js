@@ -37,4 +37,10 @@ describe('24-bit to bytes', function() {
             [0, 0, 0, 0, 0, 0]
         );
     });
+    it('should turn 2 unsigned 24-bit ints to 6 bytes in a Uint8Array (0s)', function() {
+        assert.deepEqual(byteData.toBytes(
+            [0, 0], 24, {"buffer": true}),
+            [0, 0, 0, 0, 0, 0]
+        );
+    });
 });

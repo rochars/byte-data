@@ -49,4 +49,8 @@ describe('8-bit to bytes', function() {
             ['80']);
     });
 
+    it('should turn 1 8-bit signed int to 1 byte hex in a Uint8Array (-1)', function() {
+        assert.deepEqual(byteData.toBytes([-1, 5], 8, {"buffer": true}),
+            [255, 5]);
+    });
 });
