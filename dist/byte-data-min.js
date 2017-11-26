@@ -1,12 +1,13 @@
 /*
- to-half: int bits of half-precision floating point values
- Based on:
- https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
- https://github.com/rochars/byte-data
+ endianness: Swap byte endianness in arrays.
+ Copyright (c) 2017 Rafael da Silva Rocha.
+ https://github.com/rochars/endianness
+
  byte-data
- Readable data to and from bytes.
+ Readable data to and from byte buffers.
  Copyright (c) 2017 Rafael da Silva Rocha.
  https://github.com/rochars/byte-data
+
 */
 (function(g){function l(h){if(k[h])return k[h].a;var e=k[h]={Y:h,A:!1,a:{}};g[h].call(e.a,e,e.a,l);e.A=!0;return e.a}var k={};l.X=g;l.T=k;l.j=function(h,e){l.l(h)||Object.defineProperty(h,"a",{configurable:!1,enumerable:!0,get:e})};l.U=function(h){var e=h&&h.S?function(){return h["default"]}:function(){return h};l.j(e,e);return e};l.l=function(h){return Object.prototype.hasOwnProperty.call(h,"a")};l.V="";return l(l.Z=5)})([function(g){function l(h,e){var f=h.length+1;2==e?f=8:16==e&&(f=2);return k(h,
 f)}function k(h,e){for(;h.length<e;)h="0"+h;return h}g.a.h=function(h,e){var f=0,c=h.length%e;if(c)for(c=-1*(c-e);f<c;)h.push(0),f++};g.a.padding=function(h,e,f){h[f]=l(h[f],e)};g.a.H=function(h,e,f){2==e&&4>h[f].length&&(h[f]=Array(5-h[f].length).join("0")+h[f])};g.a.G=function(h,e,f){(2==e||16==e)&&2>h[f].length&&(h[f]="0"+h[f])};g.a.s=l;g.a.b=k},function(g){function l(f){h[0]=f;return e[0]}var k=new Int8Array(4),h=new Int32Array(k.buffer,0,1),e=new Float32Array(k.buffer,0,1);g.a=l;g.a.B=l;g.a.M=

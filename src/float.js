@@ -95,7 +95,7 @@ function toFloat64(value) {
 let floatView = new Float32Array(1);
 let int32View = new Int32Array(floatView.buffer);
 
-/*!
+/**
  * to-half: int bits of half-precision floating point values
  * Based on:
  * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html

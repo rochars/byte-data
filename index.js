@@ -1,8 +1,9 @@
 /*!
  * byte-data
- * Readable data to and from bytes.
+ * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
+ *
  */
 
 let toBytes = require('./src/to-bytes');

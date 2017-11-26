@@ -238,16 +238,17 @@ module.exports.BitDepthMaxValues = BitDepthMaxValues;
 /* 3 */
 /***/ (function(module, exports) {
 
-/*
- * endianness: Swap byte endianness in a array of bytes.
+/*!
+ * endianness: Swap byte endianness in arrays.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/endianness
+ *
  */
 
 /**
- * Make the resulting byte array big endian or little endian.
+ * Swap the endianness of units of information in a array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} offset The swap offset according to the bit depth.
+ * @param {number} offset The offset according to the bit depth.
  *  - 2 for 16-bit
  *  - 3 for 24-bit
  *  - 4 for 32-bit
@@ -266,7 +267,7 @@ function endianness(bytes, offset) {
 }
 
 /**
- * Swap the endianees of a unit of information in a array of bytes.
+ * Swap the endianness of a unit of information in a array of bytes.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} i The index to read.
  * @param {number} numBytes The number of bytes according to
@@ -390,7 +391,7 @@ function toFloat64(value) {
 let floatView = new Float32Array(1);
 let int32View = new Int32Array(floatView.buffer);
 
-/*!
+/**
  * to-half: int bits of half-precision floating point values
  * Based on:
  * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
@@ -423,9 +424,10 @@ module.exports.toHalf = toHalf;
 
 /*!
  * byte-data
- * Readable data to and from bytes.
+ * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
+ *
  */
 
 let toBytes = __webpack_require__(6);
