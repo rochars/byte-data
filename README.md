@@ -119,8 +119,11 @@ uIntArrayBE // {"be": true};
 str // {"char": true};
 
 // Using a preset
+byteData.fromBytes([0,0,0,128,255,255,255,127], 32, byteData.intArrayLE);
+// [-2147483648, 2147483647]
+
 byteData.fromBytes([0,0,0,128,255,255,255,127], 32, byteData.intLE);
-//[-2147483648, 2147483647]
+// -2147483648
 ```
 
 ### Pack your nibbles
