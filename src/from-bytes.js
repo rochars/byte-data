@@ -4,9 +4,9 @@
  * https://github.com/rochars/byte-data
  */
 
-const endianness = require("endianness");
 const reader = require("../src/read-bytes.js");
 const bitDepths = require("../src/bit-depth.js");
+const helpers = require("../src/helpers.js");
 
 /**
  * Turn a byte buffer into what the bytes represent.
@@ -24,17 +24,15 @@ const bitDepths = require("../src/bit-depth.js");
  *       Default is false.
  * @return {!Array<number>|string}
  */
-function fromBytes(buffer, bitDepth, options={}) {
-    let base = 10;
-    if ("base" in options) {
-        base = options.base;
-    }
-    if (options.be) {
-        endianness.endianness(buffer, bitDepth / 8);
-    }
-    bytesToInt(buffer, base);
-    let bitReader = getBitReader(bitDepth, options.float, options.char);
-    let values = readBytes(buffer, bitDepth, options.signed, bitReader);
+function fromBytes(buffer, bitDepth, options={"base": 10}) {
+    helpers.makeBigEndian(buffer, options.be, bitDepth);
+    helpers.bytesToInt(buffer, options.base);
+    let values = readBytes(
+            buffer,
+            bitDepth,
+            options.signed,
+            getBitReader(bitDepth, options.float, options.char)
+        );
     if (options.char) {
         values = values.join("");
     }
@@ -59,7 +57,7 @@ function readBytes(bytes, bitDepth, isSigned, bitReader) {
     let offset = bitDepths.BitDepthOffsets[bitDepth];
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.BitDepthMaxValues[bitDepth];
-    let signFunction = isSigned ? signed : function(x,y){return x;};
+    let signFunction = isSigned ? helpers.signed : function(x,y){return x;};
     while (i < len) {
         values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
         i += offset;
@@ -96,34 +94,6 @@ function getReaderFunctionName(bitDepth, isFloat) {
         ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
         'Bit' +
         (isFloat ? "Float" : "");
-}
-
-/**
- * Turn bytes to base 10.
- * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
- * @param {number} base The base.
- */
-function bytesToInt(bytes, base) {
-    if (base != 10) {
-        let i = 0;
-        let len = bytes.length;
-        while(i < len) {
-            bytes[i] = parseInt(bytes[i], base);
-            i++;
-        }
-    }
-}
-
-/**
- * Turn a unsigned number to a signed number.
- * @param {number} number The number.
- * @param {number} maxValue The max range for the number bit depth.
- */
-function signed(number, maxValue) {
-    if (number > parseInt(maxValue / 2, 10) - 1) {
-        number -= maxValue;
-    }
-    return number;
 }
 
 module.exports.fromBytes = fromBytes;

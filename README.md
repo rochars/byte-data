@@ -3,7 +3,7 @@ Readable data to and from byte buffers.
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
-[![Build Status](https://travis-ci.org/rochars/byte-data.svg?branch=master)](https://travis-ci.org/rochars/byte-data) [![Build status](https://ci.appveyor.com/api/projects/status/g2ellp44s7a0kvid?svg=true)](https://ci.appveyor.com/project/rochars/byte-data) [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data) [![NPM downloads](https://img.shields.io/npm/dm/byte-data.svg?style=flat)](https://www.npmjs.com/package/byte-data)
+[![Travis](https://img.shields.io/travis/rochars/byte-data.svg?style=for-the-badge)](https://travis-ci.org/rochars/byte-data) [![AppVeyor](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=for-the-badge&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=for-the-badge)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data)
 
 ## Install
 ```

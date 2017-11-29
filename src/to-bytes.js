@@ -4,11 +4,8 @@
  * https://github.com/rochars/byte-data
  */
 
-const intBits = require("int-bits");
-const pad = require("../src/byte-padding.js");
-const endianness = require("endianness");
 const writer = require("../src/write-bytes.js");
-const bitDepths = require("../src/bit-depth.js");
+const helpers = require("../src/helpers.js");
 
 /**
  * Turn numbers and strings to bytes.
@@ -25,51 +22,15 @@ const bitDepths = require("../src/bit-depth.js");
  *       Default is false (bytes are returned as a regular array).
  * @return {!Array<number>|Uint8Array} the data as a byte buffer.
  */
-function toBytes(values, bitDepth, options={}) {
-    if (!options.char && typeof values != "string") {
-        values = turnToArray(values);
-    }
-    let base = 10;
-    if ("base" in options) {
-        base = options.base;
-    }
+function toBytes(values, bitDepth, options={"base": 10}) {
+    values = helpers.turnToArray(values);
     let bytes = writeBytes(values, options.char, options.float, bitDepth);
-    makeBigEndian(bytes, options.be, bitDepth);
-    outputToBase(bytes, bitDepth, base);
+    helpers.makeBigEndian(bytes, options.be, bitDepth);
+    helpers.outputToBase(bytes, bitDepth, options.base);
     if (options.buffer) {
         bytes = new Uint8Array(bytes);
     }
     return bytes;
-}
-
-/**
- * Make a single value an array in case it is not.
- * @param {!Array<number>|number|string} values The value or values.
- * @return {!Array<number>}
- */
-function turnToArray(values) {
-    if (!Array.isArray(values)) {
-        values = [values];
-    }
-    return values;
-}
-
-/**
- * Turn the output to the correct base.
- * @param {!Array<number>} bytes The bytes.
- * @param {number} bitDepth The bit depth of the data.
- * @param {number} base The desired base for the output data.
- */
-function outputToBase(bytes, bitDepth, base) {
-    if (bitDepth == 4) {
-        bytesToBase(bytes, base, pad.paddingNibble);
-    } else if (bitDepth == 2) {
-        bytesToBase(bytes, base, pad.paddingCrumb);
-    } else if(bitDepth == 1) {
-        bytesToBase(bytes, base, function(){});
-    }else {
-        bytesToBase(bytes, base);
-    }
 }
 
 /**
@@ -96,36 +57,6 @@ function writeBytes(values, isChar, isFloat, bitDepth) {
         i++;
     }
     return bytes;
-}
-
-/**
- * Write values as bytes.
- * @param {!Array<number>} bytes The values.
- * @param {boolean} isBigEndian True if the bytes should be big endian.
- * @param {number} bitDepth The bitDepth of the data.
- */
-function makeBigEndian(bytes, isBigEndian, bitDepth) {
-    if (isBigEndian) {
-        endianness.endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
-    }
-}
-
-/**
- * Turn bytes to base.
- * @param {!Array<string>|!Array<number>} bytes The bytes.
- * @param {number} base The base.
- * @param {Function} padFunction The function to use for padding.
- */
-function bytesToBase(bytes, base, padFunction=pad.padding) {
-    if (base != 10) {
-        let i = 0;
-        let len = bytes.length;
-        while (i < len) {
-            bytes[i] = bytes[i].toString(base);
-            padFunction(bytes, base, i);
-            i++;
-        }
-    }
 }
 
 module.exports.toBytes = toBytes;

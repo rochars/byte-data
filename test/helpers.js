@@ -3,7 +3,7 @@ var assert = require('assert');
 
 describe('helpers', function() {
     
-    let helpers = require('../src/byte-padding.js');
+    let helpers = require('../src/helpers.js');
 
     // bin
     it('should pad 7 bits to a byte', function() {

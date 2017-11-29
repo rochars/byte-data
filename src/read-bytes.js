@@ -5,7 +5,7 @@
  */
 
 
-let pad = require("../src/byte-padding.js");
+let helpers = require("../src/helpers.js");
 const float = require("../src/float.js");
 const intBits = require("int-bits");
 
@@ -23,7 +23,7 @@ function readBytesAsBits(bytes, i, numBytes) {
     let j = numBytes-1;
     let bits = "";
     while (j >= 0) {
-        bits += pad.bytePadding(bytes[j + i].toString(2), 2);
+        bits += helpers.bytePadding(bytes[j + i].toString(2), 2);
         j--;
     }
     return parseInt(bits, 2);

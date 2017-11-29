@@ -4,14 +4,14 @@
  * https://github.com/rochars/byte-data
  */
 
-const pad = require('../src/byte-padding');
+const helpers = require('../src/helpers');
 
 function getBinary(bytes, rev=false) {
     let binary = "";
     let i = 0;
     let bytesLength = bytes.length;
     while(i < bytesLength) {
-        let bits = pad.lPadZeros(bytes[i].toString(2), 8);
+        let bits = helpers.lPadZeros(bytes[i].toString(2), 8);
         if (rev) {
             binary = binary + bits;
         } else {

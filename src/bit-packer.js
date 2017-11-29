@@ -4,7 +4,7 @@
  * https://github.com/rochars/byte-data
  */
 
-let pad = require("../src/byte-padding.js");
+let helpers = require("../src/helpers.js");
 
 /**
  * Pack 2 nibbles in 1 byte.
@@ -54,14 +54,14 @@ function packCrumbs(crumbs) {
     let packed = [];
     let i = 0;
     let j = 0;
-    pad.fixByteArraySize(crumbs, 4);
+    helpers.fixByteArraySize(crumbs, 4);
     let len = crumbs.length - 3;
     while (i < len) {
         packed[j++] = parseInt(
-            pad.lPadZeros(crumbs[i].toString(2), 2) +
-            pad.lPadZeros(crumbs[i+1].toString(2), 2) +
-            pad.lPadZeros(crumbs[i+2].toString(2), 2) +
-            pad.lPadZeros(crumbs[i+3].toString(2), 2), 2);
+            helpers.lPadZeros(crumbs[i].toString(2), 2) +
+            helpers.lPadZeros(crumbs[i+1].toString(2), 2) +
+            helpers.lPadZeros(crumbs[i+2].toString(2), 2) +
+            helpers.lPadZeros(crumbs[i+3].toString(2), 2), 2);
         i+=4;
     }
     return packed;
@@ -80,7 +80,7 @@ function unpackCrumbs(crumbs) {
     let bitCrumb;
     console.log(len);
     while (i < len) {
-        bitCrumb = pad.lPadZeros(crumbs[i].toString(2), 8);
+        bitCrumb = helpers.lPadZeros(crumbs[i].toString(2), 8);
         unpacked[j++] = parseInt(bitCrumb[0] + bitCrumb[1], 2);
         unpacked[j++] = parseInt(bitCrumb[2] + bitCrumb[3], 2);
         unpacked[j++] = parseInt(bitCrumb[4] + bitCrumb[5], 2);
@@ -99,7 +99,7 @@ function packBooleans(booleans) {
     let packed = [];
     let i = 0;
     let j = 0;
-    pad.fixByteArraySize(booleans, 8);
+    helpers.fixByteArraySize(booleans, 8);
     let len = booleans.length - 7;
     while (i < len) {
         packed[j++] = parseInt(
@@ -128,7 +128,7 @@ function unpackBooleans(booleans) {
     let len = booleans.length;
     let bitBoolean;
     while (i < len) {
-        bitBoolean = pad.lPadZeros(booleans[i].toString(2), 8);
+        bitBoolean = helpers.lPadZeros(booleans[i].toString(2), 8);
         unpacked[j++] = parseInt(bitBoolean[0], 2);
         unpacked[j++] = parseInt(bitBoolean[1], 2);
         unpacked[j++] = parseInt(bitBoolean[2], 2);
