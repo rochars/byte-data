@@ -32,11 +32,11 @@ For Node.js and the browser.
 let byteData = require('byte-data');
 
 // Signed 24-bit integers from a byte buffer
-let numbers = fromBytes(buffer, 24, {"signed": true});
+let numbers = byteData.fromBytes(buffer, 24, {"signed": true});
 
 // 16-bit half-precision float numbers from bytes represented as binary strings
 console.log(
-    fromBytes(
+    byteData.fromBytes(
         ["00110101", "01010101"],
         16, 
         {"base": 2, "float": true}
@@ -45,7 +45,7 @@ console.log(
 // 0.33325
 
 // 32-bit floating point numbers to bytes represented as hexadecimal values
-toBytes([2.1474836], 32, {"base": 16,  "float": true});
+byteData.toBytes([2.1474836], 32, {"base": 16,  "float": true});
 // ["5f","70","9","40"]
 
 // 32-bit signed integers to and from binary form
@@ -86,6 +86,8 @@ toBytes(numbers, bitDepth);
  *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
  *   - "char": If the bytes represent a string. Default is false.
  *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "single": If it should return a single value instead of an array.
+ *       Default is false.
  * @return {!Array<number>|string}
  */
 fromBytes(buffer, bitDepth);
@@ -98,6 +100,27 @@ fromBytes(buffer, bitDepth);
  * @return {number} The start index of the first occurrence, -1 if not found
  */
 byteData.findString(bytes, "chunk");
+
+// Presets for options
+floatLE // {"float": true, "single": true};
+intLE // {"signed": true, "single": true};
+uIntLE // {"single": true};
+floatBE // {"float": true, "single": true, "be": true};
+intBE // {"signed": true, "single": true, "be": true};
+uIntBE // {"single": true, "be": true};
+char // {"char": true, "single": true};
+
+floatArrayLE // {"float": true};
+intArrayLE // {"signed": true};
+uIntArrayLE // {};
+floatArrayBE // {"float": true, "be": true};
+intArrayBE // {"signed": true, "be": true};
+uIntArrayBE // {"be": true};
+str // {"char": true};
+
+// Using a preset
+byteData.fromBytes([0,0,0,128,255,255,255,127], 32, byteData.intLE);
+//[-2147483648, 2147483647]
 ```
 
 ### Pack your nibbles

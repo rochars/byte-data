@@ -19,4 +19,14 @@ describe('interface', function() {
     it('BitDepthMaxValues should be available', function() {
         assert.ok(byteData.BitDepthMaxValues[32]);
     });
+    it('should turn 1 bytes hex to 1 16-bit uInt single value (not array)', function() {
+        assert.equal(byteData.fromBytes(
+            ["ff","ff"], 16, {"base": 16, "single": true}),
+            65535);
+    });
+    it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
+        assert.deepEqual(byteData.toBytes(
+            65535, 16, {"base": 16}),
+            ["ff","ff"]);
+    });
 });

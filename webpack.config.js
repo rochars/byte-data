@@ -45,6 +45,66 @@ module.exports = {
             {
               search: 'module.exports.unpackBooleans',
               replace: "window['unpackBooleans']",
+            },
+
+             
+            {
+              search: 'module.exports.floatLE',
+              replace: "window['floatLE']",
+            }, 
+            {
+              search: 'module.exports.intLE',
+              replace: "window['intLE']",
+            }, 
+            {
+              search: 'module.exports.uIntLE',
+              replace: "window['uIntLE']",
+            }, 
+            {
+              search: 'module.exports.floatBE',
+              replace: "window['floatBE']",
+            }, 
+            {
+              search: 'module.exports.intBE',
+              replace: "window['intBE']",
+            }, 
+            {
+              search: 'module.exports.uIntBE',
+              replace: "window['uIntBE']",
+            }, 
+            {
+              search: 'module.exports.char',
+              replace: "window['char']",
+            },
+
+
+            {
+              search: 'module.exports.floatArrayLE',
+              replace: "window['floatArrayLE']",
+            }, 
+            {
+              search: 'module.exports.intArrayLE',
+              replace: "window['intArrayLE']",
+            }, 
+            {
+              search: 'module.exports.uIntArrayLE',
+              replace: "window['uIntArrayLE']",
+            }, 
+            {
+              search: 'module.exports.floatArrayBE',
+              replace: "window['floatArrayBE']",
+            }, 
+            {
+              search: 'module.exports.intArrayBE',
+              replace: "window['intArrayBE']",
+            }, 
+            {
+              search: 'module.exports.uIntArrayBE',
+              replace: "window['uIntArrayBE']",
+            }, 
+            {
+              search: 'module.exports.str',
+              replace: "window['str']",
             }
           ]
         }

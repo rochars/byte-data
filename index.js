@@ -44,3 +44,20 @@ module.exports.unpackNibbles = bitPacker.unpackNibbles;
 
 module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
 module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;
+
+// types
+module.exports.floatLE = {"float": true, "single": true};
+module.exports.intLE = {"signed": true, "single": true};
+module.exports.uIntLE = {"single": true};
+module.exports.floatBE = {"float": true, "single": true, "be": true};
+module.exports.intBE = {"signed": true, "single": true, "be": true};
+module.exports.uIntBE = {"single": true, "be": true};
+module.exports.char = {"char": true, "single": true};
+
+module.exports.floatArrayLE = {"float": true};
+module.exports.intArrayLE = {"signed": true};
+module.exports.uIntArrayLE = {};
+module.exports.floatArrayBE = {"float": true, "be": true};
+module.exports.intArrayBE = {"signed": true, "be": true};
+module.exports.uIntArrayBE = {"be": true};
+module.exports.str = {"char": true};

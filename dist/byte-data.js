@@ -469,6 +469,23 @@ window['unpackNibbles'] = bitPacker.unpackNibbles;
 module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
 module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;
 
+// types
+window['floatLE'] = {"float": true, "single": true};
+window['intLE'] = {"signed": true, "single": true};
+window['uIntLE'] = {"single": true};
+window['floatBE'] = {"float": true, "single": true, "be": true};
+window['intBE'] = {"signed": true, "single": true, "be": true};
+window['uIntBE'] = {"single": true, "be": true};
+window['char'] = {"char": true, "single": true};
+
+window['floatArrayLE'] = {"float": true};
+window['intArrayLE'] = {"signed": true};
+window['uIntArrayLE'] = {};
+window['floatArrayBE'] = {"float": true, "be": true};
+window['intArrayBE'] = {"signed": true, "be": true};
+window['uIntArrayBE'] = {"be": true};
+window['str'] = {"char": true};
+
 
 /***/ }),
 /* 6 */
@@ -488,7 +505,7 @@ const bitDepths = __webpack_require__(2);
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<number>|string} values The data.
+ * @param {!Array<number>|number|string} values The data.
  * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
@@ -502,6 +519,9 @@ const bitDepths = __webpack_require__(2);
  * @return {!Array<number>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={}) {
+    if (!options.char && typeof values != "string") {
+        values = turnToArray(values);
+    }
     let base = 10;
     if ("base" in options) {
         base = options.base;
@@ -513,6 +533,18 @@ function toBytes(values, bitDepth, options={}) {
         bytes = new Uint8Array(bytes);
     }
     return bytes;
+}
+
+/**
+ * Make a single value an array in case it is not.
+ * @param {!Array<number>|number|string} values The value or values.
+ * @return {!Array<number>}
+ */
+function turnToArray(values) {
+    if (!Array.isArray(values)) {
+        values = [values];
+    }
+    return values;
 }
 
 /**
@@ -535,13 +567,13 @@ function outputToBase(bytes, bitDepth, base) {
 
 /**
  * Write values as bytes.
- * @param {!Array<number>|string} numbers The values.
+ * @param {!Array<number>|number|string} values The data.
  * @param {boolean} isChar True if it is a string.
  * @param {boolean} isFloat True if it is a IEEE floating point number.
  * @param {number} bitDepth The bitDepth of the data.
  * @return {!Array<number>} the bytes.
  */
-function writeBytes(numbers, isChar, isFloat, bitDepth) {
+function writeBytes(values, isChar, isFloat, bitDepth) {
     let bitWriter;
     if (isChar) {
         bitWriter = writer.writeString;
@@ -550,10 +582,10 @@ function writeBytes(numbers, isChar, isFloat, bitDepth) {
     }
     let i = 0;
     let j = 0;
-    let len = numbers.length;
+    let len = values.length;
     let bytes = [];
     while (i < len) {            
-        j = bitWriter(bytes, numbers, i, j);
+        j = bitWriter(bytes, values, i, j);
         i++;
     }
     return bytes;
@@ -735,6 +767,8 @@ const bitDepths = __webpack_require__(2);
  *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
  *   - "char": If the bytes represent a string. Default is false.
  *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "single": If it should return a single value instead of an array.
+ *       Default is false.
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={}) {
@@ -750,6 +784,9 @@ function fromBytes(buffer, bitDepth, options={}) {
     let values = readBytes(buffer, bitDepth, options.signed, bitReader);
     if (options.char) {
         values = values.join("");
+    }
+    if (options.single) {
+        values = values[0];
     }
     return values;
 }

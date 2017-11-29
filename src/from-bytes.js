@@ -20,6 +20,8 @@ const bitDepths = require("../src/bit-depth.js");
  *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
  *   - "char": If the bytes represent a string. Default is false.
  *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "single": If it should return a single value instead of an array.
+ *       Default is false.
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={}) {
@@ -35,6 +37,9 @@ function fromBytes(buffer, bitDepth, options={}) {
     let values = readBytes(buffer, bitDepth, options.signed, bitReader);
     if (options.char) {
         values = values.join("");
+    }
+    if (options.single) {
+        values = values[0];
     }
     return values;
 }
