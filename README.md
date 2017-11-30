@@ -10,7 +10,7 @@ https://github.com/rochars/byte-data
 npm install byte-data
 ```
 
-For Node.js and the browser.
+Works in node.js and in the browser.
 
 ### Support:
 - booleans
@@ -31,31 +31,91 @@ For Node.js and the browser.
 ```javascript
 let byteData = require('byte-data');
 
-// Signed 24-bit integers from a byte buffer
-let numbers = byteData.fromBytes(buffer, 24, {"signed": true});
+// Pack a float32 number, output bytes to hex
+byteData.pack(2.1474836, byteData.float32, 16),
+//["5f","70","09","40"]
 
-// 16-bit half-precision float numbers from bytes represented as binary strings
-console.log(
-    byteData.fromBytes(
-        ["00110101", "01010101"],
-        16, 
-        {"base": 2, "float": true}
-    )
-);
+// Unpack a float16 number from bytes as binary strings
+byteData.unpack(["00110101", "01010101"], byteData.float16)
 // 0.33325
 
-// 32-bit floating point numbers to bytes represented as hexadecimal values
-byteData.toBytes([2.1474836], 32, {"base": 16,  "float": true});
-// ["5f","70","9","40"]
+// Pack an array of uInt16 numbers, output to base 10 (default)
+byteData.packSequence([65535, 0], byteData.uInt16)
+// [255, 255, 0, 0]);
 
-// 32-bit signed integers to and from binary form
-byteData.toBytes([-2147483648, 2147483647], 32);
-//[0,0,0,128,255,255,255,127]
-byteData.fromBytes([0,0,0,128,255,255,255,127], 32, {"signed": true});
-//[-2147483648, 2147483647]
+// Pack an array of int32 numbers, output to base 10 (default)
+byteData.packSequence([-2147483648, 2147483647], byteData.int32),
+//[0, 0, 0, 128, 255, 255, 255, 127]
+
+// unpack an array of uInt16 numbers from bytes represented as hex values
+byteData.unpackSequence(["ff", "ff", "00", "00"], byteData.uInt16, 16),
+// [65535, 0]
 ```
 
 ## Use
+```javascript
+/**
+ * Turn a number or string into a byte buffer.
+ * @param {number|string} value The value.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function pack(value, type, base=10) {}
+
+/**
+ * Turn a byte buffer into a readable value.
+ * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {number|string}
+ */
+function unpack(buffer, type, base=10) {}
+
+/**
+ * Turn a sequence of numbers into a byte buffer.
+ * @param {!Array<number>} values The value.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function packSequence(values, type, base=10) {}
+
+/**
+ * Turn a byte buffer into a sequence of readable values.
+ * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|string}
+ */
+function unpackSequence(values, type, base=10) {}
+```
+
+## Available types
+```javascript
+/**
+ * The available types:
+ *  - int8
+ *  - uInt8
+ *  - int16
+ *  - uInt16
+ *  - float16
+ *  - int24
+ *  - uInt24
+ *  - int32
+ *  - uInt32
+ *  - float32
+ *  - int40
+ *  - uInt40
+ *  - int48
+ *  - uInt48
+ *  - float64
+ */
+```
+
+## Old API
+The old API still available:
+
 ```javascript
 /**
  * Turn numbers and strings to bytes.

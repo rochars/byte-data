@@ -30,22 +30,87 @@ function findString(bytes, chunk) {
     return -1;
 }
 
-module.exports.findString = findString;
+/**
+ * Turn a number or string into a byte buffer.
+ * @param {number|string} value The value.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function pack(value, type, base=10) {
+    type.base = base;
+    return toBytes.toBytes(value, type.bitDepth, type);
+}
 
-module.exports.toBytes = toBytes.toBytes;
-module.exports.fromBytes = fromBytes.fromBytes;
+/**
+ * Turn a byte buffer into a readable value.
+ * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {number|string}
+ */
+function unpack(buffer, type, base=10) {
+    type.base = base;
+    return fromBytes.fromBytes(buffer, type.bitDepth, type);
+}
 
-module.exports.packBooleans = bitPacker.packBooleans;
-module.exports.unpackBooleans = bitPacker.unpackBooleans;
-module.exports.packCrumbs = bitPacker.packCrumbs;
-module.exports.unpackCrumbs = bitPacker.unpackCrumbs;
-module.exports.packNibbles = bitPacker.packNibbles;
-module.exports.unpackNibbles = bitPacker.unpackNibbles;
+/**
+ * Turn a sequence of numbers into a byte buffer.
+ * @param {!Array<number>} values The value.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function packSequence(values, type, base=10) {
+    type.base = base;
+    type.single = false;
+    return toBytes.toBytes(values, type.bitDepth, type);
+}
 
-module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
-module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;
+/**
+ * Turn a byte buffer into a sequence of readable values.
+ * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|string}
+ */
+function unpackSequence(buffer, type, base=10) {
+    type.base = base;
+    type.single = false;
+    return fromBytes.fromBytes(buffer, type.bitDepth, type);
+}
+
+// interface
+module.exports.pack = pack;
+module.exports.unpack = unpack;
+module.exports.packSequence = packSequence;
+module.exports.unpackSequence = unpackSequence;
 
 // types
+module.exports.int8 = {"bitDepth": 8, "signed": true, "single": true};
+module.exports.uInt8 = {"bitDepth": 8, "single": true};
+
+module.exports.int16  = {"bitDepth": 16, "signed": true, "single": true};
+module.exports.uInt16 = {"bitDepth": 16, "single": true};
+module.exports.float16 = {"bitDepth": 16, "float": true, "single": true};
+
+module.exports.int24 = {"bitDepth": 24, "signed": true, "single": true};
+module.exports.uInt24 = {"bitDepth": 24, "single": true};
+
+module.exports.int32 = {"bitDepth": 32, "signed": true, "single": true};
+module.exports.uInt32 = {"bitDepth": 32, "single": true};
+module.exports.float32 = {"bitDepth": 32, "float": true, "single": true};
+
+module.exports.int40 = {"bitDepth": 40, "signed": true, "single": true};
+module.exports.uInt40 = {"bitDepth": 40, "single": true};
+
+module.exports.int48 = {"bitDepth": 48, "signed": true, "single": true};
+module.exports.uInt48 = {"bitDepth": 48, "single": true};
+
+module.exports.float64 = {"bitDepth": 64, "float": true, "single": true};
+
+
+// Legacy types
 module.exports.floatLE = {"float": true, "single": true};
 module.exports.intLE = {"signed": true, "single": true};
 module.exports.uIntLE = {"single": true};
@@ -56,8 +121,21 @@ module.exports.char = {"char": true, "single": true};
 
 module.exports.floatArrayLE = {"float": true};
 module.exports.intArrayLE = {"signed": true};
-module.exports.uIntArrayLE = {};
+module.exports.uIntArrayLE = {"base": 10};
 module.exports.floatArrayBE = {"float": true, "be": true};
 module.exports.intArrayBE = {"signed": true, "be": true};
 module.exports.uIntArrayBE = {"be": true};
 module.exports.str = {"char": true};
+
+// Legacy interface
+module.exports.findString = findString;
+module.exports.toBytes = toBytes.toBytes;
+module.exports.fromBytes = fromBytes.fromBytes;
+module.exports.packBooleans = bitPacker.packBooleans;
+module.exports.unpackBooleans = bitPacker.unpackBooleans;
+module.exports.packCrumbs = bitPacker.packCrumbs;
+module.exports.unpackCrumbs = bitPacker.unpackCrumbs;
+module.exports.packNibbles = bitPacker.packNibbles;
+module.exports.unpackNibbles = bitPacker.unpackNibbles;
+module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
+module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;

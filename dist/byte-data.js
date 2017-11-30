@@ -135,7 +135,6 @@ function paddingCrumb(crumbs, base, index) {
  *      For 1 binary byte string it should be 8.
  */
 function lPadZeros(value, numZeros) {
-    let i = 0;
     while (value.length < numZeros) {
         value = '0' + value;
     }
@@ -169,7 +168,7 @@ function fixByteArraySize(byteArray, numZeros) {
  */
 function makeBigEndian(bytes, isBigEndian, bitDepth) {
     if (isBigEndian) {
-        endianness.endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
+        endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
     }
 }
 
@@ -457,8 +456,8 @@ function unpack(f) {
 }
 
 module.exports = pack
-module.exports.pack = pack
-module.exports.unpack = unpack
+window['byteData'] = window['byteData'] || {};window['byteData']['pack'] = pack
+window['byteData']['unpack'] = unpack
 
 /***/ }),
 /* 4 */
@@ -496,22 +495,87 @@ function findString(bytes, chunk) {
     return -1;
 }
 
-window['findString'] = findString;
+/**
+ * Turn a number or string into a byte buffer.
+ * @param {number|string} value The value.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function pack(value, type, base=10) {
+    type.base = base;
+    return toBytes.toBytes(value, type.bitDepth, type);
+}
 
-window['toBytes'] = toBytes.toBytes;
-window['fromBytes'] = fromBytes.fromBytes;
+/**
+ * Turn a byte buffer into a readable value.
+ * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {number|string}
+ */
+function unpack(buffer, type, base=10) {
+    type.base = base;
+    return fromBytes.fromBytes(buffer, type.bitDepth, type);
+}
 
-window['packBooleans'] = bitPacker.packBooleans;
-window['unpackBooleans'] = bitPacker.unpackBooleans;
-window['packCrumbs'] = bitPacker.packCrumbs;
-window['unpackCrumbs'] = bitPacker.unpackCrumbs;
-window['packNibbles'] = bitPacker.packNibbles;
-window['unpackNibbles'] = bitPacker.unpackNibbles;
+/**
+ * Turn a sequence of numbers into a byte buffer.
+ * @param {!Array<number>} values The value.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function packSequence(values, type, base=10) {
+    type.base = base;
+    type.single = false;
+    return toBytes.toBytes(values, type.bitDepth, type);
+}
 
-module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
-module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;
+/**
+ * Turn a byte buffer into a sequence of readable values.
+ * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|string}
+ */
+function unpackSequence(buffer, type, base=10) {
+    type.base = base;
+    type.single = false;
+    return fromBytes.fromBytes(buffer, type.bitDepth, type);
+}
+
+// interface
+window['byteData'] = window['byteData'] || {};window['byteData']['pack'] = pack;
+window['byteData']['unpack'] = unpack;
+window['byteData']['packSequence'] = packSequence;
+window['byteData']['unpackSequence'] = unpackSequence;
 
 // types
+window['byteData']['int8'] = {"bitDepth": 8, "signed": true, "single": true};
+window['byteData']['uInt8'] = {"bitDepth": 8, "single": true};
+
+window['byteData']['int16']  = {"bitDepth": 16, "signed": true, "single": true};
+window['byteData']['uInt16'] = {"bitDepth": 16, "single": true};
+window['byteData']['float16'] = {"bitDepth": 16, "float": true, "single": true};
+
+window['byteData']['int24'] = {"bitDepth": 24, "signed": true, "single": true};
+window['byteData']['uInt24'] = {"bitDepth": 24, "single": true};
+
+window['byteData']['int32'] = {"bitDepth": 32, "signed": true, "single": true};
+window['byteData']['uInt32'] = {"bitDepth": 32, "single": true};
+window['byteData']['float32'] = {"bitDepth": 32, "float": true, "single": true};
+
+window['byteData']['int40'] = {"bitDepth": 40, "signed": true, "single": true};
+window['byteData']['uInt40'] = {"bitDepth": 40, "single": true};
+
+window['byteData']['int48'] = {"bitDepth": 48, "signed": true, "single": true};
+window['byteData']['uInt48'] = {"bitDepth": 48, "single": true};
+
+window['byteData']['float64'] = {"bitDepth": 64, "float": true, "single": true};
+
+
+// Legacy types
 window['floatLE'] = {"float": true, "single": true};
 window['intLE'] = {"signed": true, "single": true};
 window['uIntLE'] = {"single": true};
@@ -522,11 +586,24 @@ window['char'] = {"char": true, "single": true};
 
 window['floatArrayLE'] = {"float": true};
 window['intArrayLE'] = {"signed": true};
-window['uIntArrayLE'] = {};
+window['uIntArrayLE'] = {"base": 10};
 window['floatArrayBE'] = {"float": true, "be": true};
 window['intArrayBE'] = {"signed": true, "be": true};
 window['uIntArrayBE'] = {"be": true};
 window['str'] = {"char": true};
+
+// Legacy interface
+window['findString'] = findString;
+window['toBytes'] = toBytes.toBytes;
+window['fromBytes'] = fromBytes.fromBytes;
+window['packBooleans'] = bitPacker.packBooleans;
+window['unpackBooleans'] = bitPacker.unpackBooleans;
+window['packCrumbs'] = bitPacker.packCrumbs;
+window['unpackCrumbs'] = bitPacker.unpackCrumbs;
+window['packNibbles'] = bitPacker.packNibbles;
+window['unpackNibbles'] = bitPacker.unpackNibbles;
+module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
+module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;
 
 
 /***/ }),
@@ -769,7 +846,7 @@ function byteSwap(bytes, offset, index) {
     }
 }
 
-module.exports.endianness = endianness;
+module.exports = endianness;
 
 
 /***/ }),
@@ -1124,7 +1201,6 @@ function unpackCrumbs(crumbs) {
     let j = 0;
     let len = crumbs.length;
     let bitCrumb;
-    console.log(len);
     while (i < len) {
         bitCrumb = helpers.lPadZeros(crumbs[i].toString(2), 8);
         unpacked[j++] = parseInt(bitCrumb[0] + bitCrumb[1], 2);

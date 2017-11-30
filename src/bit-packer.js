@@ -78,7 +78,6 @@ function unpackCrumbs(crumbs) {
     let j = 0;
     let len = crumbs.length;
     let bitCrumb;
-    console.log(len);
     while (i < len) {
         bitCrumb = helpers.lPadZeros(crumbs[i].toString(2), 8);
         unpacked[j++] = parseInt(bitCrumb[0] + bitCrumb[1], 2);

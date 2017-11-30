@@ -66,7 +66,6 @@ function paddingCrumb(crumbs, base, index) {
  *      For 1 binary byte string it should be 8.
  */
 function lPadZeros(value, numZeros) {
-    let i = 0;
     while (value.length < numZeros) {
         value = '0' + value;
     }
@@ -100,7 +99,7 @@ function fixByteArraySize(byteArray, numZeros) {
  */
 function makeBigEndian(bytes, isBigEndian, bitDepth) {
     if (isBigEndian) {
-        endianness.endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
+        endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
     }
 }
 
