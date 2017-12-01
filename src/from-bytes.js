@@ -10,7 +10,7 @@ const helpers = require("../src/helpers.js");
 
 /**
  * Turn a byte buffer into what the bytes represent.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
  * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
@@ -44,7 +44,7 @@ function fromBytes(buffer, bitDepth, options={"base": 10}) {
 
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} bytes An array of bytes.
  * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
  * @param {boolean} isSigned True if the values should be signed.
  * @param {Function} bitReader The function to read the bytes.

@@ -3,7 +3,7 @@ Readable data to and from byte buffers.
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
-[![Travis](https://img.shields.io/travis/rochars/byte-data.svg?style=for-the-badge)](https://travis-ci.org/rochars/byte-data) [![AppVeyor](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=for-the-badge&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=for-the-badge)](https://codecov.io/gh/rochars/byte-data) [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data)
+[![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/fs) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html)
 
 ## Install
 ```
@@ -13,6 +13,7 @@ npm install byte-data
 Works in node.js and in the browser.
 
 ### Support:
+- char
 - booleans
 - 2-bit integers (signed/unsigned)
 - 4-bit integers (signed/unsigned)
@@ -25,7 +26,6 @@ Works in node.js and in the browser.
 - 40-bit integers (signed/unsigned)
 - 48-bit integers (signed/unsigned)
 - 64-bit double precision floating point numbers
-- Strings
 
 ## Example
 ```javascript
@@ -95,6 +95,12 @@ function unpackSequence(values, type, base=10) {}
 ```javascript
 /**
  * The available types:
+ *  - char
+ *  - bool
+ *  - int2
+ *  - uInt2
+ *  - int4
+ *  - uInt4
  *  - int8
  *  - uInt8
  *  - int16
@@ -111,6 +117,9 @@ function unpackSequence(values, type, base=10) {}
  *  - uInt48
  *  - float64
  */
+
+// Example:
+byteData.pack(value, byteData.float16);
 ```
 
 ## Old API

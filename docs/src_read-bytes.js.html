@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/read-bytes.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BitDepthMaxValues">BitDepthMaxValues</a></li><li><a href="global.html#BitDepthOffsets">BitDepthOffsets</a></li><li><a href="global.html#bytePadding">bytePadding</a></li><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#decodeFloat16">decodeFloat16</a></li><li><a href="global.html#decodeFloat64">decodeFloat64</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#fixByteArraySize">fixByteArraySize</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#getReaderFunctionName">getReaderFunctionName</a></li><li><a href="global.html#lPadZeros">lPadZeros</a></li><li><a href="global.html#makeBigEndian">makeBigEndian</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packBooleans">packBooleans</a></li><li><a href="global.html#packCrumbs">packCrumbs</a></li><li><a href="global.html#packNibbles">packNibbles</a></li><li><a href="global.html#packSequence">packSequence</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#paddingCrumb">paddingCrumb</a></li><li><a href="global.html#paddingNibble">paddingNibble</a></li><li><a href="global.html#read1Bit">read1Bit</a></li><li><a href="global.html#read8Bit">read8Bit</a></li><li><a href="global.html#read16Bit">read16Bit</a></li><li><a href="global.html#read16BitFloat">read16BitFloat</a></li><li><a href="global.html#read24Bit">read24Bit</a></li><li><a href="global.html#read32Bit">read32Bit</a></li><li><a href="global.html#read32BitFloat">read32BitFloat</a></li><li><a href="global.html#read40Bit">read40Bit</a></li><li><a href="global.html#read48Bit">read48Bit</a></li><li><a href="global.html#read64Bit">read64Bit</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#readBytesAsBits">readBytesAsBits</a></li><li><a href="global.html#readChar">readChar</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#toHalf">toHalf</a></li><li><a href="global.html#turnToArray">turnToArray</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackBooleans">unpackBooleans</a></li><li><a href="global.html#unpackCrumbs">unpackCrumbs</a></li><li><a href="global.html#unpackNibbles">unpackNibbles</a></li><li><a href="global.html#unpackSequence">unpackSequence</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/read-bytes.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * Function to read data from bytes.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+
+let helpers = require("../src/helpers.js");
+const float = require("../src/float.js");
+const intBits = require("int-bits");
+
+/**
+ * Read a group of bytes by turning it to bits.
+ * Useful for 40 &amp; 48-bit, but underperform.
+ * TODO find better alternative for 40 &amp; 48-bit.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @param {number} numBytes The number of bytes
+ *      (1 for 8-bit, 2 for 16-bit, etc).
+ * @return {number}
+ */
+function readBytesAsBits(bytes, i, numBytes) {
+    let j = numBytes-1;
+    let bits = "";
+    while (j >= 0) {
+        bits += helpers.bytePadding(bytes[j + i].toString(2), 2);
+        j--;
+    }
+    return parseInt(bits, 2);
+}
+
+/**
+ * Read 1 1-bit int from from booleans.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of booleans.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read1Bit(bytes, i) {
+    return parseInt(bytes[i], 2);
+}
+
+/**
+ * Read 1 8-bit int from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read8Bit(bytes, i) {
+    return bytes[i];
+}
+
+/**
+ * Read 1 16-bit int from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read16Bit(bytes, i) {
+    return bytes[1 + i] &lt;&lt; 8 | bytes[i];
+}
+
+/**
+ * Read 1 16-bit float from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read16BitFloat(bytes, i) {
+    return float.decodeFloat16(bytes.slice(i,i+2));
+}
+
+/**
+ * Read 1 24-bit int from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read24Bit(bytes, i) {
+    return bytes[2 + i] &lt;&lt; 16 |
+        bytes[1 + i] &lt;&lt; 8 |
+        bytes[i];
+}
+
+/**
+ * Read 1 32-bit int from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read32Bit(bytes, i) {
+    return (bytes[3 + i] &lt;&lt; 24 |
+        bytes[2 + i] &lt;&lt; 16 |
+        bytes[1 + i] &lt;&lt; 8 |
+        bytes[i]) >>> 0;
+}
+
+/**
+ * Read 1 32-bit float from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read32BitFloat(bytes, i) {
+    return intBits.pack(read32Bit(bytes, i));
+}
+
+/**
+ * Read 1 40-bit int from from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read40Bit(bytes, i) {
+    return readBytesAsBits(bytes, i, 5);
+}
+
+/**
+ * Read 1 48-bit int from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read48Bit(bytes, i) {
+    return readBytesAsBits(bytes, i, 6);
+}
+
+/**
+ * Read 1 64-bit double from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {number}
+ */
+function read64Bit(bytes, i) {
+    return float.decodeFloat64(bytes.slice(i,i+8));
+}
+
+/**
+ * Read 1 char from bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
+ * @param {number} i The index to read.
+ * @return {string}
+ */
+function readChar(bytes, i) {
+    return String.fromCharCode(bytes[i]);
+}
+
+module.exports.readChar = readChar;
+module.exports.read1Bit = read1Bit;
+module.exports.read8Bit = read8Bit;
+module.exports.read16Bit = read16Bit;
+module.exports.read16BitFloat = read16BitFloat;
+module.exports.read24Bit = read24Bit;
+module.exports.read32Bit = read32Bit;
+module.exports.read32BitFloat = read32BitFloat;
+module.exports.read40Bit = read40Bit;
+module.exports.read48Bit = read48Bit;
+module.exports.read64Bit = read64Bit;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 30 2017 21:59:54 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -32,6 +32,30 @@ module.exports = {
 
             // types
             {
+              search: 'module.exports.char',
+              replace: "window['byteData']['char']",
+            },
+            {
+              search: 'module.exports.bool',
+              replace: "window['byteData']['bool']",
+            },
+            {
+              search: 'module.exports.int2',
+              replace: "window['byteData']['int2']",
+            },
+            {
+              search: 'module.exports.uInt2',
+              replace: "window['byteData']['uInt2']",
+            },
+            {
+              search: 'module.exports.int4',
+              replace: "window['byteData']['int4']",
+            },
+            {
+              search: 'module.exports.uInt4',
+              replace: "window['byteData']['uInt4']",
+            },
+            {
               search: 'module.exports.int8',
               replace: "window['byteData']['int8']",
             },

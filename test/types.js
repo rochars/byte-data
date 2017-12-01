@@ -54,7 +54,6 @@ describe('types', function() {
             "a");
     });
 
-
     //module.exports.floatArrayLE = {"float": true};
     it('should turn 8 bytes to 2 32-bit ints (0s)', function() {
         assert.deepEqual(byteData.fromBytes(

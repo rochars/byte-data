@@ -1,4 +1,43 @@
-/*!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BitDepthMaxValues">BitDepthMaxValues</a></li><li><a href="global.html#BitDepthOffsets">BitDepthOffsets</a></li><li><a href="global.html#bytePadding">bytePadding</a></li><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#decodeFloat16">decodeFloat16</a></li><li><a href="global.html#decodeFloat64">decodeFloat64</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#fixByteArraySize">fixByteArraySize</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#getReaderFunctionName">getReaderFunctionName</a></li><li><a href="global.html#lPadZeros">lPadZeros</a></li><li><a href="global.html#makeBigEndian">makeBigEndian</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packBooleans">packBooleans</a></li><li><a href="global.html#packCrumbs">packCrumbs</a></li><li><a href="global.html#packNibbles">packNibbles</a></li><li><a href="global.html#packSequence">packSequence</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#paddingCrumb">paddingCrumb</a></li><li><a href="global.html#paddingNibble">paddingNibble</a></li><li><a href="global.html#read1Bit">read1Bit</a></li><li><a href="global.html#read8Bit">read8Bit</a></li><li><a href="global.html#read16Bit">read16Bit</a></li><li><a href="global.html#read16BitFloat">read16BitFloat</a></li><li><a href="global.html#read24Bit">read24Bit</a></li><li><a href="global.html#read32Bit">read32Bit</a></li><li><a href="global.html#read32BitFloat">read32BitFloat</a></li><li><a href="global.html#read40Bit">read40Bit</a></li><li><a href="global.html#read48Bit">read48Bit</a></li><li><a href="global.html#read64Bit">read64Bit</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#readBytesAsBits">readBytesAsBits</a></li><li><a href="global.html#readChar">readChar</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#toHalf">toHalf</a></li><li><a href="global.html#turnToArray">turnToArray</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackBooleans">unpackBooleans</a></li><li><a href="global.html#unpackCrumbs">unpackCrumbs</a></li><li><a href="global.html#unpackNibbles">unpackNibbles</a></li><li><a href="global.html#unpackSequence">unpackSequence</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*!
  * byte-data
  * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.
@@ -14,13 +53,13 @@ let bitDepth = require('./src/bit-depth');
 /**
  * Find and return the start index of some string.
  * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} bytes Array of bytes.
+ * @param {!Array&lt;number>|Uint8Array} bytes Array of bytes.
  * @param {string} chunk Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */
 function findString(bytes, chunk) {
     let found = "";
-    for (let i = 0; i < bytes.length; i++) {
+    for (let i = 0; i &lt; bytes.length; i++) {
         found = fromBytes.fromBytes(bytes.slice(i, i + chunk.length),
             8, {"char": true});
         if (found == chunk) {
@@ -35,7 +74,7 @@ function findString(bytes, chunk) {
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function pack(value, type, base=10) {
     let copy = Object.assign({}, type);
@@ -47,7 +86,7 @@ function pack(value, type, base=10) {
 
 /**
  * Turn a byte buffer into a readable value.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {number|string}
@@ -61,10 +100,10 @@ function unpack(buffer, type, base=10) {
 
 /**
  * Turn a sequence of numbers into a byte buffer.
- * @param {!Array<number>} values The value.
+ * @param {!Array&lt;number>} values The value.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packSequence(values, type, base=10) {
     let copy = Object.assign({}, type);
@@ -75,10 +114,10 @@ function packSequence(values, type, base=10) {
 
 /**
  * Turn a byte buffer into a sequence of readable values.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
- * @return {!Array<number>|string}
+ * @return {!Array&lt;number>|string}
  */
 function unpackSequence(buffer, type, base=10) {
     let copy = Object.assign({}, type);
@@ -144,3 +183,22 @@ module.exports.packNibbles = bitPacker.packNibbles;
 module.exports.unpackNibbles = bitPacker.unpackNibbles;
 module.exports.BitDepthOffsets = bitDepth.BitDepthOffsets;
 module.exports.BitDepthMaxValues = bitDepth.BitDepthMaxValues;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 30 2017 21:59:54 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

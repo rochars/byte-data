@@ -41,6 +41,22 @@ describe('interface', function() {
             byteData.pack(2.1474836, byteData.float32, 16),
             ["5f","70","09","40"]);
     });
+    it('should turn 2 4-bit signed int to 2 nibble (-1, 5)', function() {
+        assert.deepEqual(byteData.pack([-1, 5], byteData.int4),
+            [15, 5]);
+    });
+    it('should turn 2 4-bit unsigned int to 2 nibble (15, 5)', function() {
+        assert.deepEqual(byteData.pack([15, 5], byteData.uInt4),
+            [15, 5]);
+    });
+    it('should turn 1 value to 1 booolean hex (6)', function() {
+        assert.deepEqual(byteData.pack(6, byteData.bool, 16),
+            ['1']);
+    });
+    it('should turn a 1 char string to bytes', function() {
+        assert.deepEqual(byteData.pack("a", byteData.char),
+            [97]);
+    });
 
     // unpack
     it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
@@ -53,6 +69,16 @@ describe('interface', function() {
             byteData.unpack(["00110101", "01010101"], byteData.float16).toFixed(5),
             0.33325);
     });
+    it('should turn 1 2-bit signed int bin to 1 crumb (-1)', function() {
+        assert.equal(byteData.unpack(['11'], byteData.int2, 2), -1);
+    });
+    it('should turn 1 2-bit unsigned int decimal to 1 crumb (3)', function() {
+        assert.equal(byteData.unpack([3], byteData.uInt2), 3);
+    });
+    it('should turn bytes to a char', function() {
+        assert.deepEqual(byteData.unpack([97, 98], byteData.char), "a");
+    });
+
 
     // packSequence
     it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
@@ -63,11 +89,21 @@ describe('interface', function() {
         assert.deepEqual(byteData.packSequence([-2147483648, 2147483647], byteData.int32),
             [0,0,0,128,255,255,255,127]);
     });
+    it('should turn a 2 char string to bytes', function() {
+        assert.deepEqual(byteData.packSequence("ab", byteData.char),
+            [97, 98]);
+    });
 
     // unpackSequence
     it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
         assert.deepEqual(byteData.unpackSequence(
             ["ff", "ff", "00", "00"], byteData.uInt16, 16),
             [65535, 0]);
+    });
+    it('should turn 1 2-bit signed int bin to 1 crumb (-1)', function() {
+        assert.deepEqual(
+                byteData.unpackSequence(['11'], byteData.uInt2, 2),
+                 [3]
+             );
     });
 });

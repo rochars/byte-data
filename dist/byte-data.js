@@ -503,20 +503,25 @@ function findString(bytes, chunk) {
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    type.base = base;
-    return toBytes.toBytes(value, type.bitDepth, type);
+    let copy = Object.assign({}, type);
+    copy.base = base;
+    copy.single = true;
+    value = copy.char ? value[0] : value;
+    return toBytes.toBytes(value, copy.bitDepth, copy);
 }
 
 /**
  * Turn a byte buffer into a readable value.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    type.base = base;
-    return fromBytes.fromBytes(buffer, type.bitDepth, type);
+    let copy = Object.assign({}, type);
+    copy.base = base;
+    copy.single = true;
+    return fromBytes.fromBytes(buffer, copy.bitDepth, copy);
 }
 
 /**
@@ -527,22 +532,24 @@ function unpack(buffer, type, base=10) {
  * @return {!Array<number>|!Array<string>}
  */
 function packSequence(values, type, base=10) {
-    type.base = base;
-    type.single = false;
-    return toBytes.toBytes(values, type.bitDepth, type);
+    let copy = Object.assign({}, type);
+    copy.base = base;
+    copy.single = false;
+    return toBytes.toBytes(values, copy.bitDepth, copy);
 }
 
 /**
  * Turn a byte buffer into a sequence of readable values.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|string}
  */
 function unpackSequence(buffer, type, base=10) {
-    type.base = base;
-    type.single = false;
-    return fromBytes.fromBytes(buffer, type.bitDepth, type);
+    let copy = Object.assign({}, type);
+    copy.base = base;
+    copy.single = false;
+    return fromBytes.fromBytes(buffer, copy.bitDepth, copy);
 }
 
 // interface
@@ -552,28 +559,27 @@ window['byteData']['packSequence'] = packSequence;
 window['byteData']['unpackSequence'] = unpackSequence;
 
 // types
+window['byteData']['char'] = {"bitDepth": 8, "char": true, "single": true};
+window['byteData']['bool'] = {"bitDepth": 1, "single": true};
+window['byteData']['int2'] = {"bitDepth": 2, "signed": true, "single": true};
+window['byteData']['uInt2'] = {"bitDepth": 2, "single": true};
+window['byteData']['int4'] = {"bitDepth": 4, "signed": true, "single": true};
+window['byteData']['uInt4'] = {"bitDepth": 4, "single": true};
 window['byteData']['int8'] = {"bitDepth": 8, "signed": true, "single": true};
 window['byteData']['uInt8'] = {"bitDepth": 8, "single": true};
-
 window['byteData']['int16']  = {"bitDepth": 16, "signed": true, "single": true};
 window['byteData']['uInt16'] = {"bitDepth": 16, "single": true};
 window['byteData']['float16'] = {"bitDepth": 16, "float": true, "single": true};
-
 window['byteData']['int24'] = {"bitDepth": 24, "signed": true, "single": true};
 window['byteData']['uInt24'] = {"bitDepth": 24, "single": true};
-
 window['byteData']['int32'] = {"bitDepth": 32, "signed": true, "single": true};
 window['byteData']['uInt32'] = {"bitDepth": 32, "single": true};
 window['byteData']['float32'] = {"bitDepth": 32, "float": true, "single": true};
-
 window['byteData']['int40'] = {"bitDepth": 40, "signed": true, "single": true};
 window['byteData']['uInt40'] = {"bitDepth": 40, "single": true};
-
 window['byteData']['int48'] = {"bitDepth": 48, "signed": true, "single": true};
 window['byteData']['uInt48'] = {"bitDepth": 48, "single": true};
-
 window['byteData']['float64'] = {"bitDepth": 64, "float": true, "single": true};
-
 
 // Legacy types
 window['floatLE'] = {"float": true, "single": true};
@@ -582,7 +588,6 @@ window['uIntLE'] = {"single": true};
 window['floatBE'] = {"float": true, "single": true, "be": true};
 window['intBE'] = {"signed": true, "single": true, "be": true};
 window['uIntBE'] = {"single": true, "be": true};
-window['char'] = {"char": true, "single": true};
 
 window['floatArrayLE'] = {"float": true};
 window['intArrayLE'] = {"signed": true};
@@ -632,7 +637,7 @@ const helpers = __webpack_require__(0);
  *   - "be": If the values are big endian. Default is false (little endian).
  *   - "buffer": If the bytes should be returned as a Uint8Array.
  *       Default is false (bytes are returned as a regular array).
- * @return {!Array<number>|Uint8Array} the data as a byte buffer.
+ * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={"base": 10}) {
     values = helpers.turnToArray(values);
@@ -865,7 +870,7 @@ const helpers = __webpack_require__(0);
 
 /**
  * Turn a byte buffer into what the bytes represent.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
  * @param {number} bitDepth The bit depth of the data.
  *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
@@ -899,7 +904,7 @@ function fromBytes(buffer, bitDepth, options={"base": 10}) {
 
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} bytes An array of bytes.
  * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
  * @param {boolean} isSigned True if the values should be signed.
  * @param {Function} bitReader The function to read the bytes.

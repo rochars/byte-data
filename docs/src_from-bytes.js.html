@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/from-bytes.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BitDepthMaxValues">BitDepthMaxValues</a></li><li><a href="global.html#BitDepthOffsets">BitDepthOffsets</a></li><li><a href="global.html#bytePadding">bytePadding</a></li><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#decodeFloat16">decodeFloat16</a></li><li><a href="global.html#decodeFloat64">decodeFloat64</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#fixByteArraySize">fixByteArraySize</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#getReaderFunctionName">getReaderFunctionName</a></li><li><a href="global.html#lPadZeros">lPadZeros</a></li><li><a href="global.html#makeBigEndian">makeBigEndian</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packBooleans">packBooleans</a></li><li><a href="global.html#packCrumbs">packCrumbs</a></li><li><a href="global.html#packNibbles">packNibbles</a></li><li><a href="global.html#packSequence">packSequence</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#paddingCrumb">paddingCrumb</a></li><li><a href="global.html#paddingNibble">paddingNibble</a></li><li><a href="global.html#read1Bit">read1Bit</a></li><li><a href="global.html#read8Bit">read8Bit</a></li><li><a href="global.html#read16Bit">read16Bit</a></li><li><a href="global.html#read16BitFloat">read16BitFloat</a></li><li><a href="global.html#read24Bit">read24Bit</a></li><li><a href="global.html#read32Bit">read32Bit</a></li><li><a href="global.html#read32BitFloat">read32BitFloat</a></li><li><a href="global.html#read40Bit">read40Bit</a></li><li><a href="global.html#read48Bit">read48Bit</a></li><li><a href="global.html#read64Bit">read64Bit</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#readBytesAsBits">readBytesAsBits</a></li><li><a href="global.html#readChar">readChar</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#toHalf">toHalf</a></li><li><a href="global.html#turnToArray">turnToArray</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackBooleans">unpackBooleans</a></li><li><a href="global.html#unpackCrumbs">unpackCrumbs</a></li><li><a href="global.html#unpackNibbles">unpackNibbles</a></li><li><a href="global.html#unpackSequence">unpackSequence</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/from-bytes.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * from-bytes: convert bytes to numbers and strings.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+const reader = require("../src/read-bytes.js");
+const bitDepths = require("../src/bit-depth.js");
+const helpers = require("../src/helpers.js");
+
+/**
+ * Turn a byte buffer into what the bytes represent.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
+ * @param {number} bitDepth The bit depth of the data.
+ *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
+ * @param {Object} options The options. They are:
+ *   - "signed": If the numbers are signed. Default is false (unsigned).
+ *   - "float": True for floating point numbers. Default is false.
+ *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
+ *   - "char": If the bytes represent a string. Default is false.
+ *   - "be": If the values are big endian. Default is false (little endian).
+ *   - "single": If it should return a single value instead of an array.
+ *       Default is false.
+ * @return {!Array&lt;number>|string}
+ */
+function fromBytes(buffer, bitDepth, options={"base": 10}) {
+    helpers.makeBigEndian(buffer, options.be, bitDepth);
+    helpers.bytesToInt(buffer, options.base);
+    let values = readBytes(
+            buffer,
+            bitDepth,
+            options.signed,
+            getBitReader(bitDepth, options.float, options.char)
+        );
+    if (options.char) {
+        values = values.join("");
+    }
+    if (options.single) {
+        values = values[0];
+    }
+    return values;
+}
+
+/**
+ * Turn a array of bytes into an array of what the bytes should represent.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} bytes An array of bytes.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isSigned True if the values should be signed.
+ * @param {Function} bitReader The function to read the bytes.
+ * @return {!Array&lt;number>|string}
+ */
+function readBytes(bytes, bitDepth, isSigned, bitReader) {
+    let values = [];
+    let i = 0;
+    let j = 0;
+    let offset = bitDepths.BitDepthOffsets[bitDepth];
+    let len = bytes.length - (offset -1);
+    let maxBitDepthValue = bitDepths.BitDepthMaxValues[bitDepth];
+    let signFunction = isSigned ? helpers.signed : function(x,y){return x;};
+    while (i &lt; len) {
+        values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
+        i += offset;
+        j++;
+    }
+    return values;
+}
+
+/**
+ * Return a function to read binary data.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @param {boolean} isChar True if it is a string.
+ * @return {Function}
+ */
+function getBitReader(bitDepth, isFloat, isChar) {
+    let bitReader;
+    if (isChar) {
+        bitReader = reader.readChar;
+    } else {
+        bitReader = reader[getReaderFunctionName(bitDepth, isFloat)];
+    }
+    return bitReader;
+}
+
+/**
+ * Build a bit reading function name based on the arguments.
+ * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @return {string}
+ */
+function getReaderFunctionName(bitDepth, isFloat) {
+    return 'read' +
+        ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
+        'Bit' +
+        (isFloat ? "Float" : "");
+}
+
+module.exports.fromBytes = fromBytes;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 30 2017 21:59:54 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

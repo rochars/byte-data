@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/float.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BitDepthMaxValues">BitDepthMaxValues</a></li><li><a href="global.html#BitDepthOffsets">BitDepthOffsets</a></li><li><a href="global.html#bytePadding">bytePadding</a></li><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#decodeFloat16">decodeFloat16</a></li><li><a href="global.html#decodeFloat64">decodeFloat64</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#fixByteArraySize">fixByteArraySize</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#getReaderFunctionName">getReaderFunctionName</a></li><li><a href="global.html#lPadZeros">lPadZeros</a></li><li><a href="global.html#makeBigEndian">makeBigEndian</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packBooleans">packBooleans</a></li><li><a href="global.html#packCrumbs">packCrumbs</a></li><li><a href="global.html#packNibbles">packNibbles</a></li><li><a href="global.html#packSequence">packSequence</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#paddingCrumb">paddingCrumb</a></li><li><a href="global.html#paddingNibble">paddingNibble</a></li><li><a href="global.html#read1Bit">read1Bit</a></li><li><a href="global.html#read8Bit">read8Bit</a></li><li><a href="global.html#read16Bit">read16Bit</a></li><li><a href="global.html#read16BitFloat">read16BitFloat</a></li><li><a href="global.html#read24Bit">read24Bit</a></li><li><a href="global.html#read32Bit">read32Bit</a></li><li><a href="global.html#read32BitFloat">read32BitFloat</a></li><li><a href="global.html#read40Bit">read40Bit</a></li><li><a href="global.html#read48Bit">read48Bit</a></li><li><a href="global.html#read64Bit">read64Bit</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#readBytesAsBits">readBytesAsBits</a></li><li><a href="global.html#readChar">readChar</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#toHalf">toHalf</a></li><li><a href="global.html#turnToArray">turnToArray</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackBooleans">unpackBooleans</a></li><li><a href="global.html#unpackCrumbs">unpackCrumbs</a></li><li><a href="global.html#unpackNibbles">unpackNibbles</a></li><li><a href="global.html#unpackSequence">unpackSequence</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/float.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * float: Functions to work with 16, 32 &amp; 64 bit floats.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ */
+
+const helpers = require('../src/helpers');
+
+function getBinary(bytes, rev=false) {
+    let binary = "";
+    let i = 0;
+    let bytesLength = bytes.length;
+    while(i &lt; bytesLength) {
+        let bits = helpers.lPadZeros(bytes[i].toString(2), 8);
+        if (rev) {
+            binary = binary + bits;
+        } else {
+            binary = bits + binary;
+        }
+        i++;
+    }
+    return binary;
+}
+
+/**
+ * Turn bytes to a float 16..
+ * Thanks https://stackoverflow.com/a/8796597
+ * @param {number} bytes 2 bytes representing a float 16.
+ */
+function decodeFloat16 (bytes) {
+    let binary = parseInt(getBinary(bytes, true), 2);
+    let exponent = (binary &amp; 0x7C00) >> 10;
+    let fraction = binary &amp; 0x03FF;
+    let floatValue;
+    if (exponent) {
+        floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
+    } else {
+        floatValue = 6.103515625e-5 * (fraction / 0x400);
+    }
+    return  floatValue * (binary >> 15 ? -1 : 1);
+}
+
+/**
+ * Turn an array of bytes into a float 64.
+ * Thanks https://gist.github.com/kg/2192799
+ * @param {!Array&lt;number>} bytes 8 bytes representing a float 64.
+ */
+function decodeFloat64(bytes) {
+    if (bytes.toString() == "0,0,0,0,0,0,0,0") {
+        return 0;
+    }
+    let binary = getBinary(bytes);
+    let significandBin = "1" + binary.substr(1 + 11, 52);
+    let val = 1;
+    let significand = 0;
+    let i = 0;
+    while (i &lt; significandBin.length) {
+        significand += val * parseInt(significandBin.charAt(i), 10);
+        val = val / 2;
+        i++;
+    }
+    let sign = (binary.charAt(0) == "1") ? -1 : 1;
+    let doubleValue = sign * significand *
+        Math.pow(2, parseInt(binary.substr(1, 11), 2) - 1023);
+    return doubleValue;
+}
+
+/**
+ * Unpack a 64 bit float into two words.
+ * Thanks https://stackoverflow.com/a/16043259
+ * @param {number} value A float64 number.
+ */
+function toFloat64(value) {
+    if (value == 0) {
+        return [0, 0];
+    }
+    let hiWord = 0;
+    let loWord = 0;
+    if (value &lt;= 0.0) {
+        hiWord = 0x80000000;
+        value = -value;
+    }
+    let exponent = Math.floor(
+        Math.log(value) / Math.log(2));
+    let significand = Math.floor(
+        (value / Math.pow(2, exponent)) * Math.pow(2, 52));
+    loWord = significand &amp; 0xFFFFFFFF;
+    significand /= Math.pow(2, 32);
+    exponent += 1023;
+    hiWord = hiWord | (exponent &lt;&lt; 20);
+    hiWord = hiWord | (significand &amp; ~(-1 &lt;&lt; 20));
+    return [hiWord, loWord];
+}
+
+let floatView = new Float32Array(1);
+let int32View = new Int32Array(floatView.buffer);
+
+/**
+ * to-half: int bits of half-precision floating point values
+ * Based on:
+ * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
+ * https://github.com/rochars/byte-data
+ */
+function toHalf(val) {
+    floatView[0] = val;
+    let x = int32View[0];
+    let bits = (x >> 16) &amp; 0x8000;
+    let m = (x >> 12) &amp; 0x07ff;
+    let e = (x >> 23) &amp; 0xff;
+    if (e &lt; 103) {
+        return bits;
+    }
+    bits |= ((e - 112) &lt;&lt; 10) | (m >> 1);
+    bits += m &amp; 1;
+    return bits;
+}
+
+module.exports.getBinary = getBinary;
+module.exports.decodeFloat16 = decodeFloat16;
+module.exports.decodeFloat64 = decodeFloat64;
+module.exports.toFloat64 = toFloat64;
+module.exports.toHalf = toHalf;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Nov 30 2017 21:59:54 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
