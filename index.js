@@ -38,11 +38,11 @@ function findString(bytes, chunk) {
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    let copy = Object.assign({}, type);
-    copy.base = base;
-    copy.single = true;
-    value = copy.char ? value[0] : value;
-    return toBytes.toBytes(value, copy.bitDepth, copy);
+    let theType = Object.assign({}, type);
+    theType.base = base;
+    theType.single = true;
+    value = theType.char ? value[0] : value;
+    return toBytes.toBytes(value, theType.bitDepth, theType);
 }
 
 /**
@@ -53,38 +53,38 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let copy = Object.assign({}, type);
-    copy.base = base;
-    copy.single = true;
-    return fromBytes.fromBytes(buffer, copy.bitDepth, copy);
+    let theType = Object.assign({}, type);
+    theType.base = base;
+    theType.single = true;
+    return fromBytes.fromBytes(buffer, theType.bitDepth, theType);
 }
 
 /**
- * Turn a sequence of numbers into a byte buffer.
- * @param {!Array<number>} values The value.
+ * Turn a array of numbers into a byte buffer.
+ * @param {!Array<number>} values The values.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
 function packSequence(values, type, base=10) {
-    let copy = Object.assign({}, type);
-    copy.base = base;
-    copy.single = false;
-    return toBytes.toBytes(values, copy.bitDepth, copy);
+    let theType = Object.assign({}, type);
+    theType.base = base;
+    theType.single = false;
+    return toBytes.toBytes(values, theType.bitDepth, theType);
 }
 
 /**
- * Turn a byte buffer into a sequence of readable values.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
+ * Turn a byte array into a sequence of readable values.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|string}
  */
 function unpackSequence(buffer, type, base=10) {
-    let copy = Object.assign({}, type);
-    copy.base = base;
-    copy.single = false;
-    return fromBytes.fromBytes(buffer, copy.bitDepth, copy);
+    let theType = Object.assign({}, type);
+    theType.base = base;
+    theType.single = false;
+    return fromBytes.fromBytes(buffer, theType.bitDepth, theType);
 }
 
 // interface
