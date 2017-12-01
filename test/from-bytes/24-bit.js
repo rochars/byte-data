@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('24-bit from bytes', function() {
     
-    let byteData = require('../../index.js');
-
     it('should turn 6 bytes to 2 24-bit ints', function() {
         assert.deepEqual(byteData.fromBytes(
             [0,0,0,0,0,0], 24, {"base": 10, "signed": false}),

@@ -1,12 +1,11 @@
 /*
- * Function to read data from bytes.
+ * read-bytes: Function to read data from bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
 
-
 let helpers = require("../src/helpers.js");
-const float = require("../src/float.js");
+const floats = require("../src/floats.js");
 const intBits = require("int-bits");
 
 /**
@@ -66,7 +65,7 @@ function read16Bit(bytes, i) {
  * @return {number}
  */
 function read16BitFloat(bytes, i) {
-    return float.decodeFloat16(bytes.slice(i,i+2));
+    return floats.decodeFloat16(bytes.slice(i,i+2));
 }
 
 /**
@@ -131,7 +130,7 @@ function read48Bit(bytes, i) {
  * @return {number}
  */
 function read64Bit(bytes, i) {
-    return float.decodeFloat64(bytes.slice(i,i+8));
+    return floats.decodeFloat64(bytes.slice(i,i+8));
 }
 
 /**

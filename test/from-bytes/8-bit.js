@@ -1,16 +1,19 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
-describe('8-bit from bytes', function() {
-    
-    let byteData = require('../../index.js');
+describe('8-bit from bytes', function() {    
 
     it('should turn 1 byte to a 8-bit uInt', function() {
         assert.deepEqual(byteData.fromBytes(
             [0,0], 8),
             [0,0]);
     });
-
     it('should turn 1 hex byte to a 8-bit uInt (max range)', function() {
         assert.deepEqual(byteData.fromBytes(
             ["0","ff"], 8, {"base": 16}),

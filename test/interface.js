@@ -1,9 +1,14 @@
-var assert = require('assert');
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
+
+let assert = require('assert');
+let byteData = require('../index.js');
 
 describe('interface', function() {
     
-    let byteData = require('../index.js');
-
     it('should find the "ab" among the junk', function() {
         let index = byteData.findString([1, 0, 1, 100, 97, 98, 2, 2, 0], "ab");
         assert.equal(index, 4);
@@ -54,8 +59,32 @@ describe('interface', function() {
             ['1']);
     });
     it('should turn a 1 char string to bytes', function() {
-        assert.deepEqual(byteData.pack("a", byteData.char),
+        assert.deepEqual(byteData.pack("a", byteData.chr),
             [97]);
+    });
+    it('should turn a trucate a 16-bit value when writing as 8-bit', function() {
+        assert.deepEqual(byteData.pack(254, byteData.uInt8),
+            [254]);
+    });
+    it('should turn a trucate a 16-bit value when writing as 8-bit', function() {
+        assert.deepEqual(byteData.pack(255, byteData.uInt8),
+            [255]);
+    });
+    it('should turn a trucate a 16-bit value when writing as 8-bit', function() {
+        assert.deepEqual(byteData.pack(300, byteData.uInt8),
+            [255]);
+    });
+    it('should turn a < 0 value to 0 writing as unsigned 8-bit', function() {
+        assert.deepEqual(byteData.pack(-1, byteData.uInt8),
+            [0]);
+    });
+    it('should turn a signed value to 1 byte (-1)', function() {
+        assert.deepEqual(byteData.pack(-1, byteData.int8),
+            [255]);
+    });
+    it('should turn a signed value to 1 byte (-2)', function() {
+        assert.deepEqual(byteData.pack(-2, byteData.int8),
+            [254]);
     });
 
     // unpack
@@ -76,7 +105,7 @@ describe('interface', function() {
         assert.equal(byteData.unpack([3], byteData.uInt2), 3);
     });
     it('should turn bytes to a char', function() {
-        assert.deepEqual(byteData.unpack([97, 98], byteData.char), "a");
+        assert.deepEqual(byteData.unpack([97, 98], byteData.chr), "a");
     });
 
 
@@ -90,7 +119,7 @@ describe('interface', function() {
             [0,0,0,128,255,255,255,127]);
     });
     it('should turn a 2 char string to bytes', function() {
-        assert.deepEqual(byteData.packSequence("ab", byteData.char),
+        assert.deepEqual(byteData.packSequence("ab", byteData.chr),
             [97, 98]);
     });
 

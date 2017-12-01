@@ -1,14 +1,14 @@
 /*
- * Functions to turn data into bytes.
+ * write-bytes: Functions to turn data into bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
 
-const float = require("../src/float.js");
+const floats = require("../src/floats.js");
 const intBits = require("int-bits");
 
-function write64Bit(bytes, numbers, i, j) {
-    let bits = float.toFloat64(numbers[i]);
+function write64BitFloat(bytes, numbers, i, j) {
+    let bits = floats.toFloat64(numbers[i]);
     j = write32Bit(bytes, bits, 1, j);
     return write32Bit(bytes, bits, 0, j);
 }
@@ -65,7 +65,7 @@ function write16Bit(bytes, numbers, i, j) {
 }
 
 function write16BitFloat(bytes, numbers, i, j) {
-    let bits = float.toHalf(numbers[i]);
+    let bits = floats.toHalf(numbers[i]);
     bytes[j++] = bits  >>> 8 & 0xFF;
     bytes[j++] = bits  & 0xFF;
     return j;
@@ -96,7 +96,7 @@ function writeString(bytes, string, i, j) {
     return j;
 }
 
-module.exports.write64Bit = write64Bit;
+module.exports.write64BitFloat = write64BitFloat;
 module.exports.write48Bit = write48Bit;
 module.exports.write40Bit = write40Bit;
 module.exports.write32BitFloat = write32BitFloat;

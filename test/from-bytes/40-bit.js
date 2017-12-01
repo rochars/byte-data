@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('40-bit from bytes', function() {
     
-    let byteData = require('../../index.js');
-
     // 40 bit unsigned
     it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (65535)',
             function() {

@@ -1,10 +1,7 @@
-*.log
-.nyc_output
-node_modules
 test
+.gitignore
 .jshintrc
-.npmignore
+.nyc_output
 .travis.yml
 appveyor.yml
-package-lock.json
 webpack.config.js

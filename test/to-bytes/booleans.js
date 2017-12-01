@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('booleans to bytes', function() {
     
-    let byteData = require('../../index.js');
-
     // booleans
     it('should turn 1 value to 1 booolean bin (6)', function() {
         assert.deepEqual(byteData.toBytes([6], 1, {"base": 2}),

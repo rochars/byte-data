@@ -1,8 +1,14 @@
-var assert = require('assert');
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
+
+let assert = require('assert');
+let byteData = require('../index.js');
 
 describe('types', function() {
-    let byteData = require('../index.js');
-
+    
     //module.exports.floatLE = {"float": true, "single": true};
     it('should turn 8 bytes to 2 32-bit ints (0s)', function() {
         assert.equal(byteData.fromBytes(
@@ -50,7 +56,7 @@ describe('types', function() {
     //module.exports.char = {"char": true, "single": true};
     it('should turn bytes to a char', function() {
         assert.deepEqual(byteData.fromBytes(
-            [97, 98], 8, byteData.char),
+            [97, 98], 8, byteData.chr),
             "a");
     });
 

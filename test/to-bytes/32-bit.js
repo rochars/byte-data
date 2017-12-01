@@ -1,9 +1,13 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
-describe('32-bit to bytes', function() {
-    
-    let byteData = require('../../index.js');
+describe('32-bit to bytes', function() {     
 
     // 32-bit / 4 bytes
     it('should turn 2 signed 32-bit floats to 8 bytes (0s)', function() {
@@ -24,7 +28,7 @@ describe('32-bit to bytes', function() {
     });
 
     it('should turn 2 signed 32-bit int to 8 bytes (max range)', function() {
-        assert.deepEqual(byteData.toBytes([-2147483648, 2147483647], 32, {"base": 10}),
+        assert.deepEqual(byteData.toBytes([-2147483648, 2147483647], 32, {"base": 10, "signed": true}),
             [0,0,0,128,255,255,255,127]);
     });
     it('should turn 2 unsigned 32-bit ints to 8 bytes (0s)', function() {
@@ -36,7 +40,7 @@ describe('32-bit to bytes', function() {
             [0,0,0,0,255,255,255,255]);
     });
     it('should turn 1 signed 32-bit int to 4 bytes bin (min range)', function() {
-        assert.deepEqual(byteData.toBytes([-2147483648], 32, {"base": 2, "float": false}),
+        assert.deepEqual(byteData.toBytes([-2147483648], 32, {"base": 2, "float": false, "signed": true}),
             ["00000000", "00000000","00000000","10000000",]);
     });
     it('should turn 1 signed 32-bit int to 4 bytes bin (max range)', function() {
@@ -44,7 +48,7 @@ describe('32-bit to bytes', function() {
             ["11111111","11111111","11111111","01111111"]);
     });
     it('should turn 1 signed 32-bit int to 4 bytes bin (max range)', function() {
-        assert.deepEqual(byteData.toBytes([-2147483648], 32, {"base": 16}),
+        assert.deepEqual(byteData.toBytes([-2147483648], 32, {"base": 16, "signed": true}),
             ["00","00","00","80"]);
     });
     it('should turn 1 unsigned 32-bit int to 4 bytes hex (max range)', function() {

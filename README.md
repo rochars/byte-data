@@ -5,27 +5,26 @@ https://github.com/rochars/byte-data
 
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html)
 
-## Install
-```
-npm install byte-data
-```
+Works in Node.js and in the browser.
 
-Works in node.js and in the browser.
-
-### Support:
+## Support:
 - char
 - booleans
 - 2-bit integers (signed/unsigned)
 - 4-bit integers (signed/unsigned)
 - 8-bit integers (signed/unsigned)
 - 16-bit integers (signed/unsigned)
-- 16-bit half precision floating point numbers
 - 24-bit integers (signed/unsigned)
 - 32-bit integers (signed/unsigned)
 - 32-bit single precision floating point numbers
 - 40-bit integers (signed/unsigned)
 - 48-bit integers (signed/unsigned)
 - 64-bit double precision floating point numbers
+
+## Install
+```
+npm install byte-data
+```
 
 ## Example
 ```javascript
@@ -34,10 +33,6 @@ let byteData = require('byte-data');
 // Pack a float32 number, output bytes to hex
 byteData.pack(2.1474836, byteData.float32, 16),
 //["5f","70","09","40"]
-
-// Unpack a float16 number from bytes as binary strings
-byteData.unpack(["00110101", "01010101"], byteData.float16)
-// 0.33325
 
 // Pack an array of uInt16 numbers, output to base 10 (default)
 byteData.packSequence([65535, 0], byteData.uInt16)
@@ -95,7 +90,7 @@ function unpackSequence(values, type, base=10) {}
 ```javascript
 /**
  * The available types:
- *  - char
+ *  - chr
  *  - bool
  *  - int2
  *  - uInt2
@@ -105,7 +100,6 @@ function unpackSequence(values, type, base=10) {}
  *  - uInt8
  *  - int16
  *  - uInt16
- *  - float16
  *  - int24
  *  - uInt24
  *  - int32
@@ -122,119 +116,39 @@ function unpackSequence(values, type, base=10) {}
 byteData.pack(value, byteData.float16);
 ```
 
-## Old API
-The old API still available:
-
+**byte-data types** are objects like this:
 ```javascript
-/**
- * Turn numbers and strings to bytes.
- * @param {!Array<number>|string} values The data.
- * @param {number} bitDepth The bit depth of the data.
- *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
- * @param {Object} options The options:
- *   - "float": True for floating point numbers. Default is false.
- *       This option is available for 16, 32 and 64-bit numbers.
- *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
- *   - "char": If the bytes represent a string. Default is false.
- *   - "be": If the values are big endian. Default is false (little endian).
- *   - "buffer": If the bytes should be returned as a Uint8Array.
- *       Default is false (bytes are returned as a regular array).
- * @return {!Array<number>|Uint8Array} the data as a byte buffer.
- */
-toBytes(numbers, bitDepth);
-
-/**
- * Turn a byte buffer into what the bytes represent.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
- * @param {number} bitDepth The bit depth of the data.
- *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
- * @param {Object} options The options. They are:
- *   - "signed": If the numbers are signed. Default is false (unsigned).
- *   - "float": True for floating point numbers. Default is false.
- *       This option is available for 16, 32 and 64-bit numbers.
- *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
- *   - "char": If the bytes represent a string. Default is false.
- *   - "be": If the values are big endian. Default is false (little endian).
- *   - "single": If it should return a single value instead of an array.
- *       Default is false.
- * @return {!Array<number>|string}
- */
-fromBytes(buffer, bitDepth);
-
-/**
- * Find and return the start index of some string.
- * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} bytes Array of bytes.
- * @param {string} chunk Some string to look for.
- * @return {number} The start index of the first occurrence, -1 if not found
- */
-byteData.findString(bytes, "chunk");
-
-// Presets for options
-floatLE // {"float": true, "single": true};
-intLE // {"signed": true, "single": true};
-uIntLE // {"single": true};
-floatBE // {"float": true, "single": true, "be": true};
-intBE // {"signed": true, "single": true, "be": true};
-uIntBE // {"single": true, "be": true};
-char // {"char": true, "single": true};
-
-floatArrayLE // {"float": true};
-intArrayLE // {"signed": true};
-uIntArrayLE // {};
-floatArrayBE // {"float": true, "be": true};
-intArrayBE // {"signed": true, "be": true};
-uIntArrayBE // {"be": true};
-str // {"char": true};
-
-// Using a preset
-byteData.fromBytes([0,0,0,128,255,255,255,127], 32, byteData.intArrayLE);
-// [-2147483648, 2147483647]
-
-byteData.fromBytes([0,0,0,128,255,255,255,127], 32, byteData.intLE);
-// -2147483648
+{
+    "bitDepth": 16, // 1, 2, 4, 8, 16, 24, 32, 40, 48, 64
+    "signed": true, // signed or unsigned
+    "float": false, // float or int (64-bit is always float)
+    "be": false // big-endian or little-endian
+}
 ```
 
-### Pack your nibbles
-Packing nibbles:
+You can define your types:
 ```javascript
-byteData.packNibbles([15, 15, 1, 4, 1, 15]);
-//[255, 20, 31]);
-```
-This will pack 2 nibbles into one byte.
-
-Unpacking nibbles:
-```javascript
-byteData.unpackNibbles([255, 20, 31]);
-//[15, 15, 1, 4, 1, 15]
+let int16BE = {
+    "bitDepth": 16,
+    "signed": true,
+    "float": false,
+    "be": true
+}
+byteData.pack(2, int16BE);
 ```
 
-### Pack your crumbs
-Packing crumbs:
+## Overflow
+Values will be truncated according to the bit depth of the type.
 ```javascript
-byteData.packCrumbs([3,3,3,3,1,2,3,0,1,1,0,0]);
-//[255, 108, 80]);
-```
-This will pack 4 crumbs into one byte.
+// Values in the correct range
+byteData.pack(254, uInt8); // [254]
+byteData.pack(255, uInt8); // [255]
 
-Unpacking crumbs:
-```javascript
-byteData.unpackCrumbs([108]);
-//[1, 2, 3, 0]
-```
+// Overflow
+byteData.pack(300, uInt8); // [255]
 
-### Pack your booleans
-Packing booleans:
-```javascript
-byteData.packBooleans([0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0]);
-//[0,76]);
-```
-This will pack 8 booleans into one byte.
-
-Unpacking booleans:
-```javascript
-byteData.unpackBooleans([77]);
-//[0,1,0,0,1,1,0,1]
+// Underflow
+byteData.pack(-1, uInt8); // [0]
 ```
 
 ## LICENSE

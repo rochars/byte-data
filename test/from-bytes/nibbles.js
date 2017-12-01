@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
-describe('Nibbles from bytes', function() {
+describe('Nibbles from bytes', function() { 
     
-    let byteData = require('../../index.js');
-
     it('should turn 1 nibble to a 4-bit uInt', function() {
         assert.deepEqual(byteData.fromBytes(
             [0], 4, {"base": 10, "signed": false}),

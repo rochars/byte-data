@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../index.js');
 
 describe('extras', function() {
     
-    let byteData = require('../index.js');
-
     // packNibbles
     it('should pack two nibbles as one byte', function() {
         packed = byteData.packNibbles([1,4])

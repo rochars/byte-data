@@ -19,18 +19,18 @@ function padding(bytes, base, index) {
 
 /**
  * Padding with 0s for byte strings.
- * @param {string} byte The byte as a binary or hex string.
+ * @param {string} theByte The byte as a binary or hex string.
  * @param {number} base The base.
  * @returns {string} The padded byte.
  */
-function bytePadding(byte, base) {
-    let offset = byte.length + 1;
+function bytePadding(theByte, base) {
+    let offset = theByte.length + 1;
     if (base == 2) {
         offset = 8;
     } else if (base == 16) {
         offset = 2;
     }
-    return lPadZeros(byte, offset);
+    return lPadZeros(theByte, offset);
 }
 
 /**
@@ -154,14 +154,14 @@ function turnToArray(values) {
 
 /**
  * Turn a unsigned number to a signed number.
- * @param {number} number The number.
+ * @param {number} num The number.
  * @param {number} maxValue The max range for the number bit depth.
  */
-function signed(number, maxValue) {
-    if (number > parseInt(maxValue / 2, 10) - 1) {
-        number -= maxValue;
+function signed(num, maxValue) {
+    if (num > parseInt(maxValue / 2, 10) - 1) {
+        num -= maxValue;
     }
-    return number;
+    return num;
 }
 
 /**

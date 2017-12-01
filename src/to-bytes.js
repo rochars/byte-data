@@ -6,6 +6,7 @@
 
 const writer = require("../src/write-bytes.js");
 const helpers = require("../src/helpers.js");
+const bitDepthLib = require("../src/bit-depth.js");
 
 /**
  * Turn numbers and strings to bytes.
@@ -15,6 +16,7 @@ const helpers = require("../src/helpers.js");
  * @param {Object} options The options:
  *   - "float": True for floating point numbers. Default is false.
  *       This option is available for 16, 32 and 64-bit numbers.
+ *   - "signed": True for signed values. Default is false.
  *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
  *   - "char": If the bytes represent a string. Default is false.
  *   - "be": If the values are big endian. Default is false (little endian).
@@ -22,9 +24,16 @@ const helpers = require("../src/helpers.js");
  *       Default is false (bytes are returned as a regular array).
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
-function toBytes(values, bitDepth, options={"base": 10}) {
+function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
+    if (bitDepth == 64) {
+        options.float = true;
+    }
+    if (options.float) {
+        options.signed = true;
+    }
+    options.bitDepth = bitDepth;
     values = helpers.turnToArray(values);
-    let bytes = writeBytes(values, options.char, options.float, bitDepth);
+    let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);
     if (options.buffer) {
@@ -36,27 +45,62 @@ function toBytes(values, bitDepth, options={"base": 10}) {
 /**
  * Write values as bytes.
  * @param {!Array<number>|number|string} values The data.
- * @param {boolean} isChar True if it is a string.
- * @param {boolean} isFloat True if it is a IEEE floating point number.
+ * @param {Object} options The options according to the type.
  * @param {number} bitDepth The bitDepth of the data.
  * @return {!Array<number>} the bytes.
  */
-function writeBytes(values, isChar, isFloat, bitDepth) {
+function writeBytes(values, options, bitDepth) {
     let bitWriter;
-    if (isChar) {
+    if (options.char) {
         bitWriter = writer.writeString;
     } else {
-        bitWriter = writer['write' + bitDepth + 'Bit' + (isFloat ? "Float" : "")];
+        bitWriter = writer['write' + bitDepth + 'Bit' + (options.float ? "Float" : "")];
     }
     let i = 0;
     let j = 0;
     let len = values.length;
     let bytes = [];
-    while (i < len) {            
-        j = bitWriter(bytes, values, i, j);
+    let minMax = getBitDepthMinMax(options, bitDepth);
+    while (i < len) {
+        checkOverflow(values, i, minMax.min, minMax.max);
+        j = bitWriter(bytes, values, i, j, options.signed);
         i++;
     }
     return bytes;
+}
+
+/**
+ * Get the minimum and maximum values accordind to the type.
+ * @param {Object} options The options according to the type.
+ * @param {number} bitDepth The bit depth of the data.
+ * @return {Object}
+ */
+function getBitDepthMinMax(options, bitDepth) {
+    let minMax = {};
+    if (options.signed) {
+        minMax.max = (bitDepthLib.BitDepthMaxValues[bitDepth] / 2) - 1;
+        minMax.min = (bitDepthLib.BitDepthMaxValues[bitDepth] / 2) * -1;
+    } else {
+        minMax.max = bitDepthLib.BitDepthMaxValues[bitDepth] - 1;
+        minMax.min = 0;
+    }
+    return minMax;
+}
+
+/**
+ * Limit the value according to the bit depth in case of
+ * overflow or underflow.
+ * @param {!Array<number>|number|string} values The data.
+ * @param {number} index The index of the value in the array.
+ * @param {number} min The minimum value.
+ * @param {number} max The maximum value.
+ */
+function checkOverflow(values, index, min, max) {
+    if (values[index] > max) {
+        values[index] = max;
+    } else if(values[index] < min) {
+        values[index] = min;
+    }
 }
 
 module.exports.toBytes = toBytes;

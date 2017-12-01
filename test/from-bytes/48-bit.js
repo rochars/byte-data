@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('48-bit from bytes', function() {
     
-    let byteData = require('../../index.js');
-
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
             function() {
         assert.deepEqual(byteData.fromBytes(

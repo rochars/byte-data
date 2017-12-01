@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
-describe('40-bit to bytes', function() {
+describe('40-bit to bytes', function() { 
     
-    let byteData = require('../../index.js');
-
     // 40 bit
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (max range)', function() {
         assert.deepEqual(byteData.toBytes([549755813887], 40, {"base": 16}),
@@ -15,7 +19,7 @@ describe('40-bit to bytes', function() {
             ["3f", "d9", "ad", "21", "dd"]);
     });  
     it('should turn 1 signed 40-bit int to 5 bytes (hex) (max range)', function() {
-        assert.deepEqual(byteData.toBytes([-549755813888], 40, {"base": 16}),
+        assert.deepEqual(byteData.toBytes([-549755813888], 40, {"base": 16, "signed": true}),
             ["00","00","00","00","80"]);
     });
     it('should turn 1 unsigned 40-bit int to 5 bytes (hex) (max range)', function() {

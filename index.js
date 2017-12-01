@@ -94,7 +94,7 @@ module.exports.packSequence = packSequence;
 module.exports.unpackSequence = unpackSequence;
 
 // types
-module.exports.char = {"bitDepth": 8, "char": true, "single": true};
+module.exports.chr = {"bitDepth": 8, "char": true, "single": true};
 module.exports.bool = {"bitDepth": 1, "single": true};
 module.exports.int2 = {"bitDepth": 2, "signed": true, "single": true};
 module.exports.uInt2 = {"bitDepth": 2, "single": true};

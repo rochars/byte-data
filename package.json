@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "Readable data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -10,7 +10,6 @@
     "array",
     "int",
     "float",
-    "half",
     "single",
     "double",
     "char",
@@ -61,7 +60,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "endianness": "3.0.0",
+    "endianness": "3.0.1",
     "int-bits": "1.0.0"
   },
   "main": "index.js"

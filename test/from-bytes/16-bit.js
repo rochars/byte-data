@@ -1,11 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
-
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('16-bit from bytes: New API', function() {
     
-    let byteData = require('../../index.js');
-
     it('should turn 2 bytes to a 16-bit int', function() {
         assert.deepEqual(byteData.unpackSequence(
             [0,0,0,0], byteData.uInt16),
@@ -103,8 +106,6 @@ describe('16-bit from bytes: New API', function() {
 
 
 describe('16-bit from bytes', function() {
-    
-    let byteData = require('../../index.js');
 
     it('should turn 2 bytes to a 16-bit int', function() {
         assert.deepEqual(byteData.fromBytes(

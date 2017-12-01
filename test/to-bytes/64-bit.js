@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('64-bit to bytes', function() {
     
-    let byteData = require('../../index.js');
-
     // 64-bit / 8 bytes
     it('should turn 2 64-bit floats to 16 bytes (-1, 1)', function() {
         assert.deepEqual(byteData.toBytes([1,-1], 64, {"base": 10}),

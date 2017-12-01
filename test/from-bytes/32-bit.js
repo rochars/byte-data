@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('32-bit from bytes', function() {
-    
-    let byteData = require('../../index.js');
-        
+            
     // 32
     it('should turn 4 bytes bin to 1 32-bit float', function() {
         assert.deepEqual(byteData.fromBytes(

@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
-describe('little endiand and big endian reading', function() {
+describe('little endiand and big endian reading', function() { 
     
-    let byteData = require('../../index.js');
-
     // 16-bit
     it('should turn 2 16-bit signed ints to 2 bytes BE (0s)', function() {
         assert.deepEqual(byteData.fromBytes([0, 0, 0, 0],

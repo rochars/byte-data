@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let helpers = require('../src/helpers.js');
 
 describe('helpers', function() {
     
-    let helpers = require('../src/helpers.js');
-
     // bin
     it('should pad 7 bits to a byte', function() {
         assert.deepEqual(helpers.bytePadding('1111101', 2), '01111101');

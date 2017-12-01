@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../index.js');
 
 describe('to-from', function() {
-    
-    let byteData = require('../index.js');
-        
+            
     it('should turn 8 bytes to 1 64-bit float and back (1', function() {
         let bytes = byteData.toBytes([612345678987654.3], 64);
         let num = byteData.fromBytes(bytes, 64)
@@ -70,7 +74,7 @@ describe('to-from', function() {
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (min range)',
             function() {
-        let bytes = byteData.toBytes([-140737488355328], 48);
+        let bytes = byteData.toBytes([-140737488355328], 48, {"signed": true});
         let num = byteData.fromBytes(bytes, 48, {"signed": true});
         assert.equal(-140737488355328, num[0]);
     });
@@ -108,7 +112,7 @@ describe('to-from', function() {
     });
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (min range)',
             function() {
-        let bytes = byteData.toBytes([-549755813888], 40);
+        let bytes = byteData.toBytes([-549755813888], 40, {"signed": true});
         let num = byteData.fromBytes(bytes, 40, {"signed": true});
         assert.equal(-549755813888, num[0]);
     });
@@ -171,7 +175,7 @@ describe('to-from', function() {
     });
     it('should turn 2 32-bit signed int to 8 bytes and back ' +
         '(-2147483648, 2147483647)', function() {
-        let bytes = byteData.toBytes([-2147483648, 2147483647], 32);
+        let bytes = byteData.toBytes([-2147483648, 2147483647], 32, {"signed": true});
         let num = byteData.fromBytes(bytes, 32, {"signed": true});
         assert.deepEqual([0,0,0,128, 255,255,255,127], bytes);
         assert.deepEqual([-2147483648, 2147483647], num);
@@ -212,7 +216,7 @@ describe('to-from', function() {
     });
     it('should turn 2 24-bit signed int to 6 bytes and back ' +
         '(-8388608, 8388607)', function() {
-        let bytes = byteData.toBytes([-8388608, 8388607], 24);
+        let bytes = byteData.toBytes([-8388608, 8388607], 24, {"signed": true});
         let num = byteData.fromBytes(bytes, 24, {"signed": true});
         assert.deepEqual([-8388608, 8388607], num);
     });
@@ -252,7 +256,7 @@ describe('to-from', function() {
     it('should turn 2 16-bit signed int to 4 bytes and back ' +
         '(-32768, 32767)',
             function() {
-        let bytes = byteData.toBytes([-32768, 32767], 16);
+        let bytes = byteData.toBytes([-32768, 32767], 16, {"signed": true});
         let num = byteData.fromBytes(bytes, 16, {"signed": true});
         assert.deepEqual([-32768, 32767], num);
     });
@@ -331,12 +335,12 @@ describe('to-from', function() {
         assert.deepEqual([0], num);
     });
     it('should turn 2 8-bit signed int to 2 bytes (-128, 127)', function() {
-        let bytes = byteData.toBytes([-128, 127], 8);
+        let bytes = byteData.toBytes([-128, 127], 8, {"signed": true});
         let num = byteData.fromBytes(bytes, 8, {"signed": true});
         assert.deepEqual([-128, 127], num);
     });
     it('should turn 1 8-bit signed int to 1 byte (-1)', function() {
-        let bytes = byteData.toBytes([-1], 8);
+        let bytes = byteData.toBytes([-1], 8, {"signed": true});
         let num = byteData.fromBytes(bytes, 8, {"signed": true});
         assert.deepEqual([-1], num);
     });
@@ -367,12 +371,12 @@ describe('to-from', function() {
         assert.deepEqual([0], num);
     });
     it('should turn 2 4-bit signed int to 2 nibbles (-8, 7)', function() {
-        let bytes = byteData.toBytes([-8, 7], 4);
+        let bytes = byteData.toBytes([-8, 7], 4, {"signed": true});
         let num = byteData.fromBytes(bytes, 4, {"signed": true});
         assert.deepEqual([-8, 7], num);
     });
     it('should turn 1 4-bit signed int to a nibble (-1)', function() {
-        let bytes = byteData.toBytes([-1], 4);
+        let bytes = byteData.toBytes([-1], 4, {"signed": true});
         let num = byteData.fromBytes(bytes, 4, {"signed": true});
         assert.deepEqual([-1], num);
     });
@@ -384,12 +388,12 @@ describe('to-from', function() {
         assert.deepEqual([0], num);
     });
     it('should turn 2 2-bit signed int to 2 crumb (-2, 1)', function() {
-        let crumbs = byteData.toBytes([-2, 1], 2);
+        let crumbs = byteData.toBytes([-2, 1], 2, {"signed": true});
         let num = byteData.fromBytes(crumbs, 2, {"signed": true});
         assert.deepEqual([-2, 1], num);
     });
     it('should turn 1 2-bit signed int to a crumb (-1)', function() {
-        let crumbs = byteData.toBytes([-1], 2);
+        let crumbs = byteData.toBytes([-1], 2, {"signed": true});
         let num = byteData.fromBytes(crumbs, 2, {"signed": true});
         assert.deepEqual([-1], num);
     });

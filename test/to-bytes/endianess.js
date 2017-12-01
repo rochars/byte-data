@@ -1,10 +1,14 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('little endiand and big endian', function() {
     
-    let byteData = require('../../index.js');
-
     // 16-bit
     it('should turn 2 16-bit unsigned ints to 2 bytes BE (0s)', function() {
         assert.deepEqual(byteData.toBytes([0, 0], 16, {"base": 10, "be": true}),
@@ -33,11 +37,11 @@ describe('little endiand and big endian', function() {
             [0, 0, 1, 0, 0, 1]);
     });
     it('should turn 2 24-bit unsigned ints to 6 bytes BE (max range)', function() {
-        assert.deepEqual(byteData.toBytes([-8388608, 8388607], 24, {"base": 16, "be": true}),
+        assert.deepEqual(byteData.toBytes([-8388608, 8388607], 24, {"base": 16, "be": true, "signed": true}),
             ["80","00","00", "7f", "ff", "ff"]);
     });
     it('should turn 2 24-bit unsigned ints to 6 bytes BE', function() {
-        assert.deepEqual(byteData.toBytes([-8388608, 1, 8388607], 24, {"base": 16, "be": true}),
+        assert.deepEqual(byteData.toBytes([-8388608, 1, 8388607], 24, {"base": 16, "be": true, "signed": true}),
             ["80","00","00" , "00","00","01", "7f", "ff", "ff"]);
     });
 

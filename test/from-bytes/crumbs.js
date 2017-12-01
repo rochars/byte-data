@@ -1,8 +1,13 @@
+/*!
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/byte-data
+ *
+ */
 
-var assert = require('assert');
+let assert = require('assert');
+let byteData = require('../../index.js');
 
 describe('crumbs from bytes', function() {   
-    let byteData = require('../../index.js');
 
     // 2-bit
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {

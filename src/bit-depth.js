@@ -26,6 +26,7 @@ const BitDepthOffsets = {
  * @enum {number}
  */
 const BitDepthMaxValues = {
+    1: 2,
     2: 4,
     4: 16,
     8: 256,
@@ -33,7 +34,8 @@ const BitDepthMaxValues = {
     24: 16777216,
     32: 4294967296,
     40: 1099511627776,
-    48: 281474976710656
+    48: 281474976710656,
+    64: Infinity // FIXME 53-bit limit!
 };
 
 module.exports.BitDepthOffsets = BitDepthOffsets;
