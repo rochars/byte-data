@@ -54,7 +54,7 @@ describe('16-bit to bytes', function() {
             ["fd", "02"]);
     });
 
-    // 16-bit floats: 0s
+    // 16-bit floats
     it('should turn 2 bytes to 1 16-bit float (0)', function() {
         assert.deepEqual(byteData.toBytes(
             [0], 16, {"signed": false, "base": 10, "float": true}),
@@ -70,11 +70,8 @@ describe('16-bit to bytes', function() {
             [0], 16, {"signed": false, "base": 2, "float": true}),
             ["00000000", "00000000"]);
     });
-    /*
     it('should turn 2 bytes hex to 1 16-bit float (1)', function() {
-        assert.deepEqual(byteData.toBytes(
-            [1], 16, {"signed": false, "base": 16, "float": true}),
-            ["00", "3c"]);
+        assert.deepEqual(byteData.pack(1, byteData.float16, 16), ["00", "3c"]);
     });
     it('should turn 2 bytes hex to 1 16-bit float (1/3)', function() {
         assert.deepEqual(byteData.toBytes(
@@ -87,8 +84,38 @@ describe('16-bit to bytes', function() {
             ["00", "c0"]);
     });
     it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
-        assert.deepEqual(byteData.toBytes(
-            [65504], 16, {"signed": true, "base": 16, "float": true}),
+        assert.deepEqual(
+            byteData.packArray([100], byteData.float16, 16),
+            ["40", "56"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(
+            byteData.packArray([500], byteData.float16, 16),
+            ["d0", "5f"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(
+            byteData.packArray([1000], byteData.float16, 16),
+            ["d0", "63"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(
+            byteData.packArray([10000], byteData.float16, 16),
+            ["e2", "70"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(
+            byteData.packArray([30000], byteData.float16, 16),
+            ["53", "77"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(
+            byteData.packArray([40000], byteData.float16, 16),
+            ["e2", "78"]);
+    });
+    it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
+        assert.deepEqual(
+            byteData.packArray([65504], byteData.float16, 16),
             ["ff", "7b"]);
     });
     it('should turn 4 bytes hex to 2 16-bit float (65504, 0.33325, extra byte)', function() {
@@ -96,7 +123,6 @@ describe('16-bit to bytes', function() {
             [65504, 0.33325], 16, {"signed": true, "base": 16, "float": true}),
             ["ff", "7b", "55", "35"]);
     });
-    */
     it('should turn 2 signed 16-bit ints to 4 bytes in a Uint8Array (max range)', function() {
         assert.deepEqual(byteData.toBytes([-32768, 32767], 16, {"buffer": true, "signed": true}),
             [0, 128, 255, 127]

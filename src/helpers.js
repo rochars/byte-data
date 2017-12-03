@@ -180,6 +180,12 @@ function bytesToInt(bytes, base) {
     }
 }
 
+function fixFloat16Endianness(bytes, options) {
+    if (options.float && options.bits == 16) {
+        endianness(bytes, 2);
+    }
+}
+
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
@@ -192,3 +198,4 @@ module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
+module.exports.fixFloat16Endianness = fixFloat16Endianness;

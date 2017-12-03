@@ -95,7 +95,7 @@ describe('interface', function() {
     });
     it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
         assert.equal(
-            byteData.unpack(["00110101", "01010101"], byteData.float16).toFixed(5),
+            byteData.unpack(["01010101", "00110101"], byteData.float16).toFixed(5),
             0.33325);
     });
     it('should turn 1 2-bit signed int bin to 1 crumb (-1)', function() {

@@ -266,46 +266,47 @@ describe('to-from', function() {
         let num = byteData.fromBytes(bytes, 16, {"signed": true});
         assert.deepEqual([1], num);
     });
+
     it('should turn 1 16-bit float to 2 byte and back (0.0006)',
             function() {
-        let bytes = byteData.toBytes([0.0006], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([0.0006], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.deepEqual(0.0006, num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.0006)',
             function() {
-        let bytes = byteData.toBytes([-0.0006], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([-0.0006], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.deepEqual(-0.0006, num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (0.0106)',
             function() {
-        let bytes = byteData.toBytes([0.0106], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([0.0106], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.deepEqual(0.0106, num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.1006)',
             function() {
-        let bytes = byteData.toBytes([-0.1006], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([-0.1006], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.deepEqual(-0.1006, num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (0.00106)',
             function() {
-        let bytes = byteData.toBytes([0.00106], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([0.00106], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.deepEqual(0.00106, num[0].toFixed(5));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.01006)',
             function() {
-        let bytes = byteData.toBytes([-0.01006], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([-0.01006], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.deepEqual(-0.01006, num[0].toFixed(5));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.01006 vs -0.01005)',
             function() {
-        let bytes = byteData.toBytes([-0.01006], 16, {"float": true});
-        let num = byteData.fromBytes(bytes, 16, {"float": true});
+        let bytes = byteData.packArray([-0.01006], byteData.float16);
+        let num = byteData.unpackArray(bytes, byteData.float16);
         assert.ok(-0.01005 != num[0].toFixed(5));
     });
 

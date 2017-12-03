@@ -36,6 +36,7 @@ function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);
+    helpers.fixFloat16Endianness(bytes, options);
     if (options.buffer) {
         bytes = new Uint8Array(bytes);
     }
@@ -62,7 +63,9 @@ function writeBytes(values, options, bitDepth) {
     let bytes = [];
     let minMax = getBitDepthMinMax(options, bitDepth);
     while (i < len) {
-        checkOverflow(values, i, minMax.min, minMax.max);
+        if (!options.float) {
+            checkOverflow(values, i, minMax.min, minMax.max);
+        }
         j = bitWriter(bytes, values, i, j, options.signed);
         i++;
     }

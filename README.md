@@ -14,12 +14,13 @@ Works in Node.js and in the browser.
 - 4-bit integers (signed/unsigned)
 - 8-bit integers (signed/unsigned)
 - 16-bit integers (signed/unsigned)
+- 16-bit half-precision floating point numbers
 - 24-bit integers (signed/unsigned)
 - 32-bit integers (signed/unsigned)
-- 32-bit single precision floating point numbers
+- 32-bit single-precision floating point numbers
 - 40-bit integers (signed/unsigned)
 - 48-bit integers (signed/unsigned)
-- 64-bit double precision floating point numbers
+- 64-bit double-precision floating point numbers
 
 ## Install
 ```
@@ -100,6 +101,7 @@ function unpackArray(values, type, base=10) {}
  *  - uInt8
  *  - int16
  *  - uInt16
+ *  - float16
  *  - int24
  *  - uInt24
  *  - int32
@@ -138,7 +140,8 @@ byteData.pack(2, int16BE);
 ```
 
 ## Overflow
-Values will be truncated according to the bit depth of the type.
+Integer values will be truncated according to the bit depth of the type.
+There is no overflow or underflow check for floating-point values.
 ```javascript
 // Values in the correct range
 byteData.pack(254, uInt8); // [254]

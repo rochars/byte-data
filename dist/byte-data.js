@@ -249,6 +249,12 @@ function bytesToInt(bytes, base) {
     }
 }
 
+function fixFloat16Endianness(bytes, options) {
+    if (options.float && options.bits == 16) {
+        endianness(bytes, 2);
+    }
+}
+
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
@@ -261,6 +267,7 @@ module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
+module.exports.fixFloat16Endianness = fixFloat16Endianness;
 
 
 /***/ }),
@@ -638,6 +645,7 @@ function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);
+    helpers.fixFloat16Endianness(bytes, options);
     if (options.buffer) {
         bytes = new Uint8Array(bytes);
     }
@@ -664,7 +672,9 @@ function writeBytes(values, options, bitDepth) {
     let bytes = [];
     let minMax = getBitDepthMinMax(options, bitDepth);
     while (i < len) {
-        checkOverflow(values, i, minMax.min, minMax.max);
+        if (!options.float) {
+            checkOverflow(values, i, minMax.min, minMax.max);
+        }
         j = bitWriter(bytes, values, i, j, options.signed);
         i++;
     }
@@ -909,12 +919,16 @@ function fromBytes(buffer, bitDepth, options={"base": 10}) {
     if (bitDepth == 64) {
         options.float = true;
     }
+    if (options.float) {
+        options.signed = true;
+    }
+    options.bits = bitDepth;
+    helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     helpers.bytesToInt(buffer, options.base);
     let values = readBytes(
             buffer,
-            bitDepth,
-            options.signed,
+            options,
             getBitReader(bitDepth, options.float, options.char)
         );
     if (options.char) {
@@ -928,20 +942,20 @@ function fromBytes(buffer, bitDepth, options={"base": 10}) {
 
 /**
  * Turn a array of bytes into an array of what the bytes should represent.
- * @param {!Array<number>|!Array<string>|Uint8Array} bytes An array of bytes.
- * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} isSigned True if the values should be signed.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {Object} type The type.
  * @param {Function} bitReader The function to read the bytes.
  * @return {!Array<number>|string}
  */
-function readBytes(bytes, bitDepth, isSigned, bitReader) {
+function readBytes(bytes, type, bitReader) {
     let values = [];
     let i = 0;
     let j = 0;
-    let offset = bitDepths.BitDepthOffsets[bitDepth];
+    let offset = bitDepths.BitDepthOffsets[type.bits];
     let len = bytes.length - (offset -1);
-    let maxBitDepthValue = bitDepths.BitDepthMaxValues[bitDepth];
-    let signFunction = isSigned ? helpers.signed : function(x,y){return x;};
+    let maxBitDepthValue = bitDepths.BitDepthMaxValues[type.bits];
+    let signFunction = type.signed && !type.float ?
+        helpers.signed : function(x,y){return x;};
     while (i < len) {
         values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
         i += offset;

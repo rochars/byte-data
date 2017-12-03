@@ -32,7 +32,7 @@ describe('little endiand and big endian reading', function() {
     });
     it('should turn 2 bytes hex to 1 16-bit float BE (1/3)', function() {
         assert.deepEqual(byteData.fromBytes(
-            ["55", "35"], 16, {"base": 16, "float": true, "be": true})[0].toFixed(5),
+            ["35", "55"], 16, {"base": 16, "float": true, "be": true})[0].toFixed(5),
             0.33325);
     });
 
