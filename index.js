@@ -66,7 +66,7 @@ function unpack(buffer, type, base=10) {
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
-function packSequence(values, type, base=10) {
+function packArray(values, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
@@ -80,7 +80,7 @@ function packSequence(values, type, base=10) {
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|string}
  */
-function unpackSequence(buffer, type, base=10) {
+function unpackArray(buffer, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
@@ -90,8 +90,8 @@ function unpackSequence(buffer, type, base=10) {
 // interface
 module.exports.pack = pack;
 module.exports.unpack = unpack;
-module.exports.packSequence = packSequence;
-module.exports.unpackSequence = unpackSequence;
+module.exports.packArray = packArray;
+module.exports.unpackArray = unpackArray;
 
 // types
 module.exports.chr = {"bitDepth": 8, "char": true, "single": true};
@@ -116,23 +116,6 @@ module.exports.int48 = {"bitDepth": 48, "signed": true, "single": true};
 module.exports.uInt48 = {"bitDepth": 48, "single": true};
 module.exports.float64 = {"bitDepth": 64, "float": true, "single": true};
 
-// Legacy types
-module.exports.floatLE = {"float": true, "single": true};
-module.exports.intLE = {"signed": true, "single": true};
-module.exports.uIntLE = {"single": true};
-module.exports.floatBE = {"float": true, "single": true, "be": true};
-module.exports.intBE = {"signed": true, "single": true, "be": true};
-module.exports.uIntBE = {"single": true, "be": true};
-
-module.exports.floatArrayLE = {"float": true};
-module.exports.intArrayLE = {"signed": true};
-module.exports.uIntArrayLE = {"base": 10};
-module.exports.floatArrayBE = {"float": true, "be": true};
-module.exports.intArrayBE = {"signed": true, "be": true};
-module.exports.uIntArrayBE = {"be": true};
-module.exports.str = {"char": true};
-
-// Legacy interface
 module.exports.findString = findString;
 module.exports.toBytes = toBytes.toBytes;
 module.exports.fromBytes = fromBytes.fromBytes;

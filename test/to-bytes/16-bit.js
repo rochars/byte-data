@@ -70,31 +70,31 @@ describe('16-bit to bytes', function() {
             [0], 16, {"signed": false, "base": 2, "float": true}),
             ["00000000", "00000000"]);
     });
+    /*
     it('should turn 2 bytes hex to 1 16-bit float (1)', function() {
         assert.deepEqual(byteData.toBytes(
             [1], 16, {"signed": false, "base": 16, "float": true}),
-            ["3c", "00"]);
+            ["00", "3c"]);
     });
     it('should turn 2 bytes hex to 1 16-bit float (1/3)', function() {
         assert.deepEqual(byteData.toBytes(
             [0.33325], 16, {"signed": false, "base": 16, "float": true}),
-            ["35", "55"]);
+            ["55","35"]);
     });
     it('should turn 2 bytes hex to 1 16-bit float (-2)', function() {
         assert.deepEqual(byteData.toBytes(
             [-2], 16, {"signed": true, "base": 16, "float": true}),
-            ["c0", "00"]);
+            ["00", "c0"]);
     });
-    /*
     it('should turn 2 bytes hex to 1 16-bit float (65504)', function() {
         assert.deepEqual(byteData.toBytes(
             [65504], 16, {"signed": true, "base": 16, "float": true}),
-            ["7b", "ff"]);
+            ["ff", "7b"]);
     });
     it('should turn 4 bytes hex to 2 16-bit float (65504, 0.33325, extra byte)', function() {
         assert.deepEqual(byteData.toBytes(
             [65504, 0.33325], 16, {"signed": true, "base": 16, "float": true}),
-            ["7b", "ff", "35", "55"]);
+            ["ff", "7b", "55", "35"]);
     });
     */
     it('should turn 2 signed 16-bit ints to 4 bytes in a Uint8Array (max range)', function() {

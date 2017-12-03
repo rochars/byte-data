@@ -66,8 +66,8 @@ function write16Bit(bytes, numbers, i, j) {
 
 function write16BitFloat(bytes, numbers, i, j) {
     let bits = floats.toHalf(numbers[i]);
-    bytes[j++] = bits  >>> 8 & 0xFF;
-    bytes[j++] = bits  & 0xFF;
+    bytes[j++] = bits >>> 8 & 0xFF;
+    bytes[j++] = bits & 0xFF;
     return j;
 }
 

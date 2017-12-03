@@ -35,15 +35,15 @@ byteData.pack(2.1474836, byteData.float32, 16),
 //["5f","70","09","40"]
 
 // Pack an array of uInt16 numbers, output to base 10 (default)
-byteData.packSequence([65535, 0], byteData.uInt16)
+byteData.packArray([65535, 0], byteData.uInt16)
 // [255, 255, 0, 0]);
 
 // Pack an array of int32 numbers, output to base 10 (default)
-byteData.packSequence([-2147483648, 2147483647], byteData.int32),
+byteData.packArray([-2147483648, 2147483647], byteData.int32),
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
 // unpack an array of uInt16 numbers from bytes represented as hex values
-byteData.unpackSequence(["ff", "ff", "00", "00"], byteData.uInt16, 16),
+byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
 // [65535, 0]
 ```
 
@@ -74,7 +74,7 @@ function unpack(buffer, type, base=10) {}
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
-function packSequence(values, type, base=10) {}
+function packArray(values, type, base=10) {}
 
 /**
  * Turn a byte buffer into a sequence of readable values.
@@ -83,7 +83,7 @@ function packSequence(values, type, base=10) {}
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|string}
  */
-function unpackSequence(values, type, base=10) {}
+function unpackArray(values, type, base=10) {}
 ```
 
 ## Available types

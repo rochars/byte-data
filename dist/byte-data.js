@@ -533,7 +533,7 @@ function unpack(buffer, type, base=10) {
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
-function packSequence(values, type, base=10) {
+function packArray(values, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
@@ -547,7 +547,7 @@ function packSequence(values, type, base=10) {
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|string}
  */
-function unpackSequence(buffer, type, base=10) {
+function unpackArray(buffer, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
@@ -557,11 +557,11 @@ function unpackSequence(buffer, type, base=10) {
 // interface
 window['byteData'] = window['byteData'] || {};window['byteData']['pack'] = pack;
 window['byteData']['unpack'] = unpack;
-window['byteData']['packSequence'] = packSequence;
-window['byteData']['unpackSequence'] = unpackSequence;
+window['byteData']['packArray'] = packArray;
+window['byteData']['unpackArray'] = unpackArray;
 
 // types
-module.exports.chr = {"bitDepth": 8, "char": true, "single": true};
+window['byteData']['chr'] = {"bitDepth": 8, "char": true, "single": true};
 window['byteData']['bool'] = {"bitDepth": 1, "single": true};
 window['byteData']['int2'] = {"bitDepth": 2, "signed": true, "single": true};
 window['byteData']['uInt2'] = {"bitDepth": 2, "single": true};
@@ -583,23 +583,6 @@ window['byteData']['int48'] = {"bitDepth": 48, "signed": true, "single": true};
 window['byteData']['uInt48'] = {"bitDepth": 48, "single": true};
 window['byteData']['float64'] = {"bitDepth": 64, "float": true, "single": true};
 
-// Legacy types
-window['floatLE'] = {"float": true, "single": true};
-window['intLE'] = {"signed": true, "single": true};
-window['uIntLE'] = {"single": true};
-window['floatBE'] = {"float": true, "single": true, "be": true};
-window['intBE'] = {"signed": true, "single": true, "be": true};
-window['uIntBE'] = {"single": true, "be": true};
-
-window['floatArrayLE'] = {"float": true};
-window['intArrayLE'] = {"signed": true};
-window['uIntArrayLE'] = {"base": 10};
-window['floatArrayBE'] = {"float": true, "be": true};
-window['intArrayBE'] = {"signed": true, "be": true};
-window['uIntArrayBE'] = {"be": true};
-window['str'] = {"char": true};
-
-// Legacy interface
 window['findString'] = findString;
 window['toBytes'] = toBytes.toBytes;
 window['fromBytes'] = fromBytes.fromBytes;
@@ -797,8 +780,8 @@ function write16Bit(bytes, numbers, i, j) {
 
 function write16BitFloat(bytes, numbers, i, j) {
     let bits = floats.toHalf(numbers[i]);
-    bytes[j++] = bits  >>> 8 & 0xFF;
-    bytes[j++] = bits  & 0xFF;
+    bytes[j++] = bits >>> 8 & 0xFF;
+    bytes[j++] = bits & 0xFF;
     return j;
 }
 

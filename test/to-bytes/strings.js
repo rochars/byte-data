@@ -23,7 +23,7 @@ describe('pack char', function() {
             ["61"]);
     });
     it('should turn a 3 char string to bytes (hex)', function() {
-        assert.deepEqual(byteData.packSequence("abc", byteData.chr, 16),
+        assert.deepEqual(byteData.packArray("abc", byteData.chr, 16),
             ["61", "62", "63"]);
     });
 
@@ -38,20 +38,20 @@ describe('pack char', function() {
 
     // packSequence
     it('should turn a 2 char string to bytes', function() {
-        assert.deepEqual(byteData.packSequence("ab", byteData.chr),
+        assert.deepEqual(byteData.packArray("ab", byteData.chr),
             [97, 98]);
     });
     it('should turn a 2 char string to bytes (hex)', function() {
-        assert.deepEqual(byteData.packSequence("ab", byteData.chr, 16),
+        assert.deepEqual(byteData.packArray("ab", byteData.chr, 16),
             ["61", "62"]);
     });
 
     it('should turn a 1 char string to bytes', function() {
-        assert.deepEqual(byteData.packSequence("a", byteData.chr),
+        assert.deepEqual(byteData.packArray("a", byteData.chr),
             [97]);
     });
     it('should turn a 1 char string to bytes (hex)', function() {
-        assert.deepEqual(byteData.packSequence("a",  byteData.chr, 16),
+        assert.deepEqual(byteData.packArray("a",  byteData.chr, 16),
             ["61"]);
     });
 
