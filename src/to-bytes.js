@@ -31,7 +31,7 @@ function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
     if (options.float) {
         options.signed = true;
     }
-    options.bitDepth = bitDepth;
+    options.bits = bitDepth;
     values = helpers.turnToArray(values);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);

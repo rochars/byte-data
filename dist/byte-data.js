@@ -509,7 +509,7 @@ function pack(value, type, base=10) {
     theType.base = base;
     theType.single = true;
     value = theType.char ? value[0] : value;
-    return toBytes.toBytes(value, theType.bitDepth, theType);
+    return toBytes.toBytes(value, theType.bits, theType);
 }
 
 /**
@@ -523,7 +523,7 @@ function unpack(buffer, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = true;
-    return fromBytes.fromBytes(buffer, theType.bitDepth, theType);
+    return fromBytes.fromBytes(buffer, theType.bits, theType);
 }
 
 /**
@@ -537,7 +537,7 @@ function packArray(values, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
-    return toBytes.toBytes(values, theType.bitDepth, theType);
+    return toBytes.toBytes(values, theType.bits, theType);
 }
 
 /**
@@ -551,7 +551,7 @@ function unpackArray(buffer, type, base=10) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
-    return fromBytes.fromBytes(buffer, theType.bitDepth, theType);
+    return fromBytes.fromBytes(buffer, theType.bits, theType);
 }
 
 // interface
@@ -561,27 +561,27 @@ window['byteData']['packArray'] = packArray;
 window['byteData']['unpackArray'] = unpackArray;
 
 // types
-window['byteData']['chr'] = {"bitDepth": 8, "char": true, "single": true};
-window['byteData']['bool'] = {"bitDepth": 1, "single": true};
-window['byteData']['int2'] = {"bitDepth": 2, "signed": true, "single": true};
-window['byteData']['uInt2'] = {"bitDepth": 2, "single": true};
-window['byteData']['int4'] = {"bitDepth": 4, "signed": true, "single": true};
-window['byteData']['uInt4'] = {"bitDepth": 4, "single": true};
-window['byteData']['int8'] = {"bitDepth": 8, "signed": true, "single": true};
-window['byteData']['uInt8'] = {"bitDepth": 8, "single": true};
-window['byteData']['int16']  = {"bitDepth": 16, "signed": true, "single": true};
-window['byteData']['uInt16'] = {"bitDepth": 16, "single": true};
-window['byteData']['float16'] = {"bitDepth": 16, "float": true, "single": true};
-window['byteData']['int24'] = {"bitDepth": 24, "signed": true, "single": true};
-window['byteData']['uInt24'] = {"bitDepth": 24, "single": true};
-window['byteData']['int32'] = {"bitDepth": 32, "signed": true, "single": true};
-window['byteData']['uInt32'] = {"bitDepth": 32, "single": true};
-window['byteData']['float32'] = {"bitDepth": 32, "float": true, "single": true};
-window['byteData']['int40'] = {"bitDepth": 40, "signed": true, "single": true};
-window['byteData']['uInt40'] = {"bitDepth": 40, "single": true};
-window['byteData']['int48'] = {"bitDepth": 48, "signed": true, "single": true};
-window['byteData']['uInt48'] = {"bitDepth": 48, "single": true};
-window['byteData']['float64'] = {"bitDepth": 64, "float": true, "single": true};
+window['byteData']['chr'] = {"bits": 8, "char": true, "single": true};
+window['byteData']['bool'] = {"bits": 1, "single": true};
+window['byteData']['int2'] = {"bits": 2, "signed": true, "single": true};
+window['byteData']['uInt2'] = {"bits": 2, "single": true};
+window['byteData']['int4'] = {"bits": 4, "signed": true, "single": true};
+window['byteData']['uInt4'] = {"bits": 4, "single": true};
+window['byteData']['int8'] = {"bits": 8, "signed": true, "single": true};
+window['byteData']['uInt8'] = {"bits": 8, "single": true};
+window['byteData']['int16']  = {"bits": 16, "signed": true, "single": true};
+window['byteData']['uInt16'] = {"bits": 16, "single": true};
+window['byteData']['float16'] = {"bits": 16, "float": true, "single": true};
+window['byteData']['int24'] = {"bits": 24, "signed": true, "single": true};
+window['byteData']['uInt24'] = {"bits": 24, "single": true};
+window['byteData']['int32'] = {"bits": 32, "signed": true, "single": true};
+window['byteData']['uInt32'] = {"bits": 32, "single": true};
+window['byteData']['float32'] = {"bits": 32, "float": true, "single": true};
+window['byteData']['int40'] = {"bits": 40, "signed": true, "single": true};
+window['byteData']['uInt40'] = {"bits": 40, "single": true};
+window['byteData']['int48'] = {"bits": 48, "signed": true, "single": true};
+window['byteData']['uInt48'] = {"bits": 48, "single": true};
+window['byteData']['float64'] = {"bits": 64, "float": true, "single": true};
 
 window['findString'] = findString;
 window['toBytes'] = toBytes.toBytes;
@@ -633,7 +633,7 @@ function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
     if (options.float) {
         options.signed = true;
     }
-    options.bitDepth = bitDepth;
+    options.bits = bitDepth;
     values = helpers.turnToArray(values);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);

@@ -72,7 +72,7 @@ describe('crumbs to bytes', function() {
             [3]);
     });
     it('should turn 1 2-bit signed int to 1 crumb hex (-1)', function() {
-        assert.deepEqual(byteData.pack(-1, {"base": 16, "signed": true, "bitDepth": 2}),
+        assert.deepEqual(byteData.pack(-1, {"base": 16, "signed": true, "bits": 2}),
             ['03']);
     });
     it('should turn 1 2-bit unsigned int to 1 crumb hex (2)', function() {
