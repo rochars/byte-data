@@ -119,7 +119,7 @@ byteData.pack(value, byteData.float16);
 **byte-data types** are objects like this:
 ```javascript
 {
-    "bitDepth": 16, // 1, 2, 4, 8, 16, 24, 32, 40, 48, 64
+    "bits": 16, // 1, 2, 4, 8, 16, 24, 32, 40, 48, 64
     "signed": true, // signed or unsigned
     "float": false, // float or int (64-bit is always float)
     "be": false // big-endian or little-endian
@@ -129,7 +129,7 @@ byteData.pack(value, byteData.float16);
 You can define your types:
 ```javascript
 let int16BE = {
-    "bitDepth": 16,
+    "bits": 16,
     "signed": true,
     "float": false,
     "be": true
