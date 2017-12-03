@@ -25,13 +25,7 @@ const bitDepthLib = require("../src/bit-depth.js");
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
-    if (bitDepth == 64) {
-        options.float = true;
-    }
-    if (options.float) {
-        options.signed = true;
-    }
-    options.bits = bitDepth;
+    helpers.buildType(options, bitDepth);
     values = helpers.turnToArray(values);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
@@ -63,9 +57,7 @@ function writeBytes(values, options, bitDepth) {
     let bytes = [];
     let minMax = getBitDepthMinMax(options, bitDepth);
     while (i < len) {
-        if (!options.float) {
-            checkOverflow(values, i, minMax.min, minMax.max);
-        }
+        checkOverflow(values, i, minMax, options);
         j = bitWriter(bytes, values, i, j, options.signed);
         i++;
     }
@@ -95,14 +87,16 @@ function getBitDepthMinMax(options, bitDepth) {
  * overflow or underflow.
  * @param {!Array<number>|number|string} values The data.
  * @param {number} index The index of the value in the array.
- * @param {number} min The minimum value.
- * @param {number} max The maximum value.
+ * @param {Object} minMax The minimum value.
+ * @param {Object} options The maximum value.
  */
-function checkOverflow(values, index, min, max) {
-    if (values[index] > max) {
-        values[index] = max;
-    } else if(values[index] < min) {
-        values[index] = min;
+function checkOverflow(values, index, minMax, options) {
+    if (!options.float) {
+        if (values[index] > minMax.max) {
+            values[index] = minMax.max;
+        } else if(values[index] < minMax.min) {
+            values[index] = minMax.min;
+        }
     }
 }
 

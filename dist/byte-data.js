@@ -234,25 +234,29 @@ function signed(num, maxValue) {
 }
 
 /**
- * Turn bytes to base 10.
- * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
- * @param {number} base The base.
+ * Fix the endianness of float16 bytes (r/w is always big-endian).
+ * @param {!Array<number>|Uint8Array} bytes The bytes.
+ * @param {Object} options The type.
  */
-function bytesToInt(bytes, base) {
-    if (base != 10) {
-        let i = 0;
-        let len = bytes.length;
-        while(i < len) {
-            bytes[i] = parseInt(bytes[i], base);
-            i++;
-        }
-    }
-}
-
 function fixFloat16Endianness(bytes, options) {
     if (options.float && options.bits == 16) {
         endianness(bytes, 2);
     }
+}
+
+/**
+ * Build a type based on the arguments.
+ * @param {Object} options The type.
+ * @param {number} bitDepth The bit depth.
+ */
+function buildType(options, bitDepth) {
+    if (bitDepth == 64) {
+        options.float = true;
+    }
+    if (options.float) {
+        options.signed = true;
+    }
+    options.bits = bitDepth;
 }
 
 module.exports.makeBigEndian = makeBigEndian;
@@ -260,7 +264,6 @@ module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
 module.exports.turnToArray = turnToArray;
 module.exports.signed = signed;
-module.exports.bytesToInt = bytesToInt;
 module.exports.fixByteArraySize = fixByteArraySize;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
@@ -268,6 +271,7 @@ module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
 module.exports.fixFloat16Endianness = fixFloat16Endianness;
+module.exports.buildType = buildType;
 
 
 /***/ }),
@@ -512,9 +516,7 @@ function findString(bytes, chunk) {
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = true;
+    let theType = getSingleType(type, base);
     value = theType.char ? value[0] : value;
     return toBytes.toBytes(value, theType.bits, theType);
 }
@@ -527,9 +529,7 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = true;
+    let theType = getSingleType(type, base);
     return fromBytes.fromBytes(buffer, theType.bits, theType);
 }
 
@@ -541,9 +541,7 @@ function unpack(buffer, type, base=10) {
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = false;
+    let theType = getArrayType(type, base);
     return toBytes.toBytes(values, theType.bits, theType);
 }
 
@@ -555,10 +553,34 @@ function packArray(values, type, base=10) {
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {
+    let theType = getArrayType(type, base);
+    return fromBytes.fromBytes(buffer, theType.bits, theType);
+}
+
+/**
+ * Make the type a single value type on the specified base.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input.
+ * @return {Object}
+ */
+function getSingleType(type, base) {
+    let theType = Object.assign({}, type);
+    theType.base = base;
+    theType.single = true;
+    return theType;
+}
+
+/**
+ * Make the type a array with the specified base.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input.
+ * @return {Object}
+ */
+function getArrayType(type, base) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
-    return fromBytes.fromBytes(buffer, theType.bits, theType);
+    return theType;
 }
 
 // interface
@@ -634,13 +656,7 @@ const bitDepthLib = __webpack_require__(1);
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
-    if (bitDepth == 64) {
-        options.float = true;
-    }
-    if (options.float) {
-        options.signed = true;
-    }
-    options.bits = bitDepth;
+    helpers.buildType(options, bitDepth);
     values = helpers.turnToArray(values);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
@@ -672,9 +688,7 @@ function writeBytes(values, options, bitDepth) {
     let bytes = [];
     let minMax = getBitDepthMinMax(options, bitDepth);
     while (i < len) {
-        if (!options.float) {
-            checkOverflow(values, i, minMax.min, minMax.max);
-        }
+        checkOverflow(values, i, minMax, options);
         j = bitWriter(bytes, values, i, j, options.signed);
         i++;
     }
@@ -704,14 +718,16 @@ function getBitDepthMinMax(options, bitDepth) {
  * overflow or underflow.
  * @param {!Array<number>|number|string} values The data.
  * @param {number} index The index of the value in the array.
- * @param {number} min The minimum value.
- * @param {number} max The maximum value.
+ * @param {Object} minMax The minimum value.
+ * @param {Object} options The maximum value.
  */
-function checkOverflow(values, index, min, max) {
-    if (values[index] > max) {
-        values[index] = max;
-    } else if(values[index] < min) {
-        values[index] = min;
+function checkOverflow(values, index, minMax, options) {
+    if (!options.float) {
+        if (values[index] > minMax.max) {
+            values[index] = minMax.max;
+        } else if(values[index] < minMax.min) {
+            values[index] = minMax.min;
+        }
     }
 }
 
@@ -916,16 +932,10 @@ const helpers = __webpack_require__(0);
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={"base": 10}) {
-    if (bitDepth == 64) {
-        options.float = true;
-    }
-    if (options.float) {
-        options.signed = true;
-    }
-    options.bits = bitDepth;
+    helpers.buildType(options, bitDepth);
     helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
-    helpers.bytesToInt(buffer, options.base);
+    bytesToInt(buffer, options.base);
     let values = readBytes(
             buffer,
             options,
@@ -992,6 +1002,22 @@ function getReaderFunctionName(bitDepth, isFloat) {
         ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
         'Bit' +
         (isFloat ? "Float" : "");
+}
+
+/**
+ * Turn bytes to base 10.
+ * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
+ * @param {number} base The base.
+ */
+function bytesToInt(bytes, base) {
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while(i < len) {
+            bytes[i] = parseInt(bytes[i], base);
+            i++;
+        }
+    }
 }
 
 module.exports.fromBytes = fromBytes;

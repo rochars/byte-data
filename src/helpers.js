@@ -165,25 +165,29 @@ function signed(num, maxValue) {
 }
 
 /**
- * Turn bytes to base 10.
- * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
- * @param {number} base The base.
+ * Fix the endianness of float16 bytes (r/w is always big-endian).
+ * @param {!Array<number>|Uint8Array} bytes The bytes.
+ * @param {Object} options The type.
  */
-function bytesToInt(bytes, base) {
-    if (base != 10) {
-        let i = 0;
-        let len = bytes.length;
-        while(i < len) {
-            bytes[i] = parseInt(bytes[i], base);
-            i++;
-        }
-    }
-}
-
 function fixFloat16Endianness(bytes, options) {
     if (options.float && options.bits == 16) {
         endianness(bytes, 2);
     }
+}
+
+/**
+ * Build a type based on the arguments.
+ * @param {Object} options The type.
+ * @param {number} bitDepth The bit depth.
+ */
+function buildType(options, bitDepth) {
+    if (bitDepth == 64) {
+        options.float = true;
+    }
+    if (options.float) {
+        options.signed = true;
+    }
+    options.bits = bitDepth;
 }
 
 module.exports.makeBigEndian = makeBigEndian;
@@ -191,7 +195,6 @@ module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
 module.exports.turnToArray = turnToArray;
 module.exports.signed = signed;
-module.exports.bytesToInt = bytesToInt;
 module.exports.fixByteArraySize = fixByteArraySize;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
@@ -199,3 +202,4 @@ module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
 module.exports.fixFloat16Endianness = fixFloat16Endianness;
+module.exports.buildType = buildType;

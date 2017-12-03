@@ -25,16 +25,10 @@ const helpers = require("../src/helpers.js");
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={"base": 10}) {
-    if (bitDepth == 64) {
-        options.float = true;
-    }
-    if (options.float) {
-        options.signed = true;
-    }
-    options.bits = bitDepth;
+    helpers.buildType(options, bitDepth);
     helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
-    helpers.bytesToInt(buffer, options.base);
+    bytesToInt(buffer, options.base);
     let values = readBytes(
             buffer,
             options,
@@ -101,6 +95,22 @@ function getReaderFunctionName(bitDepth, isFloat) {
         ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
         'Bit' +
         (isFloat ? "Float" : "");
+}
+
+/**
+ * Turn bytes to base 10.
+ * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
+ * @param {number} base The base.
+ */
+function bytesToInt(bytes, base) {
+    if (base != 10) {
+        let i = 0;
+        let len = bytes.length;
+        while(i < len) {
+            bytes[i] = parseInt(bytes[i], base);
+            i++;
+        }
+    }
 }
 
 module.exports.fromBytes = fromBytes;

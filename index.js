@@ -38,9 +38,7 @@ function findString(bytes, chunk) {
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = true;
+    let theType = getSingleType(type, base);
     value = theType.char ? value[0] : value;
     return toBytes.toBytes(value, theType.bits, theType);
 }
@@ -53,9 +51,7 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = true;
+    let theType = getSingleType(type, base);
     return fromBytes.fromBytes(buffer, theType.bits, theType);
 }
 
@@ -67,9 +63,7 @@ function unpack(buffer, type, base=10) {
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = false;
+    let theType = getArrayType(type, base);
     return toBytes.toBytes(values, theType.bits, theType);
 }
 
@@ -81,10 +75,34 @@ function packArray(values, type, base=10) {
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {
+    let theType = getArrayType(type, base);
+    return fromBytes.fromBytes(buffer, theType.bits, theType);
+}
+
+/**
+ * Make the type a single value type on the specified base.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input.
+ * @return {Object}
+ */
+function getSingleType(type, base) {
+    let theType = Object.assign({}, type);
+    theType.base = base;
+    theType.single = true;
+    return theType;
+}
+
+/**
+ * Make the type a array with the specified base.
+ * @param {Object} type One of the available types.
+ * @param {number} base The base of the input.
+ * @return {Object}
+ */
+function getArrayType(type, base) {
     let theType = Object.assign({}, type);
     theType.base = base;
     theType.single = false;
-    return fromBytes.fromBytes(buffer, theType.bits, theType);
+    return theType;
 }
 
 // interface
