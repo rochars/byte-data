@@ -25,6 +25,9 @@ const helpers = require("../src/helpers.js");
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={"base": 10}) {
+    if (bitDepth == 64) {
+        options.float = true;
+    }
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     helpers.bytesToInt(buffer, options.base);
     let values = readBytes(

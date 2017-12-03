@@ -906,6 +906,9 @@ const helpers = __webpack_require__(0);
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={"base": 10}) {
+    if (bitDepth == 64) {
+        options.float = true;
+    }
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     helpers.bytesToInt(buffer, options.base);
     let values = readBytes(
@@ -1115,7 +1118,7 @@ function read48Bit(bytes, i) {
  * @param {number} i The index to read.
  * @return {number}
  */
-function read64Bit(bytes, i) {
+function read64BitFloat(bytes, i) {
     return floats.decodeFloat64(bytes.slice(i,i+8));
 }
 
@@ -1139,7 +1142,7 @@ module.exports.read32Bit = read32Bit;
 module.exports.read32BitFloat = read32BitFloat;
 module.exports.read40Bit = read40Bit;
 module.exports.read48Bit = read48Bit;
-module.exports.read64Bit = read64Bit;
+module.exports.read64BitFloat = read64BitFloat;
 
 
 /***/ }),

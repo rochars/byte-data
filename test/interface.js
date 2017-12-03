@@ -118,6 +118,10 @@ describe('interface', function() {
         assert.deepEqual(byteData.packArray([-2147483648, 2147483647], byteData.int32),
             [0,0,0,128,255,255,255,127]);
     });
+    it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
+        assert.deepEqual(byteData.packArray([-1, 1], byteData.float32),
+            [0,0,128,191,0,0,128,63]);
+    });
     it('should turn a 2 char string to bytes', function() {
         assert.deepEqual(byteData.packArray("ab", byteData.chr),
             [97, 98]);
@@ -133,6 +137,16 @@ describe('interface', function() {
         assert.deepEqual(
                 byteData.unpackArray(['11'], byteData.uInt2, 2),
                  [3]
+             );
+    });
+    it('should turn 1 8-bit value to 8 bytes (-1)', function() {
+        assert.deepEqual(
+                byteData.unpackArray(
+                        ['00','00','00','00','00','00','f0','3f'],
+                        byteData.float64,
+                        16
+                    ),
+                    [1]
              );
     });
 });
