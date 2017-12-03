@@ -26,7 +26,6 @@ const bitDepthLib = require("../src/bit-depth.js");
  */
 function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
     helpers.buildType(options, bitDepth);
-    values = helpers.turnToArray(values);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);

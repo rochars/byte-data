@@ -40,7 +40,7 @@ function findString(bytes, chunk) {
 function pack(value, type, base=10) {
     let theType = getSingleType(type, base);
     value = theType.char ? value[0] : value;
-    return toBytes.toBytes(value, theType.bits, theType);
+    return toBytes.toBytes(turnToArray(value), theType.bits, theType);
 }
 
 /**
@@ -103,6 +103,19 @@ function getArrayType(type, base) {
     theType.base = base;
     theType.single = false;
     return theType;
+}
+
+/**
+ * Make a single value an array in case it is not.
+ * If the value is a string it stays a string.
+ * @param {!Array<number>|number|string} values The value or values.
+ * @return {!Array<number>|string}
+ */
+function turnToArray(values) {
+    if (!Array.isArray(values) && typeof values != "string") {
+        values = [values];
+    }
+    return values;
 }
 
 // interface

@@ -54,7 +54,7 @@ function packCrumbs(crumbs) {
     let packed = [];
     let i = 0;
     let j = 0;
-    helpers.fixByteArraySize(crumbs, 4);
+    fixByteArraySize(crumbs, 4);
     let len = crumbs.length - 3;
     while (i < len) {
         packed[j++] = parseInt(
@@ -98,7 +98,7 @@ function packBooleans(booleans) {
     let packed = [];
     let i = 0;
     let j = 0;
-    helpers.fixByteArraySize(booleans, 8);
+    fixByteArraySize(booleans, 8);
     let len = booleans.length - 7;
     while (i < len) {
         packed[j++] = parseInt(
@@ -139,6 +139,25 @@ function unpackBooleans(booleans) {
         i++;
     }
     return unpacked;
+}
+
+/**
+ * Pad a array with zeros to the right.
+ * @param {!Array<number>} byteArray The array.
+ * @param {number} numZeros the max number of zeros.
+ *      For 1 binary byte string it should be 8.
+ *      TODO: better explanation of numZeros
+ */
+function fixByteArraySize(byteArray, numZeros) {
+    let i = 0;
+    let fix = byteArray.length % numZeros;
+    if (fix) {
+        fix = (fix - numZeros) * -1;
+        while(i < fix) {
+            byteArray.push(0);
+            i++;
+        }
+    }
 }
 
 module.exports.packBooleans = packBooleans;

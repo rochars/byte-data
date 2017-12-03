@@ -30,8 +30,8 @@ describe('interface', function() {
             65535);
     });
     it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
-        assert.deepEqual(byteData.toBytes(
-            65535, 16, {"base": 16}),
+        assert.deepEqual(
+            byteData.pack(65535, byteData.uInt16, 16),
             ["ff","ff"]);
     });
 

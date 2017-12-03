@@ -73,25 +73,6 @@ function lPadZeros(value, numZeros) {
 }
 
 /**
- * Pad a array with zeros to the right.
- * @param {!Array<number>} byteArray The array.
- * @param {number} numZeros the max number of zeros.
- *      For 1 binary byte string it should be 8.
- *      TODO: better explanation of numZeros
- */
-function fixByteArraySize(byteArray, numZeros) {
-    let i = 0;
-    let fix = byteArray.length % numZeros;
-    if (fix) {
-        fix = (fix - numZeros) * -1;
-        while(i < fix) {
-            byteArray.push(0);
-            i++;
-        }
-    }
-}
-
-/**
  * Swap the endianness to big endian.
  * @param {!Array<number>} bytes The values.
  * @param {boolean} isBigEndian True if the bytes should be big endian.
@@ -140,19 +121,6 @@ function outputToBase(bytes, bitDepth, base) {
 }
 
 /**
- * Make a single value an array in case it is not.
- * If the value is a string it stays a string.
- * @param {!Array<number>|number|string} values The value or values.
- * @return {!Array<number>|string}
- */
-function turnToArray(values) {
-    if (!Array.isArray(values) && typeof values != "string") {
-        values = [values];
-    }
-    return values;
-}
-
-/**
  * Turn a unsigned number to a signed number.
  * @param {number} num The number.
  * @param {number} maxValue The max range for the number bit depth.
@@ -193,9 +161,7 @@ function buildType(options, bitDepth) {
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
-module.exports.turnToArray = turnToArray;
 module.exports.signed = signed;
-module.exports.fixByteArraySize = fixByteArraySize;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
