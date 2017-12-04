@@ -9,6 +9,10 @@ let byteData = require('../../index.js');
 
 describe('interface', function() {
     
+    it('should find the "a" among the junk', function() {
+        let index = byteData.findString([1, 0, 1, 100, 97, 98, 2, 2, 0], "a");
+        assert.equal(index, 4);
+    });
     it('should find the "ab" among the junk', function() {
         let index = byteData.findString([1, 0, 1, 100, 97, 98, 2, 2, 0], "ab");
         assert.equal(index, 4);
@@ -158,153 +162,5 @@ describe('interface', function() {
                     ),
                     [1]
              );
-    });
-
-    // packStruct
-    it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
-        let struct = [
-            "a",
-            0,
-            -1,
-            3,
-            -8,
-            7,
-            -128,
-            255,
-            -32768,
-            65535,
-            0.33325,
-            -8388608,
-            16777215,
-            -2147483648,
-            4294967295,
-            2.147483647,
-            -549755813888,
-            1099511627775,
-            -140737488355328,
-            281474976710655,
-            3.141592653589793
-        ];
-        let def = [
-            byteData.chr,
-            byteData.bool,
-            byteData.int2,
-            byteData.uInt2,
-            byteData.int4,
-            byteData.uInt4,
-            byteData.int8,
-            byteData.uInt8,
-            byteData.int16,
-            byteData.uInt16,
-            byteData.float16,
-            byteData.int24,
-            byteData.uInt24,
-            byteData.int32,
-            byteData.uInt32,
-            byteData.float32,
-            byteData.int40,
-            byteData.uInt40,
-            byteData.int48,
-            byteData.uInt48,
-            byteData.float64
-        ];
-        let expected = [
-            97,
-            0,
-            3,
-            3,
-            8,
-            7,
-            128,
-            255,
-            0, 128,
-            255, 255,
-            85,53,
-            0,0,128,
-            255,255,255,
-            0,0,0,128,
-            255,255,255,255,
-            95,112,9,64,
-            0,0,0,0,128,
-            255,255,255,255,255,
-            0,0,0,0,0,128,
-            255,255,255,255,255,255,
-            24,45,68,84,251,33,9,64
-        ];
-        assert.deepEqual(
-                byteData.packStruct(struct, def),
-                expected
-            );
-    });
-
-    // unpackStruct
-    it('should turn 1 value (not array) to 2 byte hex (not array)', function() {
-        let struct = [
-            "a",
-            0,
-            -1,
-            3,
-            -8,
-            7,
-            -128,
-            255,
-            -32768,
-            65535,
-            -8388608,
-            16777215,
-            -2147483648,
-            4294967295,
-            -549755813888,
-            1099511627775,
-            -140737488355328,
-            281474976710655,
-            3.141592653589793
-        ];
-        let def = [
-            byteData.chr,
-            byteData.bool,
-            byteData.int2,
-            byteData.uInt2,
-            byteData.int4,
-            byteData.uInt4,
-            byteData.int8,
-            byteData.uInt8,
-            byteData.int16,
-            byteData.uInt16,
-            byteData.int24,
-            byteData.uInt24,
-            byteData.int32,
-            byteData.uInt32,
-            byteData.int40,
-            byteData.uInt40,
-            byteData.int48,
-            byteData.uInt48,
-            byteData.float64
-        ];
-        let expected = [
-            97,
-            0,
-            3,
-            3,
-            8,
-            7,
-            128,
-            255,
-            0, 128,
-            255, 255,
-            0,0,128,
-            255,255,255,
-            0,0,0,128,
-            255,255,255,255,
-            0,0,0,0,128,
-            255,255,255,255,255,
-            0,0,0,0,0,128,
-            255,255,255,255,255,255,
-            24,45,68,84,251,33,9,64
-        ];
-        assert.deepEqual(
-                byteData.unpackStruct(expected, def),
-                struct
-            );
     });
 });

@@ -89,14 +89,35 @@ function packArray(values, type, base=10) {}
  */
 function unpackArray(buffer, type, base=10) {}
 
+
+/**
+ * Turn a struct into a byte buffer.
+ * A struct is an array of values of not necessarily the same type.
+ * @param {Array} struct The struct values.
+ * @param {!Array<Object>} def The struct type definition.
+ * @param {number} base The base of the output. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function packStruct(struct, def, base=10) {}
+
+/**
+ * Turn a byte buffer into a structure.
+ * A struct is an array of values of not necessarily the same type.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte buffer.
+ * @param {!Array<Object>} def The struct type definition.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {Array}
+ */
+function unpackStruct(buffer, def, base=10) {}
+
 /**
  * Find and return the start index of some string.
  * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} bytes Array of bytes.
+ * @param {!Array<number>|Uint8Array} buffer Array of bytes.
  * @param {string} text Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */
-function findString(bytes, text) {}
+function findString(buffer, text) {}
 ```
 
 ## Available types
@@ -155,6 +176,28 @@ byteData.pack(value, byteData.float16);
     "be": false // big-endian or little-endian
     "char": false // if the type represent a string
 }
+```
+
+## Structs
+You must define a **struct** to use **packStruct()** and **unpackStruct()**. A struct is a array of types:
+```javascript
+// Define a struct:
+let structDef = [
+    fourCC,
+    byteData.uInt32,
+    byteData.uInt16
+];
+
+// The struct data:
+let struct = [
+    "abcd",
+    4294967295,
+    65535
+]
+
+// Pack the struct:
+byteData.packStruct(struct, structDef);
+// [97,98,99,100,255,255,255,255,255,255,255,255]
 ```
 
 ## Overflow

@@ -160,6 +160,7 @@ function getType(atype, base, single) {
     if (theType.float) {
         theType.signed = true;
     }
+    theType.offset = theType.bits < 8 ? 1 : theType.bits / 8;
     return theType;
 }
 

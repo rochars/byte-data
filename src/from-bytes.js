@@ -65,14 +65,14 @@ function getSingleValue(values, type) {
 function readBytes(bytes, type, bitReader) {
     let values = [];
     let i = 0;
-    let offset = type.bits < 8 ? 1 : type.bits / 8;
-    let len = bytes.length - (offset -1);
+    //let offset = type.bits < 8 ? 1 : type.bits / 8;
+    let len = bytes.length - (type.offset -1);
     let maxBitDepthValue = bitDepths.BitDepthMaxValues[type.bits];
     let signFunction = type.signed && !type.float ?
         helpers.signed : function(x){return x;};
     while (i < len) {
         values.push(signFunction(bitReader(bytes, i, type), maxBitDepthValue));
-        i += offset;
+        i += type.offset;
     }
     if (type.char) {
         values = values.join("");
