@@ -22,7 +22,7 @@ let helpers = require("./src/helpers");
 function pack(value, type, base=10) {
     let theType = helpers.getType(type, base, true);
     value = theType.char ? value[0] : value;
-    return toBytes.toBytes(helpers.turnToArray(value), theType.bits, theType);
+    return toBytes.toBytes(helpers.turnToArray(value), theType);
 }
 
 /**
@@ -33,8 +33,7 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let theType = helpers.getType(type, base, true);
-    return fromBytes.fromBytes(buffer, theType.bits, theType);
+    return fromBytes.fromBytes(buffer, helpers.getType(type, base, true));
 }
 
 /**
@@ -45,8 +44,7 @@ function unpack(buffer, type, base=10) {
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {
-    let theType = helpers.getType(type, base, false);
-    return toBytes.toBytes(values, theType.bits, theType);
+    return toBytes.toBytes(values, helpers.getType(type, base, false));
 }
 
 /**
@@ -57,8 +55,7 @@ function packArray(values, type, base=10) {
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {
-    let theType = helpers.getType(type, base, false);
-    return fromBytes.fromBytes(buffer, theType.bits, theType);
+    return fromBytes.fromBytes(buffer, helpers.getType(type, base, false));
 }
 
 /**
@@ -73,7 +70,7 @@ function findString(bytes, text) {
     for (let i = 0; i < bytes.length; i++) {
         found = fromBytes.fromBytes(
             bytes.slice(i, i + text.length),
-            8, {"bits": 8, "char": true, "single": false});
+            {"bits": 8, "char": true, "single": false});
         if (found == text) {
             return i;
         }

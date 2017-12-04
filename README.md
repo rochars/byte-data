@@ -3,6 +3,7 @@ Readable data to and from byte buffers.
 Copyright (c) 2017 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
+[![Build Status](https://travis-ci.org/rochars/byte-data.svg?branch=master)](https://travis-ci.org/rochars/byte-data) [![Build status](https://ci.appveyor.com/api/projects/status/g2ellp44s7a0kvid?svg=true)](https://ci.appveyor.com/project/rochars/byte-data) [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rochars/byte-data/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rochars/byte-data/?branch=master) [![Code Climate](https://img.shields.io/codeclimate/maintainability/rochars/byte-data.svg)](https://codeclimate.com/github/rochars/byte-data/) [![Code Climate](https://img.shields.io/codeclimate/issues/github/rochars/byte-data.svg)](https://codeclimate.com/github/rochars/byte-data/)  
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html)
 
 Works in Node.js and in the browser.

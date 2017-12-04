@@ -486,7 +486,7 @@ let helpers = __webpack_require__(0);
 function pack(value, type, base=10) {
     let theType = helpers.getType(type, base, true);
     value = theType.char ? value[0] : value;
-    return toBytes.toBytes(helpers.turnToArray(value), theType.bits, theType);
+    return toBytes.toBytes(helpers.turnToArray(value), theType);
 }
 
 /**
@@ -497,8 +497,7 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let theType = helpers.getType(type, base, true);
-    return fromBytes.fromBytes(buffer, theType.bits, theType);
+    return fromBytes.fromBytes(buffer, helpers.getType(type, base, true));
 }
 
 /**
@@ -509,8 +508,7 @@ function unpack(buffer, type, base=10) {
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {
-    let theType = helpers.getType(type, base, false);
-    return toBytes.toBytes(values, theType.bits, theType);
+    return toBytes.toBytes(values, helpers.getType(type, base, false));
 }
 
 /**
@@ -521,8 +519,7 @@ function packArray(values, type, base=10) {
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {
-    let theType = helpers.getType(type, base, false);
-    return fromBytes.fromBytes(buffer, theType.bits, theType);
+    return fromBytes.fromBytes(buffer, helpers.getType(type, base, false));
 }
 
 /**
@@ -537,7 +534,7 @@ function findString(bytes, text) {
     for (let i = 0; i < bytes.length; i++) {
         found = fromBytes.fromBytes(
             bytes.slice(i, i + text.length),
-            8, {"bits": 8, "char": true, "single": false});
+            {"bits": 8, "char": true, "single": false});
         if (found == text) {
             return i;
         }
@@ -674,8 +671,6 @@ const bitDepthLib = __webpack_require__(1);
 /**
  * Turn numbers and strings to bytes.
  * @param {!Array<number>|number|string} values The data.
- * @param {number} bitDepth The bit depth of the data.
- *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
  *   - "float": True for floating point numbers. Default is false.
  *       This option is available for 16, 32 and 64-bit numbers.
@@ -686,7 +681,8 @@ const bitDepthLib = __webpack_require__(1);
  *       Default is false (bytes are returned as a regular array).
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
-function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
+function toBytes(values, options={"base": 10, "signed": false}) {
+    let bitDepth = options.bits;
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);
@@ -947,8 +943,6 @@ const helpers = __webpack_require__(0);
 /**
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
- * @param {number} bitDepth The bit depth of the data.
- *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
  *   - "signed": If the numbers are signed. Default is false (unsigned).
  *   - "float": True for floating point numbers. Default is false.
@@ -960,7 +954,8 @@ const helpers = __webpack_require__(0);
  *       Default is false.
  * @return {!Array<number>|string}
  */
-function fromBytes(buffer, bitDepth, options={"base": 10}) {
+function fromBytes(buffer, options={"base": 10}) {
+    let bitDepth = options.bits;
     helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     bytesToInt(buffer, options.base);

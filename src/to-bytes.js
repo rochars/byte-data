@@ -11,8 +11,6 @@ const bitDepthLib = require("../src/bit-depth.js");
 /**
  * Turn numbers and strings to bytes.
  * @param {!Array<number>|number|string} values The data.
- * @param {number} bitDepth The bit depth of the data.
- *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options:
  *   - "float": True for floating point numbers. Default is false.
  *       This option is available for 16, 32 and 64-bit numbers.
@@ -23,7 +21,8 @@ const bitDepthLib = require("../src/bit-depth.js");
  *       Default is false (bytes are returned as a regular array).
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
-function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
+function toBytes(values, options={"base": 10, "signed": false}) {
+    let bitDepth = options.bits;
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);

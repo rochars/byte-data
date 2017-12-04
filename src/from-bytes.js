@@ -11,8 +11,6 @@ const helpers = require("../src/helpers.js");
 /**
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
- * @param {number} bitDepth The bit depth of the data.
- *   Possible values are 1, 2, 4, 8, 16, 24, 32, 40, 48 or 64.
  * @param {Object} options The options. They are:
  *   - "signed": If the numbers are signed. Default is false (unsigned).
  *   - "float": True for floating point numbers. Default is false.
@@ -24,7 +22,8 @@ const helpers = require("../src/helpers.js");
  *       Default is false.
  * @return {!Array<number>|string}
  */
-function fromBytes(buffer, bitDepth, options={"base": 10}) {
+function fromBytes(buffer, options={"base": 10}) {
+    let bitDepth = options.bits;
     helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     bytesToInt(buffer, options.base);
