@@ -144,19 +144,38 @@ function fixFloat16Endianness(bytes, options) {
 }
 
 /**
- * Build a type based on the arguments.
- * @param {Object} options The type.
- * @param {number} bitDepth The bit depth.
+ * Get the full type spec for the reading/writing.
+ * @param {Object} atype One of the available types.
+ * @param {number} base The base of the input.
+ * @param {boolean} single True if its a single value, false for array.
+ * @return {Object}
  */
-function buildType(options, bitDepth) {
-    if (bitDepth == 64) {
-        options.float = true;
+function getType(atype, base, single) {
+    let theType = Object.assign({}, atype);
+    theType.base = base;
+    theType.single = single;
+    if (theType.bits == 64) {
+        theType.float = true;
     }
-    if (options.float) {
-        options.signed = true;
+    if (theType.float) {
+        theType.signed = true;
     }
-    options.bits = bitDepth;
+    return theType;
 }
+
+/**
+ * Make a single value an array in case it is not.
+ * If the value is a string it stays a string.
+ * @param {!Array<number>|number|string} values The value or values.
+ * @return {!Array<number>|string}
+ */
+function turnToArray(values) {
+    if (!Array.isArray(values) && typeof values != "string") {
+        values = [values];
+    }
+    return values;
+}
+
 
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
@@ -168,4 +187,5 @@ module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
 module.exports.fixFloat16Endianness = fixFloat16Endianness;
-module.exports.buildType = buildType;
+module.exports.getType = getType;
+module.exports.turnToArray = turnToArray;

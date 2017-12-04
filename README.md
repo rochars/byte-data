@@ -21,6 +21,7 @@ Works in Node.js and in the browser.
 - 40-bit integers (signed/unsigned)
 - 48-bit integers (signed/unsigned)
 - 64-bit double-precision floating point numbers
+- little-endian and big-endian
 
 ## Install
 ```
@@ -54,14 +55,14 @@ byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
  * Turn a number or string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {}
 
 /**
  * Turn a byte buffer into a readable value.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {number|string}
@@ -69,28 +70,39 @@ function pack(value, type, base=10) {}
 function unpack(buffer, type, base=10) {}
 
 /**
- * Turn a sequence of numbers into a byte buffer.
- * @param {!Array<number>} values The value.
+ * Turn a array of numbers into a byte buffer.
+ * @param {!Array<number>|string} values The values.
  * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {}
 
 /**
- * Turn a byte buffer into a sequence of readable values.
- * @param {!Array<number>|Uint8Array} buffer An array of bytes.
+ * Turn a byte array into a sequence of readable values.
+ * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array<number>|string}
  */
-function unpackArray(values, type, base=10) {}
+function unpackArray(buffer, type, base=10) {}
+
+/**
+ * Find and return the start index of some string.
+ * Return -1 if the string is not found.
+ * @param {!Array<number>|Uint8Array} bytes Array of bytes.
+ * @param {string} text Some string to look for.
+ * @return {number} The start index of the first occurrence, -1 if not found
+ */
+function findString(bytes, text) {}
 ```
 
 ## Available types
 ```javascript
 /**
  * The available types:
+ *
+ * little-endian:
  *  - chr
  *  - bool
  *  - int2
@@ -112,6 +124,21 @@ function unpackArray(values, type, base=10) {}
  *  - int48
  *  - uInt48
  *  - float64
+ *
+ * big-endian:
+ *  - int16BE
+ *  - uInt16BE
+ *  - float16BE
+ *  - int24BE
+ *  - uInt24BE
+ *  - int32BE
+ *  - uInt32BE
+ *  - float32BE
+ *  - int40BE
+ *  - uInt40BE
+ *  - int48BE
+ *  - uInt48BE
+ *  - float64BE
  */
 
 // Example:
@@ -126,17 +153,6 @@ byteData.pack(value, byteData.float16);
     "float": false, // float or int (64-bit is always float)
     "be": false // big-endian or little-endian
 }
-```
-
-You can define your types:
-```javascript
-let int16BE = {
-    "bits": 16,
-    "signed": true,
-    "float": false,
-    "be": true
-}
-byteData.pack(2, int16BE);
 ```
 
 ## Overflow

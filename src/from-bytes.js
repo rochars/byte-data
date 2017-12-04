@@ -25,7 +25,6 @@ const helpers = require("../src/helpers.js");
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={"base": 10}) {
-    helpers.buildType(options, bitDepth);
     helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     bytesToInt(buffer, options.base);
@@ -58,7 +57,7 @@ function readBytes(bytes, type, bitReader) {
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.BitDepthMaxValues[type.bits];
     let signFunction = type.signed && !type.float ?
-        helpers.signed : function(x,y){return x;};
+        helpers.signed : function(x){return x;};
     while (i < len) {
         values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
         i += offset;

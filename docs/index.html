@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#BitDepthMaxValues">BitDepthMaxValues</a></li><li><a href="global.html#BitDepthOffsets">BitDepthOffsets</a></li><li><a href="global.html#buildType">buildType</a></li><li><a href="global.html#bytePadding">bytePadding</a></li><li><a href="global.html#bytesToBase">bytesToBase</a></li><li><a href="global.html#bytesToInt">bytesToInt</a></li><li><a href="global.html#checkOverflow">checkOverflow</a></li><li><a href="global.html#decodeFloat16">decodeFloat16</a></li><li><a href="global.html#decodeFloat64">decodeFloat64</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#fixByteArraySize">fixByteArraySize</a></li><li><a href="global.html#fixFloat16Endianness">fixFloat16Endianness</a></li><li><a href="global.html#fromBytes">fromBytes</a></li><li><a href="global.html#getArrayType">getArrayType</a></li><li><a href="global.html#getBitDepthMinMax">getBitDepthMinMax</a></li><li><a href="global.html#getBitReader">getBitReader</a></li><li><a href="global.html#getReaderFunctionName">getReaderFunctionName</a></li><li><a href="global.html#getSingleType">getSingleType</a></li><li><a href="global.html#lPadZeros">lPadZeros</a></li><li><a href="global.html#makeBigEndian">makeBigEndian</a></li><li><a href="global.html#outputToBase">outputToBase</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packBooleans">packBooleans</a></li><li><a href="global.html#packCrumbs">packCrumbs</a></li><li><a href="global.html#packNibbles">packNibbles</a></li><li><a href="global.html#padding">padding</a></li><li><a href="global.html#paddingCrumb">paddingCrumb</a></li><li><a href="global.html#paddingNibble">paddingNibble</a></li><li><a href="global.html#read1Bit">read1Bit</a></li><li><a href="global.html#read8Bit">read8Bit</a></li><li><a href="global.html#read16Bit">read16Bit</a></li><li><a href="global.html#read16BitFloat">read16BitFloat</a></li><li><a href="global.html#read24Bit">read24Bit</a></li><li><a href="global.html#read32Bit">read32Bit</a></li><li><a href="global.html#read32BitFloat">read32BitFloat</a></li><li><a href="global.html#read40Bit">read40Bit</a></li><li><a href="global.html#read48Bit">read48Bit</a></li><li><a href="global.html#read64BitFloat">read64BitFloat</a></li><li><a href="global.html#readBytes">readBytes</a></li><li><a href="global.html#readBytesAsBits">readBytesAsBits</a></li><li><a href="global.html#readChar">readChar</a></li><li><a href="global.html#signed">signed</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#toFloat64">toFloat64</a></li><li><a href="global.html#toHalf">toHalf</a></li><li><a href="global.html#turnToArray">turnToArray</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackBooleans">unpackBooleans</a></li><li><a href="global.html#unpackCrumbs">unpackCrumbs</a></li><li><a href="global.html#unpackNibbles">unpackNibbles</a></li><li><a href="global.html#writeBytes">writeBytes</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -63,6 +63,7 @@
 <li>40-bit integers (signed/unsigned)</li>
 <li>48-bit integers (signed/unsigned)</li>
 <li>64-bit double-precision floating point numbers</li>
+<li>little-endian and big-endian</li>
 </ul>
 <h2>Install</h2><pre class="prettyprint source"><code>npm install byte-data</code></pre><h2>Example</h2><pre class="prettyprint source lang-javascript"><code>let byteData = require('byte-data');
 
@@ -84,14 +85,14 @@ byteData.unpackArray([&quot;ff&quot;, &quot;ff&quot;, &quot;00&quot;, &quot;00&q
  * Turn a number or string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function pack(value, type, base=10) {}
 
 /**
  * Turn a byte buffer into a readable value.
- * @param {!Array&lt;number>|Uint8Array} buffer An array of bytes.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {number|string}
@@ -99,23 +100,34 @@ function pack(value, type, base=10) {}
 function unpack(buffer, type, base=10) {}
 
 /**
- * Turn a sequence of numbers into a byte buffer.
- * @param {!Array&lt;number>} values The value.
+ * Turn a array of numbers into a byte buffer.
+ * @param {!Array&lt;number>|string} values The values.
  * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packArray(values, type, base=10) {}
 
 /**
- * Turn a byte buffer into a sequence of readable values.
- * @param {!Array&lt;number>|Uint8Array} buffer An array of bytes.
+ * Turn a byte array into a sequence of readable values.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {!Array&lt;number>|string}
  */
-function unpackArray(values, type, base=10) {}</code></pre><h2>Available types</h2><pre class="prettyprint source lang-javascript"><code>/**
+function unpackArray(buffer, type, base=10) {}
+
+/**
+ * Find and return the start index of some string.
+ * Return -1 if the string is not found.
+ * @param {!Array&lt;number>|Uint8Array} bytes Array of bytes.
+ * @param {string} text Some string to look for.
+ * @return {number} The start index of the first occurrence, -1 if not found
+ */
+function findString(bytes, text) {}</code></pre><h2>Available types</h2><pre class="prettyprint source lang-javascript"><code>/**
  * The available types:
+ *
+ * little-endian:
  *  - chr
  *  - bool
  *  - int2
@@ -137,6 +149,21 @@ function unpackArray(values, type, base=10) {}</code></pre><h2>Available types</
  *  - int48
  *  - uInt48
  *  - float64
+ *
+ * big-endian:
+ *  - int16BE
+ *  - uInt16BE
+ *  - float16BE
+ *  - int24BE
+ *  - uInt24BE
+ *  - int32BE
+ *  - uInt32BE
+ *  - float32BE
+ *  - int40BE
+ *  - uInt40BE
+ *  - int48BE
+ *  - uInt48BE
+ *  - float64BE
  */
 
 // Example:
@@ -146,14 +173,7 @@ byteData.pack(value, byteData.float16);</code></pre><p><strong>byte-data types</
     &quot;signed&quot;: true, // signed or unsigned
     &quot;float&quot;: false, // float or int (64-bit is always float)
     &quot;be&quot;: false // big-endian or little-endian
-}</code></pre><p>You can define your types:</p>
-<pre class="prettyprint source lang-javascript"><code>let int16BE = {
-    &quot;bits&quot;: 16,
-    &quot;signed&quot;: true,
-    &quot;float&quot;: false,
-    &quot;be&quot;: true
-}
-byteData.pack(2, int16BE);</code></pre><h2>Overflow</h2><p>Integer values will be truncated according to the bit depth of the type.
+}</code></pre><h2>Overflow</h2><p>Integer values will be truncated according to the bit depth of the type.
 There is no overflow or underflow check for floating-point values.</p>
 <pre class="prettyprint source lang-javascript"><code>// Values in the correct range
 byteData.pack(254, uInt8); // [254]
@@ -192,7 +212,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Dec 03 2017 07:18:39 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Dec 04 2017 14:42:34 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -20,19 +20,17 @@ const bitDepthLib = require("../src/bit-depth.js");
  *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
  *   - "char": If the bytes represent a string. Default is false.
  *   - "be": If the values are big endian. Default is false (little endian).
- *   - "buffer": If the bytes should be returned as a Uint8Array.
  *       Default is false (bytes are returned as a regular array).
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
-    helpers.buildType(options, bitDepth);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);
     helpers.fixFloat16Endianness(bytes, options);
-    if (options.buffer) {
-        bytes = new Uint8Array(bytes);
-    }
+    //if (options.buffer) {
+    //    bytes = new Uint8Array(bytes);
+    //}
     return bytes;
 }
 

@@ -213,19 +213,38 @@ function fixFloat16Endianness(bytes, options) {
 }
 
 /**
- * Build a type based on the arguments.
- * @param {Object} options The type.
- * @param {number} bitDepth The bit depth.
+ * Get the full type spec for the reading/writing.
+ * @param {Object} atype One of the available types.
+ * @param {number} base The base of the input.
+ * @param {boolean} single True if its a single value, false for array.
+ * @return {Object}
  */
-function buildType(options, bitDepth) {
-    if (bitDepth == 64) {
-        options.float = true;
+function getType(atype, base, single) {
+    let theType = Object.assign({}, atype);
+    theType.base = base;
+    theType.single = single;
+    if (theType.bits == 64) {
+        theType.float = true;
     }
-    if (options.float) {
-        options.signed = true;
+    if (theType.float) {
+        theType.signed = true;
     }
-    options.bits = bitDepth;
+    return theType;
 }
+
+/**
+ * Make a single value an array in case it is not.
+ * If the value is a string it stays a string.
+ * @param {!Array<number>|number|string} values The value or values.
+ * @return {!Array<number>|string}
+ */
+function turnToArray(values) {
+    if (!Array.isArray(values) && typeof values != "string") {
+        values = [values];
+    }
+    return values;
+}
+
 
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
@@ -237,7 +256,8 @@ module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
 module.exports.fixFloat16Endianness = fixFloat16Endianness;
-module.exports.buildType = buildType;
+module.exports.getType = getType;
+module.exports.turnToArray = turnToArray;
 
 
 /***/ }),
@@ -454,37 +474,19 @@ let toBytes = __webpack_require__(5);
 let fromBytes = __webpack_require__(8);
 let bitPacker = __webpack_require__(10);
 let bitDepth = __webpack_require__(1);
-
-/**
- * Find and return the start index of some string.
- * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} bytes Array of bytes.
- * @param {string} chunk Some string to look for.
- * @return {number} The start index of the first occurrence, -1 if not found
- */
-function findString(bytes, chunk) {
-    let found = "";
-    for (let i = 0; i < bytes.length; i++) {
-        found = fromBytes.fromBytes(bytes.slice(i, i + chunk.length),
-            8, {"char": true});
-        if (found == chunk) {
-            return i;
-        }
-    }
-    return -1;
-}
+let helpers = __webpack_require__(0);
 
 /**
  * Turn a number or string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    let theType = getSingleType(type, base);
+    let theType = helpers.getType(type, base, true);
     value = theType.char ? value[0] : value;
-    return toBytes.toBytes(turnToArray(value), theType.bits, theType);
+    return toBytes.toBytes(helpers.turnToArray(value), theType.bits, theType);
 }
 
 /**
@@ -495,19 +497,19 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let theType = getSingleType(type, base);
+    let theType = helpers.getType(type, base, true);
     return fromBytes.fromBytes(buffer, theType.bits, theType);
 }
 
 /**
  * Turn a array of numbers into a byte buffer.
- * @param {!Array<number>} values The values.
+ * @param {!Array<number>|string} values The values.
  * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {
-    let theType = getArrayType(type, base);
+    let theType = helpers.getType(type, base, false);
     return toBytes.toBytes(values, theType.bits, theType);
 }
 
@@ -519,47 +521,67 @@ function packArray(values, type, base=10) {
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {
-    let theType = getArrayType(type, base);
+    let theType = helpers.getType(type, base, false);
     return fromBytes.fromBytes(buffer, theType.bits, theType);
 }
 
 /**
- * Make the type a single value type on the specified base.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the input.
- * @return {Object}
+ * Find and return the start index of some string.
+ * Return -1 if the string is not found.
+ * @param {!Array<number>|Uint8Array} bytes Array of bytes.
+ * @param {string} text Some string to look for.
+ * @return {number} The start index of the first occurrence, -1 if not found
  */
-function getSingleType(type, base) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = true;
-    return theType;
-}
-
-/**
- * Make the type a array with the specified base.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the input.
- * @return {Object}
- */
-function getArrayType(type, base) {
-    let theType = Object.assign({}, type);
-    theType.base = base;
-    theType.single = false;
-    return theType;
-}
-
-/**
- * Make a single value an array in case it is not.
- * If the value is a string it stays a string.
- * @param {!Array<number>|number|string} values The value or values.
- * @return {!Array<number>|string}
- */
-function turnToArray(values) {
-    if (!Array.isArray(values) && typeof values != "string") {
-        values = [values];
+function findString(bytes, text) {
+    let found = "";
+    for (let i = 0; i < bytes.length; i++) {
+        found = fromBytes.fromBytes(
+            bytes.slice(i, i + text.length),
+            8, {"bits": 8, "char": true, "single": false});
+        if (found == text) {
+            return i;
+        }
     }
-    return values;
+    return -1;
+}
+
+/**
+ * Turn a struct into a byte buffer.
+ * A struct is an array of values of not necessarily the same type.
+ * @param {Array} struct The struct values.
+ * @param {Array} def The struct type definition.
+ * @param {number} base The base of the output. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function packStruct(struct, def, base=10) {
+    let bytes = [];
+    for (let i = 0; i < struct.length; i++) {
+        bytes = bytes.concat(pack(struct[i], def[i], base));
+    }
+    return bytes;
+}
+
+/**
+ * Turn a byte buffer into a structure.
+ * A struct is an array of values of not necessarily the same type.
+ * @param {Array} buffer The byte buffer.
+ * @param {Array} def The struct type definition.
+ * @param {number} base The base of the input. Optional. Default is 10.
+ * @return {!Array<number>|!Array<string>}
+ */
+function unpackStruct(buffer, def, base=10) {
+    let struct = [];
+    let i = 0;
+    let j = 0;
+    while (j < buffer.length) {
+        let bits = def[i].bits < 8 ? 1 : def[i].bits / 8;
+        struct = struct.concat(
+                unpack(buffer.slice(j, j + bits), def[i], base)
+            );
+        j += bits;
+        i++;
+    }
+    return struct;
 }
 
 // interface
@@ -567,9 +589,12 @@ window['byteData'] = window['byteData'] || {};window['byteData']['pack'] = pack;
 window['byteData']['unpack'] = unpack;
 window['byteData']['packArray'] = packArray;
 window['byteData']['unpackArray'] = unpackArray;
+window['byteData']['unpackStruct'] = unpackStruct;
+window['byteData']['packStruct'] = packStruct;
 
-// types
+// types: LE
 window['byteData']['chr'] = {"bits": 8, "char": true, "single": true};
+module.exports.fourCC = {"bits": 32, "char": true, "single": true};
 window['byteData']['bool'] = {"bits": 1, "single": true};
 window['byteData']['int2'] = {"bits": 2, "signed": true, "single": true};
 window['byteData']['uInt2'] = {"bits": 2, "single": true};
@@ -590,6 +615,34 @@ window['byteData']['uInt40'] = {"bits": 40, "single": true};
 window['byteData']['int48'] = {"bits": 48, "signed": true, "single": true};
 window['byteData']['uInt48'] = {"bits": 48, "single": true};
 window['byteData']['float64'] = {"bits": 64, "float": true, "single": true};
+
+// types: BE
+window['byteData']['int16BE']  = {
+    "bits": 16, "signed": true, "single": true, "be": true};
+window['byteData']['uInt16BE'] = {
+    "bits": 16, "single": true, "be": true};
+window['byteData']['float16BE'] = {
+    "bits": 16, "float": true, "single": true, "be": true};
+window['byteData']['int24BE'] = {
+    "bits": 24, "signed": true, "single": true, "be": true};
+window['byteData']['uInt24BE'] = {
+    "bits": 24, "single": true, "be": true};
+window['byteData']['int32BE'] = {
+    "bits": 32, "signed": true, "single": true, "be": true};
+window['byteData']['uInt32BE'] = {
+    "bits": 32, "single": true, "be": true};
+window['byteData']['float32BE'] = {
+    "bits": 32, "float": true, "single": true, "be": true};
+window['byteData']['int40BE'] = {
+    "bits": 40, "signed": true, "single": true, "be": true};
+window['byteData']['uInt40BE'] = {
+    "bits": 40, "single": true, "be": true};
+window['byteData']['int48BE'] = {
+    "bits": 48, "signed": true, "single": true, "be": true};
+window['byteData']['uInt48BE'] = {
+    "bits": 48, "single": true, "be": true};
+window['byteData']['float64BE'] = {
+    "bits": 64, "float": true, "single": true, "be": true};
 
 window['findString'] = findString;
 window['toBytes'] = toBytes.toBytes;
@@ -630,19 +683,17 @@ const bitDepthLib = __webpack_require__(1);
  *   - "base": The base of the output. Default is 10. Can be 2, 10 or 16.
  *   - "char": If the bytes represent a string. Default is false.
  *   - "be": If the values are big endian. Default is false (little endian).
- *   - "buffer": If the bytes should be returned as a Uint8Array.
  *       Default is false (bytes are returned as a regular array).
  * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
  */
 function toBytes(values, bitDepth, options={"base": 10, "signed": false}) {
-    helpers.buildType(options, bitDepth);
     let bytes = writeBytes(values, options, bitDepth);
     helpers.makeBigEndian(bytes, options.be, bitDepth);
     helpers.outputToBase(bytes, bitDepth, options.base);
     helpers.fixFloat16Endianness(bytes, options);
-    if (options.buffer) {
-        bytes = new Uint8Array(bytes);
-    }
+    //if (options.buffer) {
+    //    bytes = new Uint8Array(bytes);
+    //}
     return bytes;
 }
 
@@ -910,7 +961,6 @@ const helpers = __webpack_require__(0);
  * @return {!Array<number>|string}
  */
 function fromBytes(buffer, bitDepth, options={"base": 10}) {
-    helpers.buildType(options, bitDepth);
     helpers.fixFloat16Endianness(buffer, options);
     helpers.makeBigEndian(buffer, options.be, bitDepth);
     bytesToInt(buffer, options.base);
@@ -943,7 +993,7 @@ function readBytes(bytes, type, bitReader) {
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.BitDepthMaxValues[type.bits];
     let signFunction = type.signed && !type.float ?
-        helpers.signed : function(x,y){return x;};
+        helpers.signed : function(x){return x;};
     while (i < len) {
         values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
         i += offset;

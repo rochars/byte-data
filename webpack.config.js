@@ -35,8 +35,20 @@ module.exports = {
               search: 'module.exports.unpackArray',
               replace: "window['byteData']['unpackArray']",
             },
+            {
+              search: 'module.exports.packStruct',
+              replace: "window['byteData']['packStruct']",
+            },
+            {
+              search: 'module.exports.unpackStruct',
+              replace: "window['byteData']['unpackStruct']",
+            },
+            {
+              search: 'module.exports.findString',
+              replace: "window['findString']",
+            },
 
-            // types
+            // types: LE
             {
               search: 'module.exports.chr',
               replace: "window['byteData']['chr']",
@@ -122,6 +134,60 @@ module.exports = {
               replace: "window['byteData']['float64']",
             },
 
+            // types: BE
+            {
+              search: 'module.exports.int16BE',
+              replace: "window['byteData']['int16BE']",
+            },
+            {
+              search: 'module.exports.uInt16BE',
+              replace: "window['byteData']['uInt16BE']",
+            },
+            {
+              search: 'module.exports.float16BE',
+              replace: "window['byteData']['float16BE']",
+            },
+            {
+              search: 'module.exports.int24BE',
+              replace: "window['byteData']['int24BE']",
+            },
+            {
+              search: 'module.exports.uInt24BE',
+              replace: "window['byteData']['uInt24BE']",
+            },
+            {
+              search: 'module.exports.int32BE',
+              replace: "window['byteData']['int32BE']",
+            },
+            {
+              search: 'module.exports.uInt32BE',
+              replace: "window['byteData']['uInt32BE']",
+            },
+            {
+              search: 'module.exports.float32BE',
+              replace: "window['byteData']['float32BE']",
+            },
+            {
+              search: 'module.exports.int40BE',
+              replace: "window['byteData']['int40BE']",
+            },
+            {
+              search: 'module.exports.uInt40BE',
+              replace: "window['byteData']['uInt40BE']",
+            },
+            {
+              search: 'module.exports.int48BE',
+              replace: "window['byteData']['int48BE']",
+            },
+            {
+              search: 'module.exports.uInt48BE',
+              replace: "window['byteData']['uInt48BE']",
+            },
+            {
+              search: 'module.exports.float64BE',
+              replace: "window['byteData']['float64BE']",
+            },
+
             // Legacy API
             {
               search: 'module.exports.toBytes',
@@ -130,10 +196,6 @@ module.exports = {
             {
               search: 'module.exports.fromBytes',
               replace: "window['fromBytes']",
-            },
-            {
-              search: 'module.exports.findString',
-              replace: "window['findString']",
             },
             {
               search: 'module.exports.packNibbles',
