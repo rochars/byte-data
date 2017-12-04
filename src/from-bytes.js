@@ -24,13 +24,20 @@ function fromBytes(buffer, type) {
             type,
             getBitReader(type)
         );
-    if (type.char) {
-        values = values.join("");
-    }
     if (type.single) {
         values = getSingleValue(values, type);
     }
     return values;
+}
+
+/**
+ * Return a function to read binary data.
+ * @param {Object} type One of the available types.
+ * @return {Function}
+ */
+function getBitReader(type) {
+    return type.char ?
+        reader.readChar : reader[getReaderName(type.bits, type.float)];
 }
 
 /**
@@ -67,22 +74,10 @@ function readBytes(bytes, type, bitReader) {
         values.push(signFunction(bitReader(bytes, i, type), maxBitDepthValue));
         i += offset;
     }
-    return values;
-}
-
-/**
- * Return a function to read binary data.
- * @param {Object} type One of the available types.
- * @return {Function}
- */
-function getBitReader(type) {
-    let bitReader;
     if (type.char) {
-        bitReader = reader.readChar;
-    } else {
-        bitReader = reader[getReaderFunctionName(type.bits, type.float)];
+        values = values.join("");
     }
-    return bitReader;
+    return values;
 }
 
 /**
@@ -91,7 +86,7 @@ function getBitReader(type) {
  * @param {boolean} float True if the values are IEEE floating point numbers.
  * @return {string}
  */
-function getReaderFunctionName(bits, float) {
+function getReaderName(bits, float) {
     return 'read' + (bits < 8 ? 8 : bits) +
         'Bit' + (float ? "Float" : "");
 }

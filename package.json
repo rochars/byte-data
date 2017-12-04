@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Readable data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -16,6 +16,7 @@
     "double-precision",
     "IEEE",
     "char",
+    "fourCC",
     "string",
     "boolean",
     "crumb",

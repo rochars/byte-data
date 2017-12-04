@@ -23,6 +23,7 @@ Works in Node.js and in the browser.
 - 48-bit integers (signed/unsigned)
 - 64-bit double-precision floating point numbers
 - little-endian and big-endian
+- strings of fixed and variable length
 
 ## Install
 ```
@@ -103,6 +104,7 @@ function findString(bytes, text) {}
 /**
  * The available types:
  *  - chr
+ *  - fourCC
  *  - bool
  *  - int2
  *  - uInt2
@@ -151,6 +153,7 @@ byteData.pack(value, byteData.float16);
     "signed": true, // signed or unsigned
     "float": false, // float or int (64-bit is always float)
     "be": false // big-endian or little-endian
+    "char": false // if the type represent a string
 }
 ```
 
