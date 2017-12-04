@@ -9,6 +9,20 @@ let byteData = require('../index.js');
 
 describe('unpack struct', function() {
     
+    it('should unpack a LE struct', function() {
+        let struct = ["abcd", 4294967295, 65535];
+        let def = [
+            byteData.fourCC,
+            byteData.uInt32,
+            byteData.uInt16
+        ];
+        let buffer = [97,98,99,100,255,255,255,255,255,255];
+        assert.deepEqual(
+                byteData.unpackStruct(buffer, def),
+                struct
+            );
+    });
+
     it('should unpack a LE struct with all available types', function() {
         let struct = [
             "abcd",

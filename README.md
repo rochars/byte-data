@@ -89,7 +89,6 @@ function packArray(values, type, base=10) {}
  */
 function unpackArray(buffer, type, base=10) {}
 
-
 /**
  * Turn a struct into a byte buffer.
  * A struct is an array of values of not necessarily the same type.
@@ -179,11 +178,14 @@ byteData.pack(value, byteData.float16);
 ```
 
 ## Structs
-You must define a **struct** to use **packStruct()** and **unpackStruct()**. A struct is a array of types:
+You must define a **struct** to use **packStruct()** and **unpackStruct()**.
+A struct is a array os values of not necessarily the same type.
+
+### Packing a struct
 ```javascript
 // Define a struct:
 let structDef = [
-    fourCC,
+    byteData.fourCC,
     byteData.uInt32,
     byteData.uInt16
 ];
@@ -196,8 +198,25 @@ let struct = [
 ]
 
 // Pack the struct:
-byteData.packStruct(struct, structDef);
-// [97,98,99,100,255,255,255,255,255,255,255,255]
+console.log(byteData.packStruct(struct, structDef));
+// [97,98,99,100,255,255,255,255,255,255]
+```
+
+### Unpacking a struct
+```javascript
+// Define a struct:
+let structDef = [
+    byteData.fourCC,
+    byteData.uInt32,
+    byteData.uInt16
+];
+
+// The byte buffer:
+let buffer = [97,98,99,100,255,255,255,255,255,255];
+
+// Unpack the struct:
+console.log(byteData.unpackStruct(struct, structDef));
+// ["abcd", 4294967295, 65535]
 ```
 
 ## Overflow
