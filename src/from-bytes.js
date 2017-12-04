@@ -11,31 +11,38 @@ const helpers = require("../src/helpers.js");
 /**
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
- * @param {Object} options The options. They are:
- *   - "signed": If the numbers are signed. Default is false (unsigned).
- *   - "float": True for floating point numbers. Default is false.
- *       This option is available for 16, 32 and 64-bit numbers.
- *   - "base": The base of the input. Default is 10. Can be 2, 10 or 16.
- *   - "char": If the bytes represent a string. Default is false.
- *   - "be": If the values are big endian. Default is false (little endian).
- *   - "single": If it should return a single value instead of an array.
- *       Default is false.
- * @return {!Array<number>|string}
+ * @param {Object} type One of the available types.
+ * @return {!Array<number>|number|string}
  */
-function fromBytes(buffer, options={"base": 10}) {
-    let bitDepth = options.bits;
-    helpers.fixFloat16Endianness(buffer, options);
-    helpers.makeBigEndian(buffer, options.be, bitDepth);
-    bytesToInt(buffer, options.base);
+function fromBytes(buffer, type) {
+    let bitDepth = type.bits;
+    helpers.fixFloat16Endianness(buffer, type);
+    helpers.makeBigEndian(buffer, type.be, bitDepth);
+    bytesToInt(buffer, type.base);
     let values = readBytes(
             buffer,
-            options,
-            getBitReader(bitDepth, options.float, options.char)
+            type,
+            getBitReader(type)
         );
-    if (options.char) {
+    if (type.char) {
         values = values.join("");
     }
-    if (options.single) {
+    if (type.single) {
+        values = getSingleValue(values, type);
+    }
+    return values;
+}
+
+/**
+ * Return the first value from the result value array.
+ * @param {!Array<number>|string} values The values.
+ * @param {Object} type One of the available types.
+ * @return {number|string}
+ */
+function getSingleValue(values, type) {
+    if (type.char) {
+        values = values.slice(0, type.bits / 8);
+    } else {
         values = values[0];
     }
     return values;
@@ -51,48 +58,42 @@ function fromBytes(buffer, options={"base": 10}) {
 function readBytes(bytes, type, bitReader) {
     let values = [];
     let i = 0;
-    let j = 0;
-    let offset = bitDepths.BitDepthOffsets[type.bits];
+    let offset = type.bits < 8 ? 1 : type.bits / 8;
     let len = bytes.length - (offset -1);
     let maxBitDepthValue = bitDepths.BitDepthMaxValues[type.bits];
     let signFunction = type.signed && !type.float ?
         helpers.signed : function(x){return x;};
     while (i < len) {
-        values[j] = signFunction(bitReader(bytes, i), maxBitDepthValue);
+        values.push(signFunction(bitReader(bytes, i, type), maxBitDepthValue));
         i += offset;
-        j++;
     }
     return values;
 }
 
 /**
  * Return a function to read binary data.
- * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} isFloat True if the values are IEEE floating point numbers.
- * @param {boolean} isChar True if it is a string.
+ * @param {Object} type One of the available types.
  * @return {Function}
  */
-function getBitReader(bitDepth, isFloat, isChar) {
+function getBitReader(type) {
     let bitReader;
-    if (isChar) {
+    if (type.char) {
         bitReader = reader.readChar;
     } else {
-        bitReader = reader[getReaderFunctionName(bitDepth, isFloat)];
+        bitReader = reader[getReaderFunctionName(type.bits, type.float)];
     }
     return bitReader;
 }
 
 /**
  * Build a bit reading function name based on the arguments.
- * @param {number} bitDepth The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} isFloat True if the values are IEEE floating point numbers.
+ * @param {number} bits The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {boolean} float True if the values are IEEE floating point numbers.
  * @return {string}
  */
-function getReaderFunctionName(bitDepth, isFloat) {
-    return 'read' +
-        ((bitDepth == 2 || bitDepth == 4) ? 8 : bitDepth) +
-        'Bit' +
-        (isFloat ? "Float" : "");
+function getReaderFunctionName(bits, float) {
+    return 'read' + (bits < 8 ? 8 : bits) +
+        'Bit' + (float ? "Float" : "");
 }
 
 /**

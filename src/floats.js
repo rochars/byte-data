@@ -27,7 +27,7 @@ function getBinary(bytes, rev=false) {
  * Thanks https://stackoverflow.com/a/8796597
  * @param {number} bytes 2 bytes representing a float 16.
  */
-function decodeFloat16 (bytes) {
+function decodeFloat16(bytes) {
     let binary = parseInt(getBinary(bytes, true), 2);
     let exponent = (binary & 0x7C00) >> 10;
     let fraction = binary & 0x03FF;

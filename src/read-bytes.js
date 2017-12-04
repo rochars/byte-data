@@ -11,7 +11,6 @@ const intBits = require("int-bits");
 /**
  * Read a group of bytes by turning it to bits.
  * Useful for 40 & 48-bit, but underperform.
- * TODO find better alternative for 40 & 48-bit.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} i The index to read.
  * @param {number} numBytes The number of bytes
@@ -26,16 +25,6 @@ function readBytesAsBits(bytes, i, numBytes) {
         j--;
     }
     return parseInt(bits, 2);
-}
-
-/**
- * Read 1 1-bit int from from booleans.
- * @param {!Array<number>|Uint8Array} bytes An array of booleans.
- * @param {number} i The index to read.
- * @return {number}
- */
-function read1Bit(bytes, i) {
-    return parseInt(bytes[i], 2);
 }
 
 /**
@@ -139,12 +128,18 @@ function read64BitFloat(bytes, i) {
  * @param {number} i The index to read.
  * @return {string}
  */
-function readChar(bytes, i) {
-    return String.fromCharCode(bytes[i]);
+function readChar(bytes, i, type) {
+    let chrs = "";
+    let j = 0;
+    let len = type.bits / 8;
+    while(j < len) {
+        chrs += String.fromCharCode(bytes[i+j]);
+        j++;
+    }
+    return chrs;
 }
 
 module.exports.readChar = readChar;
-module.exports.read1Bit = read1Bit;
 module.exports.read8Bit = read8Bit;
 module.exports.read16Bit = read16Bit;
 module.exports.read16BitFloat = read16BitFloat;

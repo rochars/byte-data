@@ -176,7 +176,6 @@ function turnToArray(values) {
     return values;
 }
 
-
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;

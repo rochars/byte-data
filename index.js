@@ -21,7 +21,7 @@ let helpers = require("./src/helpers");
  */
 function pack(value, type, base=10) {
     let theType = helpers.getType(type, base, true);
-    value = theType.char ? value[0] : value;
+    value = theType.char ? value.slice(0, type.bits / 8) : value;
     return toBytes.toBytes(helpers.turnToArray(value), theType);
 }
 

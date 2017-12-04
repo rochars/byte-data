@@ -7,35 +7,35 @@
 const floats = require("../src/floats.js");
 const intBits = require("int-bits");
 
-function write64BitFloat(bytes, numbers, i, j) {
-    let bits = floats.toFloat64(numbers[i]);
-    j = write32Bit(bytes, bits, 1, j);
-    return write32Bit(bytes, bits, 0, j);
+function write64BitFloat(bytes, number, j) {
+    let bits = floats.toFloat64(number);
+    j = write32Bit(bytes, bits[1], j);
+    return write32Bit(bytes, bits[0], j);
 }
 
 // https://github.com/majimboo/c-struct
-function write48Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >> 8 & 0xFF;
-    bytes[j++] = numbers[i] >> 16 & 0xFF;
-    bytes[j++] = numbers[i] >> 24 & 0xFF;
-    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
-    bytes[j++] = numbers[i] / 0x10000000000 & 0xFF;
+function write48Bit(bytes, number, j) {
+    bytes[j++] = number & 0xFF;
+    bytes[j++] = number >> 8 & 0xFF;
+    bytes[j++] = number >> 16 & 0xFF;
+    bytes[j++] = number >> 24 & 0xFF;
+    bytes[j++] = number / 0x100000000 & 0xFF;
+    bytes[j++] = number / 0x10000000000 & 0xFF;
     return j;
 }
 
 // https://github.com/majimboo/c-struct
-function write40Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >> 8 & 0xFF;
-    bytes[j++] = numbers[i] >> 16 & 0xFF;
-    bytes[j++] = numbers[i] >> 24 & 0xFF;
-    bytes[j++] = numbers[i] / 0x100000000 & 0xFF;
+function write40Bit(bytes, number, j) {
+    bytes[j++] = number & 0xFF;
+    bytes[j++] = number >> 8 & 0xFF;
+    bytes[j++] = number >> 16 & 0xFF;
+    bytes[j++] = number >> 24 & 0xFF;
+    bytes[j++] = number / 0x100000000 & 0xFF;
     return j;
 }
 
-function write32BitFloat(bytes, numbers, i, j) {
-    let bits = intBits.unpack(numbers[i]);
+function write32BitFloat(bytes, number, j) {
+    let bits = intBits.unpack(number);
     bytes[j++] = bits & 0xFF;
     bytes[j++] = bits >>> 8 & 0xFF;
     bytes[j++] = bits >>> 16 & 0xFF;
@@ -43,56 +43,56 @@ function write32BitFloat(bytes, numbers, i, j) {
     return j;
 }
 
-function write32Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] >>> 16 & 0xFF;
-    bytes[j++] = numbers[i] >>> 24 & 0xFF;
+function write32Bit(bytes, number, j) {
+    bytes[j++] = number & 0xFF;
+    bytes[j++] = number >>> 8 & 0xFF;
+    bytes[j++] = number >>> 16 & 0xFF;
+    bytes[j++] = number >>> 24 & 0xFF;
     return j;
 }
 
-function write24Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
-    bytes[j++] = numbers[i] >>> 16 & 0xFF;
+function write24Bit(bytes, number, j) {
+    bytes[j++] = number & 0xFF;
+    bytes[j++] = number >>> 8 & 0xFF;
+    bytes[j++] = number >>> 16 & 0xFF;
     return j;
 }
 
-function write16Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
-    bytes[j++] = numbers[i] >>> 8 & 0xFF;
+function write16Bit(bytes, number, j) {
+    bytes[j++] = number & 0xFF;
+    bytes[j++] = number >>> 8 & 0xFF;
     return j;
 }
 
-function write16BitFloat(bytes, numbers, i, j) {
-    let bits = floats.toHalf(numbers[i]);
+function write16BitFloat(bytes, number, j) {
+    let bits = floats.toHalf(number);
     bytes[j++] = bits >>> 8 & 0xFF;
     bytes[j++] = bits & 0xFF;
     return j;
 }
 
-function write8Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xFF;
+function write8Bit(bytes, number, j) {
+    bytes[j++] = number & 0xFF;
     return j;
 }
 
-function write4Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] & 0xF;
+function write4Bit(bytes, number, j) {
+    bytes[j++] = number & 0xF;
     return j;
 }
 
-function write2Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] < 0 ? numbers[i] + 4 : numbers[i];
+function write2Bit(bytes, number, j) {
+    bytes[j++] = number < 0 ? number + 4 : number;
     return j;
 }
 
-function write1Bit(bytes, numbers, i, j) {
-    bytes[j++] = numbers[i] ? 1 : 0;
+function write1Bit(bytes, number, j) {
+    bytes[j++] = number ? 1 : 0;
     return j;
 }
 
-function writeString(bytes, string, i, j) {
-    bytes[j++] = string.charCodeAt(i);
+function writeString(bytes, string, j) {
+    bytes[j++] = string.charCodeAt(0);
     return j;
 }
 
