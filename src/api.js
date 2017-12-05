@@ -1,4 +1,4 @@
-/**
+/*
  * byte-data
  * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.
@@ -85,8 +85,11 @@ function findString(buffer, text) {
  * @return {!Array<number>|!Array<string>}
  */
 function packStruct(struct, def, base=10) {
+    if (struct.length < def.length) {
+        return [];
+    }
     let bytes = [];
-    for (let i = 0; i < struct.length; i++) {
+    for (let i = 0; i < def.length; i++) {
         bytes = bytes.concat(pack(struct[i], def[i], base));
     }
     return bytes;
@@ -101,10 +104,13 @@ function packStruct(struct, def, base=10) {
  * @return {Array}
  */
 function unpackStruct(buffer, def, base=10) {
+    if (buffer.length < getStructBits(def)) {
+        return [];
+    }
     let struct = [];
     let i = 0;
     let j = 0;
-    while (j < buffer.length) {
+    while (i < def.length) {
         let bits = def[i].bits < 8 ? 1 : def[i].bits / 8;
         struct = struct.concat(
                 unpack(buffer.slice(j, j + bits), def[i], base)
@@ -113,6 +119,14 @@ function unpackStruct(buffer, def, base=10) {
         i++;
     }
     return struct;
+}
+
+function getStructBits(def) {
+    let bits = 0;
+    for (let i = 0; i < def.length; i++) {
+        bits += def[i].bits / 8;
+    }
+    return bits;
 }
 
 module.exports.pack = pack;
