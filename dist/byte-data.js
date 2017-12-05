@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,7 +73,7 @@
  * https://github.com/rochars/byte-data
  */
 
-const endianness = __webpack_require__(3);
+const endianness = __webpack_require__(7);
 const Type = __webpack_require__(1);
 
 /**
@@ -307,7 +307,7 @@ class Type {
     }
 
     /**
-     * Get the minimum and maximum values for the type.
+     * Set the minimum and maximum values for the type.
      */
     setMinMax() {
         let max = Math.pow(2, this.bits);
@@ -324,7 +324,7 @@ class Type {
     }
 
     /**
-     * Turn a unsigned number to a signed number.
+     * Sign a number according to the type.
      * @param {number} num The number.
      */
     sign(num) {
@@ -404,56 +404,6 @@ module.exports.toBytes = toBytes;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-/*!
- * endianness
- * Swap endianness in byte arrays.
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/endianness
- *
- */
-
-/**
- * Swap the endianness of units of information in a byte array.
- * The original array is modified in-place.
- * @param {!Array<number>|!Array<string>|Uint8Array} bytes The bytes.
- * @param {number} offset The number of bytes of each unit of information.
- */
-function endianness(bytes, offset) {
-    let len = bytes.length;
-    let i = 0;
-    while (i < len) {
-        swap(bytes, offset, i);
-        i += offset;
-    }
-}
-
-/**
- * Swap the endianness of a unit of information in a byte array.
- * The original array is modified in-place.
- * @param {!Array<number>|!Array<string>|Uint8Array} bytes The bytes.
- * @param {number} offset The number of bytes of the unit of information.
- * @param {number} index The start index of the unit of information.
- */
-function swap(bytes, offset, index) {
-    let x = 0;
-    let y = offset - 1;
-    let limit = parseInt(offset / 2, 10);
-    while(x < limit) {
-        let theByte = bytes[index + x];
-        bytes[index + x] = bytes[index + y];
-        bytes[index + y] = theByte;
-        x++;
-        y--;
-    }
-}
-
-module.exports = endianness;
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -463,7 +413,6 @@ module.exports = endianness;
  */
 
 const helpers = __webpack_require__(0);
-const endianness = __webpack_require__(3);
 
 /**
  * Get a binary string representation of a value described as bytes.
@@ -586,7 +535,7 @@ module.exports.toHalf = toHalf;
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports) {
 
 var int8 = new Int8Array(4)
@@ -608,7 +557,7 @@ module.exports.pack = pack
 module.exports.unpack = unpack
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -626,7 +575,6 @@ const helpers = __webpack_require__(0);
  * @return {!Array<number>|number|string}
  */
 function fromBytes(buffer, type) {
-    let bitDepth = type.bits;
     helpers.fixFloat16Endianness(buffer, type);
     helpers.makeBigEndian(buffer, type);
     bytesToInt(buffer, type.base);
@@ -697,7 +645,7 @@ module.exports.fromBytes = fromBytes;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -709,7 +657,7 @@ module.exports.fromBytes = fromBytes;
  */
 
 let toBytes = __webpack_require__(2);
-let fromBytes = __webpack_require__(6);
+let fromBytes = __webpack_require__(5);
 let bitPacker = __webpack_require__(10);
 let api = __webpack_require__(11);
 let Type = __webpack_require__(1);
@@ -774,6 +722,56 @@ window['unpackNibbles'] = bitPacker.unpackNibbles;
 
 
 /***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/*!
+ * endianness
+ * Swap endianness in byte arrays.
+ * Copyright (c) 2017 Rafael da Silva Rocha.
+ * https://github.com/rochars/endianness
+ *
+ */
+
+/**
+ * Swap the endianness of units of information in a byte array.
+ * The original array is modified in-place.
+ * @param {!Array<number>|!Array<string>|Uint8Array} bytes The bytes.
+ * @param {number} offset The number of bytes of each unit of information.
+ */
+function endianness(bytes, offset) {
+    let len = bytes.length;
+    let i = 0;
+    while (i < len) {
+        swap(bytes, offset, i);
+        i += offset;
+    }
+}
+
+/**
+ * Swap the endianness of a unit of information in a byte array.
+ * The original array is modified in-place.
+ * @param {!Array<number>|!Array<string>|Uint8Array} bytes The bytes.
+ * @param {number} offset The number of bytes of the unit of information.
+ * @param {number} index The start index of the unit of information.
+ */
+function swap(bytes, offset, index) {
+    let x = 0;
+    let y = offset - 1;
+    let limit = parseInt(offset / 2, 10);
+    while(x < limit) {
+        let theByte = bytes[index + x];
+        bytes[index + x] = bytes[index + y];
+        bytes[index + y] = theByte;
+        x++;
+        y--;
+    }
+}
+
+module.exports = endianness;
+
+
+/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -784,8 +782,8 @@ window['unpackNibbles'] = bitPacker.unpackNibbles;
  */
 
 let helpers = __webpack_require__(0);
-const floats = __webpack_require__(4);
-const intBits = __webpack_require__(5);
+const floats = __webpack_require__(3);
+const intBits = __webpack_require__(4);
 
 /**
  * Read a group of bytes by turning it to bits.
@@ -934,8 +932,8 @@ module.exports = BitReader;
  * https://github.com/rochars/byte-data
  */
 
-const floats = __webpack_require__(4);
-const intBits = __webpack_require__(5);
+const floats = __webpack_require__(3);
+const intBits = __webpack_require__(4);
 
 const BitWriter = {
 
@@ -1220,7 +1218,7 @@ module.exports.unpackNibbles = unpackNibbles;
  */
 
 let toBytes = __webpack_require__(2);
-let fromBytes = __webpack_require__(6);
+let fromBytes = __webpack_require__(5);
 let helpers = __webpack_require__(0);
 let Type = __webpack_require__(1);
 

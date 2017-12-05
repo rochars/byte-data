@@ -62,7 +62,7 @@ class Type {
     }
 
     /**
-     * Get the minimum and maximum values for the type.
+     * Set the minimum and maximum values for the type.
      */
     setMinMax() {
         let max = Math.pow(2, this.bits);
@@ -79,7 +79,7 @@ class Type {
     }
 
     /**
-     * Turn a unsigned number to a signed number.
+     * Sign a number according to the type.
      * @param {number} num The number.
      */
     sign(num) {

@@ -5,7 +5,6 @@
  */
 
 const helpers = require('../src/helpers');
-const endianness = require('endianness');
 
 /**
  * Get a binary string representation of a value described as bytes.
