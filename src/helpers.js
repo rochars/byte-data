@@ -5,7 +5,7 @@
  */
 
 const endianness = require("endianness");
-const bitDepths = require("../src/bit-depth.js");
+const Type = require("../src/type");
 
 /**
  * Padding for binary strings.
@@ -75,12 +75,11 @@ function lPadZeros(value, numZeros) {
 /**
  * Swap the endianness to big endian.
  * @param {!Array<number>} bytes The values.
- * @param {boolean} isBigEndian True if the bytes should be big endian.
- * @param {number} bitDepth The bitDepth of the data.
+ * @param {Object} type The type.
  */
-function makeBigEndian(bytes, isBigEndian, bitDepth) {
-    if (isBigEndian) {
-        endianness(bytes, bitDepths.BitDepthOffsets[bitDepth]);
+function makeBigEndian(bytes, type) {
+    if (type.be) {
+        endianness(bytes, type.offset);
     }
 }
 
@@ -121,18 +120,6 @@ function outputToBase(bytes, bitDepth, base) {
 }
 
 /**
- * Turn a unsigned number to a signed number.
- * @param {number} num The number.
- * @param {number} maxValue The max range for the number bit depth.
- */
-function signed(num, maxValue) {
-    if (num > parseInt(maxValue / 2, 10) - 1) {
-        num -= maxValue;
-    }
-    return num;
-}
-
-/**
  * Fix the endianness of float16 bytes (r/w is always big-endian).
  * @param {!Array<number>|Uint8Array} bytes The bytes.
  * @param {Object} options The type.
@@ -151,16 +138,9 @@ function fixFloat16Endianness(bytes, options) {
  * @return {Object}
  */
 function getType(atype, base, single) {
-    let theType = Object.assign({}, atype);
+    let theType = Object.assign(new Type({}), atype);
     theType.base = base;
     theType.single = single;
-    if (theType.bits == 64) {
-        theType.float = true;
-    }
-    if (theType.float) {
-        theType.signed = true;
-    }
-    theType.offset = theType.bits < 8 ? 1 : theType.bits / 8;
     return theType;
 }
 
@@ -180,7 +160,6 @@ function turnToArray(values) {
 module.exports.makeBigEndian = makeBigEndian;
 module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
-module.exports.signed = signed;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;

@@ -434,7 +434,7 @@ describe('pack-unpack', function() {
 
     // string
     it('should turn a 2 char string to bytes and back', function() {
-        let bytes = byteData.packArray("ab", {"char": true});
+        let bytes = byteData.packArray("ab", chr);
         let string = byteData.unpackArray(bytes, chr);
         assert.deepEqual("ab", string);
     });

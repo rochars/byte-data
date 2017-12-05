@@ -5,7 +5,13 @@
  */
 
 const helpers = require('../src/helpers');
+const endianness = require('endianness');
 
+/**
+ * Get a binary string representation of a value described as bytes.
+ * @param {Array<number>|number} bytes The bytes.
+ * @param {boolean} rev If the bytes should be reversed or not.
+ */
 function getBinary(bytes, rev=false) {
     let binary = "";
     let i = 0;
@@ -115,7 +121,6 @@ function toHalf(val) {
     return bits;
 }
 
-module.exports.getBinary = getBinary;
 module.exports.decodeFloat16 = decodeFloat16;
 module.exports.decodeFloat64 = decodeFloat64;
 module.exports.toFloat64 = toFloat64;

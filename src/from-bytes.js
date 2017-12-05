@@ -4,8 +4,6 @@
  * https://github.com/rochars/byte-data
  */
 
-const reader = require("../src/read-bytes.js");
-const bitDepths = require("../src/bit-depth.js");
 const helpers = require("../src/helpers.js");
 
 /**
@@ -17,27 +15,16 @@ const helpers = require("../src/helpers.js");
 function fromBytes(buffer, type) {
     let bitDepth = type.bits;
     helpers.fixFloat16Endianness(buffer, type);
-    helpers.makeBigEndian(buffer, type.be, bitDepth);
+    helpers.makeBigEndian(buffer, type);
     bytesToInt(buffer, type.base);
     let values = readBytes(
             buffer,
-            type,
-            getBitReader(type)
+            type
         );
     if (type.single) {
         values = getSingleValue(values, type);
     }
     return values;
-}
-
-/**
- * Return a function to read binary data.
- * @param {Object} type One of the available types.
- * @return {Function}
- */
-function getBitReader(type) {
-    return type.char ?
-        reader.readChar : reader[getReaderName(type.bits, type.float)];
 }
 
 /**
@@ -59,20 +46,15 @@ function getSingleValue(values, type) {
  * Turn a array of bytes into an array of what the bytes should represent.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {Object} type The type.
- * @param {Function} bitReader The function to read the bytes.
  * @return {!Array<number>|string}
  */
-function readBytes(bytes, type, bitReader) {
+function readBytes(bytes, type) {
     let values = [];
     let i = 0;
-    let len = bytes.length - (type.offset -1);
-    let theSignFunction = signFunction(type);
+    let len = bytes.length - (type.offset - 1);
     while (i < len) {
         values.push(
-            theSignFunction(
-                    bitReader(bytes, i, type),
-                    bitDepths.BitDepthMaxValues[type.bits]
-                )
+                type.sign(type.reader(bytes, i, type))
             );
         i += type.offset;
     }
@@ -80,27 +62,6 @@ function readBytes(bytes, type, bitReader) {
         values = values.join("");
     }
     return values;
-}
-
-/**
- * Return the function to apply sign or not to a type.
- * @param {Object} type The type.
- * @return {Function}
- */
-function signFunction(type) {
-    return type.signed && !type.float ?
-        helpers.signed : function(x){return x;};
-}
-
-/**
- * Build a bit reading function name based on the arguments.
- * @param {number} bits The bit depth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
- * @param {boolean} float True if the values are IEEE floating point numbers.
- * @return {string}
- */
-function getReaderName(bits, float) {
-    return 'read' + (bits < 8 ? 8 : bits) +
-        'Bit' + (float ? "Float" : "");
 }
 
 /**

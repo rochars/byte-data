@@ -9,6 +9,7 @@
 let toBytes = require("../src/to-bytes");
 let fromBytes = require("../src/from-bytes");
 let helpers = require("../src/helpers");
+let Type = require("../src/type");
 
 /**
  * Turn a number or string into a byte buffer.
@@ -67,8 +68,9 @@ function findString(buffer, text) {
     let found = "";
     for (let i = 0; i < buffer.length; i++) {
         found = unpack(
-            buffer.slice(i, i + text.length + 1),
-            {"bits": text.length * 8, "char": true});
+                buffer.slice(i, i + text.length + 1),
+                new Type({"bits": text.length * 8, "char": true})
+            );
         if (found == text) {
             return i;
         }
