@@ -6,13 +6,11 @@
  *
  */
 
-let toBytes = require("./src/to-bytes");
-let fromBytes = require("./src/from-bytes");
-let bitPacker = require("./src/bit-packer");
 let api = require("./src/api");
 let Type = require("./src/type");
 
 // interface
+module.exports.Type = Type;
 module.exports.pack = api.pack;
 module.exports.findString = api.findString;
 module.exports.unpack = api.unpack;
@@ -59,13 +57,3 @@ module.exports.uInt40BE = new Type({"bits": 40, "be": true});
 module.exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
 module.exports.uInt48BE = new Type({"bits": 48, "be": true});
 module.exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
-
-// old API
-module.exports.toBytes = toBytes.toBytes;
-module.exports.fromBytes = fromBytes.fromBytes;
-module.exports.packBooleans = bitPacker.packBooleans;
-module.exports.unpackBooleans = bitPacker.unpackBooleans;
-module.exports.packCrumbs = bitPacker.packCrumbs;
-module.exports.unpackCrumbs = bitPacker.unpackCrumbs;
-module.exports.packNibbles = bitPacker.packNibbles;
-module.exports.unpackNibbles = bitPacker.unpackNibbles;
