@@ -47,7 +47,7 @@
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "bundle": "webpack",
     "compile": "google-closure-compiler-js dist/byte-data.js > dist/byte-data-min.js",
-    "doc": "./node_modules/.bin/jsdoc index.js -d docs -t node_modules/docdash -r README.md",
+    "doc": "./node_modules/.bin/jsdoc index.js src/api.js -d docs -t node_modules/docdash -r README.md",
     "qa": "npm run lint && npm run test",
     "pack": "npm run bundle && npm run compile && npm run doc",
     "build": "npm run qa && npm run pack"

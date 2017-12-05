@@ -1269,7 +1269,7 @@ module.exports.unpackNibbles = unpackNibbles;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*!
+/**
  * byte-data
  * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.

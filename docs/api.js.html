@@ -1,4 +1,43 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>api.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#toBytes">toBytes</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">api.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * byte-data
  * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.
@@ -15,7 +54,7 @@ let helpers = require("../src/helpers");
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function pack(value, type, base=10) {
     let theType = helpers.getType(type, base, true);
@@ -25,7 +64,7 @@ function pack(value, type, base=10) {
 
 /**
  * Turn a byte buffer into a readable value.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {number|string}
@@ -36,10 +75,10 @@ function unpack(buffer, type, base=10) {
 
 /**
  * Turn a array of numbers into a byte buffer.
- * @param {!Array<number>|string} values The values.
+ * @param {!Array&lt;number>|string} values The values.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packArray(values, type, base=10) {
     return toBytes.toBytes(values, helpers.getType(type, base, false));
@@ -47,10 +86,10 @@ function packArray(values, type, base=10) {
 
 /**
  * Turn a byte array into a sequence of readable values.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte array.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
- * @return {!Array<number>|string}
+ * @return {!Array&lt;number>|string}
  */
 function unpackArray(buffer, type, base=10) {
     return fromBytes.fromBytes(buffer, helpers.getType(type, base, false));
@@ -59,13 +98,13 @@ function unpackArray(buffer, type, base=10) {
 /**
  * Find and return the start index of some string.
  * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} buffer A byte buffer.
+ * @param {!Array&lt;number>|Uint8Array} buffer A byte buffer.
  * @param {string} text Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */
 function findString(buffer, text) {
     let found = "";
-    for (let i = 0; i < buffer.length; i++) {
+    for (let i = 0; i &lt; buffer.length; i++) {
         found = unpack(
             buffer.slice(i, i + text.length + 1),
             {"bits": text.length * 8, "char": true});
@@ -80,13 +119,13 @@ function findString(buffer, text) {
  * Turn a struct into a byte buffer.
  * A struct is an array of values of not necessarily the same type.
  * @param {Array} struct The struct values.
- * @param {!Array<Object>} def The struct type definition.
+ * @param {!Array&lt;Object>} def The struct type definition.
  * @param {number} base The base of the output. Optional. Default is 10.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packStruct(struct, def, base=10) {
     let bytes = [];
-    for (let i = 0; i < struct.length; i++) {
+    for (let i = 0; i &lt; struct.length; i++) {
         bytes = bytes.concat(pack(struct[i], def[i], base));
     }
     return bytes;
@@ -95,8 +134,8 @@ function packStruct(struct, def, base=10) {
 /**
  * Turn a byte buffer into a structure.
  * A struct is an array of values of not necessarily the same type.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte buffer.
- * @param {!Array<Object>} def The struct type definition.
+ * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte buffer.
+ * @param {!Array&lt;Object>} def The struct type definition.
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {Array}
  */
@@ -104,8 +143,8 @@ function unpackStruct(buffer, def, base=10) {
     let struct = [];
     let i = 0;
     let j = 0;
-    while (j < buffer.length) {
-        let bits = def[i].bits < 8 ? 1 : def[i].bits / 8;
+    while (j &lt; buffer.length) {
+        let bits = def[i].bits &lt; 8 ? 1 : def[i].bits / 8;
         struct = struct.concat(
                 unpack(buffer.slice(j, j + bits), def[i], base)
             );
@@ -122,3 +161,22 @@ module.exports.packArray = packArray;
 module.exports.unpackArray = unpackArray;
 module.exports.unpackStruct = unpackStruct;
 module.exports.packStruct = packStruct;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Dec 04 2017 23:30:55 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
