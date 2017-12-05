@@ -65,13 +65,15 @@ function getSingleValue(values, type) {
 function readBytes(bytes, type, bitReader) {
     let values = [];
     let i = 0;
-    //let offset = type.bits < 8 ? 1 : type.bits / 8;
     let len = bytes.length - (type.offset -1);
-    let maxBitDepthValue = bitDepths.BitDepthMaxValues[type.bits];
-    let signFunction = type.signed && !type.float ?
-        helpers.signed : function(x){return x;};
+    let theSignFunction = signFunction(type);
     while (i < len) {
-        values.push(signFunction(bitReader(bytes, i, type), maxBitDepthValue));
+        values.push(
+            theSignFunction(
+                    bitReader(bytes, i, type),
+                    bitDepths.BitDepthMaxValues[type.bits]
+                )
+            );
         i += type.offset;
     }
     if (type.char) {
@@ -81,8 +83,18 @@ function readBytes(bytes, type, bitReader) {
 }
 
 /**
+ * Return the function to apply sign or not to a type.
+ * @param {Object} type The type.
+ * @return {Function}
+ */
+function signFunction(type) {
+    return type.signed && !type.float ?
+        helpers.signed : function(x){return x;};
+}
+
+/**
  * Build a bit reading function name based on the arguments.
- * @param {number} bits The bitDepth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
+ * @param {number} bits The bit depth. 1, 2, 4, 8, 16, 24, 32, 40, 48, 64.
  * @param {boolean} float True if the values are IEEE floating point numbers.
  * @return {string}
  */

@@ -21,13 +21,6 @@ describe('interface', function() {
         let index = byteData.findString([1, 0, 1, 100, 95, 98, 2, 2, 0], "ab");
         assert.equal(index, -1);
     });
-    it('BitDepthOffsets should be available', function() {
-        assert.ok(byteData.BitDepthOffsets[32]);
-    });
-
-    it('BitDepthMaxValues should be available', function() {
-        assert.ok(byteData.BitDepthMaxValues[32]);
-    });
     it('should turn 1 bytes hex to 1 16-bit uInt single value (not array)', function() {
         assert.equal(byteData.unpack(
             ["ff","ff"], byteData.uInt16, 16),

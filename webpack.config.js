@@ -19,13 +19,13 @@ module.exports = {
             
             // Functions
             {
-              search: 'module.exports.pack',
-              replace: "window['byteData'] = window['byteData'] || {};" + 
-                       "window['byteData']['pack']",
+              search: "module.exports.pack = api.pack",
+              replace: "window['byteData'] = window['byteData'] ? window['byteData'] : {};" + 
+                       "window['byteData']['pack'] = api.pack",
             },
             {
-              search: 'module.exports.unpack',
-              replace: "window['byteData']['unpack']",
+              search: 'module.exports.unpack = api.unpack',
+              replace: "window['byteData']['unpack'] = api.unpack",
             },
             {
               search: 'module.exports.packArray',
@@ -44,14 +44,18 @@ module.exports = {
               replace: "window['byteData']['unpackStruct']",
             },
             {
-              search: 'module.exports.findString',
-              replace: "window['findString']",
+              search: "module.exports.findString",
+              replace: "window['byteData']['findString']",
             },
 
             // types: LE
             {
               search: 'module.exports.chr',
               replace: "window['byteData']['chr']",
+            },
+            {
+              search: 'module.exports.fourCC',
+              replace: "window['byteData']['fourCC']",
             },
             {
               search: 'module.exports.bool',

@@ -215,7 +215,7 @@ let structDef = [
 let buffer = [97,98,99,100,255,255,255,255,255,255];
 
 // Unpack the struct:
-console.log(byteData.unpackStruct(struct, structDef));
+console.log(byteData.unpackStruct(buffer, structDef));
 // ["abcd", 4294967295, 65535]
 ```
 
