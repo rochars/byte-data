@@ -142,19 +142,30 @@ function formatOutput(bytes, type) {
     if (type.bits > 1) {
         let i = 0;
         let len = bytes.length;
-        let offset;
+        let offset = getOutputByteOffset(type);
         while(i < len) {
-            if (type.bits == 2) {
-                offset = (type.base == 2 ? 2 : 2) + 1;
-            } else  if (type.bits == 4) {
-                offset = (type.base == 2 ? 4 : 1) + 1;
-            } else if (type.bits >= 4) {
-                offset = (type.base == 2 ? 8 : 2) + 1;
-            }
             bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
             i++;
         }
     }
+}
+
+/**
+ * Get the number of chars a non-string output should have
+ * according to the number of bits used by the type.
+ * @param {Object} type The type.
+ * @return {number}
+ */
+function getOutputByteOffset(type) {
+    let offset = 1;
+    if (type.bits == 2) {
+        offset = (type.base == 2 ? 2 : 2) + 1;
+    } else  if (type.bits == 4) {
+        offset = (type.base == 2 ? 4 : 1) + 1;
+    } else if (type.bits >= 4) {
+        offset = (type.base == 2 ? 8 : 2) + 1;
+    }
+    return offset;
 }
 
 /**
