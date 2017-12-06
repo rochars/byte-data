@@ -13,7 +13,6 @@ const helpers = require("../src/helpers.js");
  * @return {!Array<number>|number|string}
  */
 function fromBytes(buffer, type) {
-    helpers.fixFloat16Endianness(buffer, type);
     helpers.makeBigEndian(buffer, type);
     bytesFromBase(buffer, type.base);
     let values = readBytes(
@@ -89,7 +88,6 @@ function toBytes(values, type) {
     let bytes = writeBytes(values, type);
     helpers.makeBigEndian(bytes, type);
     helpers.outputToBase(bytes, type.bits, type.base);
-    helpers.fixFloat16Endianness(bytes, type);
     return bytes;
 }
 

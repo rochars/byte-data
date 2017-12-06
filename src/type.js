@@ -13,83 +13,66 @@ const bitParser = require("../src/bit-parser.js");
 class Type {
 
     constructor(options) {
-        
         /**
          * The max number of bits used by data of this type.
          * @type {number}
          */
         this.bits = options["bits"];
-        
         /**
          * If this type represent floating-point values or not.
          * @type {boolean}
          */
         this.char = options["char"];
-        
         /**
          * If this type it is signed or not.
          * @type {boolean}
          */
         this.float = options["float"];
-
         /**
          * If this type is big-endian or not.
          * @type {boolean}
          */
         this.be = options["be"];
-
         /**
          * If this type it is signed or not.
          * @type {boolean}
          */
         this.signed = this.float ? true : options["signed"];
-
         /**
-         * If this type represent a single value or
-         * an array.
+         * If this type represent a single value or an array.
          * @type {boolean}
          */
         this.single = true;
-
         /**
-         * The function to read values of this type
-         * from byte buffers.
+         * The function to read values of this type from buffers.
          * @type {Function}
          */
         this.reader = null;
-
         /**
-         * The function to write values of this type
-         * to byte buffers.
+         * The function to write values of this type to buffers.
          * @type {Function}
          */
         this.writer = null;
-
         /**
          * The number of bytes used by data of this type.
          * @type {number}
          */
         this.offset = 0;
-
         /**
-         * The base used as a default representation for
-         * data of this type.
+         * The base used to represent data of this type.
          * @type {number}
          */
         this.base = 10;
-
         /**
-         * Min value for this type.
+         * Min value for numbers of this type.
          * @type {number}
          */
         this.min = -Infinity;
-
         /**
-         * Max value for this type.
+         * Max value for numbers of this type.
          * @type {number}
          */
         this.max = Infinity;
-        
         this.build_();
     }
 
@@ -123,11 +106,7 @@ class Type {
      * @private
      */
     build_() {
-        if (this.bits < 8) {
-            this.offset = 1;
-        } else {
-            this.offset = this.bits / 8;
-        }
+        this.offset = this.bits < 8 ? 1 : this.bits / 8;
         this.setReader_();
         this.setWriter_();
         if (!this.float) {

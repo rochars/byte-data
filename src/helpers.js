@@ -120,17 +120,6 @@ function outputToBase(bytes, bitDepth, base) {
 }
 
 /**
- * Fix the endianness of float16 bytes (r/w is always big-endian).
- * @param {!Array<number>|Uint8Array} bytes The bytes.
- * @param {Object} options The type.
- */
-function fixFloat16Endianness(bytes, options) {
-    if (options.float && options.bits == 16) {
-        endianness(bytes, 2);
-    }
-}
-
-/**
  * Get the full type spec for the reading/writing.
  * @param {Object} atype One of the available types.
  * @param {number} base The base of the input.
@@ -164,6 +153,5 @@ module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
-module.exports.fixFloat16Endianness = fixFloat16Endianness;
 module.exports.getType = getType;
 module.exports.turnToArray = turnToArray;

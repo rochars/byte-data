@@ -189,17 +189,6 @@ function outputToBase(bytes, bitDepth, base) {
 }
 
 /**
- * Fix the endianness of float16 bytes (r/w is always big-endian).
- * @param {!Array<number>|Uint8Array} bytes The bytes.
- * @param {Object} options The type.
- */
-function fixFloat16Endianness(bytes, options) {
-    if (options.float && options.bits == 16) {
-        endianness(bytes, 2);
-    }
-}
-
-/**
  * Get the full type spec for the reading/writing.
  * @param {Object} atype One of the available types.
  * @param {number} base The base of the input.
@@ -233,7 +222,6 @@ module.exports.paddingNibble = paddingNibble;
 module.exports.paddingCrumb = paddingCrumb;
 module.exports.bytePadding = bytePadding;
 module.exports.lPadZeros = lPadZeros;
-module.exports.fixFloat16Endianness = fixFloat16Endianness;
 module.exports.getType = getType;
 module.exports.turnToArray = turnToArray;
 
@@ -257,83 +245,66 @@ const bitParser = __webpack_require__(5);
 class Type {
 
     constructor(options) {
-        
         /**
          * The max number of bits used by data of this type.
          * @type {number}
          */
         this.bits = options["bits"];
-        
         /**
          * If this type represent floating-point values or not.
          * @type {boolean}
          */
         this.char = options["char"];
-        
         /**
          * If this type it is signed or not.
          * @type {boolean}
          */
         this.float = options["float"];
-
         /**
          * If this type is big-endian or not.
          * @type {boolean}
          */
         this.be = options["be"];
-
         /**
          * If this type it is signed or not.
          * @type {boolean}
          */
         this.signed = this.float ? true : options["signed"];
-
         /**
-         * If this type represent a single value or
-         * an array.
+         * If this type represent a single value or an array.
          * @type {boolean}
          */
         this.single = true;
-
         /**
-         * The function to read values of this type
-         * from byte buffers.
+         * The function to read values of this type from buffers.
          * @type {Function}
          */
         this.reader = null;
-
         /**
-         * The function to write values of this type
-         * to byte buffers.
+         * The function to write values of this type to buffers.
          * @type {Function}
          */
         this.writer = null;
-
         /**
          * The number of bytes used by data of this type.
          * @type {number}
          */
         this.offset = 0;
-
         /**
-         * The base used as a default representation for
-         * data of this type.
+         * The base used to represent data of this type.
          * @type {number}
          */
         this.base = 10;
-
         /**
-         * Min value for this type.
+         * Min value for numbers of this type.
          * @type {number}
          */
         this.min = -Infinity;
-
         /**
-         * Max value for this type.
+         * Max value for numbers of this type.
          * @type {number}
          */
         this.max = Infinity;
-        
         this.build_();
     }
 
@@ -367,11 +338,7 @@ class Type {
      * @private
      */
     build_() {
-        if (this.bits < 8) {
-            this.offset = 1;
-        } else {
-            this.offset = this.bits / 8;
-        }
+        this.offset = this.bits < 8 ? 1 : this.bits / 8;
         this.setReader_();
         this.setWriter_();
         if (!this.float) {
@@ -627,7 +594,6 @@ const helpers = __webpack_require__(0);
  * @return {!Array<number>|number|string}
  */
 function fromBytes(buffer, type) {
-    helpers.fixFloat16Endianness(buffer, type);
     helpers.makeBigEndian(buffer, type);
     bytesFromBase(buffer, type.base);
     let values = readBytes(
@@ -703,7 +669,6 @@ function toBytes(values, type) {
     let bytes = writeBytes(values, type);
     helpers.makeBigEndian(bytes, type);
     helpers.outputToBase(bytes, type.bits, type.base);
-    helpers.fixFloat16Endianness(bytes, type);
     return bytes;
 }
 
@@ -844,7 +809,7 @@ let BitReader = {
      * @return {number}
      */
     "read16BitFloat": function (bytes, i) {
-        return floats.decodeFloat16(bytes.slice(i,i+2));
+        return floats.decodeFloat16([bytes[i+1], bytes[i]]);
     },
 
     /**
@@ -975,9 +940,9 @@ let BitWriter = {
 
     "write16BitFloat": function (bytes, number, j) {
         let bits = floats.toHalf(number);
-        bytes[j++] = bits >>> 8 & 0xFF;
-        bytes[j++] = bits & 0xFF;
-        return j;
+        bytes[j] = bits & 0xFF;
+        bytes[j+1] = bits >>> 8 & 0xFF;
+        return j+2;
     },
 
     "write8Bit": function (bytes, number, j) {

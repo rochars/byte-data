@@ -59,7 +59,7 @@ let BitReader = {
      * @return {number}
      */
     "read16BitFloat": function (bytes, i) {
-        return floats.decodeFloat16(bytes.slice(i,i+2));
+        return floats.decodeFloat16([bytes[i+1], bytes[i]]);
     },
 
     /**
@@ -190,9 +190,9 @@ let BitWriter = {
 
     "write16BitFloat": function (bytes, number, j) {
         let bits = floats.toHalf(number);
-        bytes[j++] = bits >>> 8 & 0xFF;
-        bytes[j++] = bits & 0xFF;
-        return j;
+        bytes[j] = bits & 0xFF;
+        bytes[j+1] = bits >>> 8 & 0xFF;
+        return j+2;
     },
 
     "write8Bit": function (bytes, number, j) {
