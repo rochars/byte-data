@@ -1,12 +1,15 @@
-/*
- * read-bytes: Function to read data from bytes.
+/**
+ * bit-parser: Functions to read and write bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
+ * Float32 based on int-bits: https://github.com/Jam3/int-bits
  */
 
-let helpers = require("../src/helpers.js");
+const helpers = require("../src/helpers.js");
 const floats = require("../src/floats.js");
-const intBits = require("int-bits");
+let i8 = new Int8Array(4);
+let i32 = new Int32Array(i8.buffer, 0, 1);
+let f32 = new Float32Array(i8.buffer, 0, 1);
 
 /**
  * Read a group of bytes by turning it to bits.
@@ -27,7 +30,7 @@ function readBytesAsBits(bytes, i, numBytes) {
     return parseInt(bits, 2);
 }
 
-const BitReader = {
+let BitReader = {
 
     /**
      * Read 1 8-bit int from from bytes.
@@ -66,9 +69,7 @@ const BitReader = {
      * @return {number}
      */
     "read24Bit": function (bytes, i) {
-        return bytes[2 + i] << 16 |
-            bytes[1 + i] << 8 |
-            bytes[i];
+        return bytes[2 + i] << 16 | BitReader["read16Bit"](bytes, i);
     },
 
     /**
@@ -79,9 +80,7 @@ const BitReader = {
      */
     "read32Bit": function (bytes, i) {
         return (bytes[3 + i] << 24 |
-            bytes[2 + i] << 16 |
-            bytes[1 + i] << 8 |
-            bytes[i]) >>> 0;
+            BitReader["read24Bit"](bytes, i)) >>> 0;
     },
 
     /**
@@ -91,7 +90,8 @@ const BitReader = {
      * @return {number}
      */
     "read32BitFloat": function (bytes, i) {
-        return intBits.pack(BitReader["read32Bit"](bytes, i));
+        i32[0] = BitReader["read32Bit"](bytes, i);
+        return f32[0];
     },
 
     /**
@@ -142,4 +142,84 @@ const BitReader = {
     }
 };
 
-module.exports = BitReader;
+let BitWriter = {
+
+    "write64BitFloat": function(bytes, number, j) {
+        let bits = floats.toFloat64(number);
+        j = BitWriter["write32Bit"](bytes, bits[1], j);
+        return BitWriter["write32Bit"](bytes, bits[0], j);
+    },
+
+    // Thanks https://github.com/majimboo/c-struct
+    "write48Bit": function (bytes, number, j) {
+        j = BitWriter["write40Bit"](bytes, number, j);
+        bytes[j++] = number / 0x10000000000 & 0xFF;
+        return j;
+    },
+
+    // Thanks https://github.com/majimboo/c-struct
+    "write40Bit": function (bytes, number, j) {
+        j = BitWriter["write32Bit"](bytes, number, j);
+        bytes[j++] = number / 0x100000000 & 0xFF;
+        return j;
+    },
+
+    "write32BitFloat": function (bytes, number, j) {
+        f32[0] = number;
+        j = BitWriter["write32Bit"](bytes, i32[0], j);
+        return j;
+    },
+
+    "write32Bit": function (bytes, number, j) {
+        j = BitWriter["write24Bit"](bytes, number, j);
+        bytes[j++] = number >>> 24 & 0xFF;
+        return j;
+    },
+
+    "write24Bit": function (bytes, number, j) {
+        j = BitWriter["write16Bit"](bytes, number, j);
+        bytes[j++] = number >>> 16 & 0xFF;
+        return j;
+    },
+
+    "write16Bit": function (bytes, number, j) {
+        bytes[j++] = number & 0xFF;
+        bytes[j++] = number >>> 8 & 0xFF;
+        return j;
+    },
+
+    "write16BitFloat": function (bytes, number, j) {
+        let bits = floats.toHalf(number);
+        bytes[j++] = bits >>> 8 & 0xFF;
+        bytes[j++] = bits & 0xFF;
+        return j;
+    },
+
+    "write8Bit": function (bytes, number, j) {
+        bytes[j++] = number & 0xFF;
+        return j;
+    },
+
+    "write4Bit": function (bytes, number, j) {
+        bytes[j++] = number & 0xF;
+        return j;
+    },
+
+    "write2Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + 4 : number;
+        return j;
+    },
+
+    "write1Bit": function (bytes, number, j) {
+        bytes[j++] = number ? 1 : 0;
+        return j;
+    },
+
+    "writeString": function (bytes, string, j) {
+        bytes[j++] = string.charCodeAt(0);
+        return j;
+    }
+};
+
+module.exports.BitWriter = BitWriter;
+module.exports.BitReader = BitReader;

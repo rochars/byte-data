@@ -5,7 +5,12 @@ https://github.com/rochars/byte-data
 
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html)
 
-Works in Node.js and in the browser.
+- Work in Node and in the browser
+- 9KB minified, 4KB minified + compressed
+- tested against Python's struct module
+- support structs with mutiple types
+- pack and unpack single values, arrays and structs
+- [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data)
 
 ## Support:
 - char
@@ -50,7 +55,7 @@ byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
 // [65535, 0]
 ```
 
-## Use
+## Interface
 ```javascript
 /**
  * Turn a number or string into a byte buffer.
@@ -119,61 +124,48 @@ function findString(buffer, text) {}
 ```
 
 ## Available types
-```javascript
-/**
- * The available types:
- *  - chr
- *  - fourCC
- *  - bool
- *  - int2
- *  - uInt2
- *  - int4
- *  - uInt4
- *  - int8
- *  - uInt8
- *  - int16
- *  - uInt16
- *  - float16
- *  - int24
- *  - uInt24
- *  - int32
- *  - uInt32
- *  - float32
- *  - int40
- *  - uInt40
- *  - int48
- *  - uInt48
- *  - float64
- *
- * big-endian:
- *  - int16BE
- *  - uInt16BE
- *  - float16BE
- *  - int24BE
- *  - uInt24BE
- *  - int32BE
- *  - uInt32BE
- *  - float32BE
- *  - int40BE
- *  - uInt40BE
- *  - int48BE
- *  - uInt48BE
- *  - float64BE
- */
+  - chr
+  - fourCC
+  - bool
+  - int2
+  - uInt2
+  - int4
+  - uInt4
+  - int8
+  - uInt8
 
-// Example:
+### little-endian
+  - int16
+  - uInt16
+  - float16
+  - int24
+  - uInt24
+  - int32
+  - uInt32
+  - float32
+  - int40
+  - uInt40
+  - int48
+  - uInt48
+  - float64
+
+### big-endian:
+  - int16BE
+  - uInt16BE
+  - float16BE
+  - int24BE
+  - uInt24BE
+  - int32BE
+  - uInt32BE
+  - float32BE
+  - int40BE
+  - uInt40BE
+  - int48BE
+  - uInt48BE
+  - float64BE
+
+```javascript
 byteData.pack(value, byteData.float16);
-```
-
-**byte-data types** are objects like this:
-```javascript
-{
-    "bits": 16, // 1, 2, 4, 8, 16, 24, 32, 40, 48, 64
-    "signed": true, // signed or unsigned
-    "float": false, // float or int (64-bit is always float)
-    "be": false // big-endian or little-endian
-    "char": false // if the type represent a string
-}
 ```
 
 ## Structs

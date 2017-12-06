@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#setMinMax">setMinMax</a></li><li data-type='method'><a href="Type.html#setReader">setReader</a></li><li data-type='method'><a href="Type.html#setWriter">setWriter</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#packValue">packValue</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li><li><a href="global.html#unpackValue">unpackValue</a></li></ul>
 </nav>
 
 <div id="main">
@@ -48,7 +48,14 @@
     <section class="readme">
         <article><h1>byte-data</h1><p>Readable data to and from byte buffers.<br>Copyright (c) 2017 Rafael da Silva Rocha.<br>https://github.com/rochars/byte-data</p>
 <p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a></p>
-<p>Works in Node.js and in the browser.</p>
+<ul>
+<li>Work in Node and in the browser</li>
+<li>9KB minified, 4KB minified + compressed</li>
+<li>tested against Python's struct module</li>
+<li>support structs with mutiple types</li>
+<li>pack and unpack single values, arrays and structs</li>
+<li><a href="https://codecov.io/gh/rochars/byte-data"><img src="https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg" alt="codecov"></a></li>
+</ul>
 <h2>Support:</h2><ul>
 <li>char</li>
 <li>booleans</li>
@@ -82,7 +89,7 @@ byteData.packArray([-2147483648, 2147483647], byteData.int32),
 
 // unpack an array of uInt16 numbers from bytes represented as hex values
 byteData.unpackArray([&quot;ff&quot;, &quot;ff&quot;, &quot;00&quot;, &quot;00&quot;], byteData.uInt16, 16),
-// [65535, 0]</code></pre><h2>Use</h2><pre class="prettyprint source lang-javascript"><code>/**
+// [65535, 0]</code></pre><h2>Interface</h2><pre class="prettyprint source lang-javascript"><code>/**
  * Turn a number or string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
@@ -145,56 +152,48 @@ function unpackStruct(buffer, def, base=10) {}
  * @param {string} text Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */
-function findString(buffer, text) {}</code></pre><h2>Available types</h2><pre class="prettyprint source lang-javascript"><code>/**
- * The available types:
- *  - chr
- *  - fourCC
- *  - bool
- *  - int2
- *  - uInt2
- *  - int4
- *  - uInt4
- *  - int8
- *  - uInt8
- *  - int16
- *  - uInt16
- *  - float16
- *  - int24
- *  - uInt24
- *  - int32
- *  - uInt32
- *  - float32
- *  - int40
- *  - uInt40
- *  - int48
- *  - uInt48
- *  - float64
- *
- * big-endian:
- *  - int16BE
- *  - uInt16BE
- *  - float16BE
- *  - int24BE
- *  - uInt24BE
- *  - int32BE
- *  - uInt32BE
- *  - float32BE
- *  - int40BE
- *  - uInt40BE
- *  - int48BE
- *  - uInt48BE
- *  - float64BE
- */
-
-// Example:
-byteData.pack(value, byteData.float16);</code></pre><p><strong>byte-data types</strong> are objects like this:</p>
-<pre class="prettyprint source lang-javascript"><code>{
-    &quot;bits&quot;: 16, // 1, 2, 4, 8, 16, 24, 32, 40, 48, 64
-    &quot;signed&quot;: true, // signed or unsigned
-    &quot;float&quot;: false, // float or int (64-bit is always float)
-    &quot;be&quot;: false // big-endian or little-endian
-    &quot;char&quot;: false // if the type represent a string
-}</code></pre><h2>Structs</h2><p>You must define a <strong>struct</strong> to use <strong>packStruct()</strong> and <strong>unpackStruct()</strong>.
+function findString(buffer, text) {}</code></pre><h2>Available types</h2><ul>
+<li>chr</li>
+<li>fourCC</li>
+<li>bool</li>
+<li>int2</li>
+<li>uInt2</li>
+<li>int4</li>
+<li>uInt4</li>
+<li>int8</li>
+<li>uInt8</li>
+</ul>
+<h3>little-endian</h3><ul>
+<li>int16</li>
+<li>uInt16</li>
+<li>float16</li>
+<li>int24</li>
+<li>uInt24</li>
+<li>int32</li>
+<li>uInt32</li>
+<li>float32</li>
+<li>int40</li>
+<li>uInt40</li>
+<li>int48</li>
+<li>uInt48</li>
+<li>float64</li>
+</ul>
+<h3>big-endian:</h3><ul>
+<li>int16BE</li>
+<li>uInt16BE</li>
+<li>float16BE</li>
+<li>int24BE</li>
+<li>uInt24BE</li>
+<li>int32BE</li>
+<li>uInt32BE</li>
+<li>float32BE</li>
+<li>int40BE</li>
+<li>uInt40BE</li>
+<li>int48BE</li>
+<li>uInt48BE</li>
+<li>float64BE</li>
+</ul>
+<pre class="prettyprint source lang-javascript"><code>byteData.pack(value, byteData.float16);</code></pre><h2>Structs</h2><p>You must define a <strong>struct</strong> to use <strong>packStruct()</strong> and <strong>unpackStruct()</strong>.
 A struct is a array os values of not necessarily the same type.</p>
 <h3>Packing a struct</h3><pre class="prettyprint source lang-javascript"><code>// Define a struct:
 let structDef = [
@@ -263,7 +262,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 05 2017 20:45:14 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 00:16:16 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

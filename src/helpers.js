@@ -1,11 +1,11 @@
-/*
- * helpers: functions to work with bytes and byte arrays.
+/**
+ * helpers: Functions to work with bytes and byte arrays.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
 
 const endianness = require("endianness");
-const Type = require("../src/type");
+let Type = require("../src/type");
 
 /**
  * Padding for binary strings.
@@ -158,7 +158,6 @@ function turnToArray(values) {
 }
 
 module.exports.makeBigEndian = makeBigEndian;
-module.exports.bytesToBase = bytesToBase;
 module.exports.outputToBase = outputToBase;
 module.exports.padding = padding;
 module.exports.paddingNibble = paddingNibble;

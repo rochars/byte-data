@@ -1,5 +1,5 @@
-/*
- * from-bytes: convert bytes to numbers and strings.
+/**
+ * from-bytes: Numbers and strings from bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
@@ -15,7 +15,7 @@ const helpers = require("../src/helpers.js");
 function fromBytes(buffer, type) {
     helpers.fixFloat16Endianness(buffer, type);
     helpers.makeBigEndian(buffer, type);
-    bytesToInt(buffer, type.base);
+    bytesFromBase(buffer, type.base);
     let values = readBytes(
             buffer,
             type
@@ -68,7 +68,7 @@ function readBytes(bytes, type) {
  * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
  * @param {number} base The base.
  */
-function bytesToInt(bytes, base) {
+function bytesFromBase(bytes, base) {
     if (base != 10) {
         let i = 0;
         let len = bytes.length;
@@ -79,4 +79,37 @@ function bytesToInt(bytes, base) {
     }
 }
 
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number>|number|string} values The data.
+ * @param {Object} type One of the available types.
+ * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
+ */
+function toBytes(values, type) {
+    let bytes = writeBytes(values, type);
+    helpers.makeBigEndian(bytes, type);
+    helpers.outputToBase(bytes, type.bits, type.base);
+    helpers.fixFloat16Endianness(bytes, type);
+    return bytes;
+}
+
+/**
+ * Write values as bytes.
+ * @param {!Array<number>|number|string} values The data.
+ * @param {Object} type One of the available types.
+ * @return {!Array<number>} the bytes.
+ */
+function writeBytes(values, type) {
+    let i = 0;
+    let j = 0;
+    let len = values.length;
+    let bytes = [];
+    while (i < len) {
+        j = type.writer(bytes, type.overflow(values[i]), j);
+        i++;
+    }
+    return bytes;
+}
+
+module.exports.toBytes = toBytes;
 module.exports.fromBytes = fromBytes;

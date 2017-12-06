@@ -19,13 +19,13 @@ module.exports = {
             
             // Functions
             {
-              search: "module.exports.pack = api.pack",
+              search: "module.exports.pack = packValue",
               replace: "window['byteData'] = window['byteData'] ? window['byteData'] : {};" + 
-                       "window['byteData']['pack'] = api.pack",
+                       "window['byteData']['pack'] = packValue",
             },
             {
-              search: 'module.exports.unpack = api.unpack',
-              replace: "window['byteData']['unpack'] = api.unpack",
+              search: 'module.exports.unpack = unpackValue',
+              replace: "window['byteData']['unpack'] = unpackValue",
             },
             {
               search: 'module.exports.packArray',
@@ -47,7 +47,11 @@ module.exports = {
               search: "module.exports.findString",
               replace: "window['byteData']['findString']",
             },
-
+            // Classes
+            {
+              search: 'module.exports.Type',
+              replace: "window['byteData']['Type']",
+            },
             // types: LE
             {
               search: 'module.exports.chr',

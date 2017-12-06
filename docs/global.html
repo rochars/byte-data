@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#setMinMax">setMinMax</a></li><li data-type='method'><a href="Type.html#setReader">setReader</a></li><li data-type='method'><a href="Type.html#setWriter">setWriter</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#packValue">packValue</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li><li><a href="global.html#unpackValue">unpackValue</a></li></ul>
 </nav>
 
 <div id="main">
@@ -127,7 +127,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line67">line 67</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line66">line 66</a>
     </li></ul></dd>
     
 
@@ -296,225 +296,6 @@
 
     
 
-    <h4 class="name" id="pack"><span class="type-signature"></span>pack<span class="signature">(value, type, base)</span><span class="type-signature"> &rarr; {!Array.&lt;number>|!Array.&lt;string>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line21">line 21</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    Turn a number or string into a byte buffer.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">The value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">One of the available types.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>base</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    <code>10</code>
-                
-                </td>
-            
-
-            <td class="description last">The base of the output. Optional. Default is 10.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">!Array.&lt;number></span>
-|
-
-<span class="param-type">!Array.&lt;string></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-        
-            
-
-    
-
     <h4 class="name" id="packArray"><span class="type-signature"></span>packArray<span class="signature">(values, type, base)</span><span class="type-signature"> &rarr; {!Array.&lt;number>|!Array.&lt;string>}</span></h4>
 
     
@@ -527,7 +308,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line45">line 45</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -746,7 +527,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line89">line 89</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line88">line 88</a>
     </li></ul></dd>
     
 
@@ -950,7 +731,7 @@
 
     
 
-    <h4 class="name" id="unpack"><span class="type-signature"></span>unpack<span class="signature">(buffer, type, base)</span><span class="type-signature"> &rarr; {number|string}</span></h4>
+    <h4 class="name" id="packValue"><span class="type-signature"></span>packValue<span class="signature">(value, type, base)</span><span class="type-signature"> &rarr; {!Array.&lt;number>|!Array.&lt;string>}</span></h4>
 
     
 
@@ -962,7 +743,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line34">line 34</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -1002,7 +783,7 @@
 
 
 <div class="description">
-    Turn a byte buffer into a readable value.
+    Turn a number or string into a byte buffer.
 </div>
 
 
@@ -1042,19 +823,16 @@
 
         <tr>
             
-                <td class="name"><code>buffer</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">number</span>
 |
 
-<span class="param-type">!Array.&lt;string></span>
-|
-
-<span class="param-type">Uint8Array</span>
+<span class="param-type">string</span>
 
 
             
@@ -1068,7 +846,7 @@
                 </td>
             
 
-            <td class="description last">An array of bytes.</td>
+            <td class="description last">The value.</td>
         </tr>
 
     
@@ -1124,7 +902,7 @@
                 </td>
             
 
-            <td class="description last">The base of the input. Optional. Default is 10.</td>
+            <td class="description last">The base of the output. Optional. Default is 10.</td>
         </tr>
 
     
@@ -1155,10 +933,10 @@
     </dt>
     <dd>
         
-<span class="param-type">number</span>
+<span class="param-type">!Array.&lt;number></span>
 |
 
-<span class="param-type">string</span>
+<span class="param-type">!Array.&lt;string></span>
 
 
     </dd>
@@ -1184,7 +962,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line56">line 56</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -1406,7 +1184,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api.js.html">api.js</a>, <a href="api.js.html#line108">line 108</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line107">line 107</a>
     </li></ul></dd>
     
 
@@ -1609,6 +1387,228 @@
 
 
         
+            
+
+    
+
+    <h4 class="name" id="unpackValue"><span class="type-signature"></span>unpackValue<span class="signature">(buffer, type, base)</span><span class="type-signature"> &rarr; {number|string}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Turn a byte buffer into a readable value.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">!Array.&lt;number></span>
+|
+
+<span class="param-type">!Array.&lt;string></span>
+|
+
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">An array of bytes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">One of the available types.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>base</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    <code>10</code>
+                
+                </td>
+            
+
+            <td class="description last">The base of the input. Optional. Default is 10.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
     
 
     
@@ -1626,7 +1626,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 05 2017 20:45:14 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 00:16:16 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>api.js - Documentation</title>
+    <title>index.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -22,12 +22,12 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#setMinMax">setMinMax</a></li><li data-type='method'><a href="Type.html#setReader">setReader</a></li><li data-type='method'><a href="Type.html#setWriter">setWriter</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#packValue">packValue</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li><li><a href="global.html#unpackValue">unpackValue</a></li></ul>
 </nav>
 
 <div id="main">
     
-    <h1 class="page-title">api.js</h1>
+    <h1 class="page-title">index.js</h1>
     
 
     
@@ -37,7 +37,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/*
+            <pre class="prettyprint source linenums"><code>/*!
  * byte-data
  * Readable data to and from byte buffers.
  * Copyright (c) 2017 Rafael da Silva Rocha.
@@ -45,10 +45,9 @@
  *
  */
 
-let toBytes = require("../src/to-bytes");
-let fromBytes = require("../src/from-bytes");
-let helpers = require("../src/helpers");
-let Type = require("../src/type");
+const rw = require("./src/read-write");
+const helpers = require("./src/helpers");
+let Type = require("./src/type");
 
 /**
  * Turn a number or string into a byte buffer.
@@ -57,10 +56,10 @@ let Type = require("../src/type");
  * @param {number} base The base of the output. Optional. Default is 10.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
-function pack(value, type, base=10) {
+function packValue(value, type, base=10) {
     let theType = helpers.getType(type, base, true);
     value = theType.char ? value.slice(0, type.bits / 8) : value;
-    return toBytes.toBytes(helpers.turnToArray(value), theType);
+    return rw.toBytes(helpers.turnToArray(value), theType);
 }
 
 /**
@@ -70,8 +69,8 @@ function pack(value, type, base=10) {
  * @param {number} base The base of the input. Optional. Default is 10.
  * @return {number|string}
  */
-function unpack(buffer, type, base=10) {
-    return fromBytes.fromBytes(buffer, helpers.getType(type, base, true));
+function unpackValue(buffer, type, base=10) {
+    return rw.fromBytes(buffer, helpers.getType(type, base, true));
 }
 
 /**
@@ -82,7 +81,7 @@ function unpack(buffer, type, base=10) {
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packArray(values, type, base=10) {
-    return toBytes.toBytes(values, helpers.getType(type, base, false));
+    return rw.toBytes(values, helpers.getType(type, base, false));
 }
 
 /**
@@ -93,7 +92,7 @@ function packArray(values, type, base=10) {
  * @return {!Array&lt;number>|string}
  */
 function unpackArray(buffer, type, base=10) {
-    return fromBytes.fromBytes(buffer, helpers.getType(type, base, false));
+    return rw.fromBytes(buffer, helpers.getType(type, base, false));
 }
 
 /**
@@ -106,7 +105,7 @@ function unpackArray(buffer, type, base=10) {
 function findString(buffer, text) {
     let found = "";
     for (let i = 0; i &lt; buffer.length; i++) {
-        found = unpack(
+        found = unpackValue(
                 buffer.slice(i, i + text.length + 1),
                 new Type({"bits": text.length * 8, "char": true})
             );
@@ -131,7 +130,7 @@ function packStruct(struct, def, base=10) {
     }
     let bytes = [];
     for (let i = 0; i &lt; def.length; i++) {
-        bytes = bytes.concat(pack(struct[i], def[i], base));
+        bytes = bytes.concat(packValue(struct[i], def[i], base));
     }
     return bytes;
 }
@@ -154,7 +153,7 @@ function unpackStruct(buffer, def, base=10) {
     while (i &lt; def.length) {
         let bits = def[i].bits &lt; 8 ? 1 : def[i].bits / 8;
         struct = struct.concat(
-                unpack(buffer.slice(j, j + bits), def[i], base)
+                unpackValue(buffer.slice(j, j + bits), def[i], base)
             );
         j += bits;
         i++;
@@ -170,13 +169,54 @@ function getStructBits(def) {
     return bits;
 }
 
-module.exports.pack = pack;
-module.exports.findString = findString;
-module.exports.unpack = unpack;
+// interface
+module.exports.pack = packValue;
+module.exports.unpack = unpackValue;
 module.exports.packArray = packArray;
 module.exports.unpackArray = unpackArray;
 module.exports.unpackStruct = unpackStruct;
 module.exports.packStruct = packStruct;
+module.exports.findString = findString;
+module.exports.Type = Type;
+
+// types
+module.exports.chr = new Type({"bits": 8, "char": true});
+module.exports.fourCC = new Type({"bits": 32, "char": true});
+module.exports.bool = new Type({"bits": 1});
+module.exports.int2 = new Type({"bits": 2, "signed": true});
+module.exports.uInt2 = new Type({"bits": 2});
+module.exports.int4 = new Type({"bits": 4, "signed": true});
+module.exports.uInt4 = new Type({"bits": 4});
+module.exports.int8 = new Type({"bits": 8, "signed": true});
+module.exports.uInt8 = new Type({"bits": 8});
+// LE
+module.exports.int16  = new Type({"bits": 16, "signed": true});
+module.exports.uInt16 = new Type({"bits": 16});
+module.exports.float16 = new Type({"bits": 16, "float": true});
+module.exports.int24 = new Type({"bits": 24, "signed": true});
+module.exports.uInt24 = new Type({"bits": 24});
+module.exports.int32 = new Type({"bits": 32, "signed": true});
+module.exports.uInt32 = new Type({"bits": 32});
+module.exports.float32 = new Type({"bits": 32, "float": true});
+module.exports.int40 = new Type({"bits": 40, "signed": true});
+module.exports.uInt40 = new Type({"bits": 40});
+module.exports.int48 = new Type({"bits": 48, "signed": true});
+module.exports.uInt48 = new Type({"bits": 48});
+module.exports.float64 = new Type({"bits": 64, "float": true});
+// BE
+module.exports.int16BE  = new Type({"bits": 16, "signed": true, "be": true});
+module.exports.uInt16BE = new Type({"bits": 16, "be": true});
+module.exports.float16BE = new Type({"bits": 16, "float": true, "be": true});
+module.exports.int24BE = new Type({"bits": 24, "signed": true, "be": true});
+module.exports.uInt24BE = new Type({"bits": 24, "be": true});
+module.exports.int32BE = new Type({"bits": 32, "signed": true, "be": true});
+module.exports.uInt32BE = new Type({"bits": 32, "be": true});
+module.exports.float32BE = new Type({"bits": 32, "float": true, "be": true});
+module.exports.int40BE = new Type({"bits": 40, "signed": true, "be": true});
+module.exports.uInt40BE = new Type({"bits": 40, "be": true});
+module.exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
+module.exports.uInt48BE = new Type({"bits": 48, "be": true});
+module.exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
 </code></pre>
         </article>
     </section>
@@ -189,7 +229,7 @@ module.exports.packStruct = packStruct;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 05 2017 20:45:14 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 00:16:16 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

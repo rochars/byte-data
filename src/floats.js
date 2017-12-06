@@ -1,4 +1,4 @@
-/*
+/**
  * float: Functions to work with 16, 32 & 64 bit floats.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
