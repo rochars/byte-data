@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#packValue">packValue</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li><li><a href="global.html#unpackValue">unpackValue</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -49,11 +49,10 @@
         <article><h1>byte-data</h1><p>Readable data to and from byte buffers.<br>Copyright (c) 2017 Rafael da Silva Rocha.<br>https://github.com/rochars/byte-data</p>
 <p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a> <a href="https://jsperf.com/byte-data-dist"><img src="https://img.shields.io/badge/jsperf-run-blue.svg?style=for-the-badge" alt="JSPerf"></a></p>
 <ul>
-<li>Work in Node and in the browser</li>
-<li>9KB minified, 4KB minified + compressed</li>
-<li>tested against Python's struct module</li>
-<li>support structs with mutiple types</li>
-<li>pack and unpack single values, arrays and structs</li>
+<li>For Node and the browser</li>
+<li>2.89KB minified + compressed, 7.97KB minified</li>
+<li>Tested against Python's struct module</li>
+<li>Pack and unpack single values, arrays and structs</li>
 <li><a href="https://codecov.io/gh/rochars/byte-data"><img src="https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg" alt="codecov"></a></li>
 </ul>
 <h2>Support:</h2><ul>
@@ -90,37 +89,41 @@ byteData.packArray([-2147483648, 2147483647], byteData.int32),
 // unpack an array of uInt16 numbers from bytes represented as hex values
 byteData.unpackArray([&quot;ff&quot;, &quot;ff&quot;, &quot;00&quot;, &quot;00&quot;], byteData.uInt16, 16),
 // [65535, 0]</code></pre><h2>Interface</h2><pre class="prettyprint source lang-javascript"><code>/**
- * Turn a number or string into a byte buffer.
+ * Turn a number or fixed-length string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function pack(value, type, base=10) {}
 
 /**
- * Turn a byte buffer into a readable value.
+ * Turn a byte buffer into a number or a fixed-length string.
  * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {}
 
 /**
- * Turn a array of numbers into a byte buffer.
+ * Turn a array of numbers or a string into a byte buffer.
  * @param {!Array&lt;number>|string} values The values.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packArray(values, type, base=10) {}
 
 /**
- * Turn a byte array into a sequence of readable values.
+ * Turn a byte buffer into a array of numbers or a string.
  * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|string}
  */
 function unpackArray(buffer, type, base=10) {}
@@ -131,16 +134,18 @@ function unpackArray(buffer, type, base=10) {}
  * @param {Array} struct The struct values.
  * @param {!Array&lt;Object>} def The struct type definition.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packStruct(struct, def, base=10) {}
 
 /**
- * Turn a byte buffer into a structure.
+ * Turn a byte buffer into a struct.
  * A struct is an array of values of not necessarily the same type.
  * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte buffer.
  * @param {!Array&lt;Object>} def The struct type definition.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {Array}
  */
 function unpackStruct(buffer, def, base=10) {}
@@ -148,7 +153,7 @@ function unpackStruct(buffer, def, base=10) {}
 /**
  * Find and return the start index of some string.
  * Return -1 if the string is not found.
- * @param {!Array&lt;number>|Uint8Array} buffer Array of bytes.
+ * @param {!Array&lt;number>|Uint8Array} buffer A byte buffer.
  * @param {string} text Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */
@@ -262,7 +267,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 01:13:27 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 21:33:31 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

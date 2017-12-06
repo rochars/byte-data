@@ -5,11 +5,10 @@ https://github.com/rochars/byte-data
 
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html) [![JSPerf](https://img.shields.io/badge/jsperf-run-blue.svg?style=for-the-badge)](https://jsperf.com/byte-data-dist)
 
-- Work in Node and in the browser
-- 9KB minified, 4KB minified + compressed
-- tested against Python's struct module
-- support structs with mutiple types
-- pack and unpack single values, arrays and structs
+- For Node and the browser
+- 2.89KB minified + compressed, 7.97KB minified
+- Tested against Python's struct module
+- Pack and unpack single values, arrays and structs
 - [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data)
 
 ## Support:
@@ -58,37 +57,41 @@ byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
 ## Interface
 ```javascript
 /**
- * Turn a number or string into a byte buffer.
+ * Turn a number or fixed-length string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {}
 
 /**
- * Turn a byte buffer into a readable value.
+ * Turn a byte buffer into a number or a fixed-length string.
  * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {}
 
 /**
- * Turn a array of numbers into a byte buffer.
+ * Turn a array of numbers or a string into a byte buffer.
  * @param {!Array<number>|string} values The values.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {}
 
 /**
- * Turn a byte array into a sequence of readable values.
+ * Turn a byte buffer into a array of numbers or a string.
  * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {}
@@ -99,16 +102,18 @@ function unpackArray(buffer, type, base=10) {}
  * @param {Array} struct The struct values.
  * @param {!Array<Object>} def The struct type definition.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array<number>|!Array<string>}
  */
 function packStruct(struct, def, base=10) {}
 
 /**
- * Turn a byte buffer into a structure.
+ * Turn a byte buffer into a struct.
  * A struct is an array of values of not necessarily the same type.
  * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte buffer.
  * @param {!Array<Object>} def The struct type definition.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {Array}
  */
 function unpackStruct(buffer, def, base=10) {}
@@ -116,7 +121,7 @@ function unpackStruct(buffer, def, base=10) {}
 /**
  * Find and return the start index of some string.
  * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} buffer Array of bytes.
+ * @param {!Array<number>|Uint8Array} buffer A byte buffer.
  * @param {string} text Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */

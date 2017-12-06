@@ -79,6 +79,7 @@ class Type {
     /**
      * Sign a number according to the type.
      * @param {number} num The number.
+     * @return {number}
      */
     sign(num) {
         if (num > this.max) {
@@ -90,7 +91,8 @@ class Type {
     /**
      * Limit the value according to the bit depth in case of
      * overflow or underflow.
-     * @param {!Array<number>|number|string} value The data.
+     * @param {number} value The data.
+     * @return {number}
      */
     overflow(value) {
         if (value > this.max) {

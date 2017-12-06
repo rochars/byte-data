@@ -1,4 +1,4 @@
-/*!
+/**
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -19,13 +19,13 @@ module.exports = {
             
             // Functions
             {
-              search: "module.exports.pack = packValue",
+              search: "module.exports.pack = pack",
               replace: "window['byteData'] = window['byteData'] ? window['byteData'] : {};" + 
-                       "window['byteData']['pack'] = packValue",
+                       "window['byteData']['pack'] = pack",
             },
             {
-              search: 'module.exports.unpack = unpackValue',
-              replace: "window['byteData']['unpack'] = unpackValue",
+              search: 'module.exports.unpack = unpack',
+              replace: "window['byteData']['unpack'] = unpack",
             },
             {
               search: 'module.exports.packArray',
@@ -194,41 +194,7 @@ module.exports = {
             {
               search: 'module.exports.float64BE',
               replace: "window['byteData']['float64BE']",
-            },
-
-            // Legacy API
-            {
-              search: 'module.exports.toBytes',
-              replace: "window['toBytes']",
-            },
-            {
-              search: 'module.exports.fromBytes',
-              replace: "window['fromBytes']",
-            },
-            {
-              search: 'module.exports.packNibbles',
-              replace: "window['packNibbles']",
-            }, 
-            {
-              search: 'module.exports.unpackNibbles',
-              replace: "window['unpackNibbles']",
-            },
-            {
-              search: 'module.exports.packCrumbs',
-              replace: "window['packCrumbs']",
-            }, 
-            {
-              search: 'module.exports.unpackCrumbs',
-              replace: "window['unpackCrumbs']",
-            },
-            {
-              search: 'module.exports.packBooleans',
-              replace: "window['packBooleans']",
-            }, 
-            {
-              search: 'module.exports.unpackBooleans',
-              replace: "window['unpackBooleans']",
-            },
+            }
           ]
         }
       }

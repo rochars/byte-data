@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#packValue">packValue</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li><li><a href="global.html#unpackValue">unpackValue</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -45,54 +45,60 @@
  *
  */
 
+/** @private */
 const rw = require("./src/read-write");
-const helpers = require("./src/helpers");
+
+/** @private */
 let Type = require("./src/type");
 
 /**
- * Turn a number or string into a byte buffer.
+ * Turn a number or fixed-length string into a byte buffer.
  * @param {number|string} value The value.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
-function packValue(value, type, base=10) {
-    let theType = helpers.getType(type, base, true);
+function pack(value, type, base=10) {
+    let theType = rw.getType(type, base, true);
     value = theType.char ? value.slice(0, type.bits / 8) : value;
-    return rw.toBytes(helpers.turnToArray(value), theType);
+    return rw.toBytes(rw.turnToArray(value), theType);
 }
 
 /**
- * Turn a byte buffer into a readable value.
+ * Turn a byte buffer into a number or a fixed-length string.
  * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
-function unpackValue(buffer, type, base=10) {
-    return rw.fromBytes(buffer, helpers.getType(type, base, true));
+function unpack(buffer, type, base=10) {
+    return rw.fromBytes(buffer, rw.getType(type, base, true));
 }
 
 /**
- * Turn a array of numbers into a byte buffer.
+ * Turn a array of numbers or a string into a byte buffer.
  * @param {!Array&lt;number>|string} values The values.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packArray(values, type, base=10) {
-    return rw.toBytes(values, helpers.getType(type, base, false));
+    return rw.toBytes(values, rw.getType(type, base, false));
 }
 
 /**
- * Turn a byte array into a sequence of readable values.
+ * Turn a byte buffer into a array of numbers or a string.
  * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|string}
  */
 function unpackArray(buffer, type, base=10) {
-    return rw.fromBytes(buffer, helpers.getType(type, base, false));
+    return rw.fromBytes(buffer, rw.getType(type, base, false));
 }
 
 /**
@@ -105,7 +111,7 @@ function unpackArray(buffer, type, base=10) {
 function findString(buffer, text) {
     let found = "";
     for (let i = 0; i &lt; buffer.length; i++) {
-        found = unpackValue(
+        found = unpack(
                 buffer.slice(i, i + text.length + 1),
                 new Type({"bits": text.length * 8, "char": true})
             );
@@ -122,6 +128,7 @@ function findString(buffer, text) {
  * @param {Array} struct The struct values.
  * @param {!Array&lt;Object>} def The struct type definition.
  * @param {number} base The base of the output. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|!Array&lt;string>}
  */
 function packStruct(struct, def, base=10) {
@@ -130,21 +137,22 @@ function packStruct(struct, def, base=10) {
     }
     let bytes = [];
     for (let i = 0; i &lt; def.length; i++) {
-        bytes = bytes.concat(packValue(struct[i], def[i], base));
+        bytes = bytes.concat(pack(struct[i], def[i], base));
     }
     return bytes;
 }
 
 /**
- * Turn a byte buffer into a structure.
+ * Turn a byte buffer into a struct.
  * A struct is an array of values of not necessarily the same type.
  * @param {!Array&lt;number>|!Array&lt;string>|Uint8Array} buffer The byte buffer.
  * @param {!Array&lt;Object>} def The struct type definition.
  * @param {number} base The base of the input. Optional. Default is 10.
+ *      Possible values are 2, 10 or 16.
  * @return {Array}
  */
 function unpackStruct(buffer, def, base=10) {
-    if (buffer.length &lt; getStructBits(def)) {
+    if (buffer.length &lt; getStructDefSize(def)) {
         return [];
     }
     let struct = [];
@@ -153,7 +161,7 @@ function unpackStruct(buffer, def, base=10) {
     while (i &lt; def.length) {
         let bits = def[i].bits &lt; 8 ? 1 : def[i].bits / 8;
         struct = struct.concat(
-                unpackValue(buffer.slice(j, j + bits), def[i], base)
+                unpack(buffer.slice(j, j + bits), def[i], base)
             );
         j += bits;
         i++;
@@ -161,7 +169,13 @@ function unpackStruct(buffer, def, base=10) {
     return struct;
 }
 
-function getStructBits(def) {
+/**
+ * Get the length in bytes of a struct definition.
+ * @param {!Array&lt;Object>} def The struct type definition.
+ * @return {number} The length of the structure in bytes.
+ * @private
+ */
+function getStructDefSize(def) {
     let bits = 0;
     for (let i = 0; i &lt; def.length; i++) {
         bits += def[i].bits / 8;
@@ -170,8 +184,8 @@ function getStructBits(def) {
 }
 
 // interface
-module.exports.pack = packValue;
-module.exports.unpack = unpackValue;
+module.exports.pack = pack;
+module.exports.unpack = unpack;
 module.exports.packArray = packArray;
 module.exports.unpackArray = unpackArray;
 module.exports.unpackStruct = unpackStruct;
@@ -229,7 +243,7 @@ module.exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 01:13:27 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 21:33:31 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

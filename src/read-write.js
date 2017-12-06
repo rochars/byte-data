@@ -4,7 +4,8 @@
  * https://github.com/rochars/byte-data
  */
 
-const helpers = require("../src/helpers.js");
+const Type = require("../src/type");
+const endianness = require("endianness");
 
 /**
  * Turn a byte buffer into what the bytes represent.
@@ -13,7 +14,7 @@ const helpers = require("../src/helpers.js");
  * @return {!Array<number>|number|string}
  */
 function fromBytes(buffer, type) {
-    helpers.makeBigEndian(buffer, type);
+    makeBigEndian(buffer, type);
     bytesFromBase(buffer, type.base);
     let values = readBytes(
             buffer,
@@ -21,6 +22,49 @@ function fromBytes(buffer, type) {
         );
     if (type.single) {
         values = getSingleValue(values, type);
+    }
+    return values;
+}
+
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number>|number|string} values The data.
+ * @param {Object} type One of the available types.
+ * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
+ */
+function toBytes(values, type) {
+    let bytes = writeBytes(values, type);
+    makeBigEndian(bytes, type);
+    if (type.base != 10) {
+        bytesToBase(bytes, type.base);
+        formatOutput(bytes, type);
+    }
+    return bytes;
+}
+
+/**
+ * Get the full type spec for the reading/writing.
+ * @param {Object} atype One of the available types.
+ * @param {number} base The base of the input.
+ * @param {boolean} single True if its a single value, false for array.
+ * @return {Object}
+ */
+function getType(atype, base, single) {
+    let theType = Object.assign(new Type({}), atype);
+    theType.base = base;
+    theType.single = single;
+    return theType;
+}
+
+/**
+ * Make a single value an array in case it is not.
+ * If the value is a string it stays a string.
+ * @param {!Array<number>|number|string} values The value or values.
+ * @return {!Array<number>|string}
+ */
+function turnToArray(values) {
+    if (!Array.isArray(values) && typeof values != "string") {
+        values = [values];
     }
     return values;
 }
@@ -79,16 +123,52 @@ function bytesFromBase(bytes, base) {
 }
 
 /**
- * Turn numbers and strings to bytes.
- * @param {!Array<number>|number|string} values The data.
- * @param {Object} type One of the available types.
- * @return {!Array<number>|!Array<string>|Uint8Array} the data as a byte buffer.
+ * Swap the endianness to big endian.
+ * @param {!Array<number>|!Array<string>|Uint8Array} bytes The values.
+ * @param {Object} type The type.
  */
-function toBytes(values, type) {
-    let bytes = writeBytes(values, type);
-    helpers.makeBigEndian(bytes, type);
-    helpers.outputToBase(bytes, type.bits, type.base);
-    return bytes;
+function makeBigEndian(bytes, type) {
+    if (type.be) {
+        endianness(bytes, type.offset);
+    }
+}
+
+/**
+ * Turn the output to the correct base.
+ * @param {Array} bytes The bytes.
+ * @param {Object} type The type.
+ */
+function formatOutput(bytes, type) {
+    if (type.bits > 1) {
+        let i = 0;
+        let len = bytes.length;
+        let offset;
+        while(i < len) {
+            if (type.bits == 2) {
+                offset = (type.base == 2 ? 2 : 2) + 1;
+            } else  if (type.bits == 4) {
+                offset = (type.base == 2 ? 4 : 1) + 1;
+            } else if (type.bits >= 4) {
+                offset = (type.base == 2 ? 8 : 2) + 1;
+            }
+            bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
+            i++;
+        }
+    }
+}
+
+/**
+ * Turn bytes to base 2, 10 or 16.
+ * @param {!Array<string>|!Array<number>|null} bytes The bytes.
+ * @param {number} base The base.
+ */
+function bytesToBase(bytes, base) {
+    let i = 0;
+    let len = bytes.length;
+    while (i < len) {
+        bytes[i] = bytes[i].toString(base);
+        i++;
+    }
 }
 
 /**
@@ -109,5 +189,7 @@ function writeBytes(values, type) {
     return bytes;
 }
 
+module.exports.getType = getType;
+module.exports.turnToArray = turnToArray;
 module.exports.toBytes = toBytes;
 module.exports.fromBytes = fromBytes;
