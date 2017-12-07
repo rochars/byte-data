@@ -60,7 +60,7 @@ describe('pack uInt2', function() {
     it('should turn 1 2-bit unsigned int to 1 crumb hex (2)', function() {
         assert.deepEqual(
             byteData.packArray([2], uInt2, 16),
-            ['02']);
+            ['2']);
     });
     it('should turn 1 2-bit unsigned int to 1 crumb bin (1)', function() {
         assert.deepEqual(

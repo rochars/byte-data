@@ -592,14 +592,13 @@ function formatOutput(bytes, type) {
  */
 function getOutputByteOffset(type) {
     let offset = 1;
-    if (type.bits == 2) {
-        offset = (type.base == 2 ? 2 : 2) + 1;
-    } else  if (type.bits == 4) {
-        offset = (type.base == 2 ? 4 : 1) + 1;
-    } else if (type.bits >= 4) {
-        offset = (type.base == 2 ? 8 : 2) + 1;
+    if (type.bits > 7) {
+        offset = (type.base == 2 ? 8 : 2);
+    } else {
+        offset = (type.base == 2 ? type.bits : 1);
+        offset = (type.base == 2 ? type.bits : 1);
     }
-    return offset;
+    return offset + 1;
 }
 
 /**

@@ -39,6 +39,6 @@ describe('pack int2', function() {
     it('should turn 1 2-bit signed int to 1 crumb hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], int2, 16),
-            ['03']);
+            ['3']);
     });
 });
