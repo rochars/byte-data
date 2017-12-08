@@ -8,8 +8,6 @@
 
 /** @private */
 const rw = require("./src/read-write");
-
-/** @private */
 let Type = require("./src/type");
 
 /**
@@ -21,9 +19,13 @@ let Type = require("./src/type");
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    let theType = rw.getType(type, base, true);
-    value = theType.char ? value.slice(0, type.bits / 8) : value;
-    return rw.toBytes(rw.turnToArray(value), theType);
+    let values;
+    if (type.char) {
+        values = type.char ? value.slice(0, type.realBits / 8) : value;
+    } else if (!Array.isArray(value)) {
+        values = [value];
+    }
+    return rw.toBytes(values, rw.getType(type, base));
 }
 
 /**
@@ -35,7 +37,17 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    return rw.fromBytes(buffer, rw.getType(type, base, true));
+    let offset = type.bits < 8 ? type.bits : type.realBits / 8;
+    let values = rw.fromBytes(
+            buffer.slice(0, offset),
+            rw.getType(type, base)
+        );
+    if (type.char) {
+        values = values.slice(0, type.bits / 8);
+    } else {
+        values = values[0];
+    }
+    return values;
 }
 
 /**
@@ -47,7 +59,7 @@ function unpack(buffer, type, base=10) {
  * @return {!Array<number>|!Array<string>}
  */
 function packArray(values, type, base=10) {
-    return rw.toBytes(values, rw.getType(type, base, false));
+    return rw.toBytes(values, rw.getType(type, base));
 }
 
 /**
@@ -59,7 +71,7 @@ function packArray(values, type, base=10) {
  * @return {!Array<number>|string}
  */
 function unpackArray(buffer, type, base=10) {
-    return rw.fromBytes(buffer, rw.getType(type, base, false));
+    return rw.fromBytes(buffer, rw.getType(type, base));
 }
 
 /**
@@ -86,7 +98,7 @@ function findString(buffer, text) {
 /**
  * Turn a struct into a byte buffer.
  * A struct is an array of values of not necessarily the same type.
- * @param {Array} struct The struct values.
+ * @param {Array<number|string>} struct The struct values.
  * @param {!Array<Object>} def The struct type definition.
  * @param {number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
@@ -110,7 +122,7 @@ function packStruct(struct, def, base=10) {
  * @param {!Array<Object>} def The struct type definition.
  * @param {number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {Array}
+ * @return {Array<number|string>}
  */
 function unpackStruct(buffer, def, base=10) {
     if (buffer.length < getStructDefSize(def)) {
@@ -120,7 +132,7 @@ function unpackStruct(buffer, def, base=10) {
     let i = 0;
     let j = 0;
     while (i < def.length) {
-        let bits = def[i].bits < 8 ? 1 : def[i].bits / 8;
+        let bits = def[i].bits < 8 ? 1 : def[i].realBits / 8;
         struct = struct.concat(
                 unpack(buffer.slice(j, j + bits), def[i], base)
             );
@@ -139,56 +151,196 @@ function unpackStruct(buffer, def, base=10) {
 function getStructDefSize(def) {
     let bits = 0;
     for (let i = 0; i < def.length; i++) {
-        bits += def[i].bits / 8;
+        bits += def[i].realBits / 8;
     }
     return bits;
 }
 
 // interface
-module.exports.pack = pack;
-module.exports.unpack = unpack;
-module.exports.packArray = packArray;
-module.exports.unpackArray = unpackArray;
-module.exports.unpackStruct = unpackStruct;
-module.exports.packStruct = packStruct;
-module.exports.findString = findString;
-module.exports.Type = Type;
+exports.pack = pack;
+exports.unpack = unpack;
+exports.packArray = packArray;
+exports.unpackArray = unpackArray;
+exports.unpackStruct = unpackStruct;
+exports.packStruct = packStruct;
+exports.findString = findString;
+exports.Type = Type;
 
 // types
-module.exports.chr = new Type({"bits": 8, "char": true});
-module.exports.fourCC = new Type({"bits": 32, "char": true});
-module.exports.bool = new Type({"bits": 1});
-module.exports.int2 = new Type({"bits": 2, "signed": true});
-module.exports.uInt2 = new Type({"bits": 2});
-module.exports.int4 = new Type({"bits": 4, "signed": true});
-module.exports.uInt4 = new Type({"bits": 4});
-module.exports.int8 = new Type({"bits": 8, "signed": true});
-module.exports.uInt8 = new Type({"bits": 8});
+/** 
+ * A char.
+ * @type {!Type}
+ */
+exports.chr = new Type({"bits": 8, "char": true});
+/**
+ * A 4-char string
+ * @type {!Type}
+ */
+exports.fourCC = new Type({"bits": 32, "char": true});
+/**
+ * Booleans
+ * @type {!Type}
+ */
+exports.bool = new Type({"bits": 1});
+/**
+ * Signed 2-bit integers
+ * @type {!Type}
+ */
+exports.int2 = new Type({"bits": 2, "signed": true});
+/**
+ * Unsigned 2-bit integers
+ * @type {!Type}
+ */
+exports.uInt2 = new Type({"bits": 2});
+/**
+ * Signed 4-bit integers
+ * @type {!Type}
+ */
+exports.int4 = new Type({"bits": 4, "signed": true});
+/**
+ * Unsigned 4-bit integers
+ * @type {!Type}
+ */
+exports.uInt4 = new Type({"bits": 4});
+/**
+ * Signed 8-bit integers
+ * @type {!Type}
+ */
+exports.int8 = new Type({"bits": 8, "signed": true});
+/**
+ * Unsigned 4-bit integers
+ * @type {!Type}
+ */
+exports.uInt8 = new Type({"bits": 8});
 // LE
-module.exports.int16  = new Type({"bits": 16, "signed": true});
-module.exports.uInt16 = new Type({"bits": 16});
-module.exports.float16 = new Type({"bits": 16, "float": true});
-module.exports.int24 = new Type({"bits": 24, "signed": true});
-module.exports.uInt24 = new Type({"bits": 24});
-module.exports.int32 = new Type({"bits": 32, "signed": true});
-module.exports.uInt32 = new Type({"bits": 32});
-module.exports.float32 = new Type({"bits": 32, "float": true});
-module.exports.int40 = new Type({"bits": 40, "signed": true});
-module.exports.uInt40 = new Type({"bits": 40});
-module.exports.int48 = new Type({"bits": 48, "signed": true});
-module.exports.uInt48 = new Type({"bits": 48});
-module.exports.float64 = new Type({"bits": 64, "float": true});
+/**
+ * Signed 16-bit integers little-endian
+ * @type {!Type}
+ */
+exports.int16  = new Type({"bits": 16, "signed": true});
+/**
+ * Unsigned 16-bit integers little-endian
+ * @type {!Type}
+ */
+exports.uInt16 = new Type({"bits": 16});
+/**
+ * Half-precision floating-point numbers little-endian
+ * @type {!Type}
+ */
+exports.float16 = new Type({"bits": 16, "float": true});
+/**
+ * Signed 24-bit integers little-endian
+ * @type {!Type}
+ */
+exports.int24 = new Type({"bits": 24, "signed": true});
+/**
+ * Unsigned 24-bit integers little-endian
+ * @type {!Type}
+ */
+exports.uInt24 = new Type({"bits": 24});
+/**
+ * Signed 32-bit integers little-endian
+ * @type {!Type}
+ */
+exports.int32 = new Type({"bits": 32, "signed": true});
+/**
+ * Unsigned 32-bit integers little-endian
+ * @type {!Type}
+ */
+exports.uInt32 = new Type({"bits": 32});
+/**
+ * Single-precision floating-point numbers little-endian
+ * @type {!Type}
+ */
+exports.float32 = new Type({"bits": 32, "float": true});
+/**
+ * Signed 40-bit integers little-endian
+ * @type {!Type}
+ */
+exports.int40 = new Type({"bits": 40, "signed": true});
+/**
+ * Unsigned 40-bit integers little-endian
+ * @type {!Type}
+ */
+exports.uInt40 = new Type({"bits": 40});
+/**
+ * Signed 48-bit integers little-endian
+ * @type {!Type}
+ */
+exports.int48 = new Type({"bits": 48, "signed": true});
+/**
+ * Unsigned 48-bit integers little-endian
+ * @type {!Type}
+ */
+exports.uInt48 = new Type({"bits": 48});
+/**
+ * Double-precision floating-point numbers little-endian
+ * @type {!Type}
+ */
+exports.float64 = new Type({"bits": 64, "float": true});
 // BE
-module.exports.int16BE  = new Type({"bits": 16, "signed": true, "be": true});
-module.exports.uInt16BE = new Type({"bits": 16, "be": true});
-module.exports.float16BE = new Type({"bits": 16, "float": true, "be": true});
-module.exports.int24BE = new Type({"bits": 24, "signed": true, "be": true});
-module.exports.uInt24BE = new Type({"bits": 24, "be": true});
-module.exports.int32BE = new Type({"bits": 32, "signed": true, "be": true});
-module.exports.uInt32BE = new Type({"bits": 32, "be": true});
-module.exports.float32BE = new Type({"bits": 32, "float": true, "be": true});
-module.exports.int40BE = new Type({"bits": 40, "signed": true, "be": true});
-module.exports.uInt40BE = new Type({"bits": 40, "be": true});
-module.exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
-module.exports.uInt48BE = new Type({"bits": 48, "be": true});
-module.exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
+/**
+ * Signed 16-bit integers big-endian
+ * @type {!Type}
+ */
+exports.int16BE  = new Type({"bits": 16, "signed": true, "be": true});
+/**
+ * Unsigned 16-bit integers big-endian
+ * @type {!Type}
+ */
+exports.uInt16BE = new Type({"bits": 16, "be": true});
+/**
+ * Half-precision floating-point numbers big-endian
+ * @type {!Type}
+ */
+exports.float16BE = new Type({"bits": 16, "float": true, "be": true});
+/**
+ * Signed 24-bit integers big-endian
+ * @type {!Type}
+ */
+exports.int24BE = new Type({"bits": 24, "signed": true, "be": true});
+/**
+ * Unsigned 24-bit integers big-endian
+ * @type {!Type}
+ */
+exports.uInt24BE = new Type({"bits": 24, "be": true});
+/**
+ * Signed 32-bit integers big-endian
+ * @type {!Type}
+ */
+exports.int32BE = new Type({"bits": 32, "signed": true, "be": true});
+/**
+ * Unsigned 32-bit integers big-endian
+ * @type {!Type}
+ */
+exports.uInt32BE = new Type({"bits": 32, "be": true});
+/**
+ * Single-precision floating-point numbers big-endian
+ * @type {!Type}
+ */
+exports.float32BE = new Type({"bits": 32, "float": true, "be": true});
+/**
+ * Signed 40-bit integers big-endian
+ * @type {!Type}
+ */
+exports.int40BE = new Type({"bits": 40, "signed": true, "be": true});
+/**
+ * Unsigned 40-bit integers big-endian
+ * @type {!Type}
+ */
+exports.uInt40BE = new Type({"bits": 40, "be": true});
+/**
+ * Signed 48-bit integers big-endian
+ * @type {!Type}
+ */
+exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
+/**
+ * Unsigned 48-bit integers big-endian
+ * @type {!Type}
+ */
+exports.uInt48BE = new Type({"bits": 48, "be": true});
+/**
+ * Double-precision floating-point numbers big-endian
+ * @type {!Type}
+ */
+exports.float64BE = new Type({"bits": 64, "float": true, "be": true});

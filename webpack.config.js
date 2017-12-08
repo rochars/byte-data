@@ -16,183 +16,182 @@ module.exports = {
         loader: 'string-replace-loader',
         query: {
           multiple: [
-            
             // Functions
             {
-              search: "module.exports.pack = pack",
+              search: "exports.pack = pack",
               replace: "window['byteData'] = window['byteData'] ? window['byteData'] : {};" + 
                        "window['byteData']['pack'] = pack",
             },
             {
-              search: 'module.exports.unpack = unpack',
+              search: 'exports.unpack = unpack',
               replace: "window['byteData']['unpack'] = unpack",
             },
             {
-              search: 'module.exports.packArray',
+              search: 'exports.packArray',
               replace: "window['byteData']['packArray']",
             },
             {
-              search: 'module.exports.unpackArray',
+              search: 'exports.unpackArray',
               replace: "window['byteData']['unpackArray']",
             },
             {
-              search: 'module.exports.packStruct',
+              search: 'exports.packStruct',
               replace: "window['byteData']['packStruct']",
             },
             {
-              search: 'module.exports.unpackStruct',
+              search: 'exports.unpackStruct',
               replace: "window['byteData']['unpackStruct']",
             },
             {
-              search: "module.exports.findString",
+              search: "exports.findString",
               replace: "window['byteData']['findString']",
             },
             // Classes
             {
-              search: 'module.exports.Type',
+              search: 'exports.Type',
               replace: "window['byteData']['Type']",
             },
             // types: LE
             {
-              search: 'module.exports.chr',
+              search: 'exports.chr',
               replace: "window['byteData']['chr']",
             },
             {
-              search: 'module.exports.fourCC',
+              search: 'exports.fourCC',
               replace: "window['byteData']['fourCC']",
             },
             {
-              search: 'module.exports.bool',
+              search: 'exports.bool',
               replace: "window['byteData']['bool']",
             },
             {
-              search: 'module.exports.int2',
+              search: 'exports.int2',
               replace: "window['byteData']['int2']",
             },
             {
-              search: 'module.exports.uInt2',
+              search: 'exports.uInt2',
               replace: "window['byteData']['uInt2']",
             },
             {
-              search: 'module.exports.int4',
+              search: 'exports.int4',
               replace: "window['byteData']['int4']",
             },
             {
-              search: 'module.exports.uInt4',
+              search: 'exports.uInt4',
               replace: "window['byteData']['uInt4']",
             },
             {
-              search: 'module.exports.int8',
+              search: 'exports.int8',
               replace: "window['byteData']['int8']",
             },
             {
-              search: 'module.exports.uInt8',
+              search: 'exports.uInt8',
               replace: "window['byteData']['uInt8']",
             },
             {
-              search: 'module.exports.int16',
+              search: 'exports.int16',
               replace: "window['byteData']['int16']",
             },
             {
-              search: 'module.exports.uInt16',
+              search: 'exports.uInt16',
               replace: "window['byteData']['uInt16']",
             },
             {
-              search: 'module.exports.float16',
+              search: 'exports.float16',
               replace: "window['byteData']['float16']",
             },
             {
-              search: 'module.exports.int24',
+              search: 'exports.int24',
               replace: "window['byteData']['int24']",
             },
             {
-              search: 'module.exports.uInt24',
+              search: 'exports.uInt24',
               replace: "window['byteData']['uInt24']",
             },
             {
-              search: 'module.exports.int32',
+              search: 'exports.int32',
               replace: "window['byteData']['int32']",
             },
             {
-              search: 'module.exports.uInt32',
+              search: 'exports.uInt32',
               replace: "window['byteData']['uInt32']",
             },
             {
-              search: 'module.exports.float32',
+              search: 'exports.float32',
               replace: "window['byteData']['float32']",
             },
             {
-              search: 'module.exports.int40',
+              search: 'exports.int40',
               replace: "window['byteData']['int40']",
             },
             {
-              search: 'module.exports.uInt40',
+              search: 'exports.uInt40',
               replace: "window['byteData']['uInt40']",
             },
             {
-              search: 'module.exports.int48',
+              search: 'exports.int48',
               replace: "window['byteData']['int48']",
             },
             {
-              search: 'module.exports.uInt48',
+              search: 'exports.uInt48',
               replace: "window['byteData']['uInt48']",
             },
             {
-              search: 'module.exports.float64',
+              search: 'exports.float64',
               replace: "window['byteData']['float64']",
             },
 
             // types: BE
             {
-              search: 'module.exports.int16BE',
+              search: 'exports.int16BE',
               replace: "window['byteData']['int16BE']",
             },
             {
-              search: 'module.exports.uInt16BE',
+              search: 'exports.uInt16BE',
               replace: "window['byteData']['uInt16BE']",
             },
             {
-              search: 'module.exports.float16BE',
+              search: 'exports.float16BE',
               replace: "window['byteData']['float16BE']",
             },
             {
-              search: 'module.exports.int24BE',
+              search: 'exports.int24BE',
               replace: "window['byteData']['int24BE']",
             },
             {
-              search: 'module.exports.uInt24BE',
+              search: 'exports.uInt24BE',
               replace: "window['byteData']['uInt24BE']",
             },
             {
-              search: 'module.exports.int32BE',
+              search: 'exports.int32BE',
               replace: "window['byteData']['int32BE']",
             },
             {
-              search: 'module.exports.uInt32BE',
+              search: 'exports.uInt32BE',
               replace: "window['byteData']['uInt32BE']",
             },
             {
-              search: 'module.exports.float32BE',
+              search: 'exports.float32BE',
               replace: "window['byteData']['float32BE']",
             },
             {
-              search: 'module.exports.int40BE',
+              search: 'exports.int40BE',
               replace: "window['byteData']['int40BE']",
             },
             {
-              search: 'module.exports.uInt40BE',
+              search: 'exports.uInt40BE',
               replace: "window['byteData']['uInt40BE']",
             },
             {
-              search: 'module.exports.int48BE',
+              search: 'exports.int48BE',
               replace: "window['byteData']['int48BE']",
             },
             {
-              search: 'module.exports.uInt48BE',
+              search: 'exports.uInt48BE',
               replace: "window['byteData']['uInt48BE']",
             },
             {
-              search: 'module.exports.float64BE',
+              search: 'exports.float64BE',
               replace: "window['byteData']['float64BE']",
             }
           ]

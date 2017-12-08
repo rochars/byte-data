@@ -2,12 +2,18 @@
  * bit-parser: Functions to read and write bytes.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
- * Float32 based on int-bits: https://github.com/Jam3/int-bits
+ * Floats based on int-bits: https://github.com/Jam3/int-bits
+ * Future: fix https://github.com/majimboo/c-struct 40 and 48-bit
  */
 
+/** @private */
 let f32 = new Float32Array(1);
+/** @private */
 let i32 = new Int32Array(f32.buffer);
-
+/** @private */
+let f64 = new Float64Array(1);
+/** @private */
+let ui32 = new Uint32Array(f64.buffer);
 
 /**
  * Functions to read data from bytes.
@@ -108,33 +114,33 @@ const BitReader = {
     },
 
     /**
+     * Read 1 53-bit int from bytes.
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @return {number}
+     */
+    "read53Bit": function (bytes, i) {
+        return readBytesAsBits(bytes, i, 7);
+    },
+
+    /**
      * Read 1 64-bit double from bytes.
      * Thanks https://gist.github.com/kg/2192799
      * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} x The index to read.
+     * @param {number} i The index to read.
      * @return {number}
      */
-    "read64BitFloat": function (bytes, x) {
-        let binary = getBinary(bytes.slice(x, x + 8));
-        let significandBin = "1" + binary.substr(1 + 11, 52);
-        let val = 1;
-        let significand = 0;
-        let i = 0;
-        while (i < significandBin.length) {
-            significand += val * parseInt(significandBin.charAt(i), 10);
-            val = val / 2;
-            i++;
-        }
-        let sign = (binary.charAt(0) == "1") ? -1 : 1;
-        let doubleValue = sign * significand *
-            Math.pow(2, parseInt(binary.substr(1, 11), 2) - 1023);
-        return doubleValue == -0 ? 0 : doubleValue;
+    "read64BitFloat": function (bytes, i) {
+        ui32[0] = BitReader["read32Bit"](bytes, i);
+        ui32[1] = BitReader["read32Bit"](bytes, i + 4);
+        return f64[0];
     },
 
     /**
      * Read 1 char from bytes.
      * @param {!Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
+     * @param {Object} type The index to read.
      * @return {string}
      */
     "readChar": function (bytes, i, type) {
@@ -155,77 +161,187 @@ const BitReader = {
  */
 let BitWriter = {
 
+    /**
+     * Write one 64-bit float as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write64BitFloat": function(bytes, number, j) {
-        let bits = toFloat64(number);
-        j = BitWriter["write32Bit"](bytes, bits[1], j);
-        return BitWriter["write32Bit"](bytes, bits[0], j);
+        f64[0] = number;
+        j = BitWriter["write32Bit"](bytes, ui32[0], j);
+        return BitWriter["write32Bit"](bytes, ui32[1], j);
     },
 
-    // Thanks https://github.com/majimboo/c-struct
+    /**
+     * Write one 53-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
+    "write53Bit": function (bytes, number, j) {
+        j = BitWriter["write48Bit"](bytes, number, j);
+        bytes[j++] = Math.floor(number / Math.pow(2, 48)) & 0xFF;
+        return j;
+    },
+
+    /**
+     * Write one 48-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write48Bit": function (bytes, number, j) {
         j = BitWriter["write40Bit"](bytes, number, j);
-        bytes[j++] = number / 0x10000000000 & 0xFF;
+        bytes[j++] = Math.floor(number / Math.pow(2, 40)) & 0xFF;
         return j;
     },
 
-    // Thanks https://github.com/majimboo/c-struct
+    /**
+     * Write one 40-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write40Bit": function (bytes, number, j) {
         j = BitWriter["write32Bit"](bytes, number, j);
-        bytes[j++] = number / 0x100000000 & 0xFF;
+        bytes[j++] = Math.floor(number / Math.pow(2, 32)) & 0xFF;
         return j;
     },
 
+    /**
+     * Write one 32-bit float as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write32BitFloat": function (bytes, number, j) {
         f32[0] = number;
         j = BitWriter["write32Bit"](bytes, i32[0], j);
         return j;
     },
 
+    /**
+     * Write one 32-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write32Bit": function (bytes, number, j) {
         j = BitWriter["write24Bit"](bytes, number, j);
         bytes[j++] = number >>> 24 & 0xFF;
         return j;
     },
 
+    /**
+     * Write one 24-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write24Bit": function (bytes, number, j) {
         j = BitWriter["write16Bit"](bytes, number, j);
         bytes[j++] = number >>> 16 & 0xFF;
         return j;
     },
 
+    /**
+     * Write one 16-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write16Bit": function (bytes, number, j) {
         bytes[j++] = number & 0xFF;
         bytes[j++] = number >>> 8 & 0xFF;
         return j;
     },
 
+    /**
+     * Write one 16-bit float as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write16BitFloat": function (bytes, number, j) {
-        let bits = toHalf(number);
+        f32[0] = number;
+        let x = i32[0];
+        let bits = (x >> 16) & 0x8000;
+        let m = (x >> 12) & 0x07ff;
+        let e = (x >> 23) & 0xff;
+        if (e >= 103) {
+            bits |= ((e - 112) << 10) | (m >> 1);
+            bits += m & 1;
+        }
         bytes[j] = bits & 0xFF;
         bytes[j+1] = bits >>> 8 & 0xFF;
         return j+2;
     },
 
+    /**
+     * Write one 8-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write8Bit": function (bytes, number, j) {
         bytes[j++] = number & 0xFF;
         return j;
     },
 
+    /**
+     * Write one 4-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write4Bit": function (bytes, number, j) {
         bytes[j++] = number & 0xF;
         return j;
     },
 
+    /**
+     * Write one 2-bit integer as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write2Bit": function (bytes, number, j) {
         bytes[j++] = number < 0 ? number + 4 : number;
         return j;
     },
 
+    /**
+     * Write one boolean as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "write1Bit": function (bytes, number, j) {
         bytes[j++] = number ? 1 : 0;
         return j;
     },
 
+    /**
+     * Write one char as a byte.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {string} string The string to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     */
     "writeString": function (bytes, string, j) {
         bytes[j++] = string.charCodeAt(0);
         return j;
@@ -250,58 +366,7 @@ function getBinary(bytes) {
 }
 
 /**
- * Unpack a 64 bit float into two words.
- * Thanks https://stackoverflow.com/a/16043259
- * @param {number} value A float64 number.
- * @return {!Array<number>}
- */
-function toFloat64(value) {
-    if (value == 0) {
-        return [0, 0];
-    }
-    let hiWord = 0;
-    let loWord = 0;
-    if (value <= 0) {
-        hiWord = 0x80000000;
-        value = -value;
-    }
-    let exponent = Math.floor(
-        Math.log(value) / Math.log(2));
-    let significand = Math.floor(
-        (value / Math.pow(2, exponent)) * Math.pow(2, 52));
-    loWord = significand & 0xFFFFFFFF;
-    significand /= Math.pow(2, 32);
-    exponent += 1023;
-    hiWord = hiWord | (exponent << 20);
-    hiWord = hiWord | (significand & ~(-1 << 20));
-    return [hiWord, loWord];
-}
-
-/**
- * to-half: int bits of half-precision floating point values
- * Based on:
- * https://mail.mozilla.org/pipermail/es-discuss/2017-April/047994.html
- * https://github.com/rochars/byte-data
- * @param {number} val The float16 value.
- * @return {number}
- */
-function toHalf(val) {
-    f32[0] = val;
-    let x = i32[0];
-    let bits = (x >> 16) & 0x8000;
-    let m = (x >> 12) & 0x07ff;
-    let e = (x >> 23) & 0xff;
-    if (e < 103) {
-        return bits;
-    }
-    bits |= ((e - 112) << 10) | (m >> 1);
-    bits += m & 1;
-    return bits;
-}
-
-/**
  * Read a group of bytes by turning it to bits.
- * Useful for 40 & 48-bit, but underperform.
  * @param {!Array<number>|Uint8Array} bytes An array of bytes.
  * @param {number} i The index to read.
  * @param {number} numBytes The number of bytes
@@ -319,5 +384,5 @@ function readBytesAsBits(bytes, i, numBytes) {
     return parseInt(byte, 2);
 }
 
-module.exports.BitWriter = BitWriter;
-module.exports.BitReader = BitReader;
+exports.BitWriter = BitWriter;
+exports.BitReader = BitReader;

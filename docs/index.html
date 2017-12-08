@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a><ul class='methods'><li data-type='method'><a href="Type.html#overflow">overflow</a></li><li data-type='method'><a href="Type.html#sign">sign</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#findString">findString</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -50,7 +50,7 @@
 <p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a> <a href="https://jsperf.com/byte-data-dist"><img src="https://img.shields.io/badge/jsperf-run-blue.svg?style=for-the-badge" alt="JSPerf"></a></p>
 <ul>
 <li>For Node and the browser</li>
-<li>3KB minified + compressed, 8KB minified</li>
+<li>Less than 3KB minified + compressed, less than 8KB minified</li>
 <li>Tested against Python's struct module</li>
 <li>Pack and unpack single values, arrays and structs</li>
 <li><a href="https://codecov.io/gh/rochars/byte-data"><img src="https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg" alt="codecov"></a></li>
@@ -157,7 +157,7 @@ function unpackStruct(buffer, def, base=10) {}
  * @param {string} text Some string to look for.
  * @return {number} The start index of the first occurrence, -1 if not found
  */
-function findString(buffer, text) {}</code></pre><h2>Available types</h2><ul>
+function findString(buffer, text) {}</code></pre><h2>Standard types</h2><ul>
 <li>chr</li>
 <li>fourCC</li>
 <li>bool</li>
@@ -238,7 +238,9 @@ byteData.pack(255, uInt8); // [255]
 byteData.pack(300, uInt8); // [255]
 
 // Underflow
-byteData.pack(-1, uInt8); // [0]</code></pre><h2>LICENSE</h2><p>Copyright (c) 2017 Rafael da Silva Rocha.</p>
+byteData.pack(-1, uInt8); // [0]</code></pre><h2>Floating-point numbers</h2><p>Floating-point numbers are based on the <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</p>
+<p>16-bit floating-point numbers may show precision differences when compared to other implementations.</p>
+<h2>LICENSE</h2><p>Copyright (c) 2017 Rafael da Silva Rocha.</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
 &quot;Software&quot;), to deal in the Software without restriction, including
@@ -267,7 +269,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 06 2017 22:13:22 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 08 2017 15:42:38 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

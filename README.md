@@ -6,7 +6,7 @@ https://github.com/rochars/byte-data
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html) [![JSPerf](https://img.shields.io/badge/jsperf-run-blue.svg?style=for-the-badge)](https://jsperf.com/byte-data-dist)
 
 - For Node and the browser
-- 3KB minified + compressed, 8KB minified
+- Less than 3KB minified + compressed, less than 8KB minified
 - Tested against Python's struct module
 - Pack and unpack single values, arrays and structs
 - [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data)
@@ -128,7 +128,7 @@ function unpackStruct(buffer, def, base=10) {}
 function findString(buffer, text) {}
 ```
 
-## Available types
+## Standard types
   - chr
   - fourCC
   - bool
@@ -229,6 +229,11 @@ byteData.pack(300, uInt8); // [255]
 // Underflow
 byteData.pack(-1, uInt8); // [0]
 ```
+
+## Floating-point numbers
+Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
+
+16-bit floating-point numbers may show precision differences when compared to other implementations.
 
 ## LICENSE
 Copyright (c) 2017 Rafael da Silva Rocha.

@@ -10,8 +10,17 @@ const bitParser = require("../src/bit-parser.js");
 /**
  * A class to represent byte-data types.
  */
-class Type {
+module.exports = class Type {
 
+    /**
+     * @param {Object} options The type definition.
+     * @param {number} options.bits Number of bits used by data of this type.
+     * @param {boolean} options.char True for string/char types.
+     * @param {boolean} options.float True for float types.
+     *    Available only for 16, 32 and 64-bit data.
+     * @param {boolean} options.be True for signed types.
+     * @param {boolean} options.signed True for signed types.
+     */
     constructor(options) {
         /**
          * The max number of bits used by data of this type.
@@ -39,11 +48,6 @@ class Type {
          */
         this.signed = this.float ? true : options["signed"];
         /**
-         * If this type represent a single value or an array.
-         * @type {boolean}
-         */
-        this.single = true;
-        /**
          * The function to read values of this type from buffers.
          * @type {Function}
          */
@@ -60,9 +64,10 @@ class Type {
         this.offset = 0;
         /**
          * The base used to represent data of this type.
+         * Default is 10.
          * @type {number}
          */
-        this.base = 10;
+        this.base = options["base"] ? options["base"] : 10;
         /**
          * Min value for numbers of this type.
          * @type {number}
@@ -74,6 +79,7 @@ class Type {
          */
         this.max = Infinity;
         this.build_();
+        this.realBits = this.bits;
     }
 
     /**
@@ -108,7 +114,8 @@ class Type {
      * @private
      */
     build_() {
-        this.offset = this.bits < 8 ? 1 : this.bits / 8;
+        this.setRealBits_();
+        this.offset = this.bits < 8 ? 1 : this.realBits / 8;
         this.setReader_();
         this.setWriter_();
         if (!this.float) {
@@ -121,10 +128,13 @@ class Type {
      * @private
      */
     setReader_() {
-        this.reader = this.char ?
-            bitParser.BitReader["readChar"] : bitParser.BitReader[
-                'read' + (this.bits < 8 ? 8 : this.bits) +
+        if (this.char) {
+            this.reader = bitParser.BitReader["readChar"];
+        } else {
+            this.reader = bitParser.BitReader[
+                'read' + (this.bits < 8 ? 8 : this.realBits) +
                 'Bit' + (this.float ? "Float" : "")];
+        }
     }
 
     /**
@@ -136,7 +146,7 @@ class Type {
             this.writer = bitParser.BitWriter["writeString"];
         } else {
             this.writer = bitParser.BitWriter[
-                'write' + this.bits + 'Bit' + (this.float ? "Float" : "")];
+                'write' + this.realBits + 'Bit' + (this.float ? "Float" : "")];
         }
     }
 
@@ -147,13 +157,41 @@ class Type {
     setMinMax_() {
         let max = Math.pow(2, this.bits);
         if (this.signed) {
-            this.max = (max / 2) - 1;
-            this.min = (max / 2) * -1;
+            this.max = (max / 2) -1;
+            this.min = -max / 2;
         } else {
             this.max = max - 1;
             this.min = 0;
         }
     }
-}
 
-module.exports = Type;
+    /**
+     * Set the real bit depth for data with bit count different from the
+     * standard types (1, 2, 4, 8, 16, 32, 40, 48, 64): the closest bigger
+     * standard number of bits. The data is then treated as data of the
+     * standard type on all aspects except for the min and max values.
+     * Ex: a 11-bit uInt is treated as 16-bit uInt with a max value of 2048.
+     * @private
+     */
+    setRealBits_() {
+        if (this.bits > 8) {
+            if (this.bits <= 16) {
+                this.realBits = 16;
+            } else if (this.bits <= 24) {
+                this.realBits = 24;
+            } else if (this.bits <= 32) {
+                this.realBits = 32;
+            } else if (this.bits <= 40) {
+                this.realBits = 40;
+            } else if (this.bits <= 48) {
+                this.realBits = 48;
+            } else if (this.bits <= 53) {
+                this.realBits = 53;
+            } else {
+                this.realBits = 64;
+            }
+        } else {
+            this.realBits = this.bits;
+        }
+    }
+};
