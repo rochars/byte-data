@@ -4,7 +4,7 @@
  * https://github.com/rochars/byte-data
  */
 
-/** @private */
+
 const bitParser = require("../src/bit-parser.js");
 
 /**

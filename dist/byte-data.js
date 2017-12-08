@@ -73,7 +73,7 @@
  * https://github.com/rochars/byte-data
  */
 
-/** @private */
+
 const bitParser = __webpack_require__(3);
 
 /**
@@ -291,7 +291,7 @@ let Type = __webpack_require__(0);
  * @return {!Array<number>|!Array<string>}
  */
 function pack(value, type, base=10) {
-    let values;
+    let values = [];
     if (type.char) {
         values = type.char ? value.slice(0, type.realBits / 8) : value;
     } else if (!Array.isArray(value)) {
