@@ -129,9 +129,6 @@ function formatOutput(bytes, type) {
  * @return {number}
  */
 function getOutputByteOffset(type) {
-    if (type.realBits < 8) {
-        return (type.base == 2 ? type.bits : type.bits < 5 ? 1 : 2) + 1;
-    }
     return (type.base == 2 ? 8 : 2) + 1;
 }
 

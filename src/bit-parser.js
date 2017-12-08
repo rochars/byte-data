@@ -323,6 +323,24 @@ let BitWriter = {
         return j;
     },
 
+    // 3-bit to 7-bit still need specific methods
+    "write3Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 3) : number;
+        return j;
+    },
+    "write5Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 5) : number;
+        return j;
+    },
+    "write6Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 6) : number;
+        return j;
+    },
+    "write7Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 7) : number;
+        return j;
+    },
+
     /**
      * Write one boolean as a binary value.
      * @param {!Array<number>} bytes An array of bytes.

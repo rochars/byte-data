@@ -78,6 +78,7 @@ class Type {
          * @type {number}
          */
         this.max = Infinity;
+
         this.build_();
         this.realBits = this.bits;
     }
@@ -88,7 +89,7 @@ class Type {
      * @return {number}
      */
     sign(num) {
-        if (num > this.max) {
+        if (this.signed && num > this.max) {
             num -= (this.max * 2) + 2;
         }
         return num;
@@ -157,16 +158,18 @@ class Type {
     setMinMax_() {
         let max = Math.pow(2, this.bits);
         if (this.signed) {
-            this.max = (max / 2) -1;
+            this.max = max / 2 -1;
             this.min = -max / 2;
         } else {
             this.max = max - 1;
             this.min = 0;
         }
+        
     }
 
     /**
      * Set the real bit depth for data with bit count different from the
+
      * standard types (1, 2, 4, 8, 16, 32, 40, 48, 64): the closest bigger
      * standard number of bits. The data is then treated as data of the
      * standard type on all aspects except for the min and max values.

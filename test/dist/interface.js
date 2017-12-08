@@ -35,7 +35,7 @@ describe('test dist/byte-data-min', function() {
     });
     it('pack bool (6, 16) should return "1"', function() {
         assert.deepEqual(window.byteData.pack(6, window.byteData.bool, 16),
-            ['1']);
+            ['01']);
     });
     it('pack chr ("a")', function() {
         assert.deepEqual(window.byteData.pack("a", window.byteData.chr),

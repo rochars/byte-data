@@ -147,6 +147,7 @@ class Type {
          * @type {number}
          */
         this.max = Infinity;
+
         this.build_();
         this.realBits = this.bits;
     }
@@ -157,7 +158,7 @@ class Type {
      * @return {number}
      */
     sign(num) {
-        if (num > this.max) {
+        if (this.signed && num > this.max) {
             num -= (this.max * 2) + 2;
         }
         return num;
@@ -226,16 +227,18 @@ class Type {
     setMinMax_() {
         let max = Math.pow(2, this.bits);
         if (this.signed) {
-            this.max = (max / 2) -1;
+            this.max = max / 2 -1;
             this.min = -max / 2;
         } else {
             this.max = max - 1;
             this.min = 0;
         }
+        
     }
 
     /**
      * Set the real bit depth for data with bit count different from the
+
      * standard types (1, 2, 4, 8, 16, 32, 40, 48, 64): the closest bigger
      * standard number of bits. The data is then treated as data of the
      * standard type on all aspects except for the min and max values.
@@ -755,9 +758,6 @@ function formatOutput(bytes, type) {
  * @return {number}
  */
 function getOutputByteOffset(type) {
-    if (type.realBits < 8) {
-        return (type.base == 2 ? type.bits : type.bits < 5 ? 1 : 2) + 1;
-    }
     return (type.base == 2 ? 8 : 2) + 1;
 }
 
@@ -1106,6 +1106,24 @@ let BitWriter = {
      */
     "write2Bit": function (bytes, number, j) {
         bytes[j++] = number < 0 ? number + 4 : number;
+        return j;
+    },
+
+    // 3-bit to 7-bit still need specific methods
+    "write3Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 3) : number;
+        return j;
+    },
+    "write5Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 5) : number;
+        return j;
+    },
+    "write6Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 6) : number;
+        return j;
+    },
+    "write7Bit": function (bytes, number, j) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, 7) : number;
         return j;
     },
 

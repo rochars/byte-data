@@ -35,7 +35,7 @@ describe('interface', function() {
     });
     it('pack bool (6, 16) should return "1"', function() {
         assert.deepEqual(byteData.pack(6, byteData.bool, 16),
-            ['1']);
+            ['01']);
     });
     it('pack chr ("a")', function() {
         assert.deepEqual(byteData.pack("a", byteData.chr),
@@ -138,14 +138,14 @@ describe('interface', function() {
              );
     });
 
-    /*
+    
     it('uInt5 to hex', function() {
         assert.deepEqual(byteData.pack(1, new byteData.Type({"bits": 5}), 16),
             ["01"]);
     });
     it('uInt5 to bin', function() {
         assert.deepEqual(byteData.pack(1, new byteData.Type({"bits": 5}), 2),
-            ["00001"]);
+            ["00000001"]);
     });
 
     it('uInt6 to hex', function() {
@@ -154,7 +154,7 @@ describe('interface', function() {
     });
     it('uInt6 to bin', function() {
         assert.deepEqual(byteData.pack(1, new byteData.Type({"bits": 6}), 2),
-            ["000001"]);
+            ["00000001"]);
     });
 
     it('uInt7 to hex', function() {
@@ -163,19 +163,28 @@ describe('interface', function() {
     });
     it('uInt7 to bin', function() {
         assert.deepEqual(byteData.pack(1, new byteData.Type({"bits": 7}), 2),
-            ["0000001"]);
+            ["00000001"]);
     });
 
 
     it('uInt3 to hex', function() {
         assert.deepEqual(byteData.pack(1, new byteData.Type({"bits": 3}), 16),
-            ["1"]);
+            ["01"]);
     });
     it('uInt3 to bin', function() {
         assert.deepEqual(byteData.pack(1, new byteData.Type({"bits": 3}), 2),
-            ["001"]);
+            ["00000001"]);
     });
 
+    it('int16 to bytes to int16', function() {
+        let ntype = new byteData.Type({"bits": 16, "signed": true});
+        let buffer = byteData.packArray([-1024, 1023], ntype);
+        assert.deepEqual(
+            [-1024, 1023],
+            byteData.unpackArray(buffer, ntype));
+    });
+
+    /*
     it('int11 to bytes to int11', function() {
         let ntype = new byteData.Type({"bits": 11, "signed": true});
         let buffer = byteData.packArray([-1024, 1023], ntype);
@@ -183,8 +192,20 @@ describe('interface', function() {
             [-1024, 1023],
             byteData.unpackArray(buffer, ntype));
     });
-
-
+    it('int11 to bytes to int11', function() {
+        let ntype = new byteData.Type({"bits": 11, "signed": true});
+        let buffer = byteData.packArray([-1023, 1023], ntype);
+        assert.deepEqual(
+            [-1023, 1023],
+            byteData.unpackArray(buffer, ntype));
+    });
+    it('int11 to bytes to int11', function() {
+        let ntype = new byteData.Type({"bits": 11, "signed": true});
+        let buffer = byteData.packArray([-1022, 1023], ntype);
+        assert.deepEqual(
+            [-1022, 1023],
+            byteData.unpackArray(buffer, ntype));
+    });
     it('uInt12 to bytes to uInt12', function() {
         let ntype = new byteData.Type({"bits": 12});
         let buffer = byteData.packArray([0, 4095], ntype);
