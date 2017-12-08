@@ -79,7 +79,7 @@ const bitParser = __webpack_require__(3);
 /**
  * A class to represent byte-data types.
  */
-module.exports = class Type {
+class Type {
 
     /**
      * @param {Object} options The type definition.
@@ -263,7 +263,9 @@ module.exports = class Type {
             this.realBits = this.bits;
         }
     }
-};
+}
+
+module.exports = Type;
 
 
 /***/ }),

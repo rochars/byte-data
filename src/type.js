@@ -10,7 +10,7 @@ const bitParser = require("../src/bit-parser.js");
 /**
  * A class to represent byte-data types.
  */
-module.exports = class Type {
+class Type {
 
     /**
      * @param {Object} options The type definition.
@@ -194,4 +194,6 @@ module.exports = class Type {
             this.realBits = this.bits;
         }
     }
-};
+}
+
+module.exports = Type;
