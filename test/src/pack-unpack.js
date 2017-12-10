@@ -35,7 +35,7 @@ let float64 = byteData.float64;
 let uInt53 = new byteData.Type({"bits": 53});
 
 describe('pack-unpack', function() {
-            
+    
     it('should turn 8 bytes to 1 64-bit float and back (1', function() {
         let bytes = byteData.packArray([612345678987654.3], float64);
         let num = byteData.unpackArray(bytes, float64);

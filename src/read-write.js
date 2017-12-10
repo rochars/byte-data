@@ -75,7 +75,7 @@ function writeBytes(values, type) {
     let len = values.length;
     let bytes = [];
     while (i < len) {
-        j = type.writer(bytes, type.overflow(values[i]), j);
+        j = type.writer(bytes, type.overflow(values[i]), j, type);
         i++;
     }
     return bytes;

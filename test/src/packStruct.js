@@ -14,7 +14,7 @@ let byteData = require('../../index.js');
 let uInt53 = new byteData.Type({"bits": 53});
 
 describe('pack struct', function() {
-    
+
     it('should not pack a LE struct when input have less items', function() {
         let struct = ["abcd", 4294967295];
         let def = [
@@ -135,5 +135,4 @@ describe('pack struct', function() {
                 expected
             );
     });
-
 });
