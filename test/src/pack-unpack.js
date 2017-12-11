@@ -5,7 +5,7 @@
  */
 
 let assert = require('assert');
-let byteData = require('../../index.js');
+let byteData = require('../../test/loader.js');
 
 let chr = byteData.chr;
 let bool = byteData.bool;

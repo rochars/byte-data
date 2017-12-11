@@ -5,7 +5,7 @@
  */
 
 let assert = require('assert');
-let byteData = require('../../../index.js');
+let byteData = require('../../../test/loader.js');
 let uInt53 = new byteData.Type({"bits": 53});
 
 describe('53-bit to bytes', function() { 

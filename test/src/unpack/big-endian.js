@@ -5,7 +5,7 @@
  */
 
 let assert = require('assert');
-let byteData = require('../../../index.js');
+let byteData = require('../../../test/loader.js');
 
 let uInt16BE = byteData.uInt16BE;
 let float16BE = byteData.float16BE;

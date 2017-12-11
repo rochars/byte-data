@@ -5,7 +5,7 @@
  */
 
 let assert = require('assert');
-let byteData = require('../../../index.js');
+let byteData = require('../../../test/loader.js');
 let uInt32 = byteData.uInt32;
 
 describe('unpack uInt32', function() {

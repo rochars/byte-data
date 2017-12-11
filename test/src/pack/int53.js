@@ -1,6 +1,6 @@
 
 let assert = require('assert');
-let byteData = require('../../../index.js');
+let byteData = require('../../../test/loader.js');
 let int53 = new byteData.Type({"bits": 53, "signed": true});
 let int24 = new byteData.Type({"bits": 24, "signed": true});
 

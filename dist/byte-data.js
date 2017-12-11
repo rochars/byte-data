@@ -88,25 +88,26 @@ let ui32 = new Uint32Array(f64.buffer);
  */
 const BitReader = {
 
-    /**
-     * Read 1 8-bit int from from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read8Bit": function (bytes, i) {
-        return bytes[i];
-    },
+    "read": function(bytes, i, type) {
+        let num = 0;
+        let z = 1;
+        let x = type.offset;
+        /*
+        if (type.bits < 33) {
+            for (let x = type.offset; x > 0; x--) {
+                if (x > 1) {
+                    num = bytes[x + i] << ((i - 1) * 8) | num;
+                } else {
+                    num = (bytes[i] | num);
+                }
+                z++;
+            }
+            */
+        //} else {
+            num = readBytesAsBits(bytes, i, type.offset);
+        //}
+        return num;
 
-    /**
-     * Read 1 16-bit int from from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read16Bit": function (bytes, i) {
-        let v = bytes[1 + i] << 8 | bytes[i];
-        return v;
     },
 
     /**
@@ -116,7 +117,7 @@ const BitReader = {
      * @param {number} i The index to read.
      * @return {number}
      */
-    "read16BitFloat": function (bytes, i) {
+    "read16F": function (bytes, i) {
         let binary = parseInt(getBinary([bytes[i], bytes[i+1]]), 2);
         let exponent = (binary & 0x7C00) >> 10;
         let fraction = binary & 0x03FF;
@@ -130,65 +131,14 @@ const BitReader = {
     },
 
     /**
-     * Read 1 24-bit int from from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read24Bit": function (bytes, i) {
-        return bytes[2 + i] << 16 | BitReader["read16Bit"](bytes, i);
-    },
-
-    /**
-     * Read 1 32-bit int from from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read32Bit": function (bytes, i) {
-        return (bytes[3 + i] << 24 |
-            BitReader["read24Bit"](bytes, i)) >>> 0;
-    },
-
-    /**
      * Read 1 32-bit float from from bytes.
      * @param {!Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
      */
-    "read32BitFloat": function (bytes, i) {
-        i32[0] = BitReader["read32Bit"](bytes, i);
+    "read32F": function (bytes, i) {
+        i32[0] = BitReader["read"](bytes, i, {"offset": 4});
         return f32[0];
-    },
-
-    /**
-     * Read 1 40-bit int from from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read40Bit": function (bytes, i) {
-        return readBytesAsBits(bytes, i, 5);
-    },
-
-    /**
-     * Read 1 48-bit int from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read48Bit": function (bytes, i) {
-        return readBytesAsBits(bytes, i, 6);
-    },
-
-    /**
-     * Read 1 53-bit int from bytes. // 
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read56Bit": function (bytes, i) {
-        return readBytesAsBits(bytes, i, 7);
     },
 
     /**
@@ -198,9 +148,10 @@ const BitReader = {
      * @param {number} i The index to read.
      * @return {number}
      */
-    "read64BitFloat": function (bytes, i) {
-        ui32[0] = BitReader["read32Bit"](bytes, i);
-        ui32[1] = BitReader["read32Bit"](bytes, i + 4);
+    "read64F": function (bytes, i) {
+        let type = {"bits": 32, "offset": 4};
+        ui32[0] = BitReader["read"](bytes, i, type);
+        ui32[1] = BitReader["read"](bytes, i + 4, type);
         return f64[0];
     },
 
@@ -236,18 +187,11 @@ let BitWriter = {
      * @param {number} j The index being written in the byte buffer.
      * @return {number} The next index to write on the byte buffer.
      */
-    "write64BitFloat": function(bytes, number, j) {
+    "write64F": function(bytes, number, j) {
         f64[0] = number;
-        bytes[j++] = ui32[0] & 0xFF;
-        bytes[j++] = ui32[0] >>> 8 & 0xFF;
-        bytes[j++] = ui32[0] >>> 16 & 0xFF;
-        bytes[j++] = ui32[0] >>> 24 & 0xFF;
-        bytes[j++] = ui32[1] & 0xFF;
-        bytes[j++] = ui32[1] >>> 8 & 0xFF;
-        bytes[j++] = ui32[1] >>> 16 & 0xFF;
-        bytes[j++] = ui32[1] >>> 24 & 0xFF;
-        //j = BitWriter["write"](bytes, ui32[0], j, new Type({"bits": 32}));
-        return j; //BitWriter["write"](bytes, ui32[1], j, new Type({"bits": 32}));
+        let type = {bits: 32, offset: 4, lastByteMask:255};
+        j = BitWriter["write"](bytes, ui32[0], j, type);
+        return BitWriter["write"](bytes, ui32[1], j, type);
     },
 
     /**
@@ -258,7 +202,7 @@ let BitWriter = {
      * @param {Object} type The type.
      * @return {number} The next index to write on the byte buffer.
      */
-    "write32BitFloat": function (bytes, number, j, type) {
+    "write32F": function (bytes, number, j, type) {
         f32[0] = number;
         j = BitWriter["write"](bytes, i32[0], j, type);
         return j;
@@ -271,7 +215,7 @@ let BitWriter = {
      * @param {number} j The index being written in the byte buffer.
      * @return {number} The next index to write on the byte buffer.
      */
-    "write16BitFloat": function (bytes, number, j) {
+    "write16F": function (bytes, number, j) {
         f32[0] = number;
         let x = i32[0];
         let bits = (x >> 16) & 0x8000;
@@ -308,27 +252,37 @@ let BitWriter = {
      */
     "write": function (bytes, number, j, type) {
         let mask = 255;
-        for (let i = 1; i <= type.offset; i++) {
+        let len = type.offset;
+        for (let i = 1; i <= len; i++) {
             if (i == 1) {
-                if (type.offset == 1) {
-                    if (type.bits < 8) {
-                        mask = Math.pow(2, type.bits);
-                        bytes[j++] = number < 0 ? number + mask : number;
-                        return j;
-                    }
-                }
-                bytes[j++] = number & mask;
+                j = writeFirstByte(bytes, number, j, type);
             } else {
-                if (i == type.offset) {
-                    let r = 8 - (type.realBits - type.bits);
-                    mask = Math.pow(2, r > 0 ? r : 8) -1;
+                if (i == len) {
+                    mask = type.lastByteMask;
                 }
-                bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & mask;    
+                bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & mask;
             }
         }
         return j;
     }
 };
+
+/**
+ * Write the first byte of a integer number.
+ * @param {!Array<number>} bytes An array of bytes.
+ * @param {number} number The number.
+ * @param {number} j The index being written in the byte buffer.
+ * @param {Object} type The type.
+ * @return {number} The next index to write on the byte buffer.
+ */
+function writeFirstByte(bytes, number, j, type) {
+    if (type.offset == 1 && type.bits < 8) {
+        bytes[j++] = number < 0 ? number + Math.pow(2, type.bits) : number;
+    } else {
+        bytes[j++] = number & 255;
+    }
+    return j;
+}
 
 /**
  * A class to represent byte-data types.
@@ -402,6 +356,7 @@ class Type {
          */
         this.max = Infinity;
         this.realBits = this.bits;
+        this.lastByteMask = 255;
         this.build_();
     }
 
@@ -438,6 +393,7 @@ class Type {
      */
     build_() {
         this.setRealBits_();
+        this.setLastByteMask_();
         this.offset = this.bits < 8 ? 1 : Math.ceil(this.realBits / 8);
         this.setReader_();
         this.setWriter_();
@@ -451,12 +407,13 @@ class Type {
      * @private
      */
     setReader_() {
-        if (this.char) {
+        if (this.float) {
+            this.reader = BitReader[
+                'read' + this.bits + 'F'];
+        } else if (this.char) {
             this.reader = BitReader["readChar"];
         } else {
-            this.reader = BitReader[
-                'read' + (this.bits < 8 ? 8 : this.realBits) +
-                'Bit' + (this.float ? "Float" : "")];
+            this.reader = BitReader["read"];
         }
     }
 
@@ -469,7 +426,7 @@ class Type {
             this.writer = BitWriter["writeString"];
         } else if (this.float) {
             this.writer = BitWriter[
-                'write' + this.realBits + 'BitFloat'];
+                'write' + this.realBits + 'F'];
         } else {
             this.writer = BitWriter["write"];      
         }
@@ -492,7 +449,6 @@ class Type {
 
     /**
      * Set the real bit depth for data with bit count different from the
-
      * standard types (1, 2, 4, 8, 16, 32, 40, 48, 64): the closest bigger
      * standard number of bits. The data is then treated as data of the
      * standard type on all aspects except for the min and max values.
@@ -519,6 +475,16 @@ class Type {
         } else {
             this.realBits = this.bits;
         }
+    }
+
+    /**
+     * Set the mask that should be used when writing the last byte of
+     * data of the type.
+     * @private
+     */
+    setLastByteMask_() {
+        let r = 8 - (this.realBits - this.bits);
+        this.lastByteMask = Math.pow(2, r > 0 ? r : 8) -1;
     }
 }
 
@@ -1034,21 +1000,11 @@ function bytesFromBase(bytes, base) {
 function formatOutput(bytes, type) {
     let i = 0;
     let len = bytes.length;
-    let offset = getOutputByteOffset(type);
+    let offset = (type.base == 2 ? 8 : 2) + 1;
     while(i < len) {
         bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
         i++;
     }
-}
-
-/**
- * Get the number of chars a non-string output should have
- * according to the number of bits used by the type.
- * @param {Object} type The type.
- * @return {number}
- */
-function getOutputByteOffset(type) {
-    return (type.base == 2 ? 8 : 2) + 1;
 }
 
 /**

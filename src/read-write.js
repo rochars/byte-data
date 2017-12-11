@@ -115,21 +115,11 @@ function bytesFromBase(bytes, base) {
 function formatOutput(bytes, type) {
     let i = 0;
     let len = bytes.length;
-    let offset = getOutputByteOffset(type);
+    let offset = (type.base == 2 ? 8 : 2) + 1;
     while(i < len) {
         bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
         i++;
     }
-}
-
-/**
- * Get the number of chars a non-string output should have
- * according to the number of bits used by the type.
- * @param {Object} type The type.
- * @return {number}
- */
-function getOutputByteOffset(type) {
-    return (type.base == 2 ? 8 : 2) + 1;
 }
 
 /**

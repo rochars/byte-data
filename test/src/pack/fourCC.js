@@ -5,7 +5,7 @@
  */
 
 let assert = require('assert');
-let byteData = require('../../../index.js');
+let byteData = require('../../../test/loader.js');
 
 describe('pack fourCC', function() {
     it('should turn a 3 char string to bytes', function() {

@@ -5,7 +5,12 @@
  */
 
 let assert = require('assert');
-let byteData = require('../../../index.js');
+//let byteData = require('../../../test/loader.js');
+
+//process.argv.forEach(function (val, index, array) {
+//  console.log(index + ': ' + val);
+//})
+let byteData = require('../../../test/loader.js');
 
 describe('pack int16', function() { 
     

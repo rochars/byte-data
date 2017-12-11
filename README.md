@@ -7,23 +7,15 @@ https://github.com/rochars/byte-data
 
 - For Node and the browser
 - Less than 3KB minified + compressed, less than 8KB minified
-- Tested against Python's struct module
+- Tested against Python's struct module (for all common types)
 - Pack and unpack single values, arrays and structs
-- [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data)
+- With [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data)
 
-## Support:
-- char
-- booleans
-- 2-bit integers (signed/unsigned)
-- 4-bit integers (signed/unsigned)
-- 8-bit integers (signed/unsigned)
-- 16-bit integers (signed/unsigned)
+## Pack/unpack:
+- Booleans
+- All integers from 2-Bit to 53-Bit, signed and unsigned, including **4, 8, 16, 24, 32, 40 and 48-Bit**
 - 16-bit half-precision floating point numbers
-- 24-bit integers (signed/unsigned)
-- 32-bit integers (signed/unsigned)
 - 32-bit single-precision floating point numbers
-- 40-bit integers (signed/unsigned)
-- 48-bit integers (signed/unsigned)
 - 64-bit double-precision floating point numbers
 - little-endian and big-endian
 - strings of fixed and variable length
@@ -234,6 +226,20 @@ byteData.pack(-1, uInt8); // [0]
 Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
 16-bit floating-point numbers may show precision differences when compared to other implementations.
+
+## Creating new integer types
+```javascript
+// unsigned 11-bit integer
+let uInt11 = new Type({"bits": 11});
+
+// signed 45-bit integer
+let int45 = new Type({"bits": 45, "signed": true});
+
+// A fixed-size string
+let myCode = new Type({"bits": 128, "char": true});
+```
+
+New types work exactly like the pre-defined types. You can create new types of integers (signed/unsigned) and strings, not floats.
 
 ## LICENSE
 Copyright (c) 2017 Rafael da Silva Rocha.
