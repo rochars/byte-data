@@ -89,25 +89,7 @@ let ui32 = new Uint32Array(f64.buffer);
 const BitReader = {
 
     "read": function(bytes, i, type) {
-        let num = 0;
-        let z = 1;
-        let x = type.offset;
-        /*
-        if (type.bits < 33) {
-            for (let x = type.offset; x > 0; x--) {
-                if (x > 1) {
-                    num = bytes[x + i] << ((i - 1) * 8) | num;
-                } else {
-                    num = (bytes[i] | num);
-                }
-                z++;
-            }
-            */
-        //} else {
-            num = readBytesAsBits(bytes, i, type.offset);
-        //}
-        return num;
-
+        return readBytesAsBits(bytes, i, type.offset);
     },
 
     /**
