@@ -79,7 +79,7 @@ describe('interface', function() {
     });
     it('unpack float16', function() {
         assert.equal(
-            byteData.unpack(["01010101", "00110101"], byteData.float16).toFixed(5),
+            byteData.unpack(["01010101", "00110101"], byteData.float16, 2).toFixed(5),
             0.33325);
     });
     it('unpack int2', function() {

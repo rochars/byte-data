@@ -165,182 +165,180 @@ exports.unpackStruct = unpackStruct;
 exports.packStruct = packStruct;
 exports.findString = findString;
 exports.Type = Type;
-
-// types
 /** 
  * A char.
- * @type {!Type}
+ * @type {Object}
  */
 exports.chr = new Type({"bits": 8, "char": true});
 /**
  * A 4-char string
- * @type {!Type}
+ * @type {Object}
  */
 exports.fourCC = new Type({"bits": 32, "char": true});
 /**
  * Booleans
- * @type {!Type}
+ * @type {Object}
  */
 exports.bool = new Type({"bits": 1});
 /**
  * Signed 2-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.int2 = new Type({"bits": 2, "signed": true});
 /**
  * Unsigned 2-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt2 = new Type({"bits": 2});
 /**
  * Signed 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.int4 = new Type({"bits": 4, "signed": true});
 /**
  * Unsigned 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt4 = new Type({"bits": 4});
 /**
  * Signed 8-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.int8 = new Type({"bits": 8, "signed": true});
 /**
  * Unsigned 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt8 = new Type({"bits": 8});
 // LE
 /**
  * Signed 16-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int16  = new Type({"bits": 16, "signed": true});
 /**
  * Unsigned 16-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt16 = new Type({"bits": 16});
 /**
  * Half-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float16 = new Type({"bits": 16, "float": true});
 /**
  * Signed 24-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int24 = new Type({"bits": 24, "signed": true});
 /**
  * Unsigned 24-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt24 = new Type({"bits": 24});
 /**
  * Signed 32-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int32 = new Type({"bits": 32, "signed": true});
 /**
  * Unsigned 32-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt32 = new Type({"bits": 32});
 /**
  * Single-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float32 = new Type({"bits": 32, "float": true});
 /**
  * Signed 40-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int40 = new Type({"bits": 40, "signed": true});
 /**
  * Unsigned 40-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt40 = new Type({"bits": 40});
 /**
  * Signed 48-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int48 = new Type({"bits": 48, "signed": true});
 /**
  * Unsigned 48-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt48 = new Type({"bits": 48});
 /**
  * Double-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float64 = new Type({"bits": 64, "float": true});
 // BE
 /**
  * Signed 16-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int16BE  = new Type({"bits": 16, "signed": true, "be": true});
 /**
  * Unsigned 16-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt16BE = new Type({"bits": 16, "be": true});
 /**
  * Half-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float16BE = new Type({"bits": 16, "float": true, "be": true});
 /**
  * Signed 24-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int24BE = new Type({"bits": 24, "signed": true, "be": true});
 /**
  * Unsigned 24-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt24BE = new Type({"bits": 24, "be": true});
 /**
  * Signed 32-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int32BE = new Type({"bits": 32, "signed": true, "be": true});
 /**
  * Unsigned 32-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt32BE = new Type({"bits": 32, "be": true});
 /**
  * Single-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float32BE = new Type({"bits": 32, "float": true, "be": true});
 /**
  * Signed 40-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int40BE = new Type({"bits": 40, "signed": true, "be": true});
 /**
  * Unsigned 40-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt40BE = new Type({"bits": 40, "be": true});
 /**
  * Signed 48-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
 /**
  * Unsigned 48-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt48BE = new Type({"bits": 48, "be": true});
 /**
  * Double-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float64BE = new Type({"bits": 64, "float": true, "be": true});

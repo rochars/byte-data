@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -204,183 +204,181 @@ exports.unpackStruct = unpackStruct;
 exports.packStruct = packStruct;
 exports.findString = findString;
 exports.Type = Type;
-
-// types
 /** 
  * A char.
- * @type {!Type}
+ * @type {Object}
  */
 exports.chr = new Type({"bits": 8, "char": true});
 /**
  * A 4-char string
- * @type {!Type}
+ * @type {Object}
  */
 exports.fourCC = new Type({"bits": 32, "char": true});
 /**
  * Booleans
- * @type {!Type}
+ * @type {Object}
  */
 exports.bool = new Type({"bits": 1});
 /**
  * Signed 2-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.int2 = new Type({"bits": 2, "signed": true});
 /**
  * Unsigned 2-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt2 = new Type({"bits": 2});
 /**
  * Signed 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.int4 = new Type({"bits": 4, "signed": true});
 /**
  * Unsigned 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt4 = new Type({"bits": 4});
 /**
  * Signed 8-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.int8 = new Type({"bits": 8, "signed": true});
 /**
  * Unsigned 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt8 = new Type({"bits": 8});
 // LE
 /**
  * Signed 16-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int16  = new Type({"bits": 16, "signed": true});
 /**
  * Unsigned 16-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt16 = new Type({"bits": 16});
 /**
  * Half-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float16 = new Type({"bits": 16, "float": true});
 /**
  * Signed 24-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int24 = new Type({"bits": 24, "signed": true});
 /**
  * Unsigned 24-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt24 = new Type({"bits": 24});
 /**
  * Signed 32-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int32 = new Type({"bits": 32, "signed": true});
 /**
  * Unsigned 32-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt32 = new Type({"bits": 32});
 /**
  * Single-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float32 = new Type({"bits": 32, "float": true});
 /**
  * Signed 40-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int40 = new Type({"bits": 40, "signed": true});
 /**
  * Unsigned 40-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt40 = new Type({"bits": 40});
 /**
  * Signed 48-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int48 = new Type({"bits": 48, "signed": true});
 /**
  * Unsigned 48-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt48 = new Type({"bits": 48});
 /**
  * Double-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float64 = new Type({"bits": 64, "float": true});
 // BE
 /**
  * Signed 16-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int16BE  = new Type({"bits": 16, "signed": true, "be": true});
 /**
  * Unsigned 16-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt16BE = new Type({"bits": 16, "be": true});
 /**
  * Half-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float16BE = new Type({"bits": 16, "float": true, "be": true});
 /**
  * Signed 24-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int24BE = new Type({"bits": 24, "signed": true, "be": true});
 /**
  * Unsigned 24-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt24BE = new Type({"bits": 24, "be": true});
 /**
  * Signed 32-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int32BE = new Type({"bits": 32, "signed": true, "be": true});
 /**
  * Unsigned 32-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt32BE = new Type({"bits": 32, "be": true});
 /**
  * Single-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float32BE = new Type({"bits": 32, "float": true, "be": true});
 /**
  * Signed 40-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int40BE = new Type({"bits": 40, "signed": true, "be": true});
 /**
  * Unsigned 40-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt40BE = new Type({"bits": 40, "be": true});
 /**
  * Signed 48-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
 /**
  * Unsigned 48-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.uInt48BE = new Type({"bits": 48, "be": true});
 /**
  * Double-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
 </code></pre>
@@ -395,7 +393,7 @@ exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Dec 10 2017 22:25:18 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 12 2017 09:11:38 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

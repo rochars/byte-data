@@ -52,9 +52,7 @@ function readBytes(bytes, type) {
     let i = 0;
     let len = bytes.length - (type.offset - 1);
     while (i < len) {
-        values.push(
-                type.overflow(type.sign(type.reader(bytes, i, type)))
-            );
+        values.push(type.reader(bytes, i));
         i += type.offset;
     }
     if (type.char) {
@@ -75,8 +73,7 @@ function writeBytes(values, type) {
     let len = values.length;
     let bytes = [];
     while (i < len) {
-        j = type.writer(bytes, type.overflow(values[i]), j, type);
-        i++;
+        j = type.writer(bytes, values[i++], j);
     }
     return bytes;
 }

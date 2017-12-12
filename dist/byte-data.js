@@ -83,190 +83,6 @@ let f64 = new Float64Array(1);
 let ui32 = new Uint32Array(f64.buffer);
 
 /**
- * Functions to read data from bytes.
- * @enum {Function}
- */
-const BitReader = {
-
-    "read": function(bytes, i, type) {
-        return readBytesAsBits(bytes, i, type.offset);
-    },
-
-    /**
-     * Read 1 16-bit float from from bytes.
-     * Thanks https://stackoverflow.com/a/8796597
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read16F": function (bytes, i) {
-        let binary = parseInt(getBinary([bytes[i], bytes[i+1]]), 2);
-        let exponent = (binary & 0x7C00) >> 10;
-        let fraction = binary & 0x03FF;
-        let floatValue;
-        if (exponent) {
-            floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
-        } else {
-            floatValue = 6.103515625e-5 * (fraction / 0x400);
-        }
-        return  floatValue * (binary >> 15 ? -1 : 1);
-    },
-
-    /**
-     * Read 1 32-bit float from from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read32F": function (bytes, i) {
-        i32[0] = BitReader["read"](bytes, i, {"offset": 4});
-        return f32[0];
-    },
-
-    /**
-     * Read 1 64-bit double from bytes.
-     * Thanks https://gist.github.com/kg/2192799
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @return {number}
-     */
-    "read64F": function (bytes, i) {
-        let type = {"bits": 32, "offset": 4};
-        ui32[0] = BitReader["read"](bytes, i, type);
-        ui32[1] = BitReader["read"](bytes, i + 4, type);
-        return f64[0];
-    },
-
-    /**
-     * Read 1 char from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @param {Object} type The index to read.
-     * @return {string}
-     */
-    "readChar": function (bytes, i, type) {
-        let chrs = "";
-        let j = 0;
-        let len = type.bits / 8;
-        while(j < len) {
-            chrs += String.fromCharCode(bytes[i+j]);
-            j++;
-        }
-        return chrs;
-    }
-};
-
-/**
- * Functions to write data to bytes.
- * @enum {Function}
- */
-let BitWriter = {
-
-    /**
-     * Write one 64-bit float as a binary value.
-     * @param {!Array<number>} bytes An array of bytes.
-     * @param {number} number The number to write as bytes.
-     * @param {number} j The index being written in the byte buffer.
-     * @return {number} The next index to write on the byte buffer.
-     */
-    "write64F": function(bytes, number, j) {
-        f64[0] = number;
-        let type = {bits: 32, offset: 4, lastByteMask:255};
-        j = BitWriter["write"](bytes, ui32[0], j, type);
-        return BitWriter["write"](bytes, ui32[1], j, type);
-    },
-
-    /**
-     * Write one 32-bit float as a binary value.
-     * @param {!Array<number>} bytes An array of bytes.
-     * @param {number} number The number to write as bytes.
-     * @param {number} j The index being written in the byte buffer.
-     * @param {Object} type The type.
-     * @return {number} The next index to write on the byte buffer.
-     */
-    "write32F": function (bytes, number, j, type) {
-        f32[0] = number;
-        j = BitWriter["write"](bytes, i32[0], j, type);
-        return j;
-    },
-
-    /**
-     * Write one 16-bit float as a binary value.
-     * @param {!Array<number>} bytes An array of bytes.
-     * @param {number} number The number to write as bytes.
-     * @param {number} j The index being written in the byte buffer.
-     * @return {number} The next index to write on the byte buffer.
-     */
-    "write16F": function (bytes, number, j) {
-        f32[0] = number;
-        let x = i32[0];
-        let bits = (x >> 16) & 0x8000;
-        let m = (x >> 12) & 0x07ff;
-        let e = (x >> 23) & 0xff;
-        if (e >= 103) {
-            bits |= ((e - 112) << 10) | (m >> 1);
-            bits += m & 1;
-        }
-        bytes[j++] = bits & 0xFF;
-        bytes[j++] = bits >>> 8 & 0xFF;
-        return j;
-    },
-    
-    /**
-     * Write one char as a byte.
-     * @param {!Array<number>} bytes An array of bytes.
-     * @param {string} string The string to write as bytes.
-     * @param {number} j The index being written in the byte buffer.
-     * @return {number} The next index to write on the byte buffer.
-     */
-    "writeString": function (bytes, string, j) {
-        bytes[j++] = string.charCodeAt(0);
-        return j;
-    },
-
-    /**
-     * Write one char as a byte.
-     * @param {!Array<number>} bytes An array of bytes.
-     * @param {number} number The number.
-     * @param {number} j The index being written in the byte buffer.
-     * @param {Object} type The type.
-     * @return {number} The next index to write on the byte buffer.
-     */
-    "write": function (bytes, number, j, type) {
-        let mask = 255;
-        let len = type.offset;
-        for (let i = 1; i <= len; i++) {
-            if (i == 1) {
-                j = writeFirstByte(bytes, number, j, type);
-            } else {
-                if (i == len) {
-                    mask = type.lastByteMask;
-                }
-                bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & mask;
-            }
-        }
-        return j;
-    }
-};
-
-/**
- * Write the first byte of a integer number.
- * @param {!Array<number>} bytes An array of bytes.
- * @param {number} number The number.
- * @param {number} j The index being written in the byte buffer.
- * @param {Object} type The type.
- * @return {number} The next index to write on the byte buffer.
- */
-function writeFirstByte(bytes, number, j, type) {
-    if (type.offset == 1 && type.bits < 8) {
-        bytes[j++] = number < 0 ? number + Math.pow(2, type.bits) : number;
-    } else {
-        bytes[j++] = number & 255;
-    }
-    return j;
-}
-
-/**
  * A class to represent byte-data types.
  */
 class Type {
@@ -287,12 +103,12 @@ class Type {
          */
         this.bits = options["bits"];
         /**
-         * If this type represent floating-point values or not.
+         * If this type is a char or not.
          * @type {boolean}
          */
         this.char = options["char"];
         /**
-         * If this type it is signed or not.
+         * If this type is a floating-point number or not.
          * @type {boolean}
          */
         this.float = options["float"];
@@ -307,37 +123,52 @@ class Type {
          */
         this.signed = this.float ? true : options["signed"];
         /**
-         * The function to read values of this type from buffers.
-         * @type {Function}
-         */
-        this.reader = null;
-        /**
-         * The function to write values of this type to buffers.
-         * @type {Function}
-         */
-        this.writer = null;
-        /**
-         * The number of bytes used by data of this type.
-         * @type {number}
-         */
-        this.offset = 0;
-        /**
          * The base used to represent data of this type.
          * Default is 10.
          * @type {number}
          */
         this.base = options["base"] ? options["base"] : 10;
         /**
+         * The function to read values of this type from buffers.
+         * @type {Function}
+         * @ignore
+         */
+        this.reader = null;
+        /**
+         * The function to write values of this type to buffers.
+         * @type {Function}
+         * @ignore
+         */
+        this.writer = null;
+        /**
+         * The number of bytes used by data of this type.
+         * @type {number}
+         * @ignore
+         */
+        this.offset = 0;
+        /**
          * Min value for numbers of this type.
          * @type {number}
+         * @ignore
          */
         this.min = -Infinity;
         /**
          * Max value for numbers of this type.
          * @type {number}
+         * @ignore
          */
         this.max = Infinity;
+        /**
+         * The word size.
+         * @type {number}
+         * @ignore
+         */
         this.realBits = this.bits;
+        /**
+         * The mask to be used in the last byte of this type.
+         * @type {number}
+         * @ignore
+         */
         this.lastByteMask = 255;
         this.build_();
     }
@@ -346,6 +177,7 @@ class Type {
      * Sign a number according to the type.
      * @param {number} num The number.
      * @return {number}
+     * @ignore
      */
     sign(num) {
         if (num > this.max) {
@@ -359,6 +191,7 @@ class Type {
      * overflow or underflow.
      * @param {number} value The data.
      * @return {number}
+     * @ignore
      */
     overflow(value) {
         if (value > this.max) {
@@ -367,6 +200,199 @@ class Type {
             value = this.min;
         }
         return value;
+    }
+
+    /**
+     * Read a integer number from a byte buffer.
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @param {Object} type The type if other than this.
+     * @return {number}
+     * @private
+     */
+    read_(bytes, i, type=this) {
+        let num = 0;
+        let x = type.offset - 1;
+        while (x > 0) {
+            //num = (bytes[x + i] * Math.pow(2, x * 8)) | num;
+            num = (bytes[x + i] << x * 8) | num;
+            x--;
+        }
+        num = (bytes[i] | num) >>> 0;
+        return this.overflow(this.sign(num));
+    }
+
+    /**
+     * Read a integer number from a byte buffer by turning the bytes
+     * to a string of bits.
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @param {Object} type The type if other than this.
+     * @return {number}
+     * @private
+     */
+    readBits_(bytes, i, type=this) {
+        let binary = "";
+        let j = 0;
+        while(j < type.offset) {
+            let bits = bytes[i + j].toString(2);
+            binary = Array(9 - bits.length).join("0") + bits + binary;
+            j++;
+        }
+        return this.overflow(this.sign(parseInt(binary, 2)));
+    }
+
+    /**
+     * Read 1 16-bit float from from bytes.
+     * Thanks https://stackoverflow.com/a/8796597
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @return {number}
+     * @private
+     */
+    read16F_(bytes, i) {
+        let int = this.read_(bytes, i, {"bits": 16, "offset": 2});
+        let exponent = (int & 0x7C00) >> 10;
+        let fraction = int & 0x03FF;
+        let floatValue;
+        if (exponent) {
+            floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
+        } else {
+            floatValue = 6.103515625e-5 * (fraction / 0x400);
+        }
+        return  floatValue * (int >> 15 ? -1 : 1);
+    }
+
+    /**
+     * Read 1 32-bit float from bytes.
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @return {number}
+     * @private
+     */
+    read32F_(bytes, i) {
+        i32[0] = this.read_(bytes, i, {"bits": 32, "offset": 4});
+        return f32[0];
+    }
+
+    /**
+     * Read 1 64-bit double from bytes.
+     * Thanks https://gist.github.com/kg/2192799
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @return {number}
+     * @private
+     */
+    read64F_(bytes, i) {
+        ui32[0] = this.read_(bytes, i, {"bits": 32, "offset": 4});
+        ui32[1] = this.read_(bytes, i + 4, {"bits": 32, "offset": 4});
+        return f64[0];
+    }
+
+    /**
+     * Read 1 char from bytes.
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @return {string}
+     * @private
+     */
+    readChar_(bytes, i) {
+        let chrs = "";
+        let j = 0;
+        while(j < this.offset) {
+            chrs += String.fromCharCode(bytes[i+j]);
+            j++;
+        }
+        return chrs;
+    }
+
+    /**
+     * Write one integer number to a byte buffer.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number.
+     * @param {number} j The index being written in the byte buffer.
+     * @param {Object} type The type.
+     * @return {number} The next index to write on the byte buffer.
+     * @private
+     */
+    write_(bytes, number, j, type=this) {
+        number = this.overflow(number);
+        let mask = 255;
+        let len = type.offset;
+        j = this.writeFirstByte_(bytes, number, j, type);
+        for (let i = 2; i <= len; i++) {
+            if (i == len) {
+                mask = type.lastByteMask;
+            }
+            bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & mask;
+        }
+        return j;
+    }
+
+    /**
+     * Write one 64-bit float as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     * @private
+     */
+    write64F_(bytes, number, j) {
+        f64[0] = number;
+        let type = {bits: 32, offset: 4, lastByteMask:255};
+        j = this.write_(bytes, ui32[0], j, type);
+        return this.write_(bytes, ui32[1], j, type);
+    }
+
+    /**
+     * Write one 32-bit float as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @param {Object} type The type.
+     * @return {number} The next index to write on the byte buffer.
+     * @private
+     */
+    write32F_(bytes, number, j, type) {
+        f32[0] = number;
+        j = this.write_(bytes, i32[0], j, type);
+        return j;
+    }
+
+    /**
+     * Write one 16-bit float as a binary value.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     * @private
+     */
+    write16F_(bytes, number, j) {
+        f32[0] = number;
+        let x = i32[0];
+        let bits = (x >> 16) & 0x8000;
+        let m = (x >> 12) & 0x07ff;
+        let e = (x >> 23) & 0xff;
+        if (e >= 103) {
+            bits |= ((e - 112) << 10) | (m >> 1);
+            bits += m & 1;
+        }
+        bytes[j++] = bits & 0xFF;
+        bytes[j++] = bits >>> 8 & 0xFF;
+        return j;
+    }
+    
+    /**
+     * Write one char as a byte.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {string} string The string to write as bytes.
+     * @param {number} j The index being written in the byte buffer.
+     * @return {number} The next index to write on the byte buffer.
+     * @private
+     */
+    writeChar_(bytes, string, j) {
+        bytes[j++] = string.charCodeAt(0);
+        return j;
     }
 
     /**
@@ -390,12 +416,19 @@ class Type {
      */
     setReader_() {
         if (this.float) {
-            this.reader = BitReader[
-                'read' + this.bits + 'F'];
+            if (this.bits == 16) {
+                this.reader = this.read16F_;
+            } else if(this.bits == 32) {
+                this.reader = this.read32F_;
+            } else if(this.bits == 64) {
+                this.reader = this.read64F_;
+            }
         } else if (this.char) {
-            this.reader = BitReader["readChar"];
+            this.reader = this.readChar_;
+        } else if (this.bits < 33) {
+            this.reader = this.read_;
         } else {
-            this.reader = BitReader["read"];
+            this.reader = this.readBits_;
         }
     }
 
@@ -404,13 +437,18 @@ class Type {
      * @private
      */
     setWriter_() {
-        if (this.char) {
-            this.writer = BitWriter["writeString"];
-        } else if (this.float) {
-            this.writer = BitWriter[
-                'write' + this.realBits + 'F'];
+        if (this.float) {
+            if (this.bits == 16) {
+                this.writer = this.write16F_;
+            } else if(this.bits == 32) {
+                this.writer = this.write32F_;
+            } else if(this.bits == 64) {
+                this.writer = this.write64F_;
+            }
+        } else if (this.char) {
+            this.writer = this.writeChar_;
         } else {
-            this.writer = BitWriter["write"];      
+            this.writer = this.write_;
         }
     }
 
@@ -468,42 +506,24 @@ class Type {
         let r = 8 - (this.realBits - this.bits);
         this.lastByteMask = Math.pow(2, r > 0 ? r : 8) -1;
     }
-}
 
-/**
- * Get a binary string representation of a value described as bytes.
- * @param {Array<number>|number} bytes The bytes.
- * @return {string}
- */
-function getBinary(bytes) {
-    let binary = "";
-    let i = 0;
-    let bytesLength = bytes.length;
-    while(i < bytesLength) {
-        let bits = bytes[i].toString(2);
-        binary = Array(9 - bits.length).join("0") + bits + binary;
-        i++;
+    /**
+     * Write the first byte of a integer number.
+     * @param {!Array<number>} bytes An array of bytes.
+     * @param {number} number The number.
+     * @param {number} j The index being written in the byte buffer.
+     * @param {Object} type The type.
+     * @return {number} The next index to write on the byte buffer.
+     * @private
+     */
+    writeFirstByte_(bytes, number, j, type=this) {
+        if (type.offset == 1 && type.bits < 8) {
+            bytes[j++] = number < 0 ? number + Math.pow(2, type.bits) : number;
+        } else {
+            bytes[j++] = number & 255;
+        }
+        return j;
     }
-    return binary;
-}
-
-/**
- * Read a group of bytes by turning it to bits.
- * @param {!Array<number>|Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @param {number} numBytes The number of bytes
- *      (1 for 8-bit, 2 for 16-bit, etc).
- * @return {number}
- */
-function readBytesAsBits(bytes, i, numBytes) {
-    let j = numBytes-1;
-    let byte = "";
-    while (j >= 0) {
-        let bits = bytes[j + i].toString(2);
-        byte += Array(9 - bits.length).join("0") + bits;
-        j--;
-    }
-    return parseInt(byte, 2);
 }
 
 module.exports = Type;
@@ -680,183 +700,181 @@ window['byteData']['unpackStruct'] = unpackStruct;
 window['byteData']['packStruct'] = packStruct;
 window['byteData']['findString'] = findString;
 window['byteData']['Type'] = Type;
-
-// types
 /** 
  * A char.
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['chr'] = new Type({"bits": 8, "char": true});
 /**
  * A 4-char string
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['fourCC'] = new Type({"bits": 32, "char": true});
 /**
  * Booleans
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['bool'] = new Type({"bits": 1});
 /**
  * Signed 2-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int2'] = new Type({"bits": 2, "signed": true});
 /**
  * Unsigned 2-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt2'] = new Type({"bits": 2});
 /**
  * Signed 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int4'] = new Type({"bits": 4, "signed": true});
 /**
  * Unsigned 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt4'] = new Type({"bits": 4});
 /**
  * Signed 8-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int8'] = new Type({"bits": 8, "signed": true});
 /**
  * Unsigned 4-bit integers
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt8'] = new Type({"bits": 8});
 // LE
 /**
  * Signed 16-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int16']  = new Type({"bits": 16, "signed": true});
 /**
  * Unsigned 16-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt16'] = new Type({"bits": 16});
 /**
  * Half-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['float16'] = new Type({"bits": 16, "float": true});
 /**
  * Signed 24-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int24'] = new Type({"bits": 24, "signed": true});
 /**
  * Unsigned 24-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt24'] = new Type({"bits": 24});
 /**
  * Signed 32-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int32'] = new Type({"bits": 32, "signed": true});
 /**
  * Unsigned 32-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt32'] = new Type({"bits": 32});
 /**
  * Single-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['float32'] = new Type({"bits": 32, "float": true});
 /**
  * Signed 40-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int40'] = new Type({"bits": 40, "signed": true});
 /**
  * Unsigned 40-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt40'] = new Type({"bits": 40});
 /**
  * Signed 48-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int48'] = new Type({"bits": 48, "signed": true});
 /**
  * Unsigned 48-bit integers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt48'] = new Type({"bits": 48});
 /**
  * Double-precision floating-point numbers little-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['float64'] = new Type({"bits": 64, "float": true});
 // BE
 /**
  * Signed 16-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int16BE']  = new Type({"bits": 16, "signed": true, "be": true});
 /**
  * Unsigned 16-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt16BE'] = new Type({"bits": 16, "be": true});
 /**
  * Half-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['float16BE'] = new Type({"bits": 16, "float": true, "be": true});
 /**
  * Signed 24-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int24BE'] = new Type({"bits": 24, "signed": true, "be": true});
 /**
  * Unsigned 24-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt24BE'] = new Type({"bits": 24, "be": true});
 /**
  * Signed 32-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int32BE'] = new Type({"bits": 32, "signed": true, "be": true});
 /**
  * Unsigned 32-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt32BE'] = new Type({"bits": 32, "be": true});
 /**
  * Single-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['float32BE'] = new Type({"bits": 32, "float": true, "be": true});
 /**
  * Signed 40-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int40BE'] = new Type({"bits": 40, "signed": true, "be": true});
 /**
  * Unsigned 40-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt40BE'] = new Type({"bits": 40, "be": true});
 /**
  * Signed 48-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['int48BE'] = new Type({"bits": 48, "signed": true, "be": true});
 /**
  * Unsigned 48-bit integers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['uInt48BE'] = new Type({"bits": 48, "be": true});
 /**
  * Double-precision floating-point numbers big-endian
- * @type {!Type}
+ * @type {Object}
  */
 window['byteData']['float64BE'] = new Type({"bits": 64, "float": true, "be": true});
 
@@ -919,9 +937,7 @@ function readBytes(bytes, type) {
     let i = 0;
     let len = bytes.length - (type.offset - 1);
     while (i < len) {
-        values.push(
-                type.overflow(type.sign(type.reader(bytes, i, type)))
-            );
+        values.push(type.reader(bytes, i));
         i += type.offset;
     }
     if (type.char) {
@@ -942,8 +958,7 @@ function writeBytes(values, type) {
     let len = values.length;
     let bytes = [];
     while (i < len) {
-        j = type.writer(bytes, type.overflow(values[i]), j, type);
-        i++;
+        j = type.writer(bytes, values[i++], j);
     }
     return bytes;
 }

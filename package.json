@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Readable data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -10,6 +10,9 @@
     "binary",
     "array",
     "int",
+    "integer",
+    "signed",
+    "unsigned",
     "float",
     "half-precision",
     "single-precision",
@@ -43,15 +46,14 @@
   },
   "scripts": {
     "lint": "jshint index.js && jshint src",
-    "test": "nyc ./node_modules/mocha/bin/_mocha test/src/ --recursive --src",
-    "test-dist": "mocha ./node_modules/mocha/bin/_mocha test/src --recursive --dist",
+    "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --src",
+    "test-dist": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --dist",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "bundle": "webpack",
     "compile": "google-closure-compiler-js dist/byte-data.js > dist/byte-data-min.js --compilationLevel=ADVANCED",
-    "doc": "./node_modules/.bin/jsdoc index.js -d docs -t node_modules/docdash -r README.md",
-    "qa": "npm run lint && npm run test",
+    "doc": "./node_modules/.bin/jsdoc index.js src/type.js -d docs -t node_modules/docdash -r README.md",
     "pack": "npm run bundle && npm run compile && npm run test-dist && npm run doc",
-    "build": "npm run qa && npm run pack"
+    "build": "npm run lint && npm run pack && npm test"
   },
   "devDependencies": {
     "browser-env": "^3.2.4",

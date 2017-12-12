@@ -1,4 +1,43 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/type.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/type.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * type: The Type class.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
@@ -127,7 +166,7 @@ class Type {
     overflow(value) {
         if (value > this.max) {
             value = this.max;
-        } else if (value < this.min) {
+        } else if (value &lt; this.min) {
             value = this.min;
         }
         return value;
@@ -135,7 +174,7 @@ class Type {
 
     /**
      * Read a integer number from a byte buffer.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @param {Object} type The type if other than this.
      * @return {number}
@@ -146,7 +185,7 @@ class Type {
         let x = type.offset - 1;
         while (x > 0) {
             //num = (bytes[x + i] * Math.pow(2, x * 8)) | num;
-            num = (bytes[x + i] << x * 8) | num;
+            num = (bytes[x + i] &lt;&lt; x * 8) | num;
             x--;
         }
         num = (bytes[i] | num) >>> 0;
@@ -156,7 +195,7 @@ class Type {
     /**
      * Read a integer number from a byte buffer by turning the bytes
      * to a string of bits.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @param {Object} type The type if other than this.
      * @return {number}
@@ -165,7 +204,7 @@ class Type {
     readBits_(bytes, i, type=this) {
         let binary = "";
         let j = 0;
-        while(j < type.offset) {
+        while(j &lt; type.offset) {
             let bits = bytes[i + j].toString(2);
             binary = Array(9 - bits.length).join("0") + bits + binary;
             j++;
@@ -176,15 +215,15 @@ class Type {
     /**
      * Read 1 16-bit float from from bytes.
      * Thanks https://stackoverflow.com/a/8796597
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
      * @private
      */
     read16F_(bytes, i) {
         let int = this.read_(bytes, i, {"bits": 16, "offset": 2});
-        let exponent = (int & 0x7C00) >> 10;
-        let fraction = int & 0x03FF;
+        let exponent = (int &amp; 0x7C00) >> 10;
+        let fraction = int &amp; 0x03FF;
         let floatValue;
         if (exponent) {
             floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
@@ -196,7 +235,7 @@ class Type {
 
     /**
      * Read 1 32-bit float from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
      * @private
@@ -209,7 +248,7 @@ class Type {
     /**
      * Read 1 64-bit double from bytes.
      * Thanks https://gist.github.com/kg/2192799
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
      * @private
@@ -222,7 +261,7 @@ class Type {
 
     /**
      * Read 1 char from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {string}
      * @private
@@ -230,7 +269,7 @@ class Type {
     readChar_(bytes, i) {
         let chrs = "";
         let j = 0;
-        while(j < this.offset) {
+        while(j &lt; this.offset) {
             chrs += String.fromCharCode(bytes[i+j]);
             j++;
         }
@@ -239,7 +278,7 @@ class Type {
 
     /**
      * Write one integer number to a byte buffer.
-     * @param {!Array<number>} bytes An array of bytes.
+     * @param {!Array&lt;number>} bytes An array of bytes.
      * @param {number} number The number.
      * @param {number} j The index being written in the byte buffer.
      * @param {Object} type The type.
@@ -251,18 +290,18 @@ class Type {
         let mask = 255;
         let len = type.offset;
         j = this.writeFirstByte_(bytes, number, j, type);
-        for (let i = 2; i <= len; i++) {
+        for (let i = 2; i &lt;= len; i++) {
             if (i == len) {
                 mask = type.lastByteMask;
             }
-            bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & mask;
+            bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) &amp; mask;
         }
         return j;
     }
 
     /**
      * Write one 64-bit float as a binary value.
-     * @param {!Array<number>} bytes An array of bytes.
+     * @param {!Array&lt;number>} bytes An array of bytes.
      * @param {number} number The number to write as bytes.
      * @param {number} j The index being written in the byte buffer.
      * @return {number} The next index to write on the byte buffer.
@@ -277,7 +316,7 @@ class Type {
 
     /**
      * Write one 32-bit float as a binary value.
-     * @param {!Array<number>} bytes An array of bytes.
+     * @param {!Array&lt;number>} bytes An array of bytes.
      * @param {number} number The number to write as bytes.
      * @param {number} j The index being written in the byte buffer.
      * @param {Object} type The type.
@@ -292,7 +331,7 @@ class Type {
 
     /**
      * Write one 16-bit float as a binary value.
-     * @param {!Array<number>} bytes An array of bytes.
+     * @param {!Array&lt;number>} bytes An array of bytes.
      * @param {number} number The number to write as bytes.
      * @param {number} j The index being written in the byte buffer.
      * @return {number} The next index to write on the byte buffer.
@@ -301,21 +340,21 @@ class Type {
     write16F_(bytes, number, j) {
         f32[0] = number;
         let x = i32[0];
-        let bits = (x >> 16) & 0x8000;
-        let m = (x >> 12) & 0x07ff;
-        let e = (x >> 23) & 0xff;
+        let bits = (x >> 16) &amp; 0x8000;
+        let m = (x >> 12) &amp; 0x07ff;
+        let e = (x >> 23) &amp; 0xff;
         if (e >= 103) {
-            bits |= ((e - 112) << 10) | (m >> 1);
-            bits += m & 1;
+            bits |= ((e - 112) &lt;&lt; 10) | (m >> 1);
+            bits += m &amp; 1;
         }
-        bytes[j++] = bits & 0xFF;
-        bytes[j++] = bits >>> 8 & 0xFF;
+        bytes[j++] = bits &amp; 0xFF;
+        bytes[j++] = bits >>> 8 &amp; 0xFF;
         return j;
     }
     
     /**
      * Write one char as a byte.
-     * @param {!Array<number>} bytes An array of bytes.
+     * @param {!Array&lt;number>} bytes An array of bytes.
      * @param {string} string The string to write as bytes.
      * @param {number} j The index being written in the byte buffer.
      * @return {number} The next index to write on the byte buffer.
@@ -333,7 +372,7 @@ class Type {
     build_() {
         this.setRealBits_();
         this.setLastByteMask_();
-        this.offset = this.bits < 8 ? 1 : Math.ceil(this.realBits / 8);
+        this.offset = this.bits &lt; 8 ? 1 : Math.ceil(this.realBits / 8);
         this.setReader_();
         this.setWriter_();
         if (!this.float) {
@@ -356,7 +395,7 @@ class Type {
             }
         } else if (this.char) {
             this.reader = this.readChar_;
-        } else if (this.bits < 33) {
+        } else if (this.bits &lt; 33) {
             this.reader = this.read_;
         } else {
             this.reader = this.readBits_;
@@ -408,17 +447,17 @@ class Type {
      */
     setRealBits_() {
         if (this.bits > 8) {
-            if (this.bits <= 16) {
+            if (this.bits &lt;= 16) {
                 this.realBits = 16;
-            } else if (this.bits <= 24) {
+            } else if (this.bits &lt;= 24) {
                 this.realBits = 24;
-            } else if (this.bits <= 32) {
+            } else if (this.bits &lt;= 32) {
                 this.realBits = 32;
-            } else if (this.bits <= 40) {
+            } else if (this.bits &lt;= 40) {
                 this.realBits = 40;
-            } else if (this.bits <= 48) {
+            } else if (this.bits &lt;= 48) {
                 this.realBits = 48;
-            } else if (this.bits <= 56) {
+            } else if (this.bits &lt;= 56) {
                 this.realBits = 56;
             } else {
                 this.realBits = 64;
@@ -440,7 +479,7 @@ class Type {
 
     /**
      * Write the first byte of a integer number.
-     * @param {!Array<number>} bytes An array of bytes.
+     * @param {!Array&lt;number>} bytes An array of bytes.
      * @param {number} number The number.
      * @param {number} j The index being written in the byte buffer.
      * @param {Object} type The type.
@@ -448,13 +487,32 @@ class Type {
      * @private
      */
     writeFirstByte_(bytes, number, j, type=this) {
-        if (type.offset == 1 && type.bits < 8) {
-            bytes[j++] = number < 0 ? number + Math.pow(2, type.bits) : number;
+        if (type.offset == 1 &amp;&amp; type.bits &lt; 8) {
+            bytes[j++] = number &lt; 0 ? number + Math.pow(2, type.bits) : number;
         } else {
-            bytes[j++] = number & 255;
+            bytes[j++] = number &amp; 255;
         }
         return j;
     }
 }
 
 module.exports = Type;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 12 2017 09:11:38 GMT-0200 (Horário brasileiro de verão) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
