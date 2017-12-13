@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Readable data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "browser-env": "^3.2.4",
+    "chai": "^4.1.2",
     "codecov": "^3.0.0",
     "docdash": "^0.4.0",
     "google-closure-compiler-js": "^20170910.0.1",
