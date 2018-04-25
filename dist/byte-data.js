@@ -67,7 +67,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/**
+/*
  * type: The Type class.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
@@ -82,7 +82,7 @@ let f64 = new Float64Array(1);
 /** @private */
 let ui32 = new Uint32Array(f64.buffer);
 /** @private */
-let GInt = __webpack_require__(3);
+const GInt = __webpack_require__(3);
 
 /**
  * A class to represent byte-data types.
@@ -305,15 +305,15 @@ module.exports = Type;
 
 /*!
  * byte-data
- * Readable data to and from byte buffers.
- * Copyright (c) 2017 Rafael da Silva Rocha.
+ * Read and write data to and from byte buffers.
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
  */
 
 /** @private */
 const rw = __webpack_require__(2);
-let Type = __webpack_require__(0);
+const Type = __webpack_require__(0);
 
 /**
  * Turn a number or fixed-length string into a byte buffer.
@@ -653,8 +653,7 @@ window['byteData']['float64BE'] = new Type({"bits": 64, "float": true, "be": tru
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/**
- * from-bytes: Numbers and strings from bytes.
+/*
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
@@ -788,16 +787,16 @@ function bytesToBase(bytes, base) {
     }
 }
 
-exports.getType = getType;
-exports.toBytes = toBytes;
-exports.fromBytes = fromBytes;
+module.exports.getType = getType;
+module.exports.toBytes = toBytes;
+module.exports.fromBytes = fromBytes;
 
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-/**
+/*
  * gint: Generic integer.
  * A class to represent any integer from 1 to 53-Bit.
  * Copyright (c) 2017 Rafael da Silva Rocha.

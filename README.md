@@ -1,19 +1,20 @@
 # byte-data
 Readable data to and from byte buffers.  
-Copyright (c) 2017 Rafael da Silva Rocha.  
+Copyright (c) 2017-2018 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
-[![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html) [![JSPerf](https://img.shields.io/badge/jsperf-run-blue.svg?style=for-the-badge)](https://jsperf.com/byte-data-dist)
+[![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html)  
+[![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
-- For Node and the browser
+- Runs in Node.js and in the browser
 - Less than 4KB minified + compressed, less than 9KB minified
 - Tested against Python's struct module (for all common types)
-- Pack and unpack single values, arrays and structs
-- With [![codecov](https://codecov.io/gh/rochars/byte-data/branch/master/graph/badge.svg)](https://codecov.io/gh/rochars/byte-data)
+- Pack and unpack **single values**, **arrays** and **structs**
 
 ## Pack/unpack:
 - Booleans
-- All integers from 2-Bit to 53-Bit, signed and unsigned, including **4, 8, 16, 24, 32, 40 and 48-Bit**
+- **4, 8, 16, 24, 32, 40 and 48-Bit** numbers
+- All integers from 2-Bit to 53-Bit, signed and unsigned
 - 16-bit half-precision floating point numbers
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
@@ -209,7 +210,6 @@ console.log(byteData.unpackStruct(buffer, structDef));
 
 ## Overflow
 Integer values will be truncated according to the bit depth of the type.
-There is no overflow or underflow check for floating-point values.
 ```javascript
 // Values in the correct range
 byteData.pack(254, uInt8); // [254]
@@ -225,8 +225,6 @@ byteData.pack(-1, uInt8); // [0]
 ## Floating-point numbers
 Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
-16-bit floating-point numbers may show precision differences when compared to other implementations.
-
 ## Creating new integer types
 ```javascript
 // unsigned 11-bit integer
@@ -234,15 +232,12 @@ let uInt11 = new Type({"bits": 11});
 
 // signed 45-bit integer
 let int45 = new Type({"bits": 45, "signed": true});
-
-// A fixed-size string
-let myCode = new Type({"bits": 128, "char": true});
 ```
 
 New types work exactly like the pre-defined types. You can create new types of integers (signed/unsigned) and strings, not floats.
 
 ## LICENSE
-Copyright (c) 2017 Rafael da Silva Rocha.
+Copyright (c) 2017-2018 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

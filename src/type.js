@@ -1,4 +1,4 @@
-/**
+/*
  * type: The Type class.
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
@@ -13,7 +13,7 @@ let f64 = new Float64Array(1);
 /** @private */
 let ui32 = new Uint32Array(f64.buffer);
 /** @private */
-let GInt = require("../src/gint.js");
+const GInt = require("../src/gint.js");
 
 /**
  * A class to represent byte-data types.

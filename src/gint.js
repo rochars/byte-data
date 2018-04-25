@@ -1,4 +1,4 @@
-/**
+/*
  * gint: Generic integer.
  * A class to represent any integer from 1 to 53-Bit.
  * Copyright (c) 2017 Rafael da Silva Rocha.

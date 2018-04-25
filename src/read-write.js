@@ -1,5 +1,4 @@
-/**
- * from-bytes: Numbers and strings from bytes.
+/*
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
@@ -133,6 +132,6 @@ function bytesToBase(bytes, base) {
     }
 }
 
-exports.getType = getType;
-exports.toBytes = toBytes;
-exports.fromBytes = fromBytes;
+module.exports.getType = getType;
+module.exports.toBytes = toBytes;
+module.exports.fromBytes = fromBytes;
