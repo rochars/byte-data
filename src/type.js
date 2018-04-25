@@ -12,13 +12,12 @@ let i32 = new Int32Array(f32.buffer);
 let f64 = new Float64Array(1);
 /** @private */
 let ui32 = new Uint32Array(f64.buffer);
-/** @private */
-const GInt = require("../src/gint.js");
+let GenericInteger = require("generic-integer");
 
 /**
  * A class to represent byte-data types.
  */
-class Type extends GInt {
+class Type extends GenericInteger {
 
     /**
      * @param {Object} options The type definition.
@@ -26,6 +25,7 @@ class Type extends GInt {
      * @param {boolean} options.char True for string/char types.
      * @param {boolean} options.float True for float types.
      *    Available only for 16, 32 and 64-bit data.
+     * @param {boolean} options.base The base: 2, 10 or 16.
      * @param {boolean} options.be True for big-endian.
      * @param {boolean} options.signed True for signed types.
      */
@@ -41,6 +41,12 @@ class Type extends GInt {
          * @type {boolean}
          */
         this.float = options["float"];
+        /**
+         * The base used to represent data of this type.
+         * Default is 10.
+         * @type {number}
+         */
+        this.base = options["base"] ? options["base"] : 10;
         this.buildType_();
     }
 
@@ -53,7 +59,7 @@ class Type extends GInt {
      * @private
      */
     read16F_(bytes, i) {
-        let int = this.read_(bytes, i, {"bits": 16, "offset": 2});
+        let int = this.read(bytes, i, {"bits": 16, "offset": 2});
         let exponent = (int & 0x7C00) >> 10;
         let fraction = int & 0x03FF;
         let floatValue;
@@ -73,7 +79,7 @@ class Type extends GInt {
      * @private
      */
     read32F_(bytes, i) {
-        i32[0] = this.read_(bytes, i, {"bits": 32, "offset": 4});
+        i32[0] = this.read(bytes, i, {"bits": 32, "offset": 4});
         return f32[0];
     }
 
@@ -86,8 +92,9 @@ class Type extends GInt {
      * @private
      */
     read64F_(bytes, i) {
-        ui32[0] = this.read_(bytes, i, {"bits": 32, "offset": 4});
-        ui32[1] = this.read_(bytes, i + 4, {"bits": 32, "offset": 4});
+        let type32 = new Type({"bits": 32, "offset": 4});
+        ui32[0] = type32.read(bytes, i, {"bits": 32, "offset": 4});
+        ui32[1] = type32.read(bytes, i + 4, {"bits": 32, "offset": 4});
         return f64[0];
     }
 
@@ -118,9 +125,9 @@ class Type extends GInt {
      */
     write64F_(bytes, number, j) {
         f64[0] = number;
-        let type = {bits: 32, offset: 4, lastByteMask:255};
-        j = this.write_(bytes, ui32[0], j, type);
-        return this.write_(bytes, ui32[1], j, type);
+        let type = new Type({"bits": 32, "offset": 4, "lastByteMask":255});
+        j = type.write(bytes, ui32[0], j);
+        return type.write(bytes, ui32[1], j);
     }
 
     /**
@@ -128,13 +135,12 @@ class Type extends GInt {
      * @param {!Array<number>} bytes An array of bytes.
      * @param {number} number The number to write as bytes.
      * @param {number} j The index being written in the byte buffer.
-     * @param {Object} type The type.
      * @return {number} The next index to write on the byte buffer.
      * @private
      */
-    write32F_(bytes, number, j, type) {
+    write32F_(bytes, number, j) {
         f32[0] = number;
-        j = this.write_(bytes, i32[0], j, type);
+        j = this.write(bytes, i32[0], j);
         return j;
     }
 
@@ -202,9 +208,6 @@ class Type extends GInt {
             }
         } else if (this.char) {
             this.reader = this.readChar_;
-        } else if (this.bits > 32) {
-            //this.reader = this.read_;
-            this.reader = this.readBits_;
         }
     }
 

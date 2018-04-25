@@ -1,5 +1,5 @@
 # byte-data
-Read and write data to and from byte buffers.  
+Pack and unpack binary data.  
 Copyright (c) 2017-2018 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 

@@ -81,13 +81,12 @@ let i32 = new Int32Array(f32.buffer);
 let f64 = new Float64Array(1);
 /** @private */
 let ui32 = new Uint32Array(f64.buffer);
-/** @private */
-const GInt = __webpack_require__(3);
+let GenericInteger = __webpack_require__(3);
 
 /**
  * A class to represent byte-data types.
  */
-class Type extends GInt {
+class Type extends GenericInteger {
 
     /**
      * @param {Object} options The type definition.
@@ -95,6 +94,7 @@ class Type extends GInt {
      * @param {boolean} options.char True for string/char types.
      * @param {boolean} options.float True for float types.
      *    Available only for 16, 32 and 64-bit data.
+     * @param {boolean} options.base The base: 2, 10 or 16.
      * @param {boolean} options.be True for big-endian.
      * @param {boolean} options.signed True for signed types.
      */
@@ -110,6 +110,12 @@ class Type extends GInt {
          * @type {boolean}
          */
         this.float = options["float"];
+        /**
+         * The base used to represent data of this type.
+         * Default is 10.
+         * @type {number}
+         */
+        this.base = options["base"] ? options["base"] : 10;
         this.buildType_();
     }
 
@@ -122,7 +128,7 @@ class Type extends GInt {
      * @private
      */
     read16F_(bytes, i) {
-        let int = this.read_(bytes, i, {"bits": 16, "offset": 2});
+        let int = this.read(bytes, i, {"bits": 16, "offset": 2});
         let exponent = (int & 0x7C00) >> 10;
         let fraction = int & 0x03FF;
         let floatValue;
@@ -142,7 +148,7 @@ class Type extends GInt {
      * @private
      */
     read32F_(bytes, i) {
-        i32[0] = this.read_(bytes, i, {"bits": 32, "offset": 4});
+        i32[0] = this.read(bytes, i, {"bits": 32, "offset": 4});
         return f32[0];
     }
 
@@ -155,8 +161,9 @@ class Type extends GInt {
      * @private
      */
     read64F_(bytes, i) {
-        ui32[0] = this.read_(bytes, i, {"bits": 32, "offset": 4});
-        ui32[1] = this.read_(bytes, i + 4, {"bits": 32, "offset": 4});
+        let type32 = new Type({"bits": 32, "offset": 4});
+        ui32[0] = type32.read(bytes, i, {"bits": 32, "offset": 4});
+        ui32[1] = type32.read(bytes, i + 4, {"bits": 32, "offset": 4});
         return f64[0];
     }
 
@@ -187,9 +194,9 @@ class Type extends GInt {
      */
     write64F_(bytes, number, j) {
         f64[0] = number;
-        let type = {bits: 32, offset: 4, lastByteMask:255};
-        j = this.write_(bytes, ui32[0], j, type);
-        return this.write_(bytes, ui32[1], j, type);
+        let type = new Type({"bits": 32, "offset": 4, "lastByteMask":255});
+        j = type.write(bytes, ui32[0], j);
+        return type.write(bytes, ui32[1], j);
     }
 
     /**
@@ -197,13 +204,12 @@ class Type extends GInt {
      * @param {!Array<number>} bytes An array of bytes.
      * @param {number} number The number to write as bytes.
      * @param {number} j The index being written in the byte buffer.
-     * @param {Object} type The type.
      * @return {number} The next index to write on the byte buffer.
      * @private
      */
-    write32F_(bytes, number, j, type) {
+    write32F_(bytes, number, j) {
         f32[0] = number;
-        j = this.write_(bytes, i32[0], j, type);
+        j = this.write(bytes, i32[0], j);
         return j;
     }
 
@@ -271,9 +277,6 @@ class Type extends GInt {
             }
         } else if (this.char) {
             this.reader = this.readChar_;
-        } else if (this.bits > 32) {
-            //this.reader = this.read_;
-            this.reader = this.readBits_;
         }
     }
 
@@ -305,7 +308,7 @@ module.exports = Type;
 
 /*!
  * byte-data
- * Read and write data to and from byte buffers.
+ * Pack and unpack binary data.
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -326,7 +329,7 @@ const Type = __webpack_require__(0);
 function pack(value, type, base=10) {
     let values = [];
     if (type.char) {
-        values = type.char ? value.slice(0, type.realBits / 8) : value;
+        values = type.char ? value.slice(0, type.offset) : value;
     } else if (!Array.isArray(value)) {
         values = [value];
     }
@@ -342,9 +345,8 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let offset = type.bits < 8 ? type.bits : type.realBits / 8;
     let values = rw.fromBytes(
-            buffer.slice(0, offset),
+            buffer.slice(0, type.offset),
             rw.getType(type, base)
         );
     if (type.char) {
@@ -437,11 +439,10 @@ function unpackStruct(buffer, def, base=10) {
     let i = 0;
     let j = 0;
     while (i < def.length) {
-        let bits = def[i].bits < 8 ? 1 : def[i].realBits / 8;
         struct = struct.concat(
-                unpack(buffer.slice(j, j + bits), def[i], base)
+                unpack(buffer.slice(j, j + def[i].offset), def[i], base)
             );
-        j += bits;
+        j += def[i].offset;
         i++;
     }
     return struct;
@@ -456,7 +457,7 @@ function unpackStruct(buffer, def, base=10) {
 function getStructDefSize(def) {
     let bits = 0;
     for (let i = 0; i < def.length; i++) {
-        bits += def[i].realBits / 8;
+        bits += def[i].offset;
     }
     return bits;
 }
@@ -796,17 +797,17 @@ module.exports.fromBytes = fromBytes;
 /* 3 */
 /***/ (function(module, exports) {
 
-/*
- * gint: Generic integer.
- * A class to represent any integer from 1 to 53-Bit.
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
+/*!
+ * GenericInteger
+ * Pack and unpack any integer from 1 to 53-Bit.
+ * Copyright (c) 2018 Rafael da Silva Rocha.
+ * https://github.com/rochars/generic-integer
  */
 
 /**
- * A class to represent any integer from 1 to 53-Bit.
+ * A class to read and write any integer from 1 to 53-Bit.
  */
-class GInt {
+class GenericInteger {
 
     /**
      * @param {Object} options The type definition.
@@ -831,23 +832,17 @@ class GInt {
          */
         this.signed = options["signed"];
         /**
-         * The base used to represent data of this type.
-         * Default is 10.
-         * @type {number}
-         */
-        this.base = options["base"] ? options["base"] : 10;
-        /**
          * The function to read values of this type from buffers.
          * @type {Function}
          * @ignore
          */
-        this.reader = this.read_;
+        this.reader = this.read;
         /**
          * The function to write values of this type to buffers.
          * @type {Function}
          * @ignore
          */
-        this.writer = this.write_;
+        this.writer = this.write;
         /**
          * The number of bytes used by data of this type.
          * @type {number}
@@ -871,82 +866,34 @@ class GInt {
          * @type {number}
          * @ignore
          */
-        this.realBits = this.bits;
+        this.realBits_ = this.bits;
         /**
          * The mask to be used in the last byte of this type.
          * @type {number}
          * @ignore
          */
-        this.lastByteMask = 255;
+        this.lastByteMask_ = 255;
         this.build_();
-    }
-
-    /**
-     * Sign a number according to the type.
-     * @param {number} num The number.
-     * @return {number}
-     * @ignore
-     */
-    sign(num) {
-        if (num > this.max) {
-            num -= (this.max * 2) + 2;
-        }
-        return num;
-    }
-
-    /**
-     * Limit the value according to the bit depth in case of
-     * overflow or underflow.
-     * @param {number} value The data.
-     * @return {number}
-     * @ignore
-     */
-    overflow(value) {
-        if (value > this.max) {
-            value = this.max;
-        } else if (value < this.min) {
-            value = this.min;
-        }
-        return value;
     }
 
     /**
      * Read a integer number from a byte buffer.
      * @param {!Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
-     * @param {Object} type The type if other than this.
      * @return {number}
-     * @private
      */
-    read_(bytes, i, type=this) {
+    read(bytes, i=0) {
+        if (this.bits > 32) {
+            return this.readBits_(bytes, i);
+        }
         let num = 0;
-        let x = type.offset - 1;
+        let x = this.offset - 1;
         while (x > 0) {
             num = (bytes[x + i] << x * 8) | num;
             x--;
         }
         num = (bytes[i] | num) >>> 0;
-        return this.overflow(this.sign(num));
-    }
-
-    /**
-     * Read a integer number from a byte buffer by turning the bytes
-     * to a string of bits.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
-     * @param {number} i The index to read.
-     * @param {Object} type The type if other than this.
-     * @return {number}
-     * @private
-     */
-    readBits_(bytes, i, type=this) {
-        let binary = "";
-        let j = 0;
-        while(j < type.offset) {
-            let bits = bytes[i + j].toString(2);
-            binary = Array(9 - bits.length).join("0") + bits + binary;
-            j++;
-        }
-        return this.overflow(this.sign(parseInt(binary, 2)));
+        return this.overflow_(this.sign_(num));
     }
 
     /**
@@ -954,22 +901,38 @@ class GInt {
      * @param {!Array<number>} bytes An array of bytes.
      * @param {number} number The number.
      * @param {number} j The index being written in the byte buffer.
-     * @param {Object} type The type.
      * @return {number} The next index to write on the byte buffer.
-     * @private
      */
-    write_(bytes, number, j, type=this) {
-        number = this.overflow(number);
+    write(bytes, number, j=0) {
+        number = this.overflow_(number);
         let mask = 255;
-        let len = type.offset;
-        j = this.writeFirstByte_(bytes, number, j, type);
-        for (let i = 2; i <= len; i++) {
-            if (i == len) {
-                mask = type.lastByteMask;
+        j = this.writeFirstByte_(bytes, number, j);
+        for (let i = 2; i <= this.offset; i++) {
+            if (i == this.offset) {
+                mask = this.lastByteMask_;
             }
             bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & mask;
         }
         return j;
+    }
+
+    /**
+     * Read a integer number from a byte buffer by turning the bytes
+     * to a string of bits.
+     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {number} i The index to read.
+     * @return {number}
+     * @private
+     */
+    readBits_(bytes, i=0) {
+        let binary = "";
+        let j = 0;
+        while(j < this.offset) {
+            let bits = bytes[i + j].toString(2);
+            binary = Array(9 - bits.length).join("0") + bits + binary;
+            j++;
+        }
+        return this.overflow_(this.sign_(parseInt(binary, 2)));
     }
 
     /**
@@ -981,7 +944,36 @@ class GInt {
         this.setRealBits_();
         this.setLastByteMask_();
         this.setMinMax_();
-        this.offset = this.bits < 8 ? 1 : Math.ceil(this.realBits / 8);
+        this.offset = this.bits < 8 ? 1 : Math.ceil(this.realBits_ / 8);
+    }
+
+    /**
+     * Sign a number according to the type.
+     * @param {number} num The number.
+     * @return {number}
+     * @ignore
+     */
+    sign_(num) {
+        if (num > this.max) {
+            num -= (this.max * 2) + 2;
+        }
+        return num;
+    }
+
+    /**
+     * Limit the value according to the bit depth in case of
+     * overflow or underflow.
+     * @param {number} value The data.
+     * @return {number}
+     * @private
+     */
+    overflow_(value) {
+        if (value > this.max) {
+            value = this.max;
+        } else if (value < this.min) {
+            value = this.min;
+        }
+        return value;
     }
 
     /**
@@ -1016,22 +1008,22 @@ class GInt {
     setRealBits_() {
         if (this.bits > 8) {
             if (this.bits <= 16) {
-                this.realBits = 16;
+                this.realBits_ = 16;
             } else if (this.bits <= 24) {
-                this.realBits = 24;
+                this.realBits_ = 24;
             } else if (this.bits <= 32) {
-                this.realBits = 32;
+                this.realBits_ = 32;
             } else if (this.bits <= 40) {
-                this.realBits = 40;
+                this.realBits_ = 40;
             } else if (this.bits <= 48) {
-                this.realBits = 48;
+                this.realBits_ = 48;
             } else if (this.bits <= 56) {
-                this.realBits = 56;
+                this.realBits_ = 56;
             } else {
-                this.realBits = 64;
+                this.realBits_ = 64;
             }
         } else {
-            this.realBits = this.bits;
+            this.realBits_ = this.bits;
         }
     }
 
@@ -1041,8 +1033,8 @@ class GInt {
      * @private
      */
     setLastByteMask_() {
-        let r = 8 - (this.realBits - this.bits);
-        this.lastByteMask = Math.pow(2, r > 0 ? r : 8) -1;
+        let r = 8 - (this.realBits_ - this.bits);
+        this.lastByteMask_ = Math.pow(2, r > 0 ? r : 8) -1;
     }
 
     /**
@@ -1050,13 +1042,12 @@ class GInt {
      * @param {!Array<number>} bytes An array of bytes.
      * @param {number} number The number.
      * @param {number} j The index being written in the byte buffer.
-     * @param {Object} type The type.
      * @return {number} The next index to write on the byte buffer.
      * @private
      */
-    writeFirstByte_(bytes, number, j, type=this) {
-        if (type.bits < 8) {
-            bytes[j++] = number < 0 ? number + Math.pow(2, type.bits) : number;
+    writeFirstByte_(bytes, number, j) {
+        if (this.bits < 8) {
+            bytes[j++] = number < 0 ? number + Math.pow(2, this.bits) : number;
         } else {
             bytes[j++] = number & 255;
         }
@@ -1064,7 +1055,7 @@ class GInt {
     }
 }
 
-module.exports = GInt;
+module.exports = GenericInteger;
 
 
 /***/ }),

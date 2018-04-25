@@ -1,6 +1,6 @@
 /*!
  * byte-data
- * Read and write data to and from byte buffers.
+ * Pack and unpack binary data.
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -21,7 +21,7 @@ const Type = require("./src/type");
 function pack(value, type, base=10) {
     let values = [];
     if (type.char) {
-        values = type.char ? value.slice(0, type.realBits / 8) : value;
+        values = type.char ? value.slice(0, type.offset) : value;
     } else if (!Array.isArray(value)) {
         values = [value];
     }
@@ -37,9 +37,8 @@ function pack(value, type, base=10) {
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let offset = type.bits < 8 ? type.bits : type.realBits / 8;
     let values = rw.fromBytes(
-            buffer.slice(0, offset),
+            buffer.slice(0, type.offset),
             rw.getType(type, base)
         );
     if (type.char) {
@@ -132,11 +131,10 @@ function unpackStruct(buffer, def, base=10) {
     let i = 0;
     let j = 0;
     while (i < def.length) {
-        let bits = def[i].bits < 8 ? 1 : def[i].realBits / 8;
         struct = struct.concat(
-                unpack(buffer.slice(j, j + bits), def[i], base)
+                unpack(buffer.slice(j, j + def[i].offset), def[i], base)
             );
-        j += bits;
+        j += def[i].offset;
         i++;
     }
     return struct;
@@ -151,7 +149,7 @@ function unpackStruct(buffer, def, base=10) {
 function getStructDefSize(def) {
     let bits = 0;
     for (let i = 0; i < def.length; i++) {
-        bits += def[i].realBits / 8;
+        bits += def[i].offset;
     }
     return bits;
 }
