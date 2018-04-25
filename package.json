@@ -1,7 +1,7 @@
 {
   "name": "byte-data",
   "version": "4.0.3",
-  "description": "Readable data to and from byte buffers.",
+  "description": "Read and write data to and from byte buffers.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",

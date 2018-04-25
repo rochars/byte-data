@@ -1,5 +1,5 @@
 # byte-data
-Readable data to and from byte buffers.  
+Read and write data to and from byte buffers.  
 Copyright (c) 2017-2018 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
