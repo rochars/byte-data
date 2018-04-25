@@ -4,10 +4,11 @@
  Copyright (c) 2017-2018 Rafael da Silva Rocha.
  https://github.com/rochars/byte-data
 
- GenericInteger
+ generic-integer
  Pack and unpack any integer from 1 to 53-Bit.
  Copyright (c) 2018 Rafael da Silva Rocha.
  https://github.com/rochars/generic-integer
+
  endianness
  Swap endianness in byte arrays.
  Copyright (c) 2017 Rafael da Silva Rocha.

@@ -798,10 +798,11 @@ module.exports.fromBytes = fromBytes;
 /***/ (function(module, exports) {
 
 /*!
- * GenericInteger
+ * generic-integer
  * Pack and unpack any integer from 1 to 53-Bit.
  * Copyright (c) 2018 Rafael da Silva Rocha.
  * https://github.com/rochars/generic-integer
+ * 
  */
 
 /**
@@ -834,43 +835,38 @@ class GenericInteger {
         /**
          * The function to read values of this type from buffers.
          * @type {Function}
-         * @ignore
          */
         this.reader = this.read;
         /**
          * The function to write values of this type to buffers.
          * @type {Function}
-         * @ignore
          */
         this.writer = this.write;
         /**
          * The number of bytes used by data of this type.
          * @type {number}
-         * @ignore
          */
         this.offset = 0;
         /**
          * Min value for numbers of this type.
          * @type {number}
-         * @ignore
          */
         this.min = -Infinity;
         /**
          * Max value for numbers of this type.
          * @type {number}
-         * @ignore
          */
         this.max = Infinity;
         /**
          * The word size.
          * @type {number}
-         * @ignore
+         * @private
          */
         this.realBits_ = this.bits;
         /**
          * The mask to be used in the last byte of this type.
          * @type {number}
-         * @ignore
+         * @private
          */
         this.lastByteMask_ = 255;
         this.build_();
@@ -951,7 +947,7 @@ class GenericInteger {
      * Sign a number according to the type.
      * @param {number} num The number.
      * @return {number}
-     * @ignore
+     * @private
      */
     sign_(num) {
         if (num > this.max) {
@@ -991,6 +987,10 @@ class GenericInteger {
         }
     }
 
+    /**
+     * Validate the number of bits.
+     * @private
+     */
     validateWordSize_() {
         if (this.bits < 1 || this.bits > 64) {
             throw Error("Not a supported type.");

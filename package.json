@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "endianness": "^3.0.1",
-    "generic-integer": "^1.0.1"
+    "generic-integer": "^1.0.3"
   },
   "main": "index.js"
 }
