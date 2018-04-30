@@ -69,18 +69,24 @@
 
 /*
  * type: The Type class.
- * Copyright (c) 2017 Rafael da Silva Rocha.
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  */
 
 /** @private */
-let f32 = new Float32Array(1);
+var int8 = new Int8Array(4);
 /** @private */
-let i32 = new Int32Array(f32.buffer);
+var i32 = new Int32Array(int8.buffer, 0, 1);
 /** @private */
-let f64 = new Float64Array(1);
+var f32 = new Float32Array(int8.buffer, 0, 1);
+
 /** @private */
-let ui32 = new Uint32Array(f64.buffer);
+var int8f64 = new Int8Array(8);
+/** @private */
+let f64 = new Float64Array(int8f64.buffer);
+/** @private */
+let ui32 = new Uint32Array(int8f64.buffer);
+/** @private */
 let GenericInteger = __webpack_require__(3);
 
 /**
@@ -142,7 +148,7 @@ class Type extends GenericInteger {
 
     /**
      * Read 1 32-bit float from bytes.
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
      * @private
@@ -155,7 +161,7 @@ class Type extends GenericInteger {
     /**
      * Read 1 64-bit double from bytes.
      * Thanks https://gist.github.com/kg/2192799
-     * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+     * @param {Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
      * @private
@@ -812,13 +818,13 @@ class GenericInteger {
 
     /**
      * @param {Object} options The type definition.
-     * @param {number} options.bits Number of bits used by data of this type.
+     * @param {number} options.bits Number of bits used by the data.
      * @param {boolean} options.be True for big-endian.
      * @param {boolean} options.signed True for signed types.
      */
     constructor(options) {
         /**
-         * The max number of bits used by data of this type.
+         * The max number of bits used by the data.
          * @type {number}
          */
         this.bits = options["bits"];
@@ -833,17 +839,17 @@ class GenericInteger {
          */
         this.signed = options["signed"];
         /**
-         * The function to read values of this type from buffers.
+         * The function to read values from buffers.
          * @type {Function}
          */
         this.reader = this.read;
         /**
-         * The function to write values of this type to buffers.
+         * The function to write values to buffers.
          * @type {Function}
          */
         this.writer = this.write;
         /**
-         * The number of bytes used by data of this type.
+         * The number of bytes used by the data.
          * @type {number}
          */
         this.offset = 0;
@@ -858,13 +864,13 @@ class GenericInteger {
          */
         this.max = Infinity;
         /**
-         * The word size.
+         * The practical number of bits used by the data.
          * @type {number}
          * @private
          */
         this.realBits_ = this.bits;
         /**
-         * The mask to be used in the last byte of this type.
+         * The mask to be used in the last byte.
          * @type {number}
          * @private
          */
@@ -873,7 +879,7 @@ class GenericInteger {
     }
 
     /**
-     * Read a integer number from a byte buffer.
+     * Read one integer number from a byte buffer.
      * @param {!Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
@@ -913,8 +919,8 @@ class GenericInteger {
     }
 
     /**
-     * Read a integer number from a byte buffer by turning the bytes
-     * to a string of bits.
+     * Read a integer number from a byte buffer by turning int bytes
+     * to a string of bits. Used for data with more than 32 bits.
      * @param {!Array<number>|Uint8Array} bytes An array of bytes.
      * @param {number} i The index to read.
      * @return {number}
@@ -944,7 +950,7 @@ class GenericInteger {
     }
 
     /**
-     * Sign a number according to the type.
+     * Sign a number.
      * @param {number} num The number.
      * @return {number}
      * @private
@@ -998,38 +1004,18 @@ class GenericInteger {
     }
 
     /**
-     * Set the real bit depth for data with bit count different from the
-     * standard types (1, 2, 4, 8, 16, 32, 40, 48, 64): the closest bigger
-     * standard number of bits. The data is then treated as data of the
-     * standard type on all aspects except for the min and max values.
-     * Ex: a 11-bit uInt is treated as 16-bit uInt with a max value of 2048.
+     * Set the practical bit number for data with bit count different
+     * from the standard types (8, 16, 32, 40, 48, 64) and more than 8 bits.
      * @private
      */
     setRealBits_() {
         if (this.bits > 8) {
-            if (this.bits <= 16) {
-                this.realBits_ = 16;
-            } else if (this.bits <= 24) {
-                this.realBits_ = 24;
-            } else if (this.bits <= 32) {
-                this.realBits_ = 32;
-            } else if (this.bits <= 40) {
-                this.realBits_ = 40;
-            } else if (this.bits <= 48) {
-                this.realBits_ = 48;
-            } else if (this.bits <= 56) {
-                this.realBits_ = 56;
-            } else {
-                this.realBits_ = 64;
-            }
-        } else {
-            this.realBits_ = this.bits;
+            this.realBits_ = ((this.bits - 1) | 7) + 1;
         }
     }
 
     /**
-     * Set the mask that should be used when writing the last byte of
-     * data of the type.
+     * Set the mask that should be used when writing the last byte.
      * @private
      */
     setLastByteMask_() {
