@@ -27,16 +27,9 @@ class Type extends GenericInteger {
 
     /**
      * @param {Object} options The type definition.
-     * @param {number} options.bits Number of bits used by data of this type.
-     * @param {boolean} options.char True for string/char types.
-     * @param {boolean} options.float True for float types.
-     *    Available only for 16, 32 and 64-bit data.
-     * @param {boolean} options.base The base: 2, 10 or 16.
-     * @param {boolean} options.be True for big-endian.
-     * @param {boolean} options.signed True for signed types.
      */
     constructor(options) {
-        super(options);
+        super(options["bits"], options["signed"]);
         /**
          * If this type is a char or not.
          * @type {boolean}
@@ -47,6 +40,11 @@ class Type extends GenericInteger {
          * @type {boolean}
          */
         this.float = options["float"];
+        /**
+         * If this type is big-endian or not.
+         * @type {boolean}
+         */
+        this.be = options["be"];
         /**
          * The base used to represent data of this type.
          * Default is 10.
@@ -65,7 +63,8 @@ class Type extends GenericInteger {
      * @private
      */
     read16F_(bytes, i) {
-        let int = this.read(bytes, i, {"bits": 16, "offset": 2});
+        let type = new GenericInteger(16);
+        let int = type.read(bytes, i);
         let exponent = (int & 0x7C00) >> 10;
         let fraction = int & 0x03FF;
         let floatValue;
@@ -74,7 +73,7 @@ class Type extends GenericInteger {
         } else {
             floatValue = 6.103515625e-5 * (fraction / 0x400);
         }
-        return  floatValue * (int >> 15 ? -1 : 1);
+        return floatValue * (int >> 15 ? -1 : 1);
     }
 
     /**
@@ -85,7 +84,8 @@ class Type extends GenericInteger {
      * @private
      */
     read32F_(bytes, i) {
-        i32[0] = this.read(bytes, i, {"bits": 32, "offset": 4});
+        let t = new GenericInteger(32);
+        i32[0] = this.read(bytes, i);
         return f32[0];
     }
 
@@ -98,9 +98,9 @@ class Type extends GenericInteger {
      * @private
      */
     read64F_(bytes, i) {
-        let type32 = new Type({"bits": 32, "offset": 4});
-        ui32[0] = type32.read(bytes, i, {"bits": 32, "offset": 4});
-        ui32[1] = type32.read(bytes, i + 4, {"bits": 32, "offset": 4});
+        let type32 = new Type({"bits": 32});
+        ui32[0] = type32.read(bytes, i);
+        ui32[1] = type32.read(bytes, i + 4);
         return f64[0];
     }
 
@@ -113,10 +113,8 @@ class Type extends GenericInteger {
      */
     readChar_(bytes, i) {
         let chrs = "";
-        let j = 0;
-        while(j < this.offset) {
+        for(let j=0; j < this.offset; j++) {
             chrs += String.fromCharCode(bytes[i+j]);
-            j++;
         }
         return chrs;
     }
@@ -131,7 +129,7 @@ class Type extends GenericInteger {
      */
     write64F_(bytes, number, j) {
         f64[0] = number;
-        let type = new Type({"bits": 32, "offset": 4, "lastByteMask":255});
+        let type = new Type({"bits": 32});
         j = type.write(bytes, ui32[0], j);
         return type.write(bytes, ui32[1], j);
     }

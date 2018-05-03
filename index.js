@@ -7,8 +7,9 @@
  */
 
 /** @private */
-const rw = require("./src/read-write");
 const Type = require("./src/type");
+/** @private */
+const endianness = require("endianness");
 
 /**
  * Turn a number or fixed-length string into a byte buffer.
@@ -16,31 +17,30 @@ const Type = require("./src/type");
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array<number|string>}
  */
 function pack(value, type, base=10) {
     let values = [];
-    if (type.char) {
-        values = type.char ? value.slice(0, type.offset) : value;
+    type.base = base;
+    if (value.constructor == String) {
+        values = value.slice(0, type.offset);
     } else if (!Array.isArray(value)) {
         values = [value];
     }
-    return rw.toBytes(values, rw.getType(type, base));
+    return toBytes_(values, type);
 }
 
 /**
  * Turn a byte buffer into a number or a fixed-length string.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
+ * @param {!Array<number|string>|Uint8Array} buffer An array of bytes.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    let values = rw.fromBytes(
-            buffer.slice(0, type.offset),
-            rw.getType(type, base)
-        );
+    type.base = base;
+    let values = fromBytes_(buffer.slice(0, type.offset), type);
     if (type.char) {
         values = values.slice(0, type.bits / 8);
     } else {
@@ -55,43 +55,24 @@ function unpack(buffer, type, base=10) {
  * @param {Object} type One of the available types.
  * @param {number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array<number|string>}
  */
 function packArray(values, type, base=10) {
-    return rw.toBytes(values, rw.getType(type, base));
+    type.base = base;
+    return toBytes_(values, type);
 }
 
 /**
  * Turn a byte buffer into a array of numbers or a string.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte array.
+ * @param {!Array<number|string>|Uint8Array} buffer The byte array.
  * @param {Object} type One of the available types.
  * @param {number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|string}
+ * @return {!Array<number>|string|number}
  */
 function unpackArray(buffer, type, base=10) {
-    return rw.fromBytes(buffer, rw.getType(type, base));
-}
-
-/**
- * Find and return the start index of some string.
- * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} buffer A byte buffer.
- * @param {string} text Some string to look for.
- * @return {number} The start index of the first occurrence, -1 if not found
- */
-function findString(buffer, text) {
-    let found = "";
-    for (let i = 0; i < buffer.length; i++) {
-        found = unpack(
-                buffer.slice(i, i + text.length + 1),
-                new Type({"bits": text.length * 8, "char": true})
-            );
-        if (found == text) {
-            return i;
-        }
-    }
-    return -1;
+    type.base = base;
+    return fromBytes_(buffer, type);
 }
 
 /**
@@ -101,7 +82,7 @@ function findString(buffer, text) {
  * @param {!Array<Object>} def The struct type definition.
  * @param {number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array<number|string>}
  */
 function packStruct(struct, def, base=10) {
     if (struct.length < def.length) {
@@ -117,25 +98,23 @@ function packStruct(struct, def, base=10) {
 /**
  * Turn a byte buffer into a struct.
  * A struct is an array of values of not necessarily the same type.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte buffer.
+ * @param {!Array<number|string>|Uint8Array} buffer The byte buffer.
  * @param {!Array<Object>} def The struct type definition.
  * @param {number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {Array<number|string>}
  */
 function unpackStruct(buffer, def, base=10) {
-    if (buffer.length < getStructDefSize(def)) {
+    if (buffer.length < getStructDefSize_(def)) {
         return [];
     }
     let struct = [];
-    let i = 0;
     let j = 0;
-    while (i < def.length) {
+    for (let i=0; i < def.length; i++) {
         struct = struct.concat(
                 unpack(buffer.slice(j, j + def[i].offset), def[i], base)
             );
         j += def[i].offset;
-        i++;
     }
     return struct;
 }
@@ -146,12 +125,127 @@ function unpackStruct(buffer, def, base=10) {
  * @return {number} The length of the structure in bytes.
  * @private
  */
-function getStructDefSize(def) {
+function getStructDefSize_(def) {
     let bits = 0;
     for (let i = 0; i < def.length; i++) {
         bits += def[i].offset;
     }
     return bits;
+}
+
+
+/**
+ * Turn a byte buffer into what the bytes represent.
+ * @param {!Array<number|string>|Uint8Array} buffer An array of bytes.
+ * @param {Object} type One of the available types.
+ * @return {!Array<number>|number|string}
+ * @private
+ */
+function fromBytes_(buffer, type) {
+    if (type.be) {
+        endianness(buffer, type.offset);
+    }
+    if (type.base != 10) {
+        bytesFromBase_(buffer, type.base);
+    }
+    return readBytes_(buffer, type);
+}
+
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number>|number|string} values The data.
+ * @param {Object} type One of the available types.
+ * @return {!Array<number|string>} the data as a byte buffer.
+ * @private
+ */
+function toBytes_(values, type) {
+    let bytes = writeBytes_(values, type);
+    if (type.be) {
+        endianness(bytes, type.offset);
+    }
+    if (type.base != 10) {
+        bytesToBase_(bytes, type.base);
+        formatOutput_(bytes, type);
+    }
+    return bytes;
+}
+
+/**
+ * Turn a array of bytes into an array of what the bytes should represent.
+ * @param {!Array<number>|Uint8Array} bytes An array of bytes.
+ * @param {Object} type The type.
+ * @return {!Array<number>|string}
+ * @private
+ */
+function readBytes_(bytes, type) {
+    let values = [];
+    let i = 0;
+    let len = bytes.length - (type.offset - 1);
+    while (i < len) {
+        values.push(type.reader(bytes, i));
+        i += type.offset;
+    }
+    if (type.char) {
+        values = values.join("");
+    }
+    return values;
+}
+
+/**
+ * Write values as bytes.
+ * @param {!Array<number>|number|string} values The data.
+ * @param {Object} type One of the available types.
+ * @return {!Array<number>} the bytes.
+ * @private
+ */
+function writeBytes_(values, type) {
+    let j = 0;
+    let len = values.length;
+    let bytes = [];
+    for(let i=0; i < len; i++) {
+        j = type.writer(bytes, values[i], j);
+    }
+    return bytes;
+}
+
+/**
+ * Turn the output to the correct base.
+ * @param {Array} bytes The bytes.
+ * @param {Object} type The type.
+ * @private
+ */
+function formatOutput_(bytes, type) {
+    let len = bytes.length;
+    let offset = (type.base == 2 ? 8 : 2) + 1;
+    for(let i =0; i < len; i++) {
+        bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
+    }
+}
+
+/**
+ * Turn bytes to base 10 from base 2 or 16.
+ * @param {!Array<number>|Uint8Array} bytes The bytes as binary or hex strings.
+ * @param {number} base The base.
+ * @private
+ */
+function bytesFromBase_(bytes, base) {
+    let len = bytes.length;
+    for(let i=0; i < len; i++) {
+        bytes[i] = parseInt(bytes[i], base);
+    }
+}
+
+/**
+ * Turn bytes from base 10 to base 2 or 16.
+ * @param {!Array<string|number>} bytes The bytes.
+ * @param {number} base The base.
+ * @private
+ */
+function bytesToBase_(bytes, base) {
+    let len = bytes.length;
+    for(let i=0; i < len; i++) {
+        bytes[i] = bytes[i].toString(base);
+    }
 }
 
 // interface
@@ -161,7 +255,6 @@ module.exports.packArray = packArray;
 module.exports.unpackArray = unpackArray;
 module.exports.unpackStruct = unpackStruct;
 module.exports.packStruct = packStruct;
-module.exports.findString = findString;
 module.exports.Type = Type;
 /** 
  * A char.

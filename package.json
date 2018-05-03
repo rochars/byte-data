@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "5.0.6",
+  "version": "6.0.0",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -50,10 +50,9 @@
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --src",
     "test-dist": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --dist",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "compile": "google-closure-compiler-js dist/byte-data.js > dist/byte-data-min.js --compilationLevel=ADVANCED",
     "doc": "./node_modules/.bin/jsdoc index.js src/type.js -d docs -t node_modules/docdash -r README.md",
-    "pack": "webpack && npm run compile && npm run test-dist && npm run doc",
-    "build": "npm run lint && npm run pack && npm test"
+    "pack": "webpack && npm run test-dist",
+    "build": "npm run lint && npm run pack && npm test && npm run doc"
   },
   "devDependencies": {
     "browser-env": "^3.2.4",
@@ -71,7 +70,7 @@
   },
   "dependencies": {
     "endianness": "^3.0.1",
-    "generic-integer": "^1.0.5"
+    "generic-integer": "^2.0.0"
   },
   "main": "index.js"
 }

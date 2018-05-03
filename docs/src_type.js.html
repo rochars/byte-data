@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#findString">findString</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -66,16 +66,9 @@ class Type extends GenericInteger {
 
     /**
      * @param {Object} options The type definition.
-     * @param {number} options.bits Number of bits used by data of this type.
-     * @param {boolean} options.char True for string/char types.
-     * @param {boolean} options.float True for float types.
-     *    Available only for 16, 32 and 64-bit data.
-     * @param {boolean} options.base The base: 2, 10 or 16.
-     * @param {boolean} options.be True for big-endian.
-     * @param {boolean} options.signed True for signed types.
      */
     constructor(options) {
-        super(options);
+        super(options["bits"], options["signed"]);
         /**
          * If this type is a char or not.
          * @type {boolean}
@@ -86,6 +79,11 @@ class Type extends GenericInteger {
          * @type {boolean}
          */
         this.float = options["float"];
+        /**
+         * If this type is big-endian or not.
+         * @type {boolean}
+         */
+        this.be = options["be"];
         /**
          * The base used to represent data of this type.
          * Default is 10.
@@ -104,7 +102,8 @@ class Type extends GenericInteger {
      * @private
      */
     read16F_(bytes, i) {
-        let int = this.read(bytes, i, {"bits": 16, "offset": 2});
+        let type = new GenericInteger(16);
+        let int = type.read(bytes, i);
         let exponent = (int &amp; 0x7C00) >> 10;
         let fraction = int &amp; 0x03FF;
         let floatValue;
@@ -113,7 +112,7 @@ class Type extends GenericInteger {
         } else {
             floatValue = 6.103515625e-5 * (fraction / 0x400);
         }
-        return  floatValue * (int >> 15 ? -1 : 1);
+        return floatValue * (int >> 15 ? -1 : 1);
     }
 
     /**
@@ -124,7 +123,8 @@ class Type extends GenericInteger {
      * @private
      */
     read32F_(bytes, i) {
-        i32[0] = this.read(bytes, i, {"bits": 32, "offset": 4});
+        let t = new GenericInteger(32);
+        i32[0] = this.read(bytes, i);
         return f32[0];
     }
 
@@ -137,9 +137,9 @@ class Type extends GenericInteger {
      * @private
      */
     read64F_(bytes, i) {
-        let type32 = new Type({"bits": 32, "offset": 4});
-        ui32[0] = type32.read(bytes, i, {"bits": 32, "offset": 4});
-        ui32[1] = type32.read(bytes, i + 4, {"bits": 32, "offset": 4});
+        let type32 = new Type({"bits": 32});
+        ui32[0] = type32.read(bytes, i);
+        ui32[1] = type32.read(bytes, i + 4);
         return f64[0];
     }
 
@@ -152,10 +152,8 @@ class Type extends GenericInteger {
      */
     readChar_(bytes, i) {
         let chrs = "";
-        let j = 0;
-        while(j &lt; this.offset) {
+        for(let j=0; j &lt; this.offset; j++) {
             chrs += String.fromCharCode(bytes[i+j]);
-            j++;
         }
         return chrs;
     }
@@ -170,7 +168,7 @@ class Type extends GenericInteger {
      */
     write64F_(bytes, number, j) {
         f64[0] = number;
-        let type = new Type({"bits": 32, "offset": 4, "lastByteMask":255});
+        let type = new Type({"bits": 32});
         j = type.write(bytes, ui32[0], j);
         return type.write(bytes, ui32[1], j);
     }
@@ -288,7 +286,7 @@ module.exports = Type;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 30 2018 20:35:46 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu May 03 2018 00:00:50 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
