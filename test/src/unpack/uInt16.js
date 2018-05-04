@@ -74,42 +74,42 @@ describe('unpack uInt16', function() {
     // Should pack anything between 9 and 16 bits to 2 bytes
     it('should handle 11-bit as 16-bit (0)', function() {
         assert.deepEqual(
-            byteData.unpackArray([0, 0], new byteData.Type({"bits": 11})),
+            byteData.unpackArray([0, 0], {"bits": 11}),
             [0]);
     });
     it('should handle 11-bit as 16-bit (2000)', function() {
         assert.deepEqual(
-            byteData.unpackArray(['d0', '07'], new byteData.Type({"bits": 11}), 16),
+            byteData.unpackArray(['d0', '07'], {"bits": 11}, 16),
             [2000]);
     });
     it('should handle 11-bit as 16-bit (2047)', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 7], new byteData.Type({"bits": 11})),
+            byteData.unpackArray([255, 7], {"bits": 11}),
             [2047]);
     });
     it('should handle 11-bit as 16-bit (65535, overflow)', function() {
         assert.deepEqual(
-            byteData.unpackArray(['ff', 'ff'], new byteData.Type({"bits": 11}), 16),
+            byteData.unpackArray(['ff', 'ff'], {"bits": 11}, 16),
             [2047]);
     });
     it('should handle 12-bit as 16-bit (2047)', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 7], new byteData.Type({"bits": 12})),
+            byteData.unpackArray([255, 7], {"bits": 12}),
             [2047]);
     });
     it('should handle 13-bit as 16-bit (2047)', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 7], new byteData.Type({"bits": 13})),
+            byteData.unpackArray([255, 7], {"bits": 13}),
             [2047]);
     });
     it('should handle 14-bit as 16-bit (2047)', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 7], new byteData.Type({"bits": 14})),
+            byteData.unpackArray([255, 7], {"bits": 14}),
             [2047]);
     });
     it('should handle 15-bit as 16-bit (2047)', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 7], new byteData.Type({"bits": 15})),
+            byteData.unpackArray([255, 7], {"bits": 15}),
             [2047]);
     });
 });

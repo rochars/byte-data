@@ -5,30 +5,27 @@
  */
 
 let expect = require("chai").expect;
-let ByteData = require('../../test/loader.js');
+let byteData = require('../../test/loader.js');
 let testFunc;
 let typeError = "Not a supported type.";
 
 describe('Word size errors', function() {
     
-    it("More than 64 bits",
-            function () {
+    it("More than 64 bits", function () {
         testFunc = function() {
-            let type = new ByteData.Type({"bits": 65})
+            byteData.pack(2, {"bits": 65});
         };
         expect(testFunc).to.throw(typeError);
     });
-    it("Less than 1 bit (0)",
-            function () {
+    it("Less than 1 bit (0)", function () {
         testFunc = function() {
-            let type = new ByteData.Type({"bits": 0})
+            byteData.pack(2, {"bits": 0});
         };
         expect(testFunc).to.throw(typeError);
     });
-    it("Less than 1 bit (-1)",
-            function () {
+    it("Less than 1 bit (-1)", function () {
         testFunc = function() {
-            let type = new ByteData.Type({"bits": 0})
+            byteData.pack(2, {"bits": -1});
         };
         expect(testFunc).to.throw(typeError);
     });

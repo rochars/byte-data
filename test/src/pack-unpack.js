@@ -27,12 +27,7 @@ let int40 = byteData.int40;
 let uInt48 = byteData.uInt48;
 let int48 = byteData.int48;
 let float64 = byteData.float64;
-
-/**
- * Unsigned 48-bit integers little-endian
- * @type {!Type}
- */
-let uInt53 = new byteData.Type({"bits": 53});
+let uInt53 = {"bits": 53};
 
 describe('pack-unpack', function() {
     
@@ -545,3 +540,4 @@ describe('pack-unpack', function() {
         assert.deepEqual("ab", string);
     });
 });
+ 

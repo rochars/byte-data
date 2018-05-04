@@ -6,12 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../test/loader.js');
-
-/**
- * Unsigned 48-bit integers little-endian
- * @type {!Type}
- */
-let uInt53 = new byteData.Type({"bits": 53});
+let uInt53 = {"bits": 53};
 
 describe('pack struct', function() {
 

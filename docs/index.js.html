@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Type.html">Type</a></li></ul><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
 </nav>
 
 <div id="main">
@@ -37,7 +37,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/*!
+            <pre class="prettyprint source linenums"><code>/*
  * byte-data
  * Pack and unpack binary data.
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
@@ -46,42 +46,68 @@
  */
 
 /** @private */
-const Type = require("./src/type");
-/** @private */
 const endianness = require("endianness");
+/** @private */
+const GenericInteger = require("generic-integer");
+
+/** @private */
+let int8 = new Int8Array(4);
+/** @private */
+let i32 = new Int32Array(int8.buffer, 0, 1);
+/** @private */
+let f32 = new Float32Array(int8.buffer, 0, 1);
+/** @private */
+let int8f64 = new Int8Array(8);
+/** @private */
+let f64 = new Float64Array(int8f64.buffer);
+/** @private */
+let ui32 = new Uint32Array(int8f64.buffer);
 
 /**
- * Turn a number or fixed-length string into a byte buffer.
- * @param {number|string} value The value.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the output. Optional. Default is 10.
+ * @type {Function}
+ * @private
+ */
+let reader_;
+/**
+ * @type {Function}
+ * @private
+ */
+let writer_;
+/**
+ * @type {Object}
+ * @private
+ */
+let gInt_;
+
+/**
+ * Write a number or fixed-length string to a byte buffer.
+ * @param {!number|!string} value The value.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number|string>}
  */
 function pack(value, type, base=10) {
-    let values = [];
-    type.base = base;
+    assureType_(type, base);
     if (value.constructor == String) {
-        values = value.slice(0, type.offset);
-    } else if (!Array.isArray(value)) {
-        values = [value];
+        return toBytes_(value.slice(0, type["offset"]), type);
     }
-    return toBytes_(values, type);
+    return toBytes_([value], type);
 }
 
 /**
- * Turn a byte buffer into a number or a fixed-length string.
- * @param {!Array&lt;number|string>|Uint8Array} buffer An array of bytes.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * Read a number or a fixed-length string from a byte buffer.
+ * @param {!Array&lt;number|string>|!Uint8Array} buffer An array of bytes.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {
-    type.base = base;
-    let values = fromBytes_(buffer.slice(0, type.offset), type);
-    if (type.char) {
-        values = values.slice(0, type.bits / 8);
+    assureType_(type, base);
+    let values = fromBytes_(buffer.slice(0, type["offset"]), type);
+    if (type["char"]) {
+        values = values.slice(0, type["offset"]);
     } else {
         values = values[0];
     }
@@ -89,37 +115,37 @@ function unpack(buffer, type, base=10) {
 }
 
 /**
- * Turn a array of numbers or a string into a byte buffer.
+ * Write an array of numbers or a string to a byte buffer.
  * @param {!Array&lt;number>|string} values The values.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the output. Optional. Default is 10.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number|string>}
  */
 function packArray(values, type, base=10) {
-    type.base = base;
+    assureType_(type, base);
     return toBytes_(values, type);
 }
 
 /**
- * Turn a byte buffer into a array of numbers or a string.
- * @param {!Array&lt;number|string>|Uint8Array} buffer The byte array.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * Read an array of numbers or a string from a byte buffer.
+ * @param {!Array&lt;number|string>|!Uint8Array} buffer The byte array.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|string|number}
  */
 function unpackArray(buffer, type, base=10) {
-    type.base = base;
+    assureType_(type, base);
     return fromBytes_(buffer, type);
 }
 
 /**
- * Turn a struct into a byte buffer.
+ * Write a struct to a byte buffer.
  * A struct is an array of values of not necessarily the same type.
- * @param {Array&lt;number|string>} struct The struct values.
- * @param {!Array&lt;Object>} def The struct type definition.
- * @param {number} base The base of the output. Optional. Default is 10.
+ * @param {!Array&lt;number|string>} struct The struct values.
+ * @param {!Array&lt;!Object>} def The struct type definition.
+ * @param {!number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number|string>}
  */
@@ -135,11 +161,11 @@ function packStruct(struct, def, base=10) {
 }
 
 /**
- * Turn a byte buffer into a struct.
+ * Read a struct from a byte buffer.
  * A struct is an array of values of not necessarily the same type.
- * @param {!Array&lt;number|string>|Uint8Array} buffer The byte buffer.
- * @param {!Array&lt;Object>} def The struct type definition.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {!Array&lt;number|string>|!Uint8Array} buffer The byte buffer.
+ * @param {!Array&lt;!Object>} def The struct type definition.
+ * @param {!number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {Array&lt;number|string>}
  */
@@ -151,80 +177,228 @@ function unpackStruct(buffer, def, base=10) {
     let j = 0;
     for (let i=0; i &lt; def.length; i++) {
         struct = struct.concat(
-                unpack(buffer.slice(j, j + def[i].offset), def[i], base)
+                unpack(buffer.slice(j, j + def[i]["offset"]), def[i], base)
             );
-        j += def[i].offset;
+        j += def[i]["offset"];
     }
     return struct;
 }
 
 /**
+ * Read int values from bytes.
+ * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
+ * @param {!number} i The index to read.
+ * @return {!number}
+ * @private
+ */
+function readInt_(bytes, i) {
+    return gInt_.read(bytes, i);
+}
+
+/**
+ * Read 1 16-bit float from bytes.
+ * Thanks https://stackoverflow.com/a/8796597
+ * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
+ * @param {!number} i The index to read.
+ * @return {!number}
+ * @private
+ */
+function read16F_(bytes, i) {
+    let int = gInt_.read(bytes, i);
+    let exponent = (int &amp; 0x7C00) >> 10;
+    let fraction = int &amp; 0x03FF;
+    let floatValue;
+    if (exponent) {
+        floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
+    } else {
+        floatValue = 6.103515625e-5 * (fraction / 0x400);
+    }
+    return floatValue * (int >> 15 ? -1 : 1);
+}
+
+/**
+ * Read 1 32-bit float from bytes.
+ * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
+ * @param {!number} i The index to read.
+ * @return {!number}
+ * @private
+ */
+function read32F_(bytes, i) {
+    i32[0] = gInt_.read(bytes, i);
+    return f32[0];
+}
+
+/**
+ * Read 1 64-bit double from bytes.
+ * Thanks https://gist.github.com/kg/2192799
+ * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
+ * @param {!number} i The index to read.
+ * @return {!number}
+ * @private
+ */
+function read64F_(bytes, i) {
+    ui32[0] = gInt_.read(bytes, i);
+    ui32[1] = gInt_.read(bytes, i + 4);
+    return f64[0];
+}
+
+/**
+ * Read 1 char from bytes.
+ * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
+ * @param {!number} i The index to read.
+ * @return {!string}
+ * @private
+ */
+function readChar_(bytes, i) {
+    let chrs = "";
+    for(let j=0; j &lt; gInt_.offset; j++) {
+        chrs += String.fromCharCode(bytes[i+j]);
+    }
+    return chrs;
+}
+
+/**
+ * Write a integer value to a byte buffer.
+ * @param {!Array&lt;number>} bytes An array of bytes.
+ * @param {!number} number The number to write as bytes.
+ * @param {!number} j The index being written in the byte buffer.
+ * @return {!number} The next index to write on the byte buffer.
+ * @private
+ */
+function writeInt_(bytes, number, j) {
+    return gInt_.write(bytes, number, j);
+}
+
+/**
+ * Write one 16-bit float as a binary value.
+ * @param {!Array&lt;number>} bytes An array of bytes.
+ * @param {!number} number The number to write as bytes.
+ * @param {!number} j The index being written in the byte buffer.
+ * @return {!number} The next index to write on the byte buffer.
+ * @private
+ */
+function write16F_(bytes, number, j) {
+    f32[0] = number;
+    let x = i32[0];
+    let bits = (x >> 16) &amp; 0x8000;
+    let m = (x >> 12) &amp; 0x07ff;
+    let e = (x >> 23) &amp; 0xff;
+    if (e >= 103) {
+        bits |= ((e - 112) &lt;&lt; 10) | (m >> 1);
+        bits += m &amp; 1;
+    }
+    bytes[j++] = bits &amp; 0xFF;
+    bytes[j++] = bits >>> 8 &amp; 0xFF;
+    return j;
+}
+
+/**
+ * Write one 32-bit float as a binary value.
+ * @param {!Array&lt;number>} bytes An array of bytes.
+ * @param {!number} number The number to write as bytes.
+ * @param {!number} j The index being written in the byte buffer.
+ * @return {!number} The next index to write on the byte buffer.
+ * @private
+ */
+function write32F_(bytes, number, j) {
+    f32[0] = number;
+    j = gInt_.write(bytes, i32[0], j);
+    return j;
+}
+
+/**
+ * Write one 64-bit float as a binary value.
+ * @param {!Array&lt;number>} bytes An array of bytes.
+ * @param {!number} number The number to write as bytes.
+ * @param {!number} j The index being written in the byte buffer.
+ * @return {!number} The next index to write on the byte buffer.
+ * @private
+ */
+function write64F_(bytes, number, j) {
+    f64[0] = number;
+    j = gInt_.write(bytes, ui32[0], j);
+    return gInt_.write(bytes, ui32[1], j);
+}
+
+/**
+ * Write one char as a byte.
+ * @param {!Array&lt;number>} bytes An array of bytes.
+ * @param {!string} string The string to write as bytes.
+ * @param {!number} j The index being written in the byte buffer.
+ * @return {!number} The next index to write on the byte buffer.
+ * @private
+ */
+function writeChar_(bytes, string, j) {
+    bytes[j++] = string.charCodeAt(0);
+    return j;
+}
+
+/**
  * Get the length in bytes of a struct definition.
  * @param {!Array&lt;Object>} def The struct type definition.
- * @return {number} The length of the structure in bytes.
+ * @return {!number} The length of the structure in bytes.
  * @private
  */
 function getStructDefSize_(def) {
     let bits = 0;
     for (let i = 0; i &lt; def.length; i++) {
-        bits += def[i].offset;
+        bits += def[i]["offset"];
     }
     return bits;
 }
 
-
 /**
  * Turn a byte buffer into what the bytes represent.
- * @param {!Array&lt;number|string>|Uint8Array} buffer An array of bytes.
- * @param {Object} type One of the available types.
+ * @param {!Array&lt;number|string>|!Uint8Array} buffer An array of bytes.
+ * @param {!Object} type One of the available types.
  * @return {!Array&lt;number>|number|string}
  * @private
  */
 function fromBytes_(buffer, type) {
-    if (type.be) {
-        endianness(buffer, type.offset);
+    if (type["be"]) {
+        endianness(buffer, type["offset"]);
     }
-    if (type.base != 10) {
-        bytesFromBase_(buffer, type.base);
+    if (type["base"] != 10) {
+        bytesFromBase_(buffer, type["base"]);
     }
     return readBytes_(buffer, type);
 }
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array&lt;number>|number|string} values The data.
+ * @param {!Array&lt;!number|!string>|string} values The data.
  * @param {Object} type One of the available types.
  * @return {!Array&lt;number|string>} the data as a byte buffer.
  * @private
  */
 function toBytes_(values, type) {
     let bytes = writeBytes_(values, type);
-    if (type.be) {
-        endianness(bytes, type.offset);
+    if (type["be"]) {
+        endianness(bytes, type["offset"]);
     }
-    if (type.base != 10) {
-        bytesToBase_(bytes, type.base);
+    if (type["base"] != 10) {
+        bytes = bytesToBase_(bytes, type["base"]);
         formatOutput_(bytes, type);
     }
     return bytes;
 }
 
 /**
- * Turn a array of bytes into an array of what the bytes should represent.
- * @param {!Array&lt;number>|Uint8Array} bytes An array of bytes.
- * @param {Object} type The type.
- * @return {!Array&lt;number>|string}
+ * Read values from an array of bytes.
+ * @param {!Array&lt;!number>|!Uint8Array} bytes An array of bytes.
+ * @param {!Object} type The type.
+ * @return {!Array&lt;!number>|string}
  * @private
  */
 function readBytes_(bytes, type) {
     let values = [];
     let i = 0;
-    let len = bytes.length - (type.offset - 1);
+    let len = bytes.length - (type["offset"] - 1);
     while (i &lt; len) {
-        values.push(type.reader(bytes, i));
-        i += type.offset;
+        values.push(reader_(bytes, i));
+        i += type["offset"];
     }
-    if (type.char) {
+    if (type["char"]) {
         values = values.join("");
     }
     return values;
@@ -232,31 +406,29 @@ function readBytes_(bytes, type) {
 
 /**
  * Write values as bytes.
- * @param {!Array&lt;number>|number|string} values The data.
+ * @param {!Array&lt;number|string>|string} values The data.
  * @param {Object} type One of the available types.
  * @return {!Array&lt;number>} the bytes.
  * @private
  */
 function writeBytes_(values, type) {
     let j = 0;
-    let len = values.length;
     let bytes = [];
-    for(let i=0; i &lt; len; i++) {
-        j = type.writer(bytes, values[i], j);
+    for(let i=0; i &lt; values.length; i++) {
+        j = writer_(bytes, values[i], j);
     }
     return bytes;
 }
 
 /**
- * Turn the output to the correct base.
- * @param {Array} bytes The bytes.
- * @param {Object} type The type.
+ * Fill a byte string with zeros on the left.
+ * @param {!Array&lt;!string>} bytes The bytes.
+ * @param {!Object} type The type.
  * @private
  */
 function formatOutput_(bytes, type) {
-    let len = bytes.length;
-    let offset = (type.base == 2 ? 8 : 2) + 1;
-    for(let i =0; i &lt; len; i++) {
+    let offset = (type["base"] == 2 ? 8 : 2) + 1;
+    for(let i =0; i &lt; bytes.length; i++) {
         bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
     }
 }
@@ -264,12 +436,11 @@ function formatOutput_(bytes, type) {
 /**
  * Turn bytes to base 10 from base 2 or 16.
  * @param {!Array&lt;number>|Uint8Array} bytes The bytes as binary or hex strings.
- * @param {number} base The base.
+ * @param {!number} base The base.
  * @private
  */
 function bytesFromBase_(bytes, base) {
-    let len = bytes.length;
-    for(let i=0; i &lt; len; i++) {
+    for(let i=0; i &lt; bytes.length; i++) {
         bytes[i] = parseInt(bytes[i], base);
     }
 }
@@ -277,14 +448,88 @@ function bytesFromBase_(bytes, base) {
 /**
  * Turn bytes from base 10 to base 2 or 16.
  * @param {!Array&lt;string|number>} bytes The bytes.
- * @param {number} base The base.
+ * @param {!number} base The base.
+ * @return {!Array&lt;!string>}
  * @private
  */
 function bytesToBase_(bytes, base) {
-    let len = bytes.length;
-    for(let i=0; i &lt; len; i++) {
+    for(let i=0; i &lt; bytes.length; i++) {
         bytes[i] = bytes[i].toString(base);
     }
+    return bytes;
+}
+
+/**
+ * @param {!Object} type The type definition.
+ * @param {!number} base The base.
+ * @private
+ */
+function assureType_(type, base) {
+    type["offset"] = type["bits"] &lt; 8 ? 1 : Math.ceil(type["bits"] / 8);
+    type["base"] = base;
+    setReader_(type);
+    setWriter_(type);
+    setGenericInteger_(type);
+}
+
+/**
+ * @param {!Object} type The type definition.
+ * @private
+ */
+function setGenericInteger_(type) {
+    if (type["float"]) {
+        if (type["bits"] == 64) {
+            gInt_ = new GenericInteger(32, false);
+        } else if(type["bits"] == 32) {
+            gInt_ = new GenericInteger(32, true);
+        } else {
+            gInt_ = new GenericInteger(16, false);
+        }
+    } else {
+        gInt_ = new GenericInteger(type["bits"], type["signed"]);
+    }
+}
+
+/**
+ * Set the function to read data of this type.
+ * @param {!Object} type The type definition.
+ * @private
+ */
+function setReader_(type) {
+    if (type["float"]) {
+        if (type["bits"] == 16) {
+            reader_ = read16F_;
+        } else if(type["bits"] == 32) {
+            reader_ = read32F_;
+        } else if(type["bits"] == 64) {
+            reader_ = read64F_;
+        }
+    } else if (type["char"]) {
+        reader_ = readChar_;
+    } else {
+        reader_ = readInt_;
+    }
+}
+
+/**
+ * Set the function to write data of this type.
+ * @param {!Object} type The type definition.
+ * @private
+ */
+function setWriter_(type) {
+    if (type["float"]) {
+        if (type["bits"] == 16) {
+            writer_ = write16F_;
+        } else if(type["bits"] == 32) {
+            writer_ = write32F_;
+        } else if(type["bits"] == 64) {
+            writer_ = write64F_;
+        }
+    } else if (type["char"]) {
+        writer_ = writeChar_;
+    } else {
+        writer_ = writeInt_;
+    }   
 }
 
 // interface
@@ -294,184 +539,184 @@ module.exports.packArray = packArray;
 module.exports.unpackArray = unpackArray;
 module.exports.unpackStruct = unpackStruct;
 module.exports.packStruct = packStruct;
-module.exports.Type = Type;
+
 /** 
  * A char.
  * @type {Object}
  */
-module.exports.chr = new Type({"bits": 8, "char": true});
+module.exports.chr = {"bits": 8, "char": true};
 /**
  * A 4-char string
  * @type {Object}
  */
-module.exports.fourCC = new Type({"bits": 32, "char": true});
+module.exports.fourCC = {"bits": 32, "char": true};
 /**
  * Booleans
  * @type {Object}
  */
-module.exports.bool = new Type({"bits": 1});
+module.exports.bool = {"bits": 1};
 /**
  * Signed 2-bit integers
  * @type {Object}
  */
-module.exports.int2 = new Type({"bits": 2, "signed": true});
+module.exports.int2 = {"bits": 2, "signed": true};
 /**
  * Unsigned 2-bit integers
  * @type {Object}
  */
-module.exports.uInt2 = new Type({"bits": 2});
+module.exports.uInt2 = {"bits": 2};
 /**
  * Signed 4-bit integers
  * @type {Object}
  */
-module.exports.int4 = new Type({"bits": 4, "signed": true});
+module.exports.int4 = {"bits": 4, "signed": true};
 /**
  * Unsigned 4-bit integers
  * @type {Object}
  */
-module.exports.uInt4 = new Type({"bits": 4});
+module.exports.uInt4 = {"bits": 4};
 /**
  * Signed 8-bit integers
  * @type {Object}
  */
-module.exports.int8 = new Type({"bits": 8, "signed": true});
+module.exports.int8 = {"bits": 8, "signed": true};
 /**
  * Unsigned 4-bit integers
  * @type {Object}
  */
-module.exports.uInt8 = new Type({"bits": 8});
+module.exports.uInt8 = {"bits": 8};
 // LE
 /**
  * Signed 16-bit integers little-endian
  * @type {Object}
  */
-module.exports.int16  = new Type({"bits": 16, "signed": true});
+module.exports.int16  = {"bits": 16, "signed": true};
 /**
  * Unsigned 16-bit integers little-endian
  * @type {Object}
  */
-module.exports.uInt16 = new Type({"bits": 16});
+module.exports.uInt16 = {"bits": 16};
 /**
  * Half-precision floating-point numbers little-endian
  * @type {Object}
  */
-module.exports.float16 = new Type({"bits": 16, "float": true});
+module.exports.float16 = {"bits": 16, "float": true};
 /**
  * Signed 24-bit integers little-endian
  * @type {Object}
  */
-module.exports.int24 = new Type({"bits": 24, "signed": true});
+module.exports.int24 = {"bits": 24, "signed": true};
 /**
  * Unsigned 24-bit integers little-endian
  * @type {Object}
  */
-module.exports.uInt24 = new Type({"bits": 24});
+module.exports.uInt24 = {"bits": 24};
 /**
  * Signed 32-bit integers little-endian
  * @type {Object}
  */
-module.exports.int32 = new Type({"bits": 32, "signed": true});
+module.exports.int32 = {"bits": 32, "signed": true};
 /**
  * Unsigned 32-bit integers little-endian
  * @type {Object}
  */
-module.exports.uInt32 = new Type({"bits": 32});
+module.exports.uInt32 = {"bits": 32};
 /**
  * Single-precision floating-point numbers little-endian
  * @type {Object}
  */
-module.exports.float32 = new Type({"bits": 32, "float": true});
+module.exports.float32 = {"bits": 32, "float": true};
 /**
  * Signed 40-bit integers little-endian
  * @type {Object}
  */
-module.exports.int40 = new Type({"bits": 40, "signed": true});
+module.exports.int40 = {"bits": 40, "signed": true};
 /**
  * Unsigned 40-bit integers little-endian
  * @type {Object}
  */
-module.exports.uInt40 = new Type({"bits": 40});
+module.exports.uInt40 = {"bits": 40};
 /**
  * Signed 48-bit integers little-endian
  * @type {Object}
  */
-module.exports.int48 = new Type({"bits": 48, "signed": true});
+module.exports.int48 = {"bits": 48, "signed": true};
 /**
  * Unsigned 48-bit integers little-endian
  * @type {Object}
  */
-module.exports.uInt48 = new Type({"bits": 48});
+module.exports.uInt48 = {"bits": 48};
 /**
  * Double-precision floating-point numbers little-endian
  * @type {Object}
  */
-module.exports.float64 = new Type({"bits": 64, "float": true});
+module.exports.float64 = {"bits": 64, "float": true};
 // BE
 /**
  * Signed 16-bit integers big-endian
  * @type {Object}
  */
-module.exports.int16BE  = new Type({"bits": 16, "signed": true, "be": true});
+module.exports.int16BE  = {"bits": 16, "signed": true, "be": true};
 /**
  * Unsigned 16-bit integers big-endian
  * @type {Object}
  */
-module.exports.uInt16BE = new Type({"bits": 16, "be": true});
+module.exports.uInt16BE = {"bits": 16, "be": true};
 /**
  * Half-precision floating-point numbers big-endian
  * @type {Object}
  */
-module.exports.float16BE = new Type({"bits": 16, "float": true, "be": true});
+module.exports.float16BE = {"bits": 16, "float": true, "be": true};
 /**
  * Signed 24-bit integers big-endian
  * @type {Object}
  */
-module.exports.int24BE = new Type({"bits": 24, "signed": true, "be": true});
+module.exports.int24BE = {"bits": 24, "signed": true, "be": true};
 /**
  * Unsigned 24-bit integers big-endian
  * @type {Object}
  */
-module.exports.uInt24BE = new Type({"bits": 24, "be": true});
+module.exports.uInt24BE = {"bits": 24, "be": true};
 /**
  * Signed 32-bit integers big-endian
  * @type {Object}
  */
-module.exports.int32BE = new Type({"bits": 32, "signed": true, "be": true});
+module.exports.int32BE = {"bits": 32, "signed": true, "be": true};
 /**
  * Unsigned 32-bit integers big-endian
  * @type {Object}
  */
-module.exports.uInt32BE = new Type({"bits": 32, "be": true});
+module.exports.uInt32BE = {"bits": 32, "be": true};
 /**
  * Single-precision floating-point numbers big-endian
  * @type {Object}
  */
-module.exports.float32BE = new Type({"bits": 32, "float": true, "be": true});
+module.exports.float32BE = {"bits": 32, "float": true, "be": true};
 /**
  * Signed 40-bit integers big-endian
  * @type {Object}
  */
-module.exports.int40BE = new Type({"bits": 40, "signed": true, "be": true});
+module.exports.int40BE = {"bits": 40, "signed": true, "be": true};
 /**
  * Unsigned 40-bit integers big-endian
  * @type {Object}
  */
-module.exports.uInt40BE = new Type({"bits": 40, "be": true});
+module.exports.uInt40BE = {"bits": 40, "be": true};
 /**
  * Signed 48-bit integers big-endian
  * @type {Object}
  */
-module.exports.int48BE = new Type({"bits": 48, "signed": true, "be": true});
+module.exports.int48BE = {"bits": 48, "signed": true, "be": true};
 /**
  * Unsigned 48-bit integers big-endian
  * @type {Object}
  */
-module.exports.uInt48BE = new Type({"bits": 48, "be": true});
+module.exports.uInt48BE = {"bits": 48, "be": true};
 /**
  * Double-precision floating-point numbers big-endian
  * @type {Object}
  */
-module.exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
+module.exports.float64BE = {"bits": 64, "float": true, "be": true};
 </code></pre>
         </article>
     </section>
@@ -484,7 +729,7 @@ module.exports.float64BE = new Type({"bits": 64, "float": true, "be": true});
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu May 03 2018 00:00:50 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu May 03 2018 22:11:55 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

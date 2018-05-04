@@ -6,7 +6,7 @@
 
 const byteData = require("./index.js");
 
-// Functions
+// functions
 window['byteData'] = byteData;
 window['byteData']['pack'] = byteData.pack;
 window['byteData']['unpack'] = byteData.unpack;
@@ -16,7 +16,6 @@ window['byteData']['packStruct'] = byteData.packStruct;
 window['byteData']['unpackStruct'] = byteData.unpackStruct;
 
 // types
-window['byteData']['Type'] = byteData.Type;
 window['byteData']['chr'] = byteData.chr;
 window['byteData']['fourCC'] = byteData.fourCC;
 window['byteData']['bool'] = byteData.bool;
@@ -26,7 +25,6 @@ window['byteData']['int4'] = byteData.int4;
 window['byteData']['uInt4'] = byteData.uInt4;
 window['byteData']['int8'] = byteData.int8;
 window['byteData']['uInt8'] = byteData.uInt8;
-
 // types: LE
 window['byteData']['int16'] = byteData.int16;
 window['byteData']['uInt16'] = byteData.uInt16;
@@ -41,7 +39,6 @@ window['byteData']['uInt40'] = byteData.uInt40;
 window['byteData']['int48'] = byteData.int48;
 window['byteData']['uInt48'] = byteData.uInt48;
 window['byteData']['float64'] = byteData.float64;
-
 // types: BE
 window['byteData']['int16BE'] = byteData.int16BE;
 window['byteData']['uInt16BE'] = byteData.uInt16BE;

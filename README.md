@@ -7,7 +7,7 @@ https://github.com/rochars/byte-data
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
 - Runs in Node.js and in the browser
-- Less than 4KB minified + compressed, less than 9KB minified
+- Less than 3KB minified + compressed, less than 7KB minified
 - Tested against Python's struct module (for all common types)
 - Pack and unpack **single values**, **arrays** and **structs**
 
@@ -42,7 +42,7 @@ byteData.packArray([65535, 0], byteData.uInt16)
 byteData.packArray([-2147483648, 2147483647], byteData.int32),
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
-// unpack an array of uInt16 numbers from bytes represented as hex values
+// Unpack an array of uInt16 numbers from bytes represented as hex values
 byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
 // [65535, 0]
 ```
@@ -50,75 +50,66 @@ byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
 ## Interface
 ```javascript
 /**
- * Turn a number or fixed-length string into a byte buffer.
- * @param {number|string} value The value.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the output. Optional. Default is 10.
+ * Write a number or fixed-length string to a byte buffer.
+ * @param {!number|!string} value The value.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array<number|string>}
  */
 function pack(value, type, base=10) {}
 
 /**
- * Turn a byte buffer into a number or a fixed-length string.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer An array of bytes.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * Read a number or a fixed-length string from a byte buffer.
+ * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
 function unpack(buffer, type, base=10) {}
 
 /**
- * Turn a array of numbers or a string into a byte buffer.
+ * Write an array of numbers or a string to a byte buffer.
  * @param {!Array<number>|string} values The values.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the output. Optional. Default is 10.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array<number|string>}
  */
 function packArray(values, type, base=10) {}
 
 /**
- * Turn a byte buffer into a array of numbers or a string.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte array.
- * @param {Object} type One of the available types.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * Read an array of numbers or a string from a byte buffer.
+ * @param {!Array<number|string>|!Uint8Array} buffer The byte array.
+ * @param {!Object} type One of the available types.
+ * @param {!number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|string}
+ * @return {!Array<number>|string|number}
  */
 function unpackArray(buffer, type, base=10) {}
 
 /**
- * Turn a struct into a byte buffer.
+ * Write a struct to a byte buffer.
  * A struct is an array of values of not necessarily the same type.
- * @param {Array} struct The struct values.
- * @param {!Array<Object>} def The struct type definition.
- * @param {number} base The base of the output. Optional. Default is 10.
+ * @param {!Array<number|string>} struct The struct values.
+ * @param {!Array<!Object>} def The struct type definition.
+ * @param {!number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {!Array<number>|!Array<string>}
+ * @return {!Array<number|string>}
  */
 function packStruct(struct, def, base=10) {}
 
 /**
- * Turn a byte buffer into a struct.
+ * Read a struct from a byte buffer.
  * A struct is an array of values of not necessarily the same type.
- * @param {!Array<number>|!Array<string>|Uint8Array} buffer The byte buffer.
- * @param {!Array<Object>} def The struct type definition.
- * @param {number} base The base of the input. Optional. Default is 10.
+ * @param {!Array<number|string>|!Uint8Array} buffer The byte buffer.
+ * @param {!Array<!Object>} def The struct type definition.
+ * @param {!number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10 or 16.
- * @return {Array}
+ * @return {Array<number|string>}
  */
 function unpackStruct(buffer, def, base=10) {}
-
-/**
- * Find and return the start index of some string.
- * Return -1 if the string is not found.
- * @param {!Array<number>|Uint8Array} buffer A byte buffer.
- * @param {string} text Some string to look for.
- * @return {number} The start index of the first occurrence, -1 if not found
- */
-function findString(buffer, text) {}
 ```
 
 ## Standard types
@@ -227,14 +218,14 @@ Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki
 
 ## Creating new integer types
 ```javascript
-// unsigned 11-bit integer
-let uInt11 = new Type({"bits": 11});
+// Unsigned 11-bit integer
+let uInt11 = {"bits": 11};
 
-// signed 45-bit integer
-let int45 = new Type({"bits": 45, "signed": true});
+// Signed 45-bit integer
+let int45 = {"bits": 45, "signed": true};
 ```
 
-New types work exactly like the pre-defined types. You can create new types of integers (signed/unsigned) and strings, not floats.
+You can create new types of integers (signed/unsigned) and strings, not floats.
 
 ## LICENSE
 Copyright (c) 2017-2018 Rafael da Silva Rocha.
