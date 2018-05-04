@@ -18,11 +18,19 @@ const io = require("./lib/io");
  * @return {!Array<number|string>}
  */
 function pack(value, type, base=10) {
+    let packed = [];
+    if (value === undefined) {
+        return packed;
+    }
     io.assureType_(type, base);
     if (value.constructor == String) {
-        return io.toBytes_(value.slice(0, type["offset"]), type);
+        if (value.length >= type["offset"]) {
+            packed = io.toBytes_(value.slice(0, type["offset"]), type);
+        }
+    } else {
+        packed = io.toBytes_([value], type);
     }
-    return io.toBytes_([value], type);
+    return packed;
 }
 
 /**
@@ -39,7 +47,7 @@ function unpack(buffer, type, base=10) {
     if (type["char"]) {
         values = values.slice(0, type["offset"]);
     } else {
-        values = values[0];
+        values = values ? values[0] : null;
     }
     return values;
 }
