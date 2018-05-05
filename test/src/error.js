@@ -8,9 +8,29 @@ let expect = require("chai").expect;
 let byteData = require('../../test/loader.js');
 let testFunc;
 let typeError = "Not a supported type.";
+let floatTypeError = "Not a supported float type.";
 
 describe('Word size errors', function() {
     
+    it("string with odd number of bits", function () {
+        testFunc = function() {
+            byteData.pack("a", {"char": true, "bits": 9});
+        };
+        expect(testFunc).to.throw("Wrong offset for type char.");
+    });
+    it("char with with less than 8 bits", function () {
+        testFunc = function() {
+            byteData.pack("a", {"char": true, "bits": 7});
+        };
+        expect(testFunc).to.throw("Wrong offset for type char.");
+    });
+
+    it("More than 64 bits", function () {
+        testFunc = function() {
+            byteData.pack(2);
+        };
+        expect(testFunc).to.throw("Undefined type.");
+    });
     it("More than 64 bits", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 65});
@@ -28,5 +48,12 @@ describe('Word size errors', function() {
             byteData.pack(2, {"bits": -1});
         };
         expect(testFunc).to.throw(typeError);
+    });
+
+    it("17 float (-1)", function () {
+        testFunc = function() {
+            byteData.pack(2, {"bits": 17, "float": true});
+        };
+        expect(testFunc).to.throw(floatTypeError);
     });
 });

@@ -12,8 +12,6 @@ window['byteData']['pack'] = byteData.pack;
 window['byteData']['unpack'] = byteData.unpack;
 window['byteData']['packArray'] = byteData.packArray;
 window['byteData']['unpackArray'] = byteData.unpackArray;
-window['byteData']['packStruct'] = byteData.packStruct;
-window['byteData']['unpackStruct'] = byteData.unpackStruct;
 
 // types
 window['byteData']['chr'] = byteData.chr;

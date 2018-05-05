@@ -534,10 +534,18 @@ describe('pack-unpack', function() {
     });
 
     // string
-    it('should turn a 2 char string to bytes and back', function() {
+    it('should turn a 2 char string to bytes and then to ["a","b"]', function() {
         let bytes = byteData.packArray("ab", chr);
+        assert.deepEqual(bytes, [97, 98]);
         let string = byteData.unpackArray(bytes, chr);
-        assert.deepEqual("ab", string);
+        assert.deepEqual(["a","b"], string);
+    });
+
+    it('should turn a 2 array of ["a","b"] to bytes and back', function() {
+        let bytes = byteData.packArray(["a","b"], chr);
+        assert.deepEqual(bytes, [97, 98]);
+        let string = byteData.unpackArray(bytes, chr);
+        assert.deepEqual(["a","b"], string);
     });
 });
  

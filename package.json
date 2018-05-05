@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "7.0.1",
+  "version": "8.0.0",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -46,7 +46,7 @@
     "url": "git://github.com/rochars/byte-data.git"
   },
   "scripts": {
-    "lint": "jshint index.js lib/io.js",
+    "lint": "jshint index.js compile.js",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --src",
     "test-dist": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --dist",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",

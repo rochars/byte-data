@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packStruct">packStruct</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li><li><a href="global.html#unpackStruct">unpackStruct</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#bool">bool</a></li><li><a href="global.html#chr">chr</a></li><li><a href="global.html#float16">float16</a></li><li><a href="global.html#float16BE">float16BE</a></li><li><a href="global.html#float32">float32</a></li><li><a href="global.html#float32BE">float32BE</a></li><li><a href="global.html#float64">float64</a></li><li><a href="global.html#float64BE">float64BE</a></li><li><a href="global.html#fourCC">fourCC</a></li><li><a href="global.html#int2">int2</a></li><li><a href="global.html#int4">int4</a></li><li><a href="global.html#int8">int8</a></li><li><a href="global.html#int16">int16</a></li><li><a href="global.html#int16BE">int16BE</a></li><li><a href="global.html#int24">int24</a></li><li><a href="global.html#int24BE">int24BE</a></li><li><a href="global.html#int32">int32</a></li><li><a href="global.html#int32BE">int32BE</a></li><li><a href="global.html#int40">int40</a></li><li><a href="global.html#int40BE">int40BE</a></li><li><a href="global.html#int48">int48</a></li><li><a href="global.html#int48BE">int48BE</a></li><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#uInt2">uInt2</a></li><li><a href="global.html#uInt4">uInt4</a></li><li><a href="global.html#uInt8">uInt8</a></li><li><a href="global.html#uInt16">uInt16</a></li><li><a href="global.html#uInt16BE">uInt16BE</a></li><li><a href="global.html#uInt24">uInt24</a></li><li><a href="global.html#uInt24BE">uInt24BE</a></li><li><a href="global.html#uInt32">uInt32</a></li><li><a href="global.html#uInt32BE">uInt32BE</a></li><li><a href="global.html#uInt40">uInt40</a></li><li><a href="global.html#uInt40BE">uInt40BE</a></li><li><a href="global.html#uInt48">uInt48</a></li><li><a href="global.html#uInt48BE">uInt48BE</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li></ul>
 </nav>
 
 <div id="main">
@@ -52,7 +52,7 @@
 <li>Runs in Node.js and in the browser</li>
 <li>Less than 3KB minified + compressed, less than 7KB minified</li>
 <li>Tested against Python's struct module (for all common types)</li>
-<li>Pack and unpack <strong>single values</strong>, <strong>arrays</strong> and <strong>structs</strong></li>
+<li>Pack and unpack <strong>single values</strong> and <strong>arrays</strong></li>
 </ul>
 <h2>Pack/unpack:</h2><ul>
 <li>Booleans</li>
@@ -118,29 +118,7 @@ function packArray(values, type, base=10) {}
  *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|string|number}
  */
-function unpackArray(buffer, type, base=10) {}
-
-/**
- * Write a struct to a byte buffer.
- * A struct is an array of values of not necessarily the same type.
- * @param {!Array&lt;number|string>} struct The struct values.
- * @param {!Array&lt;!Object>} def The struct type definition.
- * @param {!number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
- * @return {!Array&lt;number|string>}
- */
-function packStruct(struct, def, base=10) {}
-
-/**
- * Read a struct from a byte buffer.
- * A struct is an array of values of not necessarily the same type.
- * @param {!Array&lt;number|string>|!Uint8Array} buffer The byte buffer.
- * @param {!Array&lt;!Object>} def The struct type definition.
- * @param {!number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
- * @return {Array&lt;number|string>}
- */
-function unpackStruct(buffer, def, base=10) {}</code></pre><h2>Standard types</h2><ul>
+function unpackArray(buffer, type, base=10) {}</code></pre><h2>Standard types</h2><ul>
 <li>chr</li>
 <li>fourCC</li>
 <li>bool</li>
@@ -181,37 +159,7 @@ function unpackStruct(buffer, def, base=10) {}</code></pre><h2>Standard types</h
 <li>uInt48BE</li>
 <li>float64BE</li>
 </ul>
-<pre class="prettyprint source lang-javascript"><code>byteData.pack(value, byteData.float16);</code></pre><h2>Structs</h2><p>You must define a <strong>struct</strong> to use <strong>packStruct()</strong> and <strong>unpackStruct()</strong>.
-A struct is a array os values of not necessarily the same type.</p>
-<h3>Packing a struct</h3><pre class="prettyprint source lang-javascript"><code>// Define a struct:
-let structDef = [
-    byteData.fourCC,
-    byteData.uInt32,
-    byteData.uInt16
-];
-
-// The struct data:
-let struct = [
-    &quot;abcd&quot;,
-    4294967295,
-    65535
-]
-
-// Pack the struct:
-console.log(byteData.packStruct(struct, structDef));
-// [97,98,99,100,255,255,255,255,255,255]</code></pre><h3>Unpacking a struct</h3><pre class="prettyprint source lang-javascript"><code>// Define a struct:
-let structDef = [
-    byteData.fourCC,
-    byteData.uInt32,
-    byteData.uInt16
-];
-
-// The byte buffer:
-let buffer = [97,98,99,100,255,255,255,255,255,255];
-
-// Unpack the struct:
-console.log(byteData.unpackStruct(buffer, structDef));
-// [&quot;abcd&quot;, 4294967295, 65535]</code></pre><h2>Overflow</h2><p>Integer values will be truncated according to the bit depth of the type.</p>
+<pre class="prettyprint source lang-javascript"><code>byteData.pack(value, byteData.float16);</code></pre><h2>Overflow</h2><p>Integer values will be truncated according to the bit depth of the type.</p>
 <pre class="prettyprint source lang-javascript"><code>// Values in the correct range
 byteData.pack(254, uInt8); // [254]
 byteData.pack(255, uInt8); // [255]
@@ -255,7 +203,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri May 04 2018 01:02:38 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat May 05 2018 20:51:15 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

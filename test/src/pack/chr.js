@@ -10,6 +10,17 @@ let byteData = require('../../../test/loader.js');
 describe('pack chr', function() {
     
     // pack
+    it('should turn a 128 char string to bytes', function() {
+        let str = "";
+        let bytes = [];
+        for (i=0; i<128; i++) {
+            str += "a";
+            bytes.push(97);
+        }
+        assert.deepEqual(
+            byteData.pack(str, {"char": true, "bits": 1024}),
+            bytes);
+    });
     it('should turn a 3 char string to bytes', function() {
         assert.deepEqual(
             byteData.pack("abc", byteData.chr),

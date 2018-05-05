@@ -9,7 +9,7 @@ https://github.com/rochars/byte-data
 - Runs in Node.js and in the browser
 - Less than 3KB minified + compressed, less than 7KB minified
 - Tested against Python's struct module (for all common types)
-- Pack and unpack **single values**, **arrays** and **structs**
+- Pack and unpack **single values** and **arrays**
 
 ## Pack/unpack:
 - Booleans
@@ -88,28 +88,6 @@ function packArray(values, type, base=10) {}
  * @return {!Array<number>|string|number}
  */
 function unpackArray(buffer, type, base=10) {}
-
-/**
- * Write a struct to a byte buffer.
- * A struct is an array of values of not necessarily the same type.
- * @param {!Array<number|string>} struct The struct values.
- * @param {!Array<!Object>} def The struct type definition.
- * @param {!number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
- * @return {!Array<number|string>}
- */
-function packStruct(struct, def, base=10) {}
-
-/**
- * Read a struct from a byte buffer.
- * A struct is an array of values of not necessarily the same type.
- * @param {!Array<number|string>|!Uint8Array} buffer The byte buffer.
- * @param {!Array<!Object>} def The struct type definition.
- * @param {!number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
- * @return {Array<number|string>}
- */
-function unpackStruct(buffer, def, base=10) {}
 ```
 
 ## Standard types
@@ -155,48 +133,6 @@ function unpackStruct(buffer, def, base=10) {}
 
 ```javascript
 byteData.pack(value, byteData.float16);
-```
-
-## Structs
-You must define a **struct** to use **packStruct()** and **unpackStruct()**.
-A struct is a array os values of not necessarily the same type.
-
-### Packing a struct
-```javascript
-// Define a struct:
-let structDef = [
-    byteData.fourCC,
-    byteData.uInt32,
-    byteData.uInt16
-];
-
-// The struct data:
-let struct = [
-    "abcd",
-    4294967295,
-    65535
-]
-
-// Pack the struct:
-console.log(byteData.packStruct(struct, structDef));
-// [97,98,99,100,255,255,255,255,255,255]
-```
-
-### Unpacking a struct
-```javascript
-// Define a struct:
-let structDef = [
-    byteData.fourCC,
-    byteData.uInt32,
-    byteData.uInt16
-];
-
-// The byte buffer:
-let buffer = [97,98,99,100,255,255,255,255,255,255];
-
-// Unpack the struct:
-console.log(byteData.unpackStruct(buffer, structDef));
-// ["abcd", 4294967295, 65535]
 ```
 
 ## Overflow
