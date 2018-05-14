@@ -40,9 +40,9 @@ let gInt_ = {};
  * Write a number or fixed-length string to a byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
- * @param {!number} base The base of the output. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10, 16.
- * @return {!Array<!number|!string>}
+ * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
 function pack(value, theType, base=10) {
@@ -59,7 +59,7 @@ function pack(value, theType, base=10) {
  * Read a number or a fixed-length string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @param {!number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10, 16.
  * @return {number|string|null}
  * @throws {Error} If the type definition is not valid.
@@ -74,9 +74,9 @@ function unpack(buffer, theType, base=10) {
  * Write an array of numbers or a string to a byte buffer.
  * @param {!Array<number|string>} values The values.
  * @param {!Object} theType The type definition.
- * @param {!number} base The base of the output. Optional. Default is 10.
+ * @param {number} base The base of the output. Optional. Default is 10.
  *      Possible values are 2, 10, 16.
- * @return {!Array<!number|!string>}
+ * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
 function packArray(values, theType, base=10) {
@@ -95,7 +95,7 @@ function packArray(values, theType, base=10) {
  * Read an array of numbers or a string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer The byte array.
  * @param {!Object} theType The type definition.
- * @param {!number} base The base of the input. Optional. Default is 10.
+ * @param {number} base The base of the input. Optional. Default is 10.
  *      Possible values are 2, 10, 16.
  * @return {!Array<number|string>|number}
  * @throws {Error} If the type definition is not valid.
@@ -109,7 +109,7 @@ function unpackArray(buffer, theType, base=10) {
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @param {!number} base The desired base of the ouput.
+ * @param {number} base The desired base of the ouput.
  * @return {!Array<number>}
  * @private
  */
@@ -136,10 +136,10 @@ function fromBytes_(buffer, theType, base) {
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<!number|!string>} values The data.
+ * @param {!Array<number|string>} values The data.
  * @param {!Object} theType The type definition.
- * @param {!number} base The desired base of the ouput.
- * @return {!Array<!number|!string>} the data as a byte buffer.
+ * @param {number} base The desired base of the ouput.
+ * @return {!Array<number|string>} the data as a byte buffer.
  * @private
  */
 function toBytes_(values, theType, base) {
@@ -169,8 +169,8 @@ function toBytes_(values, theType, base) {
 /**
  * Read int values from bytes.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} i The index to read.
- * @return {!number}
+ * @param {number} i The index to read.
+ * @return {number}
  * @private
  */
 function readInt_(bytes, i) {
@@ -181,8 +181,8 @@ function readInt_(bytes, i) {
  * Read 1 16-bit float from bytes.
  * Thanks https://stackoverflow.com/a/8796597
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} i The index to read.
- * @return {!number}
+ * @param {number} i The index to read.
+ * @return {number}
  * @private
  */
 function read16F_(bytes, i) {
@@ -201,8 +201,8 @@ function read16F_(bytes, i) {
 /**
  * Read 1 32-bit float from bytes.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} i The index to read.
- * @return {!number}
+ * @param {number} i The index to read.
+ * @return {number}
  * @private
  */
 function read32F_(bytes, i) {
@@ -214,8 +214,8 @@ function read32F_(bytes, i) {
  * Read 1 64-bit float from bytes.
  * Thanks https://gist.github.com/kg/2192799
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} i The index to read.
- * @return {!number}
+ * @param {number} i The index to read.
+ * @return {number}
  * @private
  */
 function read64F_(bytes, i) {
@@ -227,8 +227,8 @@ function read64F_(bytes, i) {
 /**
  * Read 1 char from bytes.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} i The index to read.
- * @return {!string}
+ * @param {number} i The index to read.
+ * @return {string}
  * @private
  */
 function readChar_(bytes, i) {
@@ -242,8 +242,8 @@ function readChar_(bytes, i) {
 /**
  * Write a integer value to a byte buffer.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} number The number to write as bytes.
- * @param {!number} j The index being written in the byte buffer.
+ * @param {number} number The number to write as bytes.
+ * @param {number} j The index being written in the byte buffer.
  * @return {!number} The next index to write on the byte buffer.
  * @private
  */
@@ -254,9 +254,9 @@ function writeInt_(bytes, number, j) {
 /**
  * Write one 16-bit float as a binary value.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} number The number to write as bytes.
- * @param {!number} j The index being written in the byte buffer.
- * @return {!number} The next index to write on the byte buffer.
+ * @param {number} number The number to write as bytes.
+ * @param {number} j The index being written in the byte buffer.
+ * @return {number} The next index to write on the byte buffer.
  * @private
  */
 function write16F_(bytes, number, j) {
@@ -277,9 +277,9 @@ function write16F_(bytes, number, j) {
 /**
  * Write one 32-bit float as a binary value.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} number The number to write as bytes.
- * @param {!number} j The index being written in the byte buffer.
- * @return {!number} The next index to write on the byte buffer.
+ * @param {number} number The number to write as bytes.
+ * @param {number} j The index being written in the byte buffer.
+ * @return {number} The next index to write on the byte buffer.
  * @private
  */
 function write32F_(bytes, number, j) {
@@ -290,9 +290,9 @@ function write32F_(bytes, number, j) {
 /**
  * Write one 64-bit float as a binary value.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!number} number The number to write as bytes.
- * @param {!number} j The index being written in the byte buffer.
- * @return {!number} The next index to write on the byte buffer.
+ * @param {number} number The number to write as bytes.
+ * @param {number} j The index being written in the byte buffer.
+ * @return {number} The next index to write on the byte buffer.
  * @private
  */
 function write64F_(bytes, number, j) {
@@ -304,9 +304,9 @@ function write64F_(bytes, number, j) {
 /**
  * Write one char as a byte.
  * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
- * @param {!string} str The string to write as bytes.
- * @param {!number} j The index being written in the byte buffer.
- * @return {!number} The next index to write on the byte buffer.
+ * @param {string} str The string to write as bytes.
+ * @param {number} j The index being written in the byte buffer.
+ * @return {number} The next index to write on the byte buffer.
  * @private
  */
 function writeChar_(bytes, str, j) {
@@ -411,9 +411,9 @@ function validateType_(theType) {
  * greater than the defined in the type or turning them to "" if
  * length is smaller than defined in the type. If the value is not a
  * string, just return the value.
- * @param {!string|number} value The string to fix.
+ * @param {string|number} value The string to fix.
  * @param {!Object} theType The type definition.
- * @return {!string|number}
+ * @return {string|number}
  * @private
  */
 function fixBadString_(value, theType) {
