@@ -1,7 +1,18 @@
-test
+*.log
+*.DS_Store
+
+# minified browser version
+dist/
+
+# Development folders
+.nyc_output/
+docs/
+test/
+
+# Development files
 .gitignore
+.npmignore
 .jshintrc
-.nyc_output
 .travis.yml
 appveyor.yml
 webpack.config.js

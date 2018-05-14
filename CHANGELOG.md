@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v8.0.1 (2018-05-13)
+	- better packaging.
+
 ## v8.0.0 (2018-05-05)
 	- packStruct() and unpackStruct() are deprecated.
 	- Validate type when packing/unpacking, throws Error if type not valid.

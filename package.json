@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -39,7 +39,8 @@
     "unpack",
     "endian",
     "big-endian",
-    "little-endian"
+    "little-endian",
+    "browser"
   ],
   "repository": {
     "type": "git",
@@ -52,7 +53,8 @@
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "doc": "./node_modules/.bin/jsdoc index.js -d docs -t node_modules/docdash -r README.md",
     "pack": "webpack && npm run test-dist",
-    "build": "npm run lint && npm run pack && npm test && npm run doc"
+    "build": "npm run lint && npm test && npm run pack && npm run doc",
+    "build-ci": "npm run lint && npm run pack && npm test && npm run doc"
   },
   "devDependencies": {
     "browser-env": "^3.2.4",
