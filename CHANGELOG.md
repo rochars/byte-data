@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v8.0.3 (2018-06-11)
+- fix: webpack.config so no dependency dist is used in the bundle.
+
 ## v8.0.1 (2018-05-13)
 	- better packaging.
 

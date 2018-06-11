@@ -9,6 +9,9 @@ module.exports = {
   output: {
     filename: './dist/byte-data-min.js'
   },
+  resolve: {
+    mainFields: ["main"],
+  },
   plugins: [
     new ClosureCompiler({
       options: {
