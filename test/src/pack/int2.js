@@ -14,17 +14,17 @@ describe('pack int2', function() {
     it('should turn 2 2-bit signed int to 2 crumb (-2)', function() {
         assert.deepEqual(
             byteData.packArray([-2], int2, 2),
-            ['00000010']);
+            [2]);
     });
     it('should turn 2 2-bit signed int to 2 crumb (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], int2, 2),
-            ['00000011']);
+            [3]);
     });
     it('should turn 2 2-bit signed int to 2 crumb (0s)', function() {
         assert.deepEqual(
             byteData.packArray([0], int2, 2),
-            ['00000000']);
+            [0]);
     });
     it('should turn 2 2-bit signed int to 2 bytes (-2)', function() {
         assert.deepEqual(
@@ -39,6 +39,6 @@ describe('pack int2', function() {
     it('should turn 1 2-bit signed int to 1 crumb hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], int2, 16),
-            ['03']);
+            [3]);
     });
 });

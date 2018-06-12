@@ -20,14 +20,14 @@ describe('unpack uInt48', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","ff","ff","ff","ff","ff"], uInt48, 16),
+                [255,255,255,255,255,255], uInt48, 16),
             [281474976710655]);
     });
     it('should turn 5 bytes (hex) to 0 unsigned 48-bit int (not enough bytes)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","ff","ff","ff","ff"], uInt48, 16),
+                [255,255,255,255,255], uInt48, 16),
             []);
     });
 
@@ -36,28 +36,28 @@ describe('unpack uInt48', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","ff","0","0","0","0"], uInt48, 16),
+                [255,255,0,0,0,0], uInt48, 16),
             [65535]);
     });
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (32767)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","7f","0","0","0", "00"], uInt48, 16),
+                [255,127,0,0,0, 0], uInt48, 16),
             [32767]);
     });
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (549755813887)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","ff","ff","ff","7f", "00"], uInt48, 16),
+                [255,255,255,255,127, 0], uInt48, 16),
             [549755813887]);
     });
     it('should turn 6 bytes (bin) to 1 unsigned 48-bit int  (500000000080)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["01010000", "10001000", "01010010",  "01101010",  "01110100", "00000000" ],
+                [80, 136, 82,  106,  116, 0 ],
                 uInt48, 2),
             [500000000080]);
     });
@@ -65,7 +65,7 @@ describe('unpack uInt48', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","ff","ff","ff","ff","00"], uInt48, 16),
+                [255,255,255,255,255,0], uInt48, 16),
             [1099511627775]);
     });
     it('should turn 6 bytes (bin) to 1 unsigned 48-bit int (max 40-bit range)',
@@ -83,14 +83,14 @@ describe('unpack uInt48', function() {
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int (149515627075)',
             function() {
         assert.deepEqual(
-            byteData.unpackArray(["43","6a", "d3","cf","22","00"], uInt48, 16),
+            byteData.unpackArray([67,106, 211,207,34,0], uInt48, 16),
             [149515627075]);
     });
     it('should turn 6 bytes (bin) to 1 unsigned 48-bit int (149515627075)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["01000011","01101010", "11010011","11001111","00100010","00000000"],
+                [67,106, 211,207,34,0],
                 uInt48, 2),
             [149515627075]);
     });
@@ -98,7 +98,7 @@ describe('unpack uInt48', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["1000011","1101010", "11010011","11001111","100010","00000000"], 
+                [67,106, 211,207,34,0], 
                 uInt48, 2),
             [149515627075]);
     });
@@ -106,14 +106,14 @@ describe('unpack uInt48', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","ff","0","0","0","0"], uInt48, 16),
+                [255,255,0,0,0,0], uInt48, 16),
             [65535]);
     });
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (32767)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["ff","7f","0","0","0","0"], uInt48, 16),
+                [255,127,0,0,0,0], uInt48, 16),
             [32767]);
     });
 });

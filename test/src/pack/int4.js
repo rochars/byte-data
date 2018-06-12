@@ -27,12 +27,12 @@ describe('pack int4', function() {
     it('should turn 1 4-bit signed int to 1 nibble hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], byteData.int4, 16),
-            ['0f']);
+            [15]);
     });
     it('should turn 1 4-bit signed int to 1 nibble hex (-8)', function() {
         assert.deepEqual(
             byteData.packArray([-8], byteData.int4, 16),
-            ['08']);
+            [8]);
     });
 
     // overflow

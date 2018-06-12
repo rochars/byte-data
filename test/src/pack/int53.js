@@ -14,24 +14,24 @@ describe('53-bit signed integers to bytes', function() {
     it('pack int53 min', function() {
         assert.deepEqual(
             byteData.packArray([-4503599627370496], int53, 16),
-            ["00", "00", "00", "00", "00", "00", "10"]); 
+            [0, 0, 0, 0, 0, 0, 16]); 
     });
     it('pack int53 min', function() {
         assert.deepEqual(
             byteData.packArray([-1], int53, 2),
-            ["11111111", "11111111", "11111111", "11111111",
-            "11111111", "11111111", "00011111"]); 
+            [255, 255, 255, 255,
+            255, 255, 31]); 
     });
     it('pack int53 min', function() {
         assert.deepEqual(
             byteData.packArray([-1], int53, 16),
-            ["ff", "ff", "ff", "ff",
-            "ff", "ff", "1f"]); 
+            [255, 255, 255, 255,
+            255, 255, 31]); 
     });
 
     it('pack int53 min', function() {
         assert.deepEqual(
             byteData.packArray([-1], int24, 16),
-            ["ff", "ff", "ff"]); 
+            [255, 255, 255]); 
     });
 });

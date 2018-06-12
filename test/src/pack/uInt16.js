@@ -44,7 +44,7 @@ describe('pack uInt16', function() {
     it('should turn 1 unsigned 16-bit int to 2 bytes (0)', function() {
         assert.deepEqual(
             byteData.packArray([765], byteData.uInt16, 16),
-            ["fd", "02"]);
+            [253, 2]);
     });
 
 
@@ -57,7 +57,7 @@ describe('pack uInt16', function() {
     it('should handle 11-bit as 16-bit (2000)', function() {
         assert.deepEqual(
             byteData.packArray([2000], {"bits": 11}, 16),
-            ['d0', '07']);
+            [208, 7]);
     });
     it('should handle 11-bit as 16-bit (2047)', function() {
         assert.deepEqual(
@@ -67,7 +67,7 @@ describe('pack uInt16', function() {
     it('should handle 11-bit as 16-bit (2048, overflow)', function() {
         assert.deepEqual(
             byteData.packArray([2048], {"bits": 11}, 16),
-            ['ff', '07']);
+            [255, 7]);
     });
     it('should handle 12-bit as 16-bit (2047)', function() {
         assert.deepEqual(

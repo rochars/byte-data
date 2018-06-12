@@ -19,28 +19,28 @@ describe('pack int24', function() {
     it('should turn 1 signed 24-bit ints to 3 bytes (min)', function() {
         assert.deepEqual(
             byteData.packArray([-8388608], byteData.int24, 16),
-            ["00","00","80"]
+            [0,0,128]
         );
     });
     // min + 1
     it('should turn 1 signed 24-bit ints to 3 bytes (min + 1)', function() {
         assert.deepEqual(
             byteData.packArray([-8388607], byteData.int24, 16),
-            ["01","00","80"]
+            [1,0,128]
         );
     });
     // min + 2
     it('should turn 1 signed 24-bit ints to 3 bytes (min + 2)', function() {
         assert.deepEqual(
             byteData.packArray([-8388606], byteData.int24, 16),
-            ["02","00","80"]
+            [2,0,128]
         );
     });
     // min + 3
     it('should turn 1 signed 24-bit ints to 3 bytes (min + 3)', function() {
         assert.deepEqual(
             byteData.packArray([-8388605], byteData.int24, 16),
-            ["03","00","80"]
+            [3,0,128]
         );
     });
 
@@ -48,21 +48,21 @@ describe('pack int24', function() {
     it('should turn 1 signed 16-bit ints to 2 bytes (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], byteData.int24, 16),
-            ["ff", "ff", "ff"]
+            [255, 255, 255]
         );
     });
     // -2
     it('should turn 1 signed 16-bit ints to 2 bytes (-2)', function() {
         assert.deepEqual(
             byteData.packArray([-2], byteData.int24, 16),
-            ["fe", "ff", "ff"]
+            [254, 255, 255]
         );
     });
     // -3
     it('should turn 1 signed 16-bit ints to 2 bytes (-3)', function() {
         assert.deepEqual(
             byteData.packArray([-3], byteData.int24, 16),
-            ["fd", "ff", "ff"]
+            [253, 255, 255]
         );
     });
 

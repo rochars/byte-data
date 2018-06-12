@@ -40,33 +40,29 @@ let gInt_ = {};
  * Write a number or fixed-length string to a byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
- * @param {number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10, 16.
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
-function pack(value, theType, base=10) {
+function pack(value, theType) {
     setUp_(theType);
     let packed = [];
     if (value === undefined) {
         return packed;
     }
     value = fixBadString_(value, theType);
-    return toBytes_([value], theType, base);
+    return toBytes_([value], theType);
 }
 
 /**
  * Read a number or a fixed-length string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @param {number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10, 16.
  * @return {number|string|null}
  * @throws {Error} If the type definition is not valid.
  */
-function unpack(buffer, theType, base=10) {
+function unpack(buffer, theType) {
     setUp_(theType);
-    let values = fromBytes_(buffer.slice(0, theType["offset"]), theType, base);
+    let values = fromBytes_(buffer.slice(0, theType["offset"]), theType);
     return values ? values[0] : theType["char"] ? "" : null;
 }
 
@@ -74,12 +70,10 @@ function unpack(buffer, theType, base=10) {
  * Write an array of numbers or a string to a byte buffer.
  * @param {!Array<number|string>} values The values.
  * @param {!Object} theType The type definition.
- * @param {number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10, 16.
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
-function packArray(values, theType, base=10) {
+function packArray(values, theType) {
     setUp_(theType);
     // Fix strings with bad length in the array
     if (theType["char"]) {
@@ -88,43 +82,34 @@ function packArray(values, theType, base=10) {
             values[i] = fixBadString_(values[i], theType);
         }
     }
-    return toBytes_(values, theType, base);
+    return toBytes_(values, theType);
 }
 
 /**
  * Read an array of numbers or a string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer The byte array.
  * @param {!Object} theType The type definition.
- * @param {number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10, 16.
  * @return {!Array<number|string>|number}
  * @throws {Error} If the type definition is not valid.
  */
-function unpackArray(buffer, theType, base=10) {
+function unpackArray(buffer, theType) {
     setUp_(theType);
-    return fromBytes_(buffer, theType, base);
+    return fromBytes_(buffer, theType);
 }
 
 /**
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @param {number} base The desired base of the ouput.
  * @return {!Array<number>}
  * @private
  */
-function fromBytes_(buffer, theType, base) {
+function fromBytes_(buffer, theType) {
     // turn to BE if BE
     if (theType["be"]) {
         endianness(buffer, theType["offset"]);
     }
     let len = buffer.length;
-    // turn the input to base 10 in case it is not
-    if (base != 10) {
-        for(let i=0; i < len; i++) {
-            buffer[i] = parseInt(buffer[i], base);
-        }
-    }
     // unpack the values
     let values = [];
     len = len - (theType["offset"] - 1);
@@ -138,11 +123,10 @@ function fromBytes_(buffer, theType, base) {
  * Turn numbers and strings to bytes.
  * @param {!Array<number|string>} values The data.
  * @param {!Object} theType The type definition.
- * @param {number} base The desired base of the ouput.
  * @return {!Array<number|string>} the data as a byte buffer.
  * @private
  */
-function toBytes_(values, theType, base) {
+function toBytes_(values, theType) {
     let j = 0;
     let bytes = [];
     let len = values.length;
@@ -153,15 +137,6 @@ function toBytes_(values, theType, base) {
     // turn to BE if BE
     if (theType["be"]) {
         endianness(bytes, theType["offset"]);
-    }
-    // turn the output to the desired base
-    if (base != 10) {
-        let offset = (base == 2 ? 8 : 2) + 1;
-        len = bytes.length;
-        for(let i=0; i < len; i++) {
-            bytes[i] = bytes[i].toString(base);
-            bytes[i] = Array(offset - bytes[i].length).join("0") + bytes[i];
-        }
     }
     return bytes;
 }

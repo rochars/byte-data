@@ -11,7 +11,7 @@ describe('interface', function() {
     
     it('pack uInt16 (undefined)', function() {
         assert.deepEqual(
-            byteData.pack(undefined, byteData.uInt16, 16),
+            byteData.pack(undefined, byteData.uInt16),
             []);
     });
     it('pack fourCC (not enought chars)', function() {
@@ -23,8 +23,8 @@ describe('interface', function() {
     // pack
     it('pack uInt16 (65535, 16)', function() {
         assert.deepEqual(
-            byteData.pack(65535, byteData.uInt16, 16),
-            ["ff","ff"]);
+            byteData.pack(65535, byteData.uInt16),
+            [255,255]);
     });
     it('pack chr ("abcd")', function() {
         assert.deepEqual(
@@ -33,8 +33,8 @@ describe('interface', function() {
     });
     it('pack float32 (2.1474836, 16)', function() {
         assert.deepEqual(
-            byteData.pack(2.1474836, byteData.float32, 16),
-            ["5f","70","09","40"]);
+            byteData.pack(2.1474836, byteData.float32),
+            [95,112,9,64]);
     });
     it('pack int4 (-1)', function() {
         assert.deepEqual(byteData.pack(-1, byteData.int4),
@@ -44,9 +44,9 @@ describe('interface', function() {
         assert.deepEqual(byteData.pack(15, byteData.uInt4),
             [15]);
     });
-    it('pack bool (6, 16) should return "1"', function() {
-        assert.deepEqual(byteData.pack(6, byteData.bool, 16),
-            ['01']);
+    it('pack bool (6, 16) should return 1', function() {
+        assert.deepEqual(byteData.pack(6, byteData.bool),
+            [1]);
     });
     it('pack chr ("a")', function() {
         assert.deepEqual(byteData.pack("a", byteData.chr),
@@ -85,12 +85,12 @@ describe('interface', function() {
     });
     it('unpack uInt16', function() {
         assert.deepEqual(
-            byteData.unpack(["ff", "ff"], byteData.uInt16, 16),
+            byteData.unpack([255, 255], byteData.uInt16),
             65535);
     });
     it('unpack float16', function() {
         assert.equal(
-            byteData.unpack(["01010101", "00110101"], byteData.float16, 2).toFixed(5),
+            byteData.unpack([85, 53], byteData.float16).toFixed(5),
             0.33325);
     });
     it('unpack int2', function() {
@@ -104,14 +104,14 @@ describe('interface', function() {
     });
     it('unpack uInt16', function() {
         assert.equal(byteData.unpack(
-            ["ff","ff"], byteData.uInt16, 16),
+            [255,255], byteData.uInt16),
             65535);
     });
 
     // packArray
     it('packArray uInt16', function() {
-        assert.deepEqual(byteData.packArray([65535, 0], byteData.uInt16, 16),
-            ["ff", "ff", "00", "00"]);
+        assert.deepEqual(byteData.packArray([65535, 0], byteData.uInt16),
+            [255, 255, 0, 0]);
     });
     it('packArray int32', function() {
         assert.deepEqual(byteData.packArray([-2147483648, 2147483647], byteData.int32),
@@ -129,21 +129,20 @@ describe('interface', function() {
     // unpackArray
     it('unpackArray uInt16', function() {
         assert.deepEqual(byteData.unpackArray(
-            ["ff", "ff", "00", "00"], byteData.uInt16, 16),
+            [255, 255, 0, 0], byteData.uInt16),
             [65535, 0]);
     });
     it('unpackArray uInt2', function() {
         assert.deepEqual(
-                byteData.unpackArray(['11'], byteData.uInt2, 2),
+                byteData.unpackArray([3], byteData.uInt2),
                  [3]
              );
     });
     it('unpackArray float64', function() {
         assert.deepEqual(
                 byteData.unpackArray(
-                        ['00','00','00','00','00','00','f0','3f'],
-                        byteData.float64,
-                        16
+                        [0,0,0,0,0,0,240,63],
+                        byteData.float64
                     ),
                     [1]
              );

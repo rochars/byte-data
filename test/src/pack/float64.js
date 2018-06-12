@@ -17,12 +17,12 @@ describe('pack float64', function() {
     it('should turn 1 64-bit floats to 16 bytes hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], byteData.float64, 16),
-            ['00','00','00','00','00','00','f0','bf']);
+            [0,0,0,0,0,0,240,191]);
     });
     it('should turn 1 64-bit floats to 16 bytes hex (-0.5)', function() {
         assert.deepEqual(
             byteData.packArray([-0.5], byteData.float64, 16),
-            ['00','00','00','00','00','00','e0','bf']);
+            [0,0,0,0,0,0,224,191]);
     });
     it('should turn 2 64-bit floats to 16 bytes (0s)', function() {
         assert.deepEqual(
@@ -72,12 +72,12 @@ describe('pack float64', function() {
     it('should turn 1 64-bit float to 8 bytes (hex) (0)', function() {
         assert.deepEqual(
             byteData.packArray([0], byteData.float64, 16),
-            ["00","00","00","00","00","00","00","00"]);
+            [0,0,0,0,0,0,0,0]);
     })
     it('should turn 1 64-bit float to 8 bytes hex (2)', function() {
         assert.deepEqual(
             byteData.packArray([2], byteData.float64, 16),
-            ["00","00","00","00","00","00","00","40"]);
+            [0,0,0,0,0,0,0,64]);
     });
     it('should turn 1 64-bit float to 8 bytes (1)', function() {
         assert.deepEqual(

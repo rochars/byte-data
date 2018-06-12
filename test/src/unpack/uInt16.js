@@ -17,25 +17,25 @@ describe('unpack uInt16', function() {
     it('should turn 4 bytes bin to 2 16-bit uInts (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00000000","00000000","11111111","11111111"],
+                [0,0,255,255],
                 byteData.uInt16, 2),
             [0, 65535]);
     });
     it('should turn 5 bytes bin to 2 16-bit uInts (ignore the extra byte) (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00000000","00000000","11111111","11111111","11111111"],
+                [0,0,255,255,255],
                 byteData.uInt16, 2),
             [0, 65535]);
     });
     it('should turn 1 byte bin to 0 16-bit uInts (not enough bytes)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["11111111"],byteData.uInt16, 2),
+            byteData.unpackArray([255],byteData.uInt16, 2),
             []);
     });
     it('should turn 4 bytes hex to 2 16-bit uInts (max range)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["0","0","ff","ff"], byteData.uInt16, 16),
+            byteData.unpackArray([0,0,255,255], byteData.uInt16, 16),
             [0, 65535]);
     });
     it('should turn 2 bytes to a 16-bit int', function() {
@@ -46,27 +46,27 @@ describe('unpack uInt16', function() {
     it('should turn 4 bytes bin to 2 16-bit uInts (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00000000","00000000","11111111","11111111"],
+                [0,0,255,255],
                 byteData.uInt16, 2),
             [0, 65535]);
     });
     it('should turn 5 bytes bin to 2 16-bit uInts (ignore the extra byte) (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00000000","00000000","11111111","11111111","11111111"],
+                [0,0,255,255,255],
                 byteData.uInt16, 2),
             [0, 65535]);
     });
     it('should turn 1 byte bin to 0 16-bit uInts (not enough bytes)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["11111111"], byteData.uInt16, 2),
+                [255], byteData.uInt16, 2),
             []);
     });
     it('should turn 4 bytes hex to 2 16-bit uInts (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["0","0","ff","ff"], byteData.uInt16, 16),
+                [0,0,255,255], byteData.uInt16, 16),
             [0, 65535]);
     });
 
@@ -79,7 +79,7 @@ describe('unpack uInt16', function() {
     });
     it('should handle 11-bit as 16-bit (2000)', function() {
         assert.deepEqual(
-            byteData.unpackArray(['d0', '07'], {"bits": 11}, 16),
+            byteData.unpackArray([208, 7], {"bits": 11}, 16),
             [2000]);
     });
     it('should handle 11-bit as 16-bit (2047)', function() {
@@ -89,7 +89,7 @@ describe('unpack uInt16', function() {
     });
     it('should handle 11-bit as 16-bit (65535, overflow)', function() {
         assert.deepEqual(
-            byteData.unpackArray(['ff', 'ff'], {"bits": 11}, 16),
+            byteData.unpackArray([255, 255], {"bits": 11}, 16),
             [2047]);
     });
     it('should handle 12-bit as 16-bit (2047)', function() {

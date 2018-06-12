@@ -35,7 +35,7 @@ describe('unpack float64', function() {
     it('should turn 9 bytes to 1 64-bit float (ignore the extra byte) (Buffer)', function() {
         assert.equal(
             byteData.unpackArray(
-                new Buffer.from([75,40,253,58,221,154,191,63,00]), float64)[0],
+                new Buffer.from([75,40,253,58,221,154,191,63,0]), float64)[0],
             0.123456789876543);
     });
     it('should turn 8 bytes to 1 64-bit float', function() {
@@ -58,14 +58,14 @@ describe('unpack float64', function() {
         assert.equal(
             byteData.unpackArray(
                 [
-                    "00000000",
-                    "00000000",
-                    "00000000",
-                    "00000000",
-                    "00000000",
-                    "00000000",
-                    "00000000",
-                    "00000000"
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
                 ], float64, 2)[0].toFixed(15),
             0);
     });
@@ -73,14 +73,14 @@ describe('unpack float64', function() {
         assert.equal(
             byteData.unpackArray(
                 [
-                    "01001011",
-                    "00101000",
-                    "11111101",
-                    "00111010",
-                    "11011101",
-                    "10011010",
-                    "10111111",
-                    "00111111"
+                    75,
+                    40,
+                    253,
+                    58,
+                    221,
+                    154,
+                    191,
+                    63
                 ], float64, 2)[0].toFixed(15),
             0.123456789876543);
     });
@@ -97,7 +97,7 @@ describe('unpack float64', function() {
     it('should turn 8 bytes hex to 1 64-bit float (2)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00","00","00","00","00","00","00","40"], float64, 16),
+                [0,0,0,0,0,0,0,64], float64, 16),
             [2]);
     });
 });

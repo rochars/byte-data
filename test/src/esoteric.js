@@ -10,39 +10,39 @@ let byteData = require('../../test/loader.js');
 describe('esoteric bit depths', function() {
     
     it('uInt5 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 5}, 16),
-            ["01"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 5},),
+            [1]);
     });
     it('uInt5 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 5}, 2),
-            ["00000001"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 5}),
+            [1]);
     });
 
     it('uInt6 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 6}, 16),
-            ["01"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 6}),
+            [1]);
     });
     it('uInt6 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 6}, 2),
-            ["00000001"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 6}),
+            [1]);
     });
 
     it('uInt7 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 7}, 16),
-            ["01"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 7}),
+            [1]);
     });
     it('uInt7 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 7}, 2),
-            ["00000001"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 7}),
+            [1]);
     });
 
     it('uInt3 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 3}, 16),
-            ["01"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 3}),
+            [1]);
     });
     it('uInt3 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 3}, 2),
-            ["00000001"]);
+        assert.deepEqual(byteData.pack(1, {"bits": 3}),
+            [1]);
     });
 
     it('int7 to bytes to int7', function() {

@@ -222,37 +222,37 @@ describe('pack-unpack', function() {
 
     it('should turn 2 32-bit signed int to 8 bytes and back ' +
         '(-2147483648, 2147483647)', function() {
-        let bytes = byteData.packArray([-2147483648, 2147483647], int32, 16);
-        assert.deepEqual(["00","00","00","80", "ff","ff","ff","7f"], bytes);
-        let num = byteData.unpackArray(bytes, int32, 16);
+        let bytes = byteData.packArray([-2147483648, 2147483647], int32);
+        assert.deepEqual([0,0,0,128, 255,255,255,127], bytes);
+        let num = byteData.unpackArray(bytes, int32);
         assert.deepEqual([-2147483648, 2147483647], num);
     });
     it('should turn 2 32-bit signed int to 8 bytes and back ' +
         '(-2147483647, 2147483647)', function() {
-        let bytes = byteData.packArray([-2147483647, 2147483647], int32, 16);
-        assert.deepEqual(["01","00","00","80", "ff","ff","ff","7f"], bytes);
-        let num = byteData.unpackArray(bytes, int32, 16);
+        let bytes = byteData.packArray([-2147483647, 2147483647], int32);
+        assert.deepEqual([1,0,0,128, 255,255,255,127], bytes);
+        let num = byteData.unpackArray(bytes, int32);
         assert.deepEqual([-2147483647, 2147483647], num);
     });
     it('should turn 2 32-bit signed int to 8 bytes and back ' +
         '(-2147483646, 2147483647)', function() {
-        let bytes = byteData.packArray([-2147483646, 2147483647], int32, 16);
-        assert.deepEqual(["02","00","00","80", "ff","ff","ff","7f"], bytes);
-        let num = byteData.unpackArray(bytes, int32, 16);
+        let bytes = byteData.packArray([-2147483646, 2147483647], int32);
+        assert.deepEqual([2,0,0,128, 255,255,255,127], bytes);
+        let num = byteData.unpackArray(bytes, int32);
         assert.deepEqual([-2147483646, 2147483647], num);
     });
     it('should turn 2 32-bit signed int to 8 bytes and back ' +
         '(-1, 2147483647)', function() {
-        let bytes = byteData.packArray([-1, 2147483647], int32, 16);
-        //assert.deepEqual(["02","00","00","80", "ff","ff","ff","7f"], bytes);
-        let num = byteData.unpackArray(bytes, int32, 16);
+        let bytes = byteData.packArray([-1, 2147483647], int32);
+        //assert.deepEqual([2,0,0,128, 255,255,255,127], bytes);
+        let num = byteData.unpackArray(bytes, int32);
         assert.deepEqual([-1, 2147483647], num);
     });
     it('should turn 2 32-bit signed int to 8 bytes and back ' +
         '(-2, 2147483647)', function() {
-        let bytes = byteData.packArray([-2, 2147483647], int32, 16);
-        //assert.deepEqual(["02","00","00","80", "ff","ff","ff","7f"], bytes);
-        let num = byteData.unpackArray(bytes, int32, 16);
+        let bytes = byteData.packArray([-2, 2147483647], int32);
+        //assert.deepEqual([2,0,0,128, 255,255,255,127], bytes);
+        let num = byteData.unpackArray(bytes, int32);
         assert.deepEqual([-2, 2147483647], num);
     });
 

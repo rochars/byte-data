@@ -58,13 +58,13 @@ describe('pack LE and BE', function() {
     });
     it('should turn 2 24-bit unsigned ints to 6 bytes BE (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([-8388608, 8388607], int24BE, 16),
-            ["80","00","00", "7f", "ff", "ff"]);
+            byteData.packArray([-8388608, 8388607], int24BE),
+            [128,0,0, 127, 255, 255]);
     });
     it('should turn 2 24-bit unsigned ints to 6 bytes BE', function() {
         assert.deepEqual(
-            byteData.packArray([-8388608, 1, 8388607], int24BE, 16),
-            ["80","00","00" , "00","00","01", "7f", "ff", "ff"]);
+            byteData.packArray([-8388608, 1, 8388607], int24BE),
+            [128,0,0 , 0,0,1, 127, 255, 255]);
     });
 
     // 32-bit
@@ -119,15 +119,15 @@ describe('pack LE and BE', function() {
     });
     it('should turn 1 48-bit unsigned ints to 6 bytes hex BE (120637438355317)', function() {
         assert.deepEqual(
-            byteData.packArray([120637438355317], uInt48BE, 16),
-            ["6d", "b8", "17", "a8", "e7", "75"]);
+            byteData.packArray([120637438355317], uInt48BE),
+            [109, 184, 23, 168, 231, 117]);
     });
     it('should turn 1 48-bit unsigned ints to 6 bytes hex BE (120637438355317)', function() {
         assert.deepEqual(
-            byteData.packArray([120637438355317, 1, 1], uInt48BE, 16),
-            ["6d", "b8", "17", "a8", "e7", "75", 
-            "00", "00", "00", "00", "00", "01", 
-            "00", "00", "00", "00", "00", "01"]);
+            byteData.packArray([120637438355317, 1, 1], uInt48BE),
+            [109, 184, 23, 168, 231, 117, 
+            0, 0, 0, 0, 0, 1, 
+            0, 0, 0, 0, 0, 1]);
     });
 
     // 64-bit

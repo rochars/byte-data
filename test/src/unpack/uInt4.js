@@ -27,12 +27,12 @@ describe('unpack uInt4', function() {
     });
     it('should turn 1 nibble to a 4-bit uInt', function() {
         assert.deepEqual(
-            byteData.unpackArray(["1111"], uInt4, 2),
+            byteData.unpackArray([15], uInt4, 2),
             [15]);
     });
     it('should turn 1 nibble to a 4-bit uInt', function() {
         assert.deepEqual(
-            byteData.unpackArray(["f"], uInt4, 16),
+            byteData.unpackArray([15], uInt4, 16),
             [15]);
     });
 });

@@ -12,7 +12,7 @@ describe('pack uInt24', function() {
     it('should turn 1 signed 24-bit int to 3 bytes hex (16777215)', function() {
         assert.deepEqual(
             byteData.packArray([16777215], byteData.uInt24, 16),
-            ["ff","ff","ff"]
+            [255,255,255]
         );
     });
     it('should turn 2 signed 24-bit ints to 6 bytes (0s)', function() {

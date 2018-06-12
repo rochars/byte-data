@@ -12,17 +12,17 @@ describe('pack uInt40', function() {
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (max range)', function() {
         assert.deepEqual(
             byteData.packArray([549755813887], byteData.uInt40, 16),
-            ["ff","ff","ff","ff","7f"]);
+            [255,255,255,255,127]);
     });
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (949752813887)', function() {
         assert.deepEqual(
             byteData.packArray([949752813887], byteData.uInt40, 16),
-            ["3f", "d9", "ad", "21", "dd"]);
+            [63, 217, 173, 33, 221]);
     });  
     it('should turn 1 unsigned 40-bit int to 5 bytes (hex) (max range)', function() {
         assert.deepEqual(
             byteData.packArray([1099511627775], byteData.uInt40, 16),
-            ["ff","ff","ff","ff","ff"]);
+            [255,255,255,255,255]);
     });
     it('should turn 1 unsigned 40-bit int to 5 bytes (max range)', function() {
         assert.deepEqual(

@@ -13,7 +13,7 @@ describe('53-bit to bytes', function() {
     it('should turn 1 unsigned 53-bit int to 7 bytes (hex) (max range)', function() {
         assert.deepEqual(
             byteData.packArray([9007199254740991], uInt53, 16),
-            ["ff", "ff", "ff", "ff", "ff", "ff", "1f"]); 
+            [255, 255, 255, 255, 255, 255, 31]); 
     });
     it('should turn 1 unsigned 53-bit int to 7 bytes (0)', function() {
         assert.deepEqual(

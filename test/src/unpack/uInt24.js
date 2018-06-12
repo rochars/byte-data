@@ -18,7 +18,7 @@ describe('unpack uInt24', function() {
     it('should turn 6 bytes bin to 2 24-bit uInts (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00000000","00000000","00000000","11111111","11111111","11111111"],
+                [0,0,0,255,255,255],
                 uInt24, 2),
             [0,16777215]);
     });
@@ -26,19 +26,19 @@ describe('unpack uInt24', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["00000000","00000000","00000000",
-                "11111111","11111111","11111111","11111111"],
+                [0,0,0,
+                255,255,255,255],
                 uInt24, 2),
             [0,16777215]);
     });
     it('should turn 2 bytes bin to 0 24-bit uInts (not enough bytes)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["11111111","11111111"], uInt24, 2),
+            byteData.unpackArray([255,255], uInt24, 2),
             []);
     });
     it('should turn 6 bytes hex to 2 24-bit uInts (max range)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["0","0","0","ff","ff","ff"], uInt24, 16),
+            byteData.unpackArray([0,0,0,255,255,255], uInt24, 16),
             [0,16777215]);
     });
 });

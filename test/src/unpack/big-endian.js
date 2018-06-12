@@ -56,7 +56,7 @@ describe('unpack LE and BE', function() {
     });
     it('should turn 2 bytes hex to 1 16-bit float BE (1/3)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["35", "55"], float16BE, 16)[0].toFixed(5),
+            byteData.unpackArray([53, 85], float16BE, 16)[0].toFixed(5),
             0.33325);
     });
 
@@ -78,18 +78,18 @@ describe('unpack LE and BE', function() {
     });
     it('should turn 1 24-bit unsigned int to 3 bytes BE (8388607)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["7f", "ff", "ff"], uInt24BE, 16),
+            byteData.unpackArray([127, 255, 255], uInt24BE, 16),
             [8388607]);
     });
     it('should turn 2 24-bit signed ints to 6 bytes BE (max range)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["80","00","00", "7f", "ff", "ff"],
+            byteData.unpackArray([128,0,0, 127, 255, 255],
                 int24BE, 16),
             [-8388608, 8388607]);
     });
     it('should turn 2 24-bit signed ints to 6 bytes BE', function() {
         assert.deepEqual(
-            byteData.unpackArray(["80","00","00" , "00","00","01", "7f", "ff", "ff"],
+            byteData.unpackArray([128,0,0 , 0,0,1, 127, 255, 255],
                 int24BE, 16),
             [-8388608, 1, 8388607]);
     });
@@ -122,14 +122,14 @@ describe('unpack LE and BE', function() {
     it('should turn 8 bytes hex to 2 32-bit ints (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["80","0","0","0", "7f","ff","ff","ff"],
+                [128,0,0,0, 127,255,255,255],
                 int32BE, 16),
             [-2147483648,2147483647]);
     });
     it('should turn 1 32-bit float from 4 bytes BE hex (2.1474836)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["40","9","70","5f"],
+                [64,9,112,95],
                 float32BE, 16)[0].toFixed(7),
             2.1474836);
     });
@@ -163,7 +163,7 @@ describe('unpack LE and BE', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                ["22","cf","d3","6a","43"], uInt40BE, 16),
+                [34,207,211,106,67], uInt40BE, 16),
             [149515627075]);
     });
 
@@ -194,14 +194,14 @@ describe('unpack LE and BE', function() {
     });
     it('should turn 1 48-bit ints to 6 bytes hex BE (120637438355317)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["6d", "b8", "17", "a8", "e7", "75"],
+            byteData.unpackArray([109, 184, 23, 168, 231, 117],
                 uInt48BE, 16),
             [120637438355317]);
     });
     it('should turn 1 48-bit unsigned ints to 6 bytes hex BE (120637438355317)', function() {
-        let bytes = ["6d", "b8", "17", "a8", "e7", "75", 
-            "00", "00", "00", "00", "00", "01", 
-            "00", "00", "00", "00", "00", "01"];
+        let bytes = [109, 184, 23, 168, 231, 117, 
+            0, 0, 0, 0, 0, 1, 
+            0, 0, 0, 0, 0, 1];
         assert.deepEqual(
             byteData.unpackArray(bytes, uInt48BE, 16),
             [120637438355317, 1, 1]);

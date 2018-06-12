@@ -17,12 +17,12 @@ describe('unpack uInt8', function() {
     });
     it('should turn 1 hex byte to a 8-bit uInt (max range)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["0","ff"], uInt8, 16),
+            byteData.unpackArray([0,255], uInt8, 16),
             [0, 255]);
     });
     it('should turn 1 bin byte to a 8-bit uInt (max range)', function() {
         assert.deepEqual(
-            byteData.unpackArray(["00000000","11111111"], uInt8, 2),
+            byteData.unpackArray([0,255], uInt8, 2),
             [0, 255]);
     });
 });

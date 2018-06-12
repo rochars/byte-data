@@ -22,12 +22,12 @@ describe('pack uInt32', function() {
     it('should turn 1 signed 32-bit int to 4 bytes bin (max range)', function() {
         assert.deepEqual(
             byteData.packArray([2147483647], byteData.uInt32, 2),
-            ["11111111","11111111","11111111","01111111"]);
+            [255,255,255,127]);
     });
     it('should turn 1 unsigned 32-bit int to 4 bytes hex (max range)', function() {
         assert.deepEqual(
             byteData.packArray([4294967295], byteData.uInt32, 16),
-            ["ff","ff","ff","ff"]);
+            [255,255,255,255]);
     });
     it('should turn 2 unsigned 32-bit int to 8 bytes in a Uint8Array (max range)', function() {
         assert.deepEqual(

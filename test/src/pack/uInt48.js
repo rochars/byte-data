@@ -12,7 +12,7 @@ describe('48-bit to bytes', function() {
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(
             byteData.packArray([120637438355317], byteData.uInt48, 16),
-            ["75", "e7", "a8", "17", "b8", "6d"]); 
+            [117, 231, 168, 23, 184, 109]); 
     });
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(

@@ -27,17 +27,17 @@ describe('pack int8', function() {
     it('should turn 1 8-bit signed int to 1 byte hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-1], byteData.int8, 16),
-            ['ff']);
+            [255]);
     });
     it('should turn 1 8-bit signed int to 1 byte hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([127], byteData.int8, 16),
-            ['7f']);
+            [127]);
     });
     it('should turn 1 8-bit signed int to 1 byte hex (-1)', function() {
         assert.deepEqual(
             byteData.packArray([-128], byteData.int8, 16),
-            ['80']);
+            [128]);
     });
     it('should turn 1 8-bit signed int to 1 byte hex in a Uint8Array (-1)', function() {
         assert.deepEqual(
@@ -50,27 +50,27 @@ describe('pack int8', function() {
     it('min', function() {
         assert.deepEqual(
             byteData.packArray([-128], byteData.int8, 16),
-            ["80"]);
+            [128]);
     });
     // min + 1
     it('min + 1', function() {
         assert.deepEqual(
             byteData.packArray([-127], byteData.int8, 16),
-            ["81"]
+            [129]
         );
     });
     // min + 2
     it('min + 2', function() {
         assert.deepEqual(
             byteData.packArray([-126], byteData.int8, 16),
-            ["82"]
+            [130]
         );
     });
     // min + 3
     it('min + 3', function() {
         assert.deepEqual(
             byteData.packArray([-125], byteData.int8, 16),
-            ["83"]
+            [131]
         );
     });
 
@@ -78,21 +78,21 @@ describe('pack int8', function() {
     it('-1', function() {
         assert.deepEqual(
             byteData.packArray([-1], byteData.int8, 16),
-            ["ff"]
+            [255]
         );
     });
     // -2
     it('-2', function() {
         assert.deepEqual(
             byteData.packArray([-2], byteData.int8, 16),
-            ["fe"]
+            [254]
         );
     });
     // -3
     it('-3', function() {
         assert.deepEqual(
             byteData.packArray([-3], byteData.int8, 16),
-            ["fd"]
+            [253]
         );
     });
 });

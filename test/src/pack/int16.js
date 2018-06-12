@@ -42,7 +42,7 @@ describe('pack int16', function() {
     it('pack min range', function() {
         assert.deepEqual(
             byteData.packArray([-32768], byteData.int16, 16),
-            ["00", "80"]
+            [0, 128]
         );
     });
 
@@ -50,42 +50,42 @@ describe('pack int16', function() {
     it('pack min + 1', function() {
         assert.deepEqual(
             byteData.packArray([-32767], byteData.int16, 16),
-            ["01", "80"]
+            [1, 128]
         );
     });
     // min - 2
     it('pack min + 2', function() {
         assert.deepEqual(
             byteData.packArray([-32766], byteData.int16, 16),
-            ["02", "80"]
+            [2, 128]
         );
     });
     // min - 3
     it('pack min + 3', function() {
         assert.deepEqual(
             byteData.packArray([-32765], byteData.int16, 16),
-            ["03", "80"]
+            [3, 128]
         );
     });
     // -1
     it('pack -1', function() {
         assert.deepEqual(
             byteData.packArray([-1], byteData.int16, 16),
-            ["ff", "ff"]
+            [255, 255]
         );
     });
     // -2
     it('pack -2', function() {
         assert.deepEqual(
             byteData.packArray([-2], byteData.int16, 16),
-            ["fe", "ff"]
+            [254, 255]
         );
     });
     // -3
     it('pack -3', function() {
         assert.deepEqual(
             byteData.packArray([-3], byteData.int16, 16),
-            ["fd", "ff"]
+            [253, 255]
         );
     });
 
