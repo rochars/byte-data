@@ -60,40 +60,42 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16),
 ## API
 ```javascript
 /**
- * Write a number or fixed-length string to a byte buffer.
+ * Write a number a string to a byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
- * @return {!Array<number|string>}
+ * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
  */
-function pack(value, type) {}
+function pack(value, theType) {}
 
 /**
- * Read a number or a fixed-length string from a byte buffer.
- * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
+ * Read a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @return {number|string|null}
+ * @return {number|string}
  * @throws {Error} If the type definition is not valid.
  */
-function unpack(buffer, type) {}
+function unpack(buffer, theType) {}
 
 /**
- * Write an array of numbers or a string to a byte buffer.
+ * Write an array of numbers or strings to a byte buffer.
  * @param {!Array<number|string>} values The values.
  * @param {!Object} theType The type definition.
+ * @return {!Array<number>}
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If any of the values is not valid.
+ */
+function packArray(values, theType) {}
+
+/**
+ * Read an array of numbers or strings from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte array.
+ * @param {!Object} theType The type definition.
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
-function packArray(values, type) {}
-
-/**
- * Read an array of numbers or a string from a byte buffer.
- * @param {!Array<number|string>|!Uint8Array} buffer The byte array.
- * @param {!Object} theType The type definition.
- * @return {!Array<number|string>|number}
- * @throws {Error} If the type definition is not valid.
- */
-function unpackArray(buffer, type) {}
+function unpackArray(buffer, theType) {}
 ```
 
 ## Types

@@ -12,57 +12,73 @@ let floatTypeError = "Not a supported float type.";
 
 describe('Errors', function() {
 
-    it("Overflow", function () {
+    // strings
+    it("String overflow in array", function () {
         testFunc = function() {
-            byteData.pack("abcde", {"chr": true, "bits": 32});
+            byteData.packArray(["abcde"], {"char": true, "bits": 32});
         };
         expect(testFunc).to.throw("String is bigger than its type definition.");
     });
-    it("Overflow", function () {
+    it("String underflow in array", function () {
         testFunc = function() {
-            byteData.pack("abc", {"chr": true, "bits": 32});
+            byteData.packArray(["abc"], {"char": true, "bits": 32});
         };
         expect(testFunc).to.throw("String is smaller than its type definition.");
     });
-
-    it("Overflow", function () {
+    it("String overflow", function () {
         testFunc = function() {
-            byteData.pack(null, {"bits": 8});
+            byteData.pack("abcde", {"char": true, "bits": 32});
         };
-        expect(testFunc).to.throw(Error);
+        expect(testFunc).to.throw("String is bigger than its type definition.");
     });
-    it("Overflow", function () {
+    it("String underflow", function () {
         testFunc = function() {
-            byteData.pack(undefined, {"bits": 8});
+            byteData.pack("abc", {"char": true, "bits": 32});
         };
-        expect(testFunc).to.throw(Error);
+        expect(testFunc).to.throw("String is smaller than its type definition.");
     });
-    it("Overflow", function () {
-        testFunc = function() {
-            byteData.pack(256, {"bits": 8});
-        };
-        expect(testFunc).to.throw("Overflow.");
-    });
-    it("Underflow", function () {
-        testFunc = function() {
-            byteData.pack(-1, {"bits": 8});
-        };
-        expect(testFunc).to.throw("Underflow.");
-    });
-
     it("string with odd number of bits", function () {
         testFunc = function() {
             byteData.pack("a", {"char": true, "bits": 9});
         };
         expect(testFunc).to.throw("Wrong offset for type char.");
     });
-    it("char with with less than 8 bits", function () {
+    it("char with less than 8 bits", function () {
         testFunc = function() {
             byteData.pack("a", {"char": true, "bits": 7});
         };
         expect(testFunc).to.throw("Wrong offset for type char.");
     });
 
+    // null and undefined
+    it("null value", function () {
+        testFunc = function() {
+            byteData.pack(null, {"bits": 8});
+        };
+        expect(testFunc).to.throw("Cannot pack null or undefined values.");
+    });
+    it("undefined value", function () {
+        testFunc = function() {
+            byteData.pack(undefined, {"bits": 8});
+        };
+        expect(testFunc).to.throw("Cannot pack null or undefined values.");
+    });
+
+    // overflow and underflow
+    it("8-bit overflow", function () {
+        testFunc = function() {
+            byteData.pack(256, {"bits": 8});
+        };
+        expect(testFunc).to.throw("Overflow.");
+    });
+    it("8-bit underflow", function () {
+        testFunc = function() {
+            byteData.pack(-1, {"bits": 8});
+        };
+        expect(testFunc).to.throw("Underflow.");
+    });
+    
+    // Invalid types
     it("More than 64 bits", function () {
         testFunc = function() {
             byteData.pack(2);
@@ -87,7 +103,6 @@ describe('Errors', function() {
         };
         expect(testFunc).to.throw(typeError);
     });
-
     it("17 float (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 17, "float": true});

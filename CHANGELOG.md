@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v9.0.2 (2018-06-12)
+- fix: validation of null, undefined and string length.
+
 ## v9.0.1 (2018-06-12)
 - fix: dist included in npm package.
 
