@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#types">types</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packer">packer</a></li><li><a href="global.html#types">types</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li></ul>
 </nav>
 
 <div id="main">
@@ -79,6 +79,10 @@ let gInt_ = {};
  * @type {!Object}
  */
 const types = require("./lib/types");
+/**
+ * @type {!Object}
+ */
+const packer = require("./lib/packer");
 
 /**
  * Write a number or fixed-length string to a byte buffer.
@@ -88,13 +92,13 @@ const types = require("./lib/types");
  * @throws {Error} If the type definition is not valid.
  */
 function pack(value, theType) {
-    setUp_(theType);
+    packer.setUp(theType);
     let packed = [];
     if (value === undefined) {
         return packed;
     }
-    value = fixBadString_(value, theType);
-    return toBytes_([value], theType);
+    value = packer.fixBadString(value, theType);
+    return packer.toBytes([value], theType);
 }
 
 /**
@@ -105,8 +109,9 @@ function pack(value, theType) {
  * @throws {Error} If the type definition is not valid.
  */
 function unpack(buffer, theType) {
-    setUp_(theType);
-    let values = fromBytes_(buffer.slice(0, theType["offset"]), theType);
+    packer.setUp(theType);
+    let values = packer.fromBytes(
+        buffer.slice(0, theType["offset"]), theType);
     return values ? values[0] : theType["char"] ? "" : null;
 }
 
@@ -118,15 +123,15 @@ function unpack(buffer, theType) {
  * @throws {Error} If the type definition is not valid.
  */
 function packArray(values, theType) {
-    setUp_(theType);
+    packer.setUp(theType);
     // Fix strings with bad length in the array
     if (theType["char"]) {
         let len = values.length;
         for (let i=0; i&lt;len; i++) {
-            values[i] = fixBadString_(values[i], theType);
+            values[i] = packer.fixBadString(values[i], theType);
         }
     }
-    return toBytes_(values, theType);
+    return packer.toBytes(values, theType);
 }
 
 /**
@@ -137,313 +142,8 @@ function packArray(values, theType) {
  * @throws {Error} If the type definition is not valid.
  */
 function unpackArray(buffer, theType) {
-    setUp_(theType);
-    return fromBytes_(buffer, theType);
-}
-
-/**
- * Turn a byte buffer into what the bytes represent.
- * @param {!Array&lt;number|string>|!Uint8Array} buffer An array of bytes.
- * @param {!Object} theType The type definition.
- * @return {!Array&lt;number>}
- * @private
- */
-function fromBytes_(buffer, theType) {
-    // turn to BE if BE
-    if (theType["be"]) {
-        endianness(buffer, theType["offset"]);
-    }
-    let len = buffer.length;
-    // unpack the values
-    let values = [];
-    len = len - (theType["offset"] - 1);
-    for (let i=0; i&lt;len; i+=theType["offset"]) {
-        values.push(reader_(buffer, i));
-    }
-    return values;
-}
-
-/**
- * Turn numbers and strings to bytes.
- * @param {!Array&lt;number|string>} values The data.
- * @param {!Object} theType The type definition.
- * @return {!Array&lt;number|string>} the data as a byte buffer.
- * @private
- */
-function toBytes_(values, theType) {
-    let j = 0;
-    let bytes = [];
-    let len = values.length;
-    // pack the values
-    for(let i=0; i &lt; len; i++) {
-        j = writer_(bytes, values[i], j);
-    }
-    // turn to BE if BE
-    if (theType["be"]) {
-        endianness(bytes, theType["offset"]);
-    }
-    return bytes;
-}
-
-/**
- * Read int values from bytes.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function readInt_(bytes, i) {
-    return gInt_.read(bytes, i);
-}
-
-/**
- * Read 1 16-bit float from bytes.
- * Thanks https://stackoverflow.com/a/8796597
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function read16F_(bytes, i) {
-    let int = gInt_.read(bytes, i);
-    let exponent = (int &amp; 0x7C00) >> 10;
-    let fraction = int &amp; 0x03FF;
-    let floatValue;
-    if (exponent) {
-        floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
-    } else {
-        floatValue = 6.103515625e-5 * (fraction / 0x400);
-    }
-    return floatValue * (int >> 15 ? -1 : 1);
-}
-
-/**
- * Read 1 32-bit float from bytes.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function read32F_(bytes, i) {
-    ui32_[0] = gInt_.read(bytes, i);
-    return f32_[0];
-}
-
-/**
- * Read 1 64-bit float from bytes.
- * Thanks https://gist.github.com/kg/2192799
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function read64F_(bytes, i) {
-    ui32_[0] = gInt_.read(bytes, i);
-    ui32_[1] = gInt_.read(bytes, i + 4);
-    return f64_[0];
-}
-
-/**
- * Read 1 char from bytes.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {string}
- * @private
- */
-function readChar_(bytes, i) {
-    let chrs = "";
-    for(let j=0; j &lt; gInt_.offset; j++) {
-        chrs += String.fromCharCode(bytes[i+j]);
-    }
-    return chrs;
-}
-
-/**
- * Write a integer value to a byte buffer.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {!number} The next index to write on the byte buffer.
- * @private
- */
-function writeInt_(bytes, number, j) {
-    return gInt_.write(bytes, number, j);
-}
-
-/**
- * Write one 16-bit float as a binary value.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function write16F_(bytes, number, j) {
-    f32_[0] = number;
-    let x = ui32_[0];
-    let bits = (x >> 16) &amp; 0x8000;
-    let m = (x >> 12) &amp; 0x07ff;
-    let e = (x >> 23) &amp; 0xff;
-    if (e >= 103) {
-        bits |= ((e - 112) &lt;&lt; 10) | (m >> 1);
-        bits += m &amp; 1;
-    }
-    bytes[j++] = bits &amp; 0xFF;
-    bytes[j++] = bits >>> 8 &amp; 0xFF;
-    return j;
-}
-
-/**
- * Write one 32-bit float as a binary value.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function write32F_(bytes, number, j) {
-    f32_[0] = number;
-    return gInt_.write(bytes, ui32_[0], j);
-}
-
-/**
- * Write one 64-bit float as a binary value.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function write64F_(bytes, number, j) {
-    f64_[0] = number;
-    j = gInt_.write(bytes, ui32_[0], j);
-    return gInt_.write(bytes, ui32_[1], j);
-}
-
-/**
- * Write one char as a byte.
- * @param {!Array&lt;number>|!Uint8Array} bytes An array of bytes.
- * @param {string} str The string to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function writeChar_(bytes, str, j) {
-    for (let i=0; i&lt;str.length; i++) {
-        bytes[j++] = str.charCodeAt(i);
-    }
-    return j;
-}
-
-/**
- * Set the function to unpack the data.
- * @param {!Object} theType The type definition.
- * @private
- */
-function setReader_(theType) {
-    if (theType["float"]) {
-        if (theType["bits"] == 16) {
-            reader_ = read16F_;
-        } else if(theType["bits"] == 32) {
-            reader_ = read32F_;
-        } else if(theType["bits"] == 64) {
-            reader_ = read64F_;
-        }
-    } else if (theType["char"]) {
-        reader_ = readChar_;
-    } else {
-        reader_ = readInt_;
-    }
-}
-
-/**
- * Set the function to pack the data.
- * @param {!Object} theType The type definition.
- * @private
- */
-function setWriter_(theType) {
-    if (theType["float"]) {
-        if (theType["bits"] == 16) {
-            writer_ = write16F_;
-        } else if(theType["bits"] == 32) {
-            writer_ = write32F_;
-        } else if(theType["bits"] == 64) {
-            writer_ = write64F_;
-        }
-    } else if (theType["char"]) {
-        writer_ = writeChar_;
-    } else {
-        writer_ = writeInt_;
-    }   
-}
-
-/**
- * Validate the type and set up the packing/unpacking functions.
- * @param {!Object} theType The type definition.
- * @throws {Error} If the type definition is not valid.
- * @private
- */
-function setUp_(theType) {
-    validateType_(theType);
-    theType["offset"] = theType["bits"] &lt; 8 ? 1 : Math.ceil(theType["bits"] / 8);
-    setReader_(theType);
-    setWriter_(theType);
-    if (!theType["char"]) {
-        gInt_ = new GenericInteger(
-            theType["bits"] == 64 ? 32 : theType["bits"],
-            theType["float"] ? false : theType["signed"]);    
-    } else {
-        // Workaround; should not use GenericInteger when type["char"]
-        gInt_.offset = theType["bits"] &lt; 8 ? 1 : Math.ceil(theType["bits"] / 8);
-    }
-}
-
-/**
- * Validate the type definition.
- * @param {!Object} theType The type definition.
- * @throws {Error} If the type definition is not valid.
- * @private
- */
-function validateType_(theType) {
-    if (!theType) {
-        throw new Error("Undefined type.");
-    }
-    if (theType["float"]) {
-        if ([16,32,64].indexOf(theType["bits"]) == -1) {
-            throw new Error("Not a supported float type.");
-        }
-    } else {
-        if (theType["char"]) {
-            if (theType["bits"] &lt; 8 || theType["bits"] % 2) {
-                throw new Error("Wrong offset for type char.");  
-            }
-        } else {
-            if (theType["bits"] &lt; 1 || theType["bits"] > 53) {
-                throw new Error("Not a supported type.");  
-            }
-        }
-    }
-}
-
-/**
- * Fix strings with bad length by either truncating when length is
- * greater than the defined in the type or turning them to "" if
- * length is smaller than defined in the type. If the value is not a
- * string, just return the value.
- * @param {string|number} value The string to fix.
- * @param {!Object} theType The type definition.
- * @return {string|number}
- * @private
- */
-function fixBadString_(value, theType) {
-    if (value.constructor == String) {
-        if (value.length >= theType["offset"]) {
-            value = value.slice(0, theType["offset"]);
-        } else {
-            value = "";
-        }
-    }
-    return value;
+    packer.setUp(theType);
+    return packer.fromBytes(buffer, theType);
 }
 
 // Methods
@@ -464,7 +164,7 @@ module.exports.types = types;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jun 11 2018 23:49:43 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jun 11 2018 23:54:27 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
