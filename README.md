@@ -53,7 +53,7 @@ byteData.packArray([-2147483648, 2147483647], byteData.types.int32),
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
 // Unpack an array of uInt16 numbers
-byteData.unpackArray([255, 255, "0, 0], byteData.types.uInt16),
+byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16),
 // [65535, 0]
 ```
 
