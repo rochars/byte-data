@@ -57,43 +57,46 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16),
 // [65535, 0]
 ```
 
-## Interface
+## API
 ```javascript
 /**
  * Write a number or fixed-length string to a byte buffer.
- * @param {!number|!string} value The value.
- * @param {!Object} type One of the available types.
+ * @param {number|string} value The value.
+ * @param {!Object} theType The type definition.
  * @return {!Array<number|string>}
+ * @throws {Error} If the type definition is not valid.
  */
 function pack(value, type) {}
 
 /**
  * Read a number or a fixed-length string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
- * @param {!Object} type One of the available types.
- * @return {number|string}
+ * @param {!Object} theType The type definition.
+ * @return {number|string|null}
+ * @throws {Error} If the type definition is not valid.
  */
 function unpack(buffer, type) {}
 
 /**
  * Write an array of numbers or a string to a byte buffer.
- * @param {!Array<number>|string} values The values.
- * @param {!Object} type One of the available types.
+ * @param {!Array<number|string>} values The values.
+ * @param {!Object} theType The type definition.
  * @return {!Array<number|string>}
+ * @throws {Error} If the type definition is not valid.
  */
 function packArray(values, type) {}
 
 /**
  * Read an array of numbers or a string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer The byte array.
- * @param {!Object} type One of the available types.
- * @return {!Array<number>|string|number}
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number|string>|number}
+ * @throws {Error} If the type definition is not valid.
  */
 function unpackArray(buffer, type) {}
 ```
 
 ## Types
-
 **byte-data** default types are defined in **byte-data.types**.
 
 Example:
