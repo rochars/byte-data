@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "8.0.3",
+  "version": "9.0.0",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -74,5 +74,6 @@
     "endianness": "^3.0.2",
     "generic-integer": "^2.0.0"
   },
-  "main": "index.js"
+  "main": "index.js",
+  "browser": "./dist/byte-data-min.js"
 }
