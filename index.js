@@ -6,42 +6,9 @@
  *
  */
 
-/** @private */
-const endianness = require("endianness");
-/** @private */
-const GenericInteger = require("generic-integer");
-
-/** @private */
-const int8_ = new Int8Array(8);
-/** @private */
-const ui32_ = new Uint32Array(int8_.buffer);
-/** @private */
-const f32_ = new Float32Array(int8_.buffer);
-/** @private */
-const f64_ = new Float64Array(int8_.buffer);
-
-/**
- * @type {Function}
- * @private
- */
-let reader_;
-/**
- * @type {Function}
- * @private
- */
-let writer_;
-/**
- * @type {Object}
- * @private
- */
-let gInt_ = {};
-
 /**
  * @type {!Object}
- */
-const types = require("./lib/types");
-/**
- * @type {!Object}
+ * @private
  */
 const packer = require("./lib/packer");
 
@@ -112,4 +79,4 @@ module.exports.pack = pack;
 module.exports.unpack = unpack;
 module.exports.packArray = packArray;
 module.exports.unpackArray = unpackArray;
-module.exports.types = types;
+module.exports.types = require("./lib/types");
