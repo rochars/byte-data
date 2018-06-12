@@ -28,7 +28,7 @@ npm install byte-data
 ## Browser
 Use the compiled file in the */dist* folder:
 ```html
-<script src="byte-data.js"></script>
+<script src="byte-data-min.js"></script>
 ```
 
 Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
