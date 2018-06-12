@@ -21,16 +21,6 @@ describe('pack chr', function() {
             byteData.pack(str, {"char": true, "bits": 1024}),
             bytes);
     });
-    it('should turn a 3 char string to bytes', function() {
-        assert.deepEqual(
-            byteData.pack("abc", byteData.types.chr),
-            [97]);
-    });
-    it('should turn a 3 char string to bytes (hex)', function() {
-        assert.deepEqual(
-            byteData.pack("abc", byteData.types.chr),
-            [97]);
-    });
     it('should turn a 3 char string to bytes (hex)', function() {
         assert.deepEqual(
             byteData.packArray("abc", byteData.types.chr),

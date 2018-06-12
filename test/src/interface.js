@@ -8,22 +8,11 @@ let assert = require('assert');
 let byteData = require('../../test/loader.js');
 
 describe('interface', function() {
-    it('pack fourCC (not enought chars)', function() {
-        assert.deepEqual(
-            byteData.pack("abc", byteData.types.fourCC),
-            []);
-    });
-
     // pack
     it('pack uInt16 (65535, 16)', function() {
         assert.deepEqual(
             byteData.pack(65535, byteData.types.uInt16),
             [255,255]);
-    });
-    it('pack chr ("abcd")', function() {
-        assert.deepEqual(
-            byteData.pack("abcd", byteData.types.chr),
-            [97]);
     });
     it('pack float32 (2.1474836, 16)', function() {
         assert.deepEqual(

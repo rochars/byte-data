@@ -6,6 +6,7 @@
 - types in byteData.types
 - throw errors on overflow and underflow
 - throw errors when packing null and undefined values
+- throw errors for strings with bad length
 
 ## v8.0.3 (2018-06-11)
 - fix: webpack.config so no dependency dist is used in the bundle.

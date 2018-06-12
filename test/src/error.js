@@ -14,6 +14,19 @@ describe('Errors', function() {
 
     it("Overflow", function () {
         testFunc = function() {
+            byteData.pack("abcde", {"chr": true, "bits": 32});
+        };
+        expect(testFunc).to.throw("String is bigger than its type definition.");
+    });
+    it("Overflow", function () {
+        testFunc = function() {
+            byteData.pack("abc", {"chr": true, "bits": 32});
+        };
+        expect(testFunc).to.throw("String is smaller than its type definition.");
+    });
+
+    it("Overflow", function () {
+        testFunc = function() {
             byteData.pack(null, {"bits": 8});
         };
         expect(testFunc).to.throw(Error);
