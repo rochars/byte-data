@@ -81,19 +81,4 @@ describe('pack int32', function() {
             [253, 255, 255, 255]
         );
     });
-
-
-    // overflow
-    it('overflow', function() {
-        assert.deepEqual(
-            byteData.packArray([-2147483649, 2147483648], byteData.types.int32, true),
-            [0,0,0,128,255,255,255,127]
-        );
-    });
-    it('larger overflow', function() {
-        assert.deepEqual(
-            byteData.packArray([-12147483649, 12147483648], byteData.types.int32, true),
-            [0,0,0,128,255,255,255,127]
-        );
-    });
 });

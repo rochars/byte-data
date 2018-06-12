@@ -65,12 +65,4 @@ describe('pack int24', function() {
             [253, 255, 255]
         );
     });
-
-    // overflow
-    it('should turn 2 signed 24-bit ints to 6 bytes (overflow)', function() {
-        assert.deepEqual(
-            byteData.packArray([-18388608, 18388607], byteData.types.int24, true),
-            [0,0,128,255,255,127]
-        );
-    });
 });

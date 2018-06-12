@@ -77,19 +77,4 @@ describe('pack int40', function() {
             byteData.packArray([549755813887], byteData.types.int40, 16),
             [255,255,255,255,127]);
     });
-
-
-    // overflow
-    it('overflow', function() {
-        assert.deepEqual(
-            byteData.packArray([-549755813889, 549755813888], byteData.types.int40, true),
-            [0,0,0,0,128, 255,255,255,255,127]
-        );
-    });
-    it('larger overflow', function() {
-        assert.deepEqual(
-            byteData.packArray([-1549755813888, 1549755813887], byteData.types.int40, true),
-            [0,0,0,0,128, 255,255,255,255,127]
-        );
-    });
 });
