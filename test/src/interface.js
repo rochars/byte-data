@@ -8,12 +8,6 @@ let assert = require('assert');
 let byteData = require('../../test/loader.js');
 
 describe('interface', function() {
-    
-    it('pack uInt16 (undefined)', function() {
-        assert.deepEqual(
-            byteData.pack(undefined, byteData.types.uInt16),
-            []);
-    });
     it('pack fourCC (not enought chars)', function() {
         assert.deepEqual(
             byteData.pack("abc", byteData.types.fourCC),

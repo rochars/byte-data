@@ -19,10 +19,6 @@ const packer = require("./lib/packer");
  */
 function pack(value, theType) {
     packer.setUp(theType);
-    let packed = [];
-    if (value === undefined) {
-        return packed;
-    }
     return packer.toBytes(
         [packer.fixBadString(value, theType)], theType);
 }

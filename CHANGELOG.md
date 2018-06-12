@@ -2,9 +2,10 @@
 
 ## v9.0.0 (unreleased)
 - dist included in npm package.
-- change: bytes only in base 10 for input and output
-- change: types in byteData.types
-- change: throw errors on overflow and underflow
+- bytes only in base 10 for input and output
+- types in byteData.types
+- throw errors on overflow and underflow
+- throw errors when packing null and undefined values
 
 ## v8.0.3 (2018-06-11)
 - fix: webpack.config so no dependency dist is used in the bundle.

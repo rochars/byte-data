@@ -14,6 +14,18 @@ describe('Errors', function() {
 
     it("Overflow", function () {
         testFunc = function() {
+            byteData.pack(null, {"bits": 8});
+        };
+        expect(testFunc).to.throw(Error);
+    });
+    it("Overflow", function () {
+        testFunc = function() {
+            byteData.pack(undefined, {"bits": 8});
+        };
+        expect(testFunc).to.throw(Error);
+    });
+    it("Overflow", function () {
+        testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
         expect(testFunc).to.throw("Overflow.");
