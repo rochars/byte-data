@@ -153,6 +153,20 @@ Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki
 ## Signed integers
 Signed integers are two's-complement.
 
+## Contributing
+**byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.
+
+See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md) for details.
+
+### Style guide
+**byte-data** code should follow the Google JavaScript Style Guide:  
+https://google.github.io/styleguide/jsguide.html
+
+### Code of conduct
+This project adopt the [Contributor Covenant, version 1.4](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html), available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html as its code of conduct.
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting rocha.rafaelsilva@gmail.com.
+
 ## LICENSE
 Copyright (c) 2017-2018 Rafael da Silva Rocha.
 
