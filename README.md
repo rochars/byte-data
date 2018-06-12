@@ -142,20 +142,6 @@ byteData.pack(value, byteData.types.float16);
   - uInt48BE
   - float64BE
 
-## Overflow
-Integer values will be truncated according to the bit depth of the type.
-```javascript
-// Values in the correct range
-byteData.pack(254, uInt8); // [254]
-byteData.pack(255, uInt8); // [255]
-
-// Overflow
-byteData.pack(300, uInt8); // [255]
-
-// Underflow
-byteData.pack(-1, uInt8); // [0]
-```
-
 ## Floating-point numbers
 Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
