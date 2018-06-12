@@ -25,8 +25,8 @@ function pack(value, theType) {
     if (value === undefined) {
         return packed;
     }
-    value = packer.fixBadString(value, theType);
-    return packer.toBytes([value], theType);
+    return packer.toBytes(
+        [packer.fixBadString(value, theType)], theType);
 }
 
 /**
