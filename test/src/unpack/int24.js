@@ -13,13 +13,13 @@ describe('unpack int24', function() {
         assert.deepEqual(
             byteData.unpackArray(
                 [0,0,128,255,255,127],
-                byteData.int24, 2),
+                byteData.types.int24, 2),
             [-8388608, 8388607]);
     });
     it('should turn 6 bytes hex to 2 24-bit ints (max range)', function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [0,0,128, 255,255,127], byteData.int24, 16),
+                [0,0,128, 255,255,127], byteData.types.int24, 16),
             [-8388608, 8388607]);
     });
 });

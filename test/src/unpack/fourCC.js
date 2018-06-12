@@ -6,7 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let fourCC = byteData.fourCC;
+let fourCC = byteData.types.fourCC;
 
 describe('unpack fourCC', function() {
     it('should read a fourCC from 4 bytes', function() {

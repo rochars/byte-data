@@ -6,7 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let int2 = byteData.int2;
+let int2 = byteData.types.int2;
 
 describe('unpack int2', function() {   
 

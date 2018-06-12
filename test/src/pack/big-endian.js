@@ -7,19 +7,19 @@
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
 
-let uInt16BE = byteData.uInt16BE;
-let uInt16 = byteData.uInt16;
-let uInt24BE = byteData.uInt24BE;
-let int24BE = byteData.int24BE;
-let uInt24 = byteData.uInt24;
-let int24 = byteData.int24;
-let uInt32BE = byteData.uInt32BE;
-let uInt32 = byteData.uInt32;
-let uInt40BE = byteData.uInt40BE;
-let uInt40 = byteData.uInt40;
-let uInt48BE = byteData.uInt48BE;
-let uInt48 = byteData.uInt48;
-let float64BE = byteData.float64BE;
+let uInt16BE = byteData.types.uInt16BE;
+let uInt16 = byteData.types.uInt16;
+let uInt24BE = byteData.types.uInt24BE;
+let int24BE = byteData.types.int24BE;
+let uInt24 = byteData.types.uInt24;
+let int24 = byteData.types.int24;
+let uInt32BE = byteData.types.uInt32BE;
+let uInt32 = byteData.types.uInt32;
+let uInt40BE = byteData.types.uInt40BE;
+let uInt40 = byteData.types.uInt40;
+let uInt48BE = byteData.types.uInt48BE;
+let uInt48 = byteData.types.uInt48;
+let float64BE = byteData.types.float64BE;
 
 describe('pack LE and BE', function() {
     

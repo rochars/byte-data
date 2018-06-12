@@ -6,7 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let int40 = byteData.int40;
+let int40 = byteData.types.int40;
 
 describe('40-bit from bytes', function() {
     

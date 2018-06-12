@@ -12,32 +12,32 @@ describe('booleans to bytes', function() {
     // booleans
     it('should turn 1 value to 1 booolean bin (6)', function() {
         assert.deepEqual(
-            byteData.packArray([6], byteData.bool),
+            byteData.packArray([6], byteData.types.bool),
             [1]);
     });
     it('should turn 1 value to 1 booolean hex (6)', function() {
         assert.deepEqual(
-            byteData.packArray([6], byteData.bool),
+            byteData.packArray([6], byteData.types.bool),
             [1]);
     });
     it('should turn 1 value to 1 booolean decimal (6)', function() {
         assert.deepEqual(
-            byteData.packArray([6], byteData.bool),
+            byteData.packArray([6], byteData.types.bool),
             [1]);
     });
     it('should turn 1 value to 1 booolean bin (0)', function() {
         assert.deepEqual(
-            byteData.packArray([0], byteData.bool),
+            byteData.packArray([0], byteData.types.bool),
             [0]);
     });
     it('should turn 1 value to 1 booolean hex (0)', function() {
         assert.deepEqual(
-            byteData.packArray([0], byteData.bool),
+            byteData.packArray([0], byteData.types.bool),
             [0]);
     });
     it('should turn 1 value to 1 booolean decimal (0)', function() {
         assert.deepEqual(
-            byteData.packArray([0], byteData.bool),
+            byteData.packArray([0], byteData.types.bool),
             [0]);
     });
 });

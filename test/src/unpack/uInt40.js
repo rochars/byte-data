@@ -6,7 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let uInt40 = byteData.uInt40;
+let uInt40 = byteData.types.uInt40;
 
 describe('unpack uInt40', function() {
 

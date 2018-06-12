@@ -11,22 +11,22 @@ describe('48-bit to bytes', function() {
     
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([120637438355317], byteData.uInt48, 16),
+            byteData.packArray([120637438355317], byteData.types.uInt48, 16),
             [117, 231, 168, 23, 184, 109]); 
     });
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([140737488355327], byteData.uInt48),
+            byteData.packArray([140737488355327], byteData.types.uInt48),
             [255,255,255,255,255,127]); 
     });
     it('should turn 1 unsigned 48-bit int to 6 bytes (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([281474976710655], byteData.uInt48),
+            byteData.packArray([281474976710655], byteData.types.uInt48),
             [255,255,255,255,255,255]);
     });
     it('should turn 1 unsigned 48-bit int to 6 bytes (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([281474976710655], byteData.uInt48),
+            byteData.packArray([281474976710655], byteData.types.uInt48),
             [255,255,255,255,255,255]);
     });
 });

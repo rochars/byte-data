@@ -6,8 +6,8 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let uInt2 = byteData.uInt2;
-let int2 = byteData.int2;
+let uInt2 = byteData.types.uInt2;
+let int2 = byteData.types.int2;
 
 describe('pack int2', function() {   
     

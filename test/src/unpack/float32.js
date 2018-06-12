@@ -6,7 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let float32 = byteData.float32;
+let float32 = byteData.types.float32;
 
 describe('unpack float32', function() {
     

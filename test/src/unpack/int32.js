@@ -6,7 +6,7 @@
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
-let int32 = byteData.int32;
+let int32 = byteData.types.int32;
 
 describe('unpack int32', function() {
 
@@ -45,27 +45,27 @@ describe('unpack int32', function() {
     // min
     it('min', function() {
         assert.deepEqual(
-            byteData.unpackArray([0,0,0,128], byteData.int32, 16),
+            byteData.unpackArray([0,0,0,128], byteData.types.int32, 16),
             [-2147483648]);
     });
     // min + 1
     it('min + 1', function() {
         assert.deepEqual(
-            byteData.unpackArray([1,0,0,128], byteData.int32, 16),
+            byteData.unpackArray([1,0,0,128], byteData.types.int32, 16),
             [-2147483647]
         );
     });
     // min + 2
     it('min + 2', function() {
         assert.deepEqual(
-            byteData.unpackArray([2,0,0,128], byteData.int32, 16),
+            byteData.unpackArray([2,0,0,128], byteData.types.int32, 16),
             [-2147483646]
         );
     });
     // min + 3
     it('min + 3', function() {
         assert.deepEqual(
-            byteData.unpackArray([3,0,0,128], byteData.int32, 16),
+            byteData.unpackArray([3,0,0,128], byteData.types.int32, 16),
             [-2147483645]
         );
     });
@@ -73,21 +73,21 @@ describe('unpack int32', function() {
     // -1
     it('-1', function() {
         assert.deepEqual(
-            byteData.unpackArray([255,255,255,255], byteData.int32, 16),
+            byteData.unpackArray([255,255,255,255], byteData.types.int32, 16),
             [-1]
         );
     });
     // -2
     it('-2', function() {
         assert.deepEqual(
-            byteData.unpackArray([254,255,255,255], byteData.int32, 16),
+            byteData.unpackArray([254,255,255,255], byteData.types.int32, 16),
             [-2]
         );
     });
     // -3
     it('-3', function() {
         assert.deepEqual(
-            byteData.unpackArray([253,255,255,255], byteData.int32, 16),
+            byteData.unpackArray([253,255,255,255], byteData.types.int32, 16),
             [-3]
         );
     });
