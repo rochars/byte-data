@@ -1,9 +1,6 @@
 *.log
 *.DS_Store
 
-# minified browser version
-dist/
-
 # Development folders
 .nyc_output/
 docs/

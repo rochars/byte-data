@@ -1,6 +1,9 @@
 # CHANGELOG
 
-## v9.0.0 (unreleased)
+## v9.0.1 (2018-06-12)
+- fix: dist included in npm package.
+
+## v9.0.0 (2018-06-12)
 - dist included in npm package.
 - bytes only in base 10 for input and output
 - types in byteData.types
