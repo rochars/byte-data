@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#packer">packer</a></li><li><a href="global.html#types">types</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#pack">pack</a></li><li><a href="global.html#packArray">packArray</a></li><li><a href="global.html#unpack">unpack</a></li><li><a href="global.html#unpackArray">unpackArray</a></li></ul>
 </nav>
 
 <div id="main">
@@ -56,69 +56,64 @@
 </ul>
 <h2>Pack/unpack:</h2><ul>
 <li>Booleans</li>
-<li><strong>4, 8, 16, 24, 32, 40 and 48-Bit</strong> numbers</li>
-<li>All integers from 2-Bit to 53-Bit, signed and unsigned</li>
+<li>All integers from 2-Bit to 48-Bit, signed and unsigned</li>
 <li>16-bit half-precision floating point numbers</li>
 <li>32-bit single-precision floating point numbers</li>
 <li>64-bit double-precision floating point numbers</li>
-<li>little-endian and big-endian</li>
+<li>little-endian and big-endian words</li>
 <li>strings of fixed and variable length</li>
 </ul>
-<h2>Install</h2><pre class="prettyprint source"><code>npm install byte-data</code></pre><h2>Example</h2><pre class="prettyprint source lang-javascript"><code>let byteData = require('byte-data');
+<h2>Install</h2><pre class="prettyprint source"><code>npm install byte-data</code></pre><h2>Browser</h2><p>Use the compiled file in the <em>/dist</em> folder:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;byte-data.js&quot;>&lt;/script></code></pre><p>Or get it from the <a href="https://www.jsdelivr.com">jsDelivr</a> CDN:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data@9.0.0&quot;>&lt;/script></code></pre><h2>Example</h2><pre class="prettyprint source lang-javascript"><code>let byteData = require('byte-data');
 
-// Pack a float32 number, output bytes to hex
-byteData.pack(2.1474836, byteData.float32, 16),
-//[&quot;5f&quot;,&quot;70&quot;,&quot;09&quot;,&quot;40&quot;]
+// Pack a float32 number
+byteData.pack(2.1474836, byteData.types.float32),
+//[95, 112, 9, 64]
 
-// Pack an array of uInt16 numbers, output to base 10 (default)
-byteData.packArray([65535, 0], byteData.uInt16)
+// Pack an array of uInt16 numbers
+byteData.packArray([65535, 0], byteData.types.uInt16)
 // [255, 255, 0, 0]);
 
-// Pack an array of int32 numbers, output to base 10 (default)
-byteData.packArray([-2147483648, 2147483647], byteData.int32),
+// Pack an array of int32 numbers
+byteData.packArray([-2147483648, 2147483647], byteData.types.int32),
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
-// Unpack an array of uInt16 numbers from bytes represented as hex values
-byteData.unpackArray([&quot;ff&quot;, &quot;ff&quot;, &quot;00&quot;, &quot;00&quot;], byteData.uInt16, 16),
+// Unpack an array of uInt16 numbers
+byteData.unpackArray([255, 255, &quot;0, 0], byteData.types.uInt16),
 // [65535, 0]</code></pre><h2>Interface</h2><pre class="prettyprint source lang-javascript"><code>/**
  * Write a number or fixed-length string to a byte buffer.
  * @param {!number|!string} value The value.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number|string>}
  */
-function pack(value, type, base=10) {}
+function pack(value, type) {}
 
 /**
  * Read a number or a fixed-length string from a byte buffer.
  * @param {!Array&lt;number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
-function unpack(buffer, type, base=10) {}
+function unpack(buffer, type) {}
 
 /**
  * Write an array of numbers or a string to a byte buffer.
  * @param {!Array&lt;number>|string} values The values.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number|string>}
  */
-function packArray(values, type, base=10) {}
+function packArray(values, type) {}
 
 /**
  * Read an array of numbers or a string from a byte buffer.
  * @param {!Array&lt;number|string>|!Uint8Array} buffer The byte array.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {!Array&lt;number>|string|number}
  */
-function unpackArray(buffer, type, base=10) {}</code></pre><h2>Standard types</h2><ul>
+function unpackArray(buffer, type) {}</code></pre><h2>Types</h2><p><strong>byte-data</strong> default types are defined in <strong>byte-data.types</strong>.</p>
+<p>Example:</p>
+<pre class="prettyprint source lang-javascript"><code>byteData.pack(value, byteData.types.float16);</code></pre><h3>The default types:</h3><ul>
 <li>chr</li>
 <li>fourCC</li>
 <li>bool</li>
@@ -129,7 +124,7 @@ function unpackArray(buffer, type, base=10) {}</code></pre><h2>Standard types</h
 <li>int8</li>
 <li>uInt8</li>
 </ul>
-<h3>little-endian</h3><ul>
+<h4>little-endian</h4><ul>
 <li>int16</li>
 <li>uInt16</li>
 <li>float16</li>
@@ -144,7 +139,7 @@ function unpackArray(buffer, type, base=10) {}</code></pre><h2>Standard types</h
 <li>uInt48</li>
 <li>float64</li>
 </ul>
-<h3>big-endian:</h3><ul>
+<h4>big-endian:</h4><ul>
 <li>int16BE</li>
 <li>uInt16BE</li>
 <li>float16BE</li>
@@ -159,7 +154,7 @@ function unpackArray(buffer, type, base=10) {}</code></pre><h2>Standard types</h
 <li>uInt48BE</li>
 <li>float64BE</li>
 </ul>
-<pre class="prettyprint source lang-javascript"><code>byteData.pack(value, byteData.float16);</code></pre><h2>Overflow</h2><p>Integer values will be truncated according to the bit depth of the type.</p>
+<h2>Overflow</h2><p>Integer values will be truncated according to the bit depth of the type.</p>
 <pre class="prettyprint source lang-javascript"><code>// Values in the correct range
 byteData.pack(254, uInt8); // [254]
 byteData.pack(255, uInt8); // [255]
@@ -169,11 +164,7 @@ byteData.pack(300, uInt8); // [255]
 
 // Underflow
 byteData.pack(-1, uInt8); // [0]</code></pre><h2>Floating-point numbers</h2><p>Floating-point numbers are based on the <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</p>
-<h2>Creating new integer types</h2><pre class="prettyprint source lang-javascript"><code>// Unsigned 11-bit integer
-let uInt11 = {&quot;bits&quot;: 11};
-
-// Signed 45-bit integer
-let int45 = {&quot;bits&quot;: 45, &quot;signed&quot;: true};</code></pre><p>You can create new types of integers (signed/unsigned) and strings, not floats.</p>
+<h2>Signed integers</h2><p>Signed integers are two's-complement.</p>
 <h2>LICENSE</h2><p>Copyright (c) 2017-2018 Rafael da Silva Rocha.</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -203,7 +194,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jun 11 2018 23:54:27 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jun 12 2018 02:56:36 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

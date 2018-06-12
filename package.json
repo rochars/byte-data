@@ -71,8 +71,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "endianness": "^3.0.2",
-    "generic-integer": "^2.0.0"
+    "endianness": "^4.0.0"
   },
   "main": "index.js",
   "browser": "./dist/byte-data-min.js"

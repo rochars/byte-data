@@ -29,7 +29,7 @@ describe('pack uInt24', function() {
     });
     it('should turn 2 unsigned 24-bit ints to 6 bytes (overflow)', function() {
         assert.deepEqual(
-            byteData.packArray([-1, 216777215], byteData.types.uInt24),
+            byteData.packArray([-1, 216777215], byteData.types.uInt24, true),
             [0,0,0,255,255,255]
         );
     });

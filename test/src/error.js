@@ -10,8 +10,21 @@ let testFunc;
 let typeError = "Not a supported type.";
 let floatTypeError = "Not a supported float type.";
 
-describe('Word size errors', function() {
-    
+describe('Errors', function() {
+
+    it("Overflow", function () {
+        testFunc = function() {
+            byteData.pack(256, {"bits": 8});
+        };
+        expect(testFunc).to.throw("Overflow.");
+    });
+    it("Underflow", function () {
+        testFunc = function() {
+            byteData.pack(-1, {"bits": 8});
+        };
+        expect(testFunc).to.throw("Underflow.");
+    });
+
     it("string with odd number of bits", function () {
         testFunc = function() {
             byteData.pack("a", {"char": true, "bits": 9});

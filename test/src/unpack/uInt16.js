@@ -89,7 +89,7 @@ describe('unpack uInt16', function() {
     });
     it('should handle 11-bit as 16-bit (65535, overflow)', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 255], {"bits": 11}, 16),
+            byteData.unpackArray([255, 255], {"bits": 11}, true),
             [2047]);
     });
     it('should handle 12-bit as 16-bit (2047)', function() {

@@ -38,13 +38,13 @@ describe('pack int4', function() {
     // overflow
     it('overflow', function() {
         assert.deepEqual(
-            byteData.packArray([-9, 8], byteData.types.int4),
+            byteData.packArray([-9, 8], byteData.types.int4, true),
             [8, 7]
         );
     });
     it('larger overflow', function() {
         assert.deepEqual(
-            byteData.packArray([-12147483649, 12147483648], byteData.types.int4),
+            byteData.packArray([-12147483649, 12147483648], byteData.types.int4, true),
             [8, 7]
         );
     });

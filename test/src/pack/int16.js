@@ -92,13 +92,13 @@ describe('pack int16', function() {
     // overflow
     it('overflow', function() {
         assert.deepEqual(
-            byteData.packArray([-32769, 32768], byteData.types.int16),
+            byteData.packArray([-32769, 32768], byteData.types.int16, true),
             [0, 128, 255, 127]
         );
     });
     it('larger overflow', function() {
         assert.deepEqual(
-            byteData.packArray([-1132769, 1132768], byteData.types.int16),
+            byteData.packArray([-1132769, 1132768], byteData.types.int16, true),
             [0, 128, 255, 127]
         );
     });

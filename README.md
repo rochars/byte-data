@@ -13,12 +13,11 @@ https://github.com/rochars/byte-data
 
 ## Pack/unpack:
 - Booleans
-- **4, 8, 16, 24, 32, 40 and 48-Bit** numbers
-- All integers from 2-Bit to 53-Bit, signed and unsigned
+- All integers from 2-Bit to 48-Bit, signed and unsigned
 - 16-bit half-precision floating point numbers
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
-- little-endian and big-endian
+- little-endian and big-endian words
 - strings of fixed and variable length
 
 ## Install
@@ -26,24 +25,35 @@ https://github.com/rochars/byte-data
 npm install byte-data
 ```
 
+## Browser
+Use the compiled file in the */dist* folder:
+```html
+<script src="byte-data.js"></script>
+```
+
+Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
+```html
+<script src="https://cdn.jsdelivr.net/npm/byte-data@9.0.0"></script>
+```
+
 ## Example
 ```javascript
 let byteData = require('byte-data');
 
-// Pack a float32 number, output bytes to hex
-byteData.pack(2.1474836, byteData.float32, 16),
-//["5f","70","09","40"]
+// Pack a float32 number
+byteData.pack(2.1474836, byteData.types.float32),
+//[95, 112, 9, 64]
 
-// Pack an array of uInt16 numbers, output to base 10 (default)
-byteData.packArray([65535, 0], byteData.uInt16)
+// Pack an array of uInt16 numbers
+byteData.packArray([65535, 0], byteData.types.uInt16)
 // [255, 255, 0, 0]);
 
-// Pack an array of int32 numbers, output to base 10 (default)
-byteData.packArray([-2147483648, 2147483647], byteData.int32),
+// Pack an array of int32 numbers
+byteData.packArray([-2147483648, 2147483647], byteData.types.int32),
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
-// Unpack an array of uInt16 numbers from bytes represented as hex values
-byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
+// Unpack an array of uInt16 numbers
+byteData.unpackArray([255, 255, "0, 0], byteData.types.uInt16),
 // [65535, 0]
 ```
 
@@ -53,44 +63,45 @@ byteData.unpackArray(["ff", "ff", "00", "00"], byteData.uInt16, 16),
  * Write a number or fixed-length string to a byte buffer.
  * @param {!number|!string} value The value.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {!Array<number|string>}
  */
-function pack(value, type, base=10) {}
+function pack(value, type) {}
 
 /**
  * Read a number or a fixed-length string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {number|string}
  */
-function unpack(buffer, type, base=10) {}
+function unpack(buffer, type) {}
 
 /**
  * Write an array of numbers or a string to a byte buffer.
  * @param {!Array<number>|string} values The values.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the output. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {!Array<number|string>}
  */
-function packArray(values, type, base=10) {}
+function packArray(values, type) {}
 
 /**
  * Read an array of numbers or a string from a byte buffer.
  * @param {!Array<number|string>|!Uint8Array} buffer The byte array.
  * @param {!Object} type One of the available types.
- * @param {!number} base The base of the input. Optional. Default is 10.
- *      Possible values are 2, 10 or 16.
  * @return {!Array<number>|string|number}
  */
-function unpackArray(buffer, type, base=10) {}
+function unpackArray(buffer, type) {}
 ```
 
-## Standard types
+## Types
+
+**byte-data** default types are defined in **byte-data.types**.
+
+Example:
+```javascript
+byteData.pack(value, byteData.types.float16);
+```
+
+### The default types:
   - chr
   - fourCC
   - bool
@@ -101,7 +112,7 @@ function unpackArray(buffer, type, base=10) {}
   - int8
   - uInt8
 
-### little-endian
+#### little-endian
   - int16
   - uInt16
   - float16
@@ -116,7 +127,7 @@ function unpackArray(buffer, type, base=10) {}
   - uInt48
   - float64
 
-### big-endian:
+#### big-endian:
   - int16BE
   - uInt16BE
   - float16BE
@@ -130,10 +141,6 @@ function unpackArray(buffer, type, base=10) {}
   - int48BE
   - uInt48BE
   - float64BE
-
-```javascript
-byteData.pack(value, byteData.float16);
-```
 
 ## Overflow
 Integer values will be truncated according to the bit depth of the type.
@@ -152,16 +159,8 @@ byteData.pack(-1, uInt8); // [0]
 ## Floating-point numbers
 Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
-## Creating new integer types
-```javascript
-// Unsigned 11-bit integer
-let uInt11 = {"bits": 11};
-
-// Signed 45-bit integer
-let int45 = {"bits": 45, "signed": true};
-```
-
-You can create new types of integers (signed/unsigned) and strings, not floats.
+## Signed integers
+Signed integers are two's-complement.
 
 ## LICENSE
 Copyright (c) 2017-2018 Rafael da Silva Rocha.

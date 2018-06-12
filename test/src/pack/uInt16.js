@@ -35,9 +35,9 @@ describe('pack uInt16', function() {
             [0, 0, 255, 255]
         );
     });
-    it('should turn 2 unsigned 16-bit ints to 4 bytes (greater than max range)', function() {
+    it('should turn 2 unsigned 16-bit ints to 4 bytes (overflow)', function() {
         assert.deepEqual(
-            byteData.packArray([0, 75535], byteData.types.uInt16),
+            byteData.packArray([0, 75535], byteData.types.uInt16, true),
             [0, 0, 255, 255]
         );
     });
@@ -66,7 +66,7 @@ describe('pack uInt16', function() {
     });
     it('should handle 11-bit as 16-bit (2048, overflow)', function() {
         assert.deepEqual(
-            byteData.packArray([2048], {"bits": 11}, 16),
+            byteData.packArray([2048], {"bits": 11}, true),
             [255, 7]);
     });
     it('should handle 12-bit as 16-bit (2047)', function() {

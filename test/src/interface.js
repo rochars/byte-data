@@ -45,7 +45,7 @@ describe('interface', function() {
             [15]);
     });
     it('pack bool (6, 16) should return 1', function() {
-        assert.deepEqual(byteData.pack(6, byteData.types.bool),
+        assert.deepEqual(byteData.pack(6, byteData.types.bool, true),
             [1]);
     });
     it('pack chr ("a")', function() {
@@ -61,11 +61,11 @@ describe('interface', function() {
             [255]);
     });
     it('pack uInt8 (300) should return [255]', function() {
-        assert.deepEqual(byteData.pack(300, byteData.types.uInt8),
+        assert.deepEqual(byteData.pack(300, byteData.types.uInt8, true),
             [255]);
     });
     it('pack uInt8 (-1) should return [0]', function() {
-        assert.deepEqual(byteData.pack(-1, byteData.types.uInt8),
+        assert.deepEqual(byteData.pack(-1, byteData.types.uInt8, true),
             [0]);
     });
     it('pack int8 (-1)', function() {
