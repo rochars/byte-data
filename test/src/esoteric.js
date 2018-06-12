@@ -10,7 +10,7 @@ let byteData = require('../../test/loader.js');
 describe('esoteric bit depths', function() {
     
     it('uInt5 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 5},),
+        assert.deepEqual(byteData.pack(1, {"bits": 5}),
             [1]);
     });
     it('uInt5 to bin', function() {
