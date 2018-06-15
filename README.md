@@ -17,8 +17,8 @@ https://github.com/rochars/byte-data
 - 16-bit half-precision floating point numbers
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
-- little-endian and big-endian words
-- strings of fixed and variable length
+- Little-endian and big-endian words
+- Strings
 
 ## Install
 ```
@@ -99,7 +99,7 @@ function unpackArray(buffer, theType) {}
 ```
 
 ## Types
-**byte-data** default types are defined in **byte-data.types**.
+**byte-data** default types are defined in **byteData.types**.
 
 Example:
 ```javascript
