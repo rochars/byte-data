@@ -1,6 +1,27 @@
-/**
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+/*
+ * byte-data: Pack and unpack binary data.
  * https://github.com/rochars/byte-data
+ *
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
@@ -11,7 +32,7 @@
 const packer = require("./lib/packer");
 
 /**
- * Write a number a string to a byte buffer.
+ * Pack a number or a string as a byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
@@ -24,8 +45,8 @@ function pack(value, theType) {
 }
 
 /**
- * Read a number or a string from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer An array of bytes.
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @return {number|string}
  * @throws {Error} If the type definition is not valid.
@@ -38,12 +59,12 @@ function unpack(buffer, theType) {
 }
 
 /**
- * Write an array of numbers or strings to a byte buffer.
+ * Pack an array of numbers or strings to a byte buffer.
  * @param {!Array<number|string>} values The values.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values is not valid.
+ * @throws {Error} If any of the values are not valid.
  */
 function packArray(values, theType) {
     packer.setUp(theType);
@@ -51,8 +72,8 @@ function packArray(values, theType) {
 }
 
 /**
- * Read an array of numbers or strings from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer The byte array.
+ * Unpack an array of numbers or strings from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.

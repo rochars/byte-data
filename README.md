@@ -7,9 +7,9 @@ https://github.com/rochars/byte-data
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
 - Runs in Node.js and in the browser
-- Less than 3KB minified + compressed, less than 7KB minified
+- Less than 3KB minified + compressed, less than 6KB minified
 - Tested against Python's struct module (for all common types)
-- Pack and unpack **single values** and **arrays**
+- Pack and unpack **single values** and entire **buffers**
 
 ## Pack/unpack:
 - Booleans
@@ -60,7 +60,7 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16),
 ## API
 ```javascript
 /**
- * Write a number a string to a byte buffer.
+ * Pack a number or a string as a byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
@@ -70,8 +70,8 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16),
 function pack(value, theType) {}
 
 /**
- * Read a number or a string from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer An array of bytes.
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @return {number|string}
  * @throws {Error} If the type definition is not valid.
@@ -79,18 +79,18 @@ function pack(value, theType) {}
 function unpack(buffer, theType) {}
 
 /**
- * Write an array of numbers or strings to a byte buffer.
+ * Pack an array of numbers or strings to a byte buffer.
  * @param {!Array<number|string>} values The values.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values is not valid.
+ * @throws {Error} If any of the values are not valid.
  */
 function packArray(values, theType) {}
 
 /**
- * Read an array of numbers or strings from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer The byte array.
+ * Unpack an array of numbers or strings from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
@@ -148,10 +148,10 @@ byteData.pack(value, byteData.types.float16);
   - float64BE
 
 ## Floating-point numbers
-Floating-point numbers are based on the [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
+Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
 ## Signed integers
-Signed integers are two's-complement.
+Signed integers are two's complement.
 
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.
