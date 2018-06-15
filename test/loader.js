@@ -7,7 +7,7 @@
 let byteData;
 
 if (process.argv[4] == '--dist') {
-    require('browser-env')();let assert = require('assert');
+    require('browser-env')();
     require('../dist/byte-data.min.js');
     byteData = window.byteData;
 } else {
