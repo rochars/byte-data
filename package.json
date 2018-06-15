@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "9.0.2",
+  "version": "10.0.0-alpha.2",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -47,22 +47,21 @@
     "url": "git://github.com/rochars/byte-data.git"
   },
   "scripts": {
-    "lint": "jshint index.js compile.js",
+    "lint": "jshint index.js",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --src",
     "test-error": "nyc ./node_modules/mocha/bin/_mocha test/src/error.js --recursive --src",
     "test-dist": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --dist",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "doc": "./node_modules/.bin/jsdoc index.js -d docs -t node_modules/docdash -r README.md",
     "pack": "webpack && npm run test-dist",
-    "build": "npm run lint && npm test && npm run pack && npm run doc",
-    "build-ci": "npm run lint && npm run pack && npm test && npm run doc"
+    "build": "npm run lint && npm test && npm run pack && npm run doc"
   },
   "devDependencies": {
     "browser-env": "^3.2.4",
     "chai": "^4.1.2",
     "codecov": "^3.0.0",
     "docdash": "^0.4.0",
-    "google-closure-compiler-js": "^20170910.0.1",
+    "google-closure-compiler-js": "^20180610.0.0",
     "jsdoc": "~3.5.5",
     "jshint": "^2.9.5",
     "mocha": "^3.5.3",
@@ -72,8 +71,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "endianness": "^4.0.0"
+    "endianness": "5.0.0"
   },
-  "main": "index.js",
-  "browser": "./dist/byte-data-min.js"
+  "main": "index.js"
 }

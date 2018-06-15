@@ -5,12 +5,11 @@
  */
 const ClosureCompiler = require('google-closure-compiler-js').webpack;
 module.exports = {
-  entry: './compile.js',
+  entry: './index.js',
   output: {
-    filename: './dist/byte-data-min.js'
-  },
-  resolve: {
-    mainFields: ["main"],
+    filename: './dist/byte-data.min.js',
+    library: "byteData",
+    libraryTarget: "window"
   },
   plugins: [
     new ClosureCompiler({
@@ -18,7 +17,9 @@ module.exports = {
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
         compilationLevel: 'ADVANCED',
-        warningLevel: "VERBOSE"
+        warningLevel: "VERBOSE",
+        exportLocalPropertyDefinitions: true,
+        generateExports: true
       }
     })
   ]

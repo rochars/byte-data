@@ -4,12 +4,14 @@
  *
  */
 
-let byteData = require('../index.js');
+let byteData;
 
 if (process.argv[4] == '--dist') {
     require('browser-env')();let assert = require('assert');
-    require('../dist/byte-data-min.js');
+    require('../dist/byte-data.min.js');
     byteData = window.byteData;
+} else {
+	byteData = require('../index.js');
 }
 
 module.exports = byteData;

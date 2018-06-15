@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
@@ -62,9 +62,13 @@ function unpackArray(buffer, theType) {
     return packer.fromBytes(buffer, theType);
 }
 
-// Methods
+/** @export */
 module.exports.pack = pack;
+/** @export */
 module.exports.unpack = unpack;
+/** @export */
 module.exports.packArray = packArray;
+/** @export */
 module.exports.unpackArray = unpackArray;
+/** @export */
 module.exports.types = require("./lib/types");

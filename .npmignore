@@ -13,7 +13,6 @@ test/
 .travis.yml
 appveyor.yml
 webpack.config.js
-compile.js
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 BUILDING.md
