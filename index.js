@@ -25,6 +25,10 @@
  *
  */
 
+/**
+ * @fileoverview The byte-data public API.
+ */
+
 /** @module byteData */
 
 /**
