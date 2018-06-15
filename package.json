@@ -53,7 +53,7 @@
     "test-error": "nyc ./node_modules/mocha/bin/_mocha test/src/error.js --recursive --src",
     "test-dist": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive --dist",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
-    "doc": "./node_modules/.bin/jsdoc index.js -d docs -t node_modules/docdash -r README.md",
+    "doc": "./node_modules/.bin/jsdoc index.js ./lib/types.js -d docs -t node_modules/docdash -r README.md",
     "pack": "webpack && npm run test-dist",
     "build": "npm run lint && npm test && npm run pack && npm run doc"
   },

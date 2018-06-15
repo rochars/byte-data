@@ -25,6 +25,8 @@
  *
  */
 
+/** @module byteData */
+
 /**
  * @type {!Object}
  * @private
@@ -91,5 +93,8 @@ module.exports.unpack = unpack;
 module.exports.packArray = packArray;
 /** @export */
 module.exports.unpackArray = unpackArray;
-/** @export */
+/**
+ * @export
+ * @ignore
+ */
 module.exports.types = require('./lib/types');
