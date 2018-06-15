@@ -29,7 +29,7 @@
  * @type {!Object}
  * @private
  */
-const packer = require("./lib/packer");
+const packer = require('./lib/packer');
 
 /**
  * Pack a number or a string as a byte buffer.
@@ -54,8 +54,8 @@ function pack(value, theType) {
 function unpack(buffer, theType) {
     packer.setUp(theType);
     let values = packer.fromBytes(
-        buffer.slice(0, theType["offset"]), theType);
-    return values ? values[0] : theType["char"] ? "" : null;
+        buffer.slice(0, theType['offset']), theType);
+    return values ? values[0] : theType['char'] ? '' : null;
 }
 
 /**
@@ -92,4 +92,4 @@ module.exports.packArray = packArray;
 /** @export */
 module.exports.unpackArray = unpackArray;
 /** @export */
-module.exports.types = require("./lib/types");
+module.exports.types = require('./lib/types');

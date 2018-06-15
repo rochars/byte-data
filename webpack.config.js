@@ -8,8 +8,8 @@ module.exports = {
   entry: './index.js',
   output: {
     filename: './dist/byte-data.min.js',
-    library: "byteData",
-    libraryTarget: "window"
+    library: 'byteData',
+    libraryTarget: 'window'
   },
   plugins: [
     new ClosureCompiler({
@@ -17,7 +17,7 @@ module.exports = {
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
         compilationLevel: 'ADVANCED',
-        warningLevel: "VERBOSE",
+        warningLevel: 'VERBOSE',
         exportLocalPropertyDefinitions: true,
         generateExports: true
       }

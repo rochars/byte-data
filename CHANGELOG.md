@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v10.0.0 (2018-06-15)
+- New dist file: ./dist/byte-data.min.js.
+- Remove 'browser' from package.json
+
 ## v9.0.2 (2018-06-12)
 - fix: validation of null, undefined and string length.
 
