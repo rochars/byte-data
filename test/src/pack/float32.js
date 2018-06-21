@@ -19,7 +19,7 @@ describe('pack float32', function() {
     });
     it('should turn 1 signed 32-bit float to 4 bytes', function() {
         assert.deepEqual(byteData.packArray([2.147483647], byteData.types.float32, 16), 
-            [95,112,"09",64]);
+            [95,112,9,64]);
     });
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
         assert.deepEqual(byteData.packArray([214748364.7], byteData.types.float32), 

@@ -73,7 +73,7 @@ describe('pack float64', function() {
         assert.deepEqual(
             byteData.packArray([0], byteData.types.float64, 16),
             [0,0,0,0,0,0,0,0]);
-    })
+    });
     it('should turn 1 64-bit float to 8 bytes hex (2)', function() {
         assert.deepEqual(
             byteData.packArray([2], byteData.types.float64, 16),

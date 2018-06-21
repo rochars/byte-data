@@ -7,7 +7,7 @@
 		exports["byteData"] = factory();
 	else
 		root["byteData"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -80,12 +80,19 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["pack"] = pack;
-/* harmony export (immutable) */ __webpack_exports__["unpack"] = unpack;
 /* harmony export (immutable) */ __webpack_exports__["packArray"] = packArray;
+/* harmony export (immutable) */ __webpack_exports__["packTo"] = packTo;
+/* harmony export (immutable) */ __webpack_exports__["packArrayTo"] = packArrayTo;
+/* harmony export (immutable) */ __webpack_exports__["unpack"] = unpack;
 /* harmony export (immutable) */ __webpack_exports__["unpackArray"] = unpackArray;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_packer__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_types_js__ = __webpack_require__(4);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "types", function() { return __WEBPACK_IMPORTED_MODULE_1__lib_types_js__["a"]; });
+/* harmony export (immutable) */ __webpack_exports__["unpackFrom"] = unpackFrom;
+/* harmony export (immutable) */ __webpack_exports__["unpackArrayFrom"] = unpackArrayFrom;
+/* harmony export (immutable) */ __webpack_exports__["setReader"] = setReader;
+/* harmony export (immutable) */ __webpack_exports__["setWriter"] = setWriter;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_types_js__ = __webpack_require__(1);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "types", function() { return __WEBPACK_IMPORTED_MODULE_0__lib_types_js__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_integer__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_endianness__ = __webpack_require__(3);
 /*
  * byte-data: Pack and unpack binary data.
  * https://github.com/rochars/byte-data
@@ -119,8 +126,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /** @module byteData */
 
-
-
 /**
  * byte-data standard types.
  * @type {!Object}
@@ -128,107 +133,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /**
- * Pack a number or a string as a byte buffer.
- * @param {number|string} value The value.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>}
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-function pack(value, theType) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["b" /* setUp */])(theType);
-    return Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["c" /* toBytes */])([value], theType);
-}
-
-/**
- * Unpack a number or a string from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @return {number|string}
- * @throws {Error} If the type definition is not valid
- */
-function unpack(buffer, theType) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["b" /* setUp */])(theType);
-    let values = Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["a" /* fromBytes */])(
-        buffer.slice(0, theType['offset']), theType);
-    //return values ? values[0] : theType['char'] ? '' : null;
-    return values[0];
-}
-
-/**
- * Pack an array of numbers or strings to a byte buffer.
- * @param {!Array<number|string>} values The values.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>}
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values are not valid.
- */
-function packArray(values, theType) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["b" /* setUp */])(theType);
-    return Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["c" /* toBytes */])(values, theType);
-}
-
-/**
- * Unpack an array of numbers or strings from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @return {!Array<number|string>}
- * @throws {Error} If the type definition is not valid.
- */
-function unpackArray(buffer, theType) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["b" /* setUp */])(theType);
-    return Object(__WEBPACK_IMPORTED_MODULE_0__lib_packer__["a" /* fromBytes */])(buffer, theType);
-}
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = fromBytes;
-/* harmony export (immutable) */ __webpack_exports__["c"] = toBytes;
-/* harmony export (immutable) */ __webpack_exports__["b"] = setUp;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_endianness__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__integer__ = __webpack_require__(3);
-/*
- * byte-data: Pack and unpack binary data.
- * https://github.com/rochars/byte-data
- *
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
+ * @constructor
  */
 
-/**
- * @fileoverview Methods to pack and unpack binary data.
- */
 
 /**
  * @type {!Function}
- * @private
- */
-
-/**
- * @constructor
  * @private
  */
 
@@ -269,15 +179,184 @@ let writer_;
 let gInt_ = {};
 
 /**
+ * Pack a number or a string as a byte buffer.
+ * @param {number|string} value The value.
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number>}
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+function pack(value, theType) {
+    setUp_(theType);
+    return toBytes_([value], theType);
+}
+
+/**
+ * Pack an array of numbers or strings to a byte buffer.
+ * @param {!Array<number|string>} values The values.
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number>}
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If any of the values are not valid.
+ */
+function packArray(values, theType) {
+    setUp_(theType);
+    return toBytes_(values, theType);
+}
+
+/**
+ * Pack a number or a string as a byte buffer.
+ * @param {number|string} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number} index The buffer index to write.
+ * @return {number} The next index to start writing.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+function packTo(value, theType, buffer, index) {
+    setUp_(theType);
+    let validate = validateNotNull_;
+    if (theType['char']) {
+        validate = validateString_;
+    }
+    return writeBytes_(value,
+        theType,
+        buffer,
+        index,
+        index + theType['offset'],
+        validate,
+        theType['be']);
+}
+
+/**
+ * Pack a number or a string as a byte buffer.
+ * @param {number|string} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number} index The buffer index to write.
+ * @return {number} The next index to start writing.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+function packArrayTo(values, theType, buffer, index) {
+    setUp_(theType);
+    let validate = validateNotNull_;
+    if (theType['char']) {
+        validate = validateString_;
+    }
+    let be = theType['be'];
+    let offset = theType['offset'];
+    for (let i=0; i<values.length; i++) {
+        index = writeBytes_(
+            values[i],
+            theType,
+            buffer,
+            index,
+            index + offset,
+            validate, be);
+    }
+    return index;
+}
+
+/**
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @return {number|string}
+ * @throws {Error} If the type definition is not valid
+ */
+function unpack(buffer, theType) {
+    setUp_(theType);
+    let values = fromBytes_(
+        buffer.slice(0, theType['offset']), theType);
+    return values[0];
+}
+
+/**
+ * Unpack an array of numbers or strings from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number|string>}
+ * @throws {Error} If the type definition is not valid.
+ */
+function unpackArray(buffer, theType) {
+    setUp_(theType);
+    return fromBytes_(buffer, theType);
+}
+
+/**
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} index The buffer index to read.
+ * @return {number|string}
+ * @throws {Error} If the type definition is not valid
+ */
+function unpackFrom(buffer, theType, index=0) {
+    setUp_(theType);
+    return readBytes_(buffer, theType, index);
+}
+
+/**
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} theType The start index. Assumes 0.
+ * @param {?number=} theType The end index. Assumes the array length.
+ * @return {number|string}
+ * @throws {Error} If the type definition is not valid
+ */
+function unpackArrayFrom(buffer, theType, start=0, end=null) {
+    setUp_(theType);
+    /*
+    end = end || buffer.length;
+    return readBytes_(buffer, theType, start);
+    */
+    if (theType['be']) {
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
+    }
+
+    let len = end || buffer.length;
+    let values = [];
+    for (let i=start; i<len; i+=theType['offset']) {
+        values.push(reader_(buffer, i));
+    }
+
+    if (theType['be']) {
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
+    }
+    return values;
+}
+
+/**
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
  * @private
  */
-function fromBytes(buffer, theType) {
+function readBytes_(buffer, theType, start) {
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_0_endianness__["a" /* endianness */])(buffer, theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset'], start, start + theType['offset']);
+    }
+    let value = reader_(buffer, start);
+    if (theType['be']) {
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset'], start, start + theType['offset']);
+    }
+    return value;
+}
+
+/**
+ * Turn a byte buffer into what the bytes represent.
+ * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number>}
+ * @private
+ */
+function fromBytes_(buffer, theType) {
+    if (theType['be']) {
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
     }
     let len = buffer.length;
     let values = [];
@@ -295,22 +374,44 @@ function fromBytes(buffer, theType) {
  * @return {!Array<number|string>} the data as a byte buffer.
  * @private
  */
-function toBytes(values, theType) {
+function toBytes_(values, theType) {
     let j = 0;
     let bytes = [];
     let len = values.length;
-    let validate = validateNotNull;
+    let validate = validateNotNull_;
     if (theType['char']) {
-        validate = validateString;
+        validate = validateString_;
     }
     for(let i=0; i < len; i++) {
         validate(values[i], theType);
         j = writer_(bytes, values[i], j);
     }
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_0_endianness__["a" /* endianness */])(bytes, theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(bytes, theType['offset']);
     }
     return bytes;
+}
+
+/**
+ * Turn numbers and strings to bytes.
+ * @param {!Array<number|string>} values The value to be packed.
+ * @param {!Object} theType The type definition.
+ * @param {!Object} buffer The buffer to write the bytes to.
+ * @param {number} index The index to start writing.
+ * @return {number} the new index to be written.
+ * @private
+ */
+function writeBytes_(value, theType, buffer, index, len, validate, be) {
+    for(let i=index; i<len; i++) {
+        validate(value, theType);
+        i = writer_(buffer, value, i);
+        index = i;
+    }
+    if (be) {
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(
+            buffer, theType['offset'], index - theType['offset'], index);
+    }
+    return index;
 }
 
 /**
@@ -468,7 +569,7 @@ function writeChar_(bytes, str, j) {
  * @param {!Object} theType The type definition.
  * @private
  */
-function setReader_(theType) {
+function setReader(theType) {
     if (theType['float']) {
         if (theType['bits'] == 16) {
             reader_ = read16F_;
@@ -489,7 +590,7 @@ function setReader_(theType) {
  * @param {!Object} theType The type definition.
  * @private
  */
-function setWriter_(theType) {
+function setWriter(theType) {
     if (theType['float']) {
         if (theType['bits'] == 16) {
             writer_ = write16F_;
@@ -511,13 +612,13 @@ function setWriter_(theType) {
  * @throws {Error} If the type definition is not valid.
  * @private
  */
-function setUp(theType) {
+function setUp_(theType) {
     validateType_(theType);
     theType['offset'] = theType['bits'] < 8 ? 1 : Math.ceil(theType['bits'] / 8);
-    setReader_(theType);
-    setWriter_(theType);
+    setReader(theType);
+    setWriter(theType);
     if (!theType['char']) {
-        gInt_ = new __WEBPACK_IMPORTED_MODULE_1__integer__["a" /* default */](
+        gInt_ = new __WEBPACK_IMPORTED_MODULE_1__lib_integer__["a" /* default */](
             theType['bits'] == 64 ? 32 : theType['bits'],
             theType['float'] ? false : theType['signed']);
     } else {
@@ -589,8 +690,8 @@ function validateIntType_(theType) {
  * @param {!Object} theType The type definition.
  * @private
  */
-function validateString(value, theType) {
-    validateNotNull(value);
+function validateString_(value, theType) {
+    validateNotNull_(value);
     if (value.length > theType['offset']) {
         throw new Error('String is bigger than its type definition.');
     } else if (value.length < theType['offset']) {
@@ -602,22 +703,22 @@ function validateString(value, theType) {
  * @param {string|number} value The value.
  * @private
  */
-function validateNotNull(value) {
+function validateNotNull_(value) {
     if (value === null || value === undefined) {
         throw new Error('Cannot pack null or undefined values.');
     }
 }
 
 
+
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = endianness;
 /*
- * endianness: Swap endianness in byte arrays.
- * https://github.com/rochars/endianness
+ * byte-data: Pack and unpack binary data.
+ * https://github.com/rochars/byte-data
  *
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  *
@@ -643,54 +744,236 @@ function validateNotNull(value) {
  */
 
 /**
- * @fileoverview A function to swap endianness in byte buffers.
+ * @fileoverview Standard type definitions.
  */
 
-/**
- * @module endianness
- */
+/** @module byteData/types */
 
 /**
- * Swap the byte ordering in a buffer. The buffer is modified in place.
- * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
- * @param {number} offset The byte offset.
- * @throws {Error} If the buffer length is not valid.
+ * byte-data standard types.
+ * @type {!Object}
  */
-function endianness(bytes, offset) {
-    let len = bytes.length;
-    if (len % offset) {
-        throw new Error("Not enough bytes.");
-    }
-    let i = 0;
-    while (i < len) {
-        swap(bytes, offset, i);
-        i += offset;
-    }
-}
+const types = {
 
-/**
- * Swap the byte order of a value in a buffer. The buffer is modified in place.
- * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
- * @param {number} offset The byte offset.
- * @param {number} index The start index.
- * @private
- */
-function swap(bytes, offset, index) {
-    let x = 0;
-    let y = offset - 1;
-    let limit = parseInt(offset / 2, 10);
-    while(x < limit) {
-        let theByte = bytes[index + x];
-        bytes[index + x] = bytes[index + y];
-        bytes[index + y] = theByte;
-        x++;
-        y--;
-    }
-}
+	/**
+	 * A char.
+	 * @type {!Object}
+	 * @export
+	 */
+	chr: {'bits': 8, 'char': true},
+	/**
+	 * A 4-char string
+	 * @type {!Object}
+	 * @export
+	 */
+	fourCC: {'bits': 32, 'char': true},
+	/**
+	 * Booleans
+	 * @type {!Object}
+	 * @export
+	 */
+	bool: {'bits': 1},
+	/**
+	 * Signed 2-bit integers
+	 * @type {!Object}
+	 * @export
+	 */
+	int2: {'bits': 2, 'signed': true},
+	/**
+	 * Unsigned 2-bit integers
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt2: {'bits': 2},
+	/**
+	 * Signed 4-bit integers
+	 * @type {!Object}
+	 * @export
+	 */
+	int4: {'bits': 4, 'signed': true},
+	/**
+	 * Unsigned 4-bit integers
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt4: {'bits': 4},
+	/**
+	 * Signed 8-bit integers
+	 * @type {!Object}
+	 * @export
+	 */
+	int8: {'bits': 8, 'signed': true},
+	/**
+	 * Unsigned 4-bit integers
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt8: {'bits': 8},
+	// LE
+	/**
+	 * Signed 16-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int16 : {'bits': 16, 'signed': true},
+	/**
+	 * Unsigned 16-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt16: {'bits': 16},
+	/**
+	 * Half-precision floating-point numbers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	float16: {'bits': 16, 'float': true},
+	/**
+	 * Signed 24-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int24: {'bits': 24, 'signed': true},
+	/**
+	 * Unsigned 24-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt24: {'bits': 24},
+	/**
+	 * Signed 32-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int32: {'bits': 32, 'signed': true},
+	/**
+	 * Unsigned 32-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt32: {'bits': 32},
+	/**
+	 * Single-precision floating-point numbers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	float32: {'bits': 32, 'float': true},
+	/**
+	 * Signed 40-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int40: {'bits': 40, 'signed': true},
+	/**
+	 * Unsigned 40-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt40: {'bits': 40},
+	/**
+	 * Signed 48-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int48: {'bits': 48, 'signed': true},
+	/**
+	 * Unsigned 48-bit integers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt48: {'bits': 48},
+	/**
+	 * Double-precision floating-point numbers little-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	float64: {'bits': 64, 'float': true},
+	// BE
+	/**
+	 * Signed 16-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int16BE : {'bits': 16, 'signed': true, 'be': true},
+	/**
+	 * Unsigned 16-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt16BE: {'bits': 16, 'be': true},
+	/**
+	 * Half-precision floating-point numbers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	float16BE: {'bits': 16, 'float': true, 'be': true},
+	/**
+	 * Signed 24-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int24BE: {'bits': 24, 'signed': true, 'be': true},
+	/**
+	 * Unsigned 24-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt24BE: {'bits': 24, 'be': true},
+	/**
+	 * Signed 32-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int32BE: {'bits': 32, 'signed': true, 'be': true},
+	/**
+	 * Unsigned 32-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt32BE: {'bits': 32, 'be': true},
+	/**
+	 * Single-precision floating-point numbers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	float32BE: {'bits': 32, 'float': true, 'be': true},
+	/**
+	 * Signed 40-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int40BE: {'bits': 40, 'signed': true, 'be': true},
+	/**
+	 * Unsigned 40-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt40BE: {'bits': 40, 'be': true},
+	/**
+	 * Signed 48-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	int48BE: {'bits': 48, 'signed': true, 'be': true},
+	/**
+	 * Unsigned 48-bit integers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	uInt48BE: {'bits': 48, 'be': true},
+	/**
+	 * Double-precision floating-point numbers big-endian
+	 * @type {!Object}
+	 * @export
+	 */
+	float64BE: {'bits': 64, 'float': true, 'be': true},
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = types;
+
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -953,13 +1236,14 @@ class Integer {
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = endianness;
 /*
- * byte-data: Pack and unpack binary data.
- * https://github.com/rochars/byte-data
+ * endianness: Swap endianness in byte arrays.
+ * https://github.com/rochars/endianness
  *
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  *
@@ -985,232 +1269,52 @@ class Integer {
  */
 
 /**
- * @fileoverview Standard type definitions.
+ * @fileoverview A function to swap endianness in byte buffers.
  */
-
-/** @module byteData/types */
 
 /**
- * byte-data standard types.
- * @type {!Object}
+ * @module endianness
  */
-const types = {
 
-	/**
-	 * A char.
-	 * @type {!Object}
-	 * @export
-	 */
-	chr: {'bits': 8, 'char': true},
-	/**
-	 * A 4-char string
-	 * @type {!Object}
-	 * @export
-	 */
-	fourCC: {'bits': 32, 'char': true},
-	/**
-	 * Booleans
-	 * @type {!Object}
-	 * @export
-	 */
-	bool: {'bits': 1},
-	/**
-	 * Signed 2-bit integers
-	 * @type {!Object}
-	 * @export
-	 */
-	int2: {'bits': 2, 'signed': true},
-	/**
-	 * Unsigned 2-bit integers
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt2: {'bits': 2},
-	/**
-	 * Signed 4-bit integers
-	 * @type {!Object}
-	 * @export
-	 */
-	int4: {'bits': 4, 'signed': true},
-	/**
-	 * Unsigned 4-bit integers
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt4: {'bits': 4},
-	/**
-	 * Signed 8-bit integers
-	 * @type {!Object}
-	 * @export
-	 */
-	int8: {'bits': 8, 'signed': true},
-	/**
-	 * Unsigned 4-bit integers
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt8: {'bits': 8},
-	// LE
-	/**
-	 * Signed 16-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int16 : {'bits': 16, 'signed': true},
-	/**
-	 * Unsigned 16-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt16: {'bits': 16},
-	/**
-	 * Half-precision floating-point numbers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	float16: {'bits': 16, 'float': true},
-	/**
-	 * Signed 24-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int24: {'bits': 24, 'signed': true},
-	/**
-	 * Unsigned 24-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt24: {'bits': 24},
-	/**
-	 * Signed 32-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int32: {'bits': 32, 'signed': true},
-	/**
-	 * Unsigned 32-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt32: {'bits': 32},
-	/**
-	 * Single-precision floating-point numbers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	float32: {'bits': 32, 'float': true},
-	/**
-	 * Signed 40-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int40: {'bits': 40, 'signed': true},
-	/**
-	 * Unsigned 40-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt40: {'bits': 40},
-	/**
-	 * Signed 48-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int48: {'bits': 48, 'signed': true},
-	/**
-	 * Unsigned 48-bit integers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt48: {'bits': 48},
-	/**
-	 * Double-precision floating-point numbers little-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	float64: {'bits': 64, 'float': true},
-	// BE
-	/**
-	 * Signed 16-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int16BE : {'bits': 16, 'signed': true, 'be': true},
-	/**
-	 * Unsigned 16-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt16BE: {'bits': 16, 'be': true},
-	/**
-	 * Half-precision floating-point numbers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	float16BE: {'bits': 16, 'float': true, 'be': true},
-	/**
-	 * Signed 24-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int24BE: {'bits': 24, 'signed': true, 'be': true},
-	/**
-	 * Unsigned 24-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt24BE: {'bits': 24, 'be': true},
-	/**
-	 * Signed 32-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int32BE: {'bits': 32, 'signed': true, 'be': true},
-	/**
-	 * Unsigned 32-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt32BE: {'bits': 32, 'be': true},
-	/**
-	 * Single-precision floating-point numbers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	float32BE: {'bits': 32, 'float': true, 'be': true},
-	/**
-	 * Signed 40-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int40BE: {'bits': 40, 'signed': true, 'be': true},
-	/**
-	 * Unsigned 40-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt40BE: {'bits': 40, 'be': true},
-	/**
-	 * Signed 48-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	int48BE: {'bits': 48, 'signed': true, 'be': true},
-	/**
-	 * Unsigned 48-bit integers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	uInt48BE: {'bits': 48, 'be': true},
-	/**
-	 * Double-precision floating-point numbers big-endian
-	 * @type {!Object}
-	 * @export
-	 */
-	float64BE: {'bits': 64, 'float': true, 'be': true},
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = types;
+/**
+ * Swap the byte ordering in a buffer. The buffer is modified in place.
+ * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
+ * @param {number} offset The byte offset.
+ * @param {number=} start The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the buffer length.
+ * @throws {Error} If the buffer length is not valid.
+ */
+function endianness(bytes, offset, start=0, end=null) {
+    let len = end || bytes.length;
+    let limit = parseInt(offset / 2, 10);
+    if (len % offset) {
+        throw new Error("Bad buffer length.");
+    }
+    let i = start;
+    while (i < len) {
+        swap(bytes, offset, i, limit);
+        i += offset;
+    }
+}
 
+/**
+ * Swap the byte order of a value in a buffer. The buffer is modified in place.
+ * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
+ * @param {number} offset The byte offset.
+ * @param {number} index The start index.
+ * @private
+ */
+function swap(bytes, offset, index, limit) {
+    let x = 0;
+    let y = offset - 1;
+    while(x < limit) {
+        let theByte = bytes[index + x];
+        bytes[index + x] = bytes[index + y];
+        bytes[index + y] = theByte;
+        x++;
+        y--;
+    }
+}
 
 
 /***/ })

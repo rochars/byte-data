@@ -7,7 +7,7 @@ https://github.com/rochars/byte-data
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
 - Runs in the server and in the browser
-- Less than 3KB minified + compressed, less than 6KB minified
+- Less than 3KB minified + compressed, less than 7KB minified
 - Tested against Python's struct module (for all common types)
 - Pack and unpack **single values** and entire **buffers**
 
@@ -33,12 +33,17 @@ Use the compiled file in the */dist* folder:
 
 Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/byte-data@10/dist/byte-data.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/byte-data@11"></script>
+```
+
+Or get it from [unpkg](https://www.unpkg.com):
+```html
+<script src="https://unpkg.com/byte-data@11"></script>
 ```
 
 ## Example
 ```javascript
-let byteData = require('byte-data');
+const byteData = require('byte-data');
 
 // Pack a float32 number
 byteData.pack(2.1474836, byteData.types.float32);
@@ -96,10 +101,55 @@ function packArray(values, theType) {}
  * @throws {Error} If the type definition is not valid.
  */
 function unpackArray(buffer, theType) {}
+
+/**
+ * Pack a number or a string as a byte buffer.
+ * @param {number|string} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number} index The buffer index to write.
+ * @return {number} The next index to start writing.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+export function packTo(value, theType, buffer, index) {}
+
+/**
+ * Pack a number or a string as a byte buffer.
+ * @param {number|string} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number} index The buffer index to write.
+ * @return {number} The next index to start writing.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+export function packArrayTo(values, theType, buffer, index) {}
+
+/**
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} index The buffer index to read.
+ * @return {number|string}
+ * @throws {Error} If the type definition is not valid
+ */
+export function unpackFrom(buffer, theType, start=0) {}
+
+/**
+ * Unpack a number or a string from a byte buffer.
+ * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} theType The start index. Assumes 0.
+ * @param {?number=} theType The end index. Assumes the array length.
+ * @return {number|string}
+ * @throws {Error} If the type definition is not valid
+ */
+export function unpackArrayFrom(buffer, theType, start=0, end=null) {}
 ```
 
 ## Types
-**byte-data** default types are defined in **byteData.types**.
+**byte-data** default types are defined in the **types** object.
 
 Example:
 ```javascript
@@ -152,6 +202,28 @@ Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) st
 
 ## Signed integers
 Signed integers are two's complement.
+
+## Distribution
+This library is implemented as a ES6 module and also distributed as a CommonJS module, UMD module and a compiled script for browsers. If your system does not pick one automatically for you, you can pick one in the **dist/** folder.
+- The CommonJS is the one used by Node. It is served in the "main" field of this library's package.json
+- The UMD module is compatible with Node, AMD and browsers. It is served in the "browser" field.
+- The compiled dist is browser-only and should be the one served by CDNs.
+- The "module" field points to "./index.js" and should be the default entry point.
+
+If you are using a module bundler to compile a module that depends on this library you might need to specify what is the correct entry point as some bundlers will assume "browser". In general, you should point to "module".
+
+### webpack example:
+```javascript
+module.exports = {
+  entry: './index.js',
+  resolve: {
+    // tells webpack to use 'module' or 'main'
+    // not 'browser'
+    mainFields: ['module', 'main']
+  },
+  ...
+};
+```
 
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.

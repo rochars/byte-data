@@ -51,7 +51,6 @@ describe('pack-unpack', function() {
         let num = byteData.unpackArray(bytes, float64);
         assert.ok(num[0] != 612345678987654.1);
     });
-
     it('should turn 8 bytes to 1 64-bit float and back', function() {
         let bytes = byteData.packArray([0.123456789876543], float64);
         let num = byteData.unpackArray(bytes, float64);
@@ -68,13 +67,13 @@ describe('pack-unpack', function() {
     it('53 bit uInt to-from (max range)',
             function() {
         let bytes = byteData.packArray([9007199254740991], uInt53);
-        let num = byteData.unpackArray(bytes, uInt53)
+        let num = byteData.unpackArray(bytes, uInt53);
         assert.equal(9007199254740991, num[0]);
     });
     it('53 bit uInt to-from (max range, check rounding)',
             function() {
         let bytes = byteData.packArray([9007199254740991], uInt53);
-        let num = byteData.unpackArray(bytes, uInt53)
+        let num = byteData.unpackArray(bytes, uInt53);
         assert.ok(9007199254740990 != num[0]);
         assert.ok(9007199254740992 != num[0]);
     });
@@ -84,13 +83,13 @@ describe('pack-unpack', function() {
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
             function() {
         let bytes = byteData.packArray([1], int48);
-        let num = byteData.unpackArray(bytes, int48)
+        let num = byteData.unpackArray(bytes, int48);
         assert.equal(1, num[0]);
     });
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
             function() {
         let bytes = byteData.packArray([11], int48);
-        let num = byteData.unpackArray(bytes, int48)
+        let num = byteData.unpackArray(bytes, int48);
         assert.equal(11, num[0]);
     });
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
@@ -287,7 +286,6 @@ describe('pack-unpack', function() {
             function() {
         let bytes = byteData.packArray([0], int24);
         let num = byteData.unpackArray(bytes, int24);
-        ;
         assert.deepEqual([0], num);
     });
     it('should turn 2 24-bit signed int to 6 bytes and back ' +
