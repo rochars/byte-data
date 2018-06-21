@@ -26,16 +26,18 @@
  */
 
 /**
- * @fileoverview The byte-data public API.
+ * @fileoverview The byte-data API.
  */
 
 /** @module byteData */
 
+import {setUp, fromBytes, toBytes} from './lib/packer';
+
 /**
+ * byte-data standard types.
  * @type {!Object}
- * @private
  */
-const packer = require('./lib/packer');
+export {types} from './lib/types.js';
 
 /**
  * Pack a number or a string as a byte buffer.
@@ -45,9 +47,9 @@ const packer = require('./lib/packer');
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function pack(value, theType) {
-    packer.setUp(theType);
-    return packer.toBytes([value], theType);
+export function pack(value, theType) {
+    setUp(theType);
+    return toBytes([value], theType);
 }
 
 /**
@@ -55,13 +57,14 @@ function pack(value, theType) {
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @return {number|string}
- * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the type definition is not valid
  */
-function unpack(buffer, theType) {
-    packer.setUp(theType);
-    let values = packer.fromBytes(
+export function unpack(buffer, theType) {
+    setUp(theType);
+    let values = fromBytes(
         buffer.slice(0, theType['offset']), theType);
-    return values ? values[0] : theType['char'] ? '' : null;
+    //return values ? values[0] : theType['char'] ? '' : null;
+    return values[0];
 }
 
 /**
@@ -72,9 +75,9 @@ function unpack(buffer, theType) {
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
-function packArray(values, theType) {
-    packer.setUp(theType);
-    return packer.toBytes(values, theType);
+export function packArray(values, theType) {
+    setUp(theType);
+    return toBytes(values, theType);
 }
 
 /**
@@ -84,21 +87,7 @@ function packArray(values, theType) {
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
-function unpackArray(buffer, theType) {
-    packer.setUp(theType);
-    return packer.fromBytes(buffer, theType);
+export function unpackArray(buffer, theType) {
+    setUp(theType);
+    return fromBytes(buffer, theType);
 }
-
-/** @export */
-module.exports.pack = pack;
-/** @export */
-module.exports.unpack = unpack;
-/** @export */
-module.exports.packArray = packArray;
-/** @export */
-module.exports.unpackArray = unpackArray;
-/**
- * @export
- * @ignore
- */
-module.exports.types = require('./lib/types');
