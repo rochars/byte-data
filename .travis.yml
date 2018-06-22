@@ -3,10 +3,10 @@ os:
   - linux
   - osx
 node_js:
-  - "7"
   - "8"
   - "9"
   - "10"
+  - "11"
 script:
   - npm run build
 after_success:
