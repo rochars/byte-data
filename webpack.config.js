@@ -31,7 +31,7 @@ module.exports = [
       "byte-data": "byte-data",
       "imaadpcm": "imaadpcm",
       "riff-chunks": "riff-chunks"
-    },
+    }
   },
   // UMD with dependencies in the bundle.
   // Will be the one in the "browser" field of package.json.
@@ -65,9 +65,9 @@ module.exports = [
           compilationLevel: 'ADVANCED',
           warningLevel: 'VERBOSE',
           exportLocalPropertyDefinitions: true,
-          generateExports: true,
+          generateExports: true
         },
       })
     ]
-  },
+  }
 ];
