@@ -8,7 +8,7 @@ npm run build
 ```
 This will lint the sources, test the sources, compile a browser version, test the browser version and generate documentation files.
 
-There **must** be no errors or warnings during the build.
+There **should** be no warnings during the build.
 
 The compiled browser version is generated in the *dist/* folder.
 

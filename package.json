@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "11.0.0-alpha.2",
+  "version": "11.0.0-alpha.3",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
@@ -11,7 +11,7 @@
   "jsdelivr": "./dist/byte-data.min.js",
   "unpkg": "./dist/byte-data.min.js",
   "engines": {
-    "node": ">=7"
+    "node": ">=8"
   },
   "keywords": [
     "byte",
@@ -57,10 +57,10 @@
   },
   "scripts": {
     "lint": "jshint main.js && jshint lib && jshint test",
-    "test": "nyc --require=esm ./node_modules/mocha/bin/_mocha test --recursive -R dot",
-    "test-min": "node ./node_modules/mocha/bin/_mocha test --min --recursive -R dot",
-    "test-cjs": "node ./node_modules/mocha/bin/_mocha test --cjs --recursive -R dot",
-    "test-umd": "node ./node_modules/mocha/bin/_mocha test --umd --recursive -R dot",
+    "test": "nyc --require=esm ./node_modules/mocha/bin/_mocha test --recursive -R min",
+    "test-min": "node ./node_modules/mocha/bin/_mocha test --min --recursive -R min",
+    "test-cjs": "node ./node_modules/mocha/bin/_mocha test --cjs --recursive -R min",
+    "test-umd": "node ./node_modules/mocha/bin/_mocha test --umd --recursive -R min",
     "test-dist": "npm run test-min && npm run test-cjs && npm run test-umd",
     "pack": "webpack && npm run test-dist && npm run test",
     "doc": "./node_modules/.bin/jsdoc main.js -d docs -t node_modules/docdash -r README.md",

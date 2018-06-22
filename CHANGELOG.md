@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v11.0.0 (2018-06-22)
+- ES6 module
+- New API with packTo, packToArray, unpackFrom, unpackArrayFrom
+
 ## v10.0.0 (2018-06-15)
 - New dist file: ./dist/byte-data.min.js.
 - Remove 'browser' from package.json

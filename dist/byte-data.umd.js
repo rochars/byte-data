@@ -309,20 +309,14 @@ function unpackFrom(buffer, theType, index=0) {
  */
 function unpackArrayFrom(buffer, theType, start=0, end=null) {
     setUp_(theType);
-    /*
-    end = end || buffer.length;
-    return readBytes_(buffer, theType, start);
-    */
     if (theType['be']) {
         Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
     }
-
     let len = end || buffer.length;
     let values = [];
     for (let i=start; i<len; i+=theType['offset']) {
         values.push(reader_(buffer, i));
     }
-
     if (theType['be']) {
         Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
     }
@@ -710,7 +704,6 @@ function validateNotNull_(value) {
 }
 
 
-
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -754,7 +747,6 @@ function validateNotNull_(value) {
  * @type {!Object}
  */
 const types = {
-
 	/**
 	 * A char.
 	 * @type {!Object}

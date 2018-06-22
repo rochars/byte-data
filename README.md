@@ -239,7 +239,10 @@ This project adopt the [Contributor Covenant, version 1.4](https://www.contribut
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting rocha.rafaelsilva@gmail.com.
 
-## LICENSE
+## Legal
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fbyte-data.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fbyte-data?ref=badge_large)
+
+### LICENSE
 Copyright (c) 2017-2018 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining
