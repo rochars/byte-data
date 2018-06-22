@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "11.0.0-alpha.3",
+  "version": "11.0.0",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
