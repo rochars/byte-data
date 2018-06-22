@@ -214,20 +214,14 @@ export function unpackFrom(buffer, theType, index=0) {
  */
 export function unpackArrayFrom(buffer, theType, start=0, end=null) {
     setUp_(theType);
-    /*
-    end = end || buffer.length;
-    return readBytes_(buffer, theType, start);
-    */
     if (theType['be']) {
         endianness(buffer, theType['offset']);
     }
-
     let len = end || buffer.length;
     let values = [];
     for (let i=start; i<len; i+=theType['offset']) {
         values.push(reader_(buffer, i));
     }
-
     if (theType['be']) {
         endianness(buffer, theType['offset']);
     }
@@ -613,4 +607,3 @@ function validateNotNull_(value) {
         throw new Error('Cannot pack null or undefined values.');
     }
 }
-
