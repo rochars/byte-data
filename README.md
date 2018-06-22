@@ -112,7 +112,7 @@ function unpackArray(buffer, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packTo(value, theType, buffer, index) {}
+function packTo(value, theType, buffer, index) {}
 
 /**
  * Pack a number or a string as a byte buffer.
@@ -124,7 +124,7 @@ export function packTo(value, theType, buffer, index) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packArrayTo(values, theType, buffer, index) {}
+function packArrayTo(values, theType, buffer, index) {}
 
 /**
  * Unpack a number or a string from a byte buffer.
@@ -134,7 +134,7 @@ export function packArrayTo(values, theType, buffer, index) {}
  * @return {number|string}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackFrom(buffer, theType, start=0) {}
+function unpackFrom(buffer, theType, start=0) {}
 
 /**
  * Unpack a number or a string from a byte buffer.
