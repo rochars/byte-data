@@ -92,8 +92,8 @@ let gInt_ = {};
  * @throws {Error} If the value is not valid.
  */
 export function pack(value, theType) {
-    setUp_(theType);
-    return toBytes_([value], theType);
+  setUp_(theType);
+  return toBytes_([value], theType);
 }
 
 /**
@@ -105,8 +105,8 @@ export function pack(value, theType) {
  * @throws {Error} If any of the values are not valid.
  */
 export function packArray(values, theType) {
-    setUp_(theType);
-    return toBytes_(values, theType);
+  setUp_(theType);
+  return toBytes_(values, theType);
 }
 
 /**
@@ -120,18 +120,18 @@ export function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 export function packTo(value, theType, buffer, index) {
-    setUp_(theType);
-    let validate = validateNotNull_;
-    if (theType['char']) {
-        validate = validateString_;
-    }
-    return writeBytes_(value,
-        theType,
-        buffer,
-        index,
-        index + theType['offset'],
-        validate,
-        theType['be']);
+  setUp_(theType);
+  let validate = validateNotNull_;
+  if (theType['char']) {
+    validate = validateString_;
+  }
+  return writeBytes_(value,
+    theType,
+    buffer,
+    index,
+    index + theType['offset'],
+    validate,
+    theType['be']);
 }
 
 /**
@@ -145,23 +145,23 @@ export function packTo(value, theType, buffer, index) {
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(values, theType, buffer, index) {
-    setUp_(theType);
-    let validate = validateNotNull_;
-    if (theType['char']) {
-        validate = validateString_;
-    }
-    let be = theType['be'];
-    let offset = theType['offset'];
-    for (let i=0; i<values.length; i++) {
-        index = writeBytes_(
-            values[i],
-            theType,
-            buffer,
-            index,
-            index + offset,
-            validate, be);
-    }
-    return index;
+  setUp_(theType);
+  let validate = validateNotNull_;
+  if (theType['char']) {
+    validate = validateString_;
+  }
+  let be = theType['be'];
+  let offset = theType['offset'];
+  for (let i=0; i<values.length; i++) {
+    index = writeBytes_(
+      values[i],
+      theType,
+      buffer,
+      index,
+      index + offset,
+      validate, be);
+  }
+  return index;
 }
 
 /**
@@ -172,10 +172,10 @@ export function packArrayTo(values, theType, buffer, index) {
  * @throws {Error} If the type definition is not valid
  */
 export function unpack(buffer, theType) {
-    setUp_(theType);
-    let values = fromBytes_(
-        buffer.slice(0, theType['offset']), theType);
-    return values[0];
+  setUp_(theType);
+  let values = fromBytes_(
+    buffer.slice(0, theType['offset']), theType);
+  return values[0];
 }
 
 /**
@@ -186,8 +186,8 @@ export function unpack(buffer, theType) {
  * @throws {Error} If the type definition is not valid.
  */
 export function unpackArray(buffer, theType) {
-    setUp_(theType);
-    return fromBytes_(buffer, theType);
+  setUp_(theType);
+  return fromBytes_(buffer, theType);
 }
 
 /**
@@ -199,8 +199,8 @@ export function unpackArray(buffer, theType) {
  * @throws {Error} If the type definition is not valid
  */
 export function unpackFrom(buffer, theType, index=0) {
-    setUp_(theType);
-    return readBytes_(buffer, theType, index);
+  setUp_(theType);
+  return readBytes_(buffer, theType, index);
 }
 
 /**
@@ -213,19 +213,19 @@ export function unpackFrom(buffer, theType, index=0) {
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayFrom(buffer, theType, start=0, end=null) {
-    setUp_(theType);
-    if (theType['be']) {
-        endianness(buffer, theType['offset']);
-    }
-    let len = end || buffer.length;
-    let values = [];
-    for (let i=start; i<len; i+=theType['offset']) {
-        values.push(reader_(buffer, i));
-    }
-    if (theType['be']) {
-        endianness(buffer, theType['offset']);
-    }
-    return values;
+  setUp_(theType);
+  if (theType['be']) {
+    endianness(buffer, theType['offset']);
+  }
+  let len = end || buffer.length;
+  let values = [];
+  for (let i=start; i<len; i+=theType['offset']) {
+    values.push(reader_(buffer, i));
+  }
+  if (theType['be']) {
+    endianness(buffer, theType['offset']);
+  }
+  return values;
 }
 
 /**
@@ -236,14 +236,14 @@ export function unpackArrayFrom(buffer, theType, start=0, end=null) {
  * @private
  */
 function readBytes_(buffer, theType, start) {
-    if (theType['be']) {
-        endianness(buffer, theType['offset'], start, start + theType['offset']);
-    }
-    let value = reader_(buffer, start);
-    if (theType['be']) {
-        endianness(buffer, theType['offset'], start, start + theType['offset']);
-    }
-    return value;
+  if (theType['be']) {
+    endianness(buffer, theType['offset'], start, start + theType['offset']);
+  }
+  let value = reader_(buffer, start);
+  if (theType['be']) {
+    endianness(buffer, theType['offset'], start, start + theType['offset']);
+  }
+  return value;
 }
 
 /**
@@ -254,16 +254,16 @@ function readBytes_(buffer, theType, start) {
  * @private
  */
 function fromBytes_(buffer, theType) {
-    if (theType['be']) {
-        endianness(buffer, theType['offset']);
-    }
-    let len = buffer.length;
-    let values = [];
-    len = len - (theType['offset'] - 1);
-    for (let i=0; i<len; i+=theType['offset']) {
-        values.push(reader_(buffer, i));
-    }
-    return values;
+  if (theType['be']) {
+    endianness(buffer, theType['offset']);
+  }
+  let len = buffer.length;
+  let values = [];
+  len = len - (theType['offset'] - 1);
+  for (let i=0; i<len; i+=theType['offset']) {
+    values.push(reader_(buffer, i));
+  }
+  return values;
 }
 
 /**
@@ -274,21 +274,21 @@ function fromBytes_(buffer, theType) {
  * @private
  */
 function toBytes_(values, theType) {
-    let j = 0;
-    let bytes = [];
-    let len = values.length;
-    let validate = validateNotNull_;
-    if (theType['char']) {
-        validate = validateString_;
-    }
-    for(let i=0; i < len; i++) {
-        validate(values[i], theType);
-        j = writer_(bytes, values[i], j);
-    }
-    if (theType['be']) {
-        endianness(bytes, theType['offset']);
-    }
-    return bytes;
+  let j = 0;
+  let bytes = [];
+  let len = values.length;
+  let validate = validateNotNull_;
+  if (theType['char']) {
+    validate = validateString_;
+  }
+  for(let i=0; i < len; i++) {
+    validate(values[i], theType);
+    j = writer_(bytes, values[i], j);
+  }
+  if (theType['be']) {
+    endianness(bytes, theType['offset']);
+  }
+  return bytes;
 }
 
 /**
@@ -304,16 +304,16 @@ function toBytes_(values, theType) {
  * @private
  */
 function writeBytes_(value, theType, buffer, index, len, validate, be) {
-    for(let i=index; i<len; i++) {
-        validate(value, theType);
-        i = writer_(buffer, value, i);
-        index = i;
-    }
-    if (be) {
-        endianness(
-            buffer, theType['offset'], index - theType['offset'], index);
-    }
-    return index;
+  for(let i=index; i<len; i++) {
+    validate(value, theType);
+    i = writer_(buffer, value, i);
+    index = i;
+  }
+  if (be) {
+    endianness(
+      buffer, theType['offset'], index - theType['offset'], index);
+  }
+  return index;
 }
 
 /**
@@ -324,7 +324,7 @@ function writeBytes_(value, theType, buffer, index, len, validate, be) {
  * @private
  */
 function readInt_(bytes, i) {
-    return gInt_.read(bytes, i);
+  return gInt_.read(bytes, i);
 }
 
 /**
@@ -336,16 +336,16 @@ function readInt_(bytes, i) {
  * @private
  */
 function read16F_(bytes, i) {
-    let int = gInt_.read(bytes, i);
-    let exponent = (int & 0x7C00) >> 10;
-    let fraction = int & 0x03FF;
-    let floatValue;
-    if (exponent) {
-        floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
-    } else {
-        floatValue = 6.103515625e-5 * (fraction / 0x400);
-    }
-    return floatValue * (int >> 15 ? -1 : 1);
+  let int = gInt_.read(bytes, i);
+  let exponent = (int & 0x7C00) >> 10;
+  let fraction = int & 0x03FF;
+  let floatValue;
+  if (exponent) {
+    floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
+  } else {
+    floatValue = 6.103515625e-5 * (fraction / 0x400);
+  }
+  return floatValue * (int >> 15 ? -1 : 1);
 }
 
 /**
@@ -356,8 +356,8 @@ function read16F_(bytes, i) {
  * @private
  */
 function read32F_(bytes, i) {
-    ui32_[0] = gInt_.read(bytes, i);
-    return f32_[0];
+  ui32_[0] = gInt_.read(bytes, i);
+  return f32_[0];
 }
 
 /**
@@ -369,9 +369,9 @@ function read32F_(bytes, i) {
  * @private
  */
 function read64F_(bytes, i) {
-    ui32_[0] = gInt_.read(bytes, i);
-    ui32_[1] = gInt_.read(bytes, i + 4);
-    return f64_[0];
+  ui32_[0] = gInt_.read(bytes, i);
+  ui32_[1] = gInt_.read(bytes, i + 4);
+  return f64_[0];
 }
 
 /**
@@ -382,11 +382,11 @@ function read64F_(bytes, i) {
  * @private
  */
 function readChar_(bytes, i) {
-    let chrs = '';
-    for(let j=0; j < gInt_.offset; j++) {
-        chrs += String.fromCharCode(bytes[i+j]);
-    }
-    return chrs;
+  let chrs = '';
+  for(let j=0; j < gInt_.offset; j++) {
+    chrs += String.fromCharCode(bytes[i+j]);
+  }
+  return chrs;
 }
 
 /**
@@ -398,7 +398,7 @@ function readChar_(bytes, i) {
  * @private
  */
 function writeInt_(bytes, number, j) {
-    return gInt_.write(bytes, number, j);
+  return gInt_.write(bytes, number, j);
 }
 
 /**
@@ -410,18 +410,18 @@ function writeInt_(bytes, number, j) {
  * @private
  */
 function write16F_(bytes, number, j) {
-    f32_[0] = number;
-    let x = ui32_[0];
-    let bits = (x >> 16) & 0x8000;
-    let m = (x >> 12) & 0x07ff;
-    let e = (x >> 23) & 0xff;
-    if (e >= 103) {
-        bits |= ((e - 112) << 10) | (m >> 1);
-        bits += m & 1;
-    }
-    bytes[j++] = bits & 0xFF;
-    bytes[j++] = bits >>> 8 & 0xFF;
-    return j;
+  f32_[0] = number;
+  let x = ui32_[0];
+  let bits = (x >> 16) & 0x8000;
+  let m = (x >> 12) & 0x07ff;
+  let e = (x >> 23) & 0xff;
+  if (e >= 103) {
+    bits |= ((e - 112) << 10) | (m >> 1);
+    bits += m & 1;
+  }
+  bytes[j++] = bits & 0xFF;
+  bytes[j++] = bits >>> 8 & 0xFF;
+  return j;
 }
 
 /**
@@ -433,8 +433,8 @@ function write16F_(bytes, number, j) {
  * @private
  */
 function write32F_(bytes, number, j) {
-    f32_[0] = number;
-    return gInt_.write(bytes, ui32_[0], j);
+  f32_[0] = number;
+  return gInt_.write(bytes, ui32_[0], j);
 }
 
 /**
@@ -446,9 +446,9 @@ function write32F_(bytes, number, j) {
  * @private
  */
 function write64F_(bytes, number, j) {
-    f64_[0] = number;
-    j = gInt_.write(bytes, ui32_[0], j);
-    return gInt_.write(bytes, ui32_[1], j);
+  f64_[0] = number;
+  j = gInt_.write(bytes, ui32_[0], j);
+  return gInt_.write(bytes, ui32_[1], j);
 }
 
 /**
@@ -460,10 +460,10 @@ function write64F_(bytes, number, j) {
  * @private
  */
 function writeChar_(bytes, str, j) {
-    for (let i=0; i<str.length; i++) {
-        bytes[j++] = str.charCodeAt(i);
-    }
-    return j;
+  for (let i=0; i<str.length; i++) {
+    bytes[j++] = str.charCodeAt(i);
+  }
+  return j;
 }
 
 /**
@@ -472,19 +472,19 @@ function writeChar_(bytes, str, j) {
  * @private
  */
 function setReader(theType) {
-    if (theType['float']) {
-        if (theType['bits'] == 16) {
-            reader_ = read16F_;
-        } else if(theType['bits'] == 32) {
-            reader_ = read32F_;
-        } else if(theType['bits'] == 64) {
-            reader_ = read64F_;
-        }
-    } else if (theType['char']) {
-        reader_ = readChar_;
-    } else {
-        reader_ = readInt_;
+  if (theType['float']) {
+    if (theType['bits'] == 16) {
+      reader_ = read16F_;
+    } else if(theType['bits'] == 32) {
+      reader_ = read32F_;
+    } else if(theType['bits'] == 64) {
+      reader_ = read64F_;
     }
+  } else if (theType['char']) {
+    reader_ = readChar_;
+  } else {
+    reader_ = readInt_;
+  }
 }
 
 /**
@@ -493,19 +493,19 @@ function setReader(theType) {
  * @private
  */
 function setWriter(theType) {
-    if (theType['float']) {
-        if (theType['bits'] == 16) {
-            writer_ = write16F_;
-        } else if(theType['bits'] == 32) {
-            writer_ = write32F_;
-        } else if(theType['bits'] == 64) {
-            writer_ = write64F_;
-        }
-    } else if (theType['char']) {
-        writer_ = writeChar_;
-    } else {
-        writer_ = writeInt_;
-    }   
+  if (theType['float']) {
+    if (theType['bits'] == 16) {
+      writer_ = write16F_;
+    } else if(theType['bits'] == 32) {
+      writer_ = write32F_;
+    } else if(theType['bits'] == 64) {
+      writer_ = write64F_;
+    }
+  } else if (theType['char']) {
+    writer_ = writeChar_;
+  } else {
+    writer_ = writeInt_;
+  }   
 }
 
 /**
@@ -515,18 +515,18 @@ function setWriter(theType) {
  * @private
  */
 function setUp_(theType) {
-    validateType_(theType);
-    theType['offset'] = theType['bits'] < 8 ? 1 : Math.ceil(theType['bits'] / 8);
-    setReader(theType);
-    setWriter(theType);
-    if (!theType['char']) {
-        gInt_ = new Integer(
-            theType['bits'] == 64 ? 32 : theType['bits'],
-            theType['float'] ? false : theType['signed']);
-    } else {
-        // Workaround; should not use Integer when type['char']
-        gInt_.offset = theType['bits'] < 8 ? 1 : Math.ceil(theType['bits'] / 8);
-    }
+  validateType_(theType);
+  theType['offset'] = theType['bits'] < 8 ? 1 : Math.ceil(theType['bits'] / 8);
+  setReader(theType);
+  setWriter(theType);
+  if (!theType['char']) {
+    gInt_ = new Integer(
+      theType['bits'] == 64 ? 32 : theType['bits'],
+      theType['float'] ? false : theType['signed']);
+  } else {
+    // Workaround; should not use Integer when type['char']
+    gInt_.offset = theType['bits'] < 8 ? 1 : Math.ceil(theType['bits'] / 8);
+  }
 }
 
 /**
@@ -536,18 +536,18 @@ function setUp_(theType) {
  * @private
  */
 function validateType_(theType) {
-    if (!theType) {
-        throw new Error('Undefined type.');
-    }
-    if (theType['float']) {
-        validateFloatType_(theType);
+  if (!theType) {
+    throw new Error('Undefined type.');
+  }
+  if (theType['float']) {
+    validateFloatType_(theType);
+  } else {
+    if (theType['char']) {
+      validateCharType_(theType);
     } else {
-        if (theType['char']) {
-            validateCharType_(theType);
-        } else {
-            validateIntType_(theType);
-        }
+      validateIntType_(theType);
     }
+  }
 }
 
 /**
@@ -557,9 +557,9 @@ function validateType_(theType) {
  * @private
  */
 function validateFloatType_(theType) {
-    if ([16,32,64].indexOf(theType['bits']) == -1) {
-        throw new Error('Not a supported float type.');
-    }
+  if ([16,32,64].indexOf(theType['bits']) == -1) {
+    throw new Error('Not a supported float type.');
+  }
 }
 
 /**
@@ -569,9 +569,9 @@ function validateFloatType_(theType) {
  * @private
  */
 function validateCharType_(theType) {
-    if (theType['bits'] < 8 || theType['bits'] % 2) {
-        throw new Error('Wrong offset for type char.');
-    }
+  if (theType['bits'] < 8 || theType['bits'] % 2) {
+    throw new Error('Wrong offset for type char.');
+  }
 }
 
 /**
@@ -581,9 +581,9 @@ function validateCharType_(theType) {
  * @private
  */
 function validateIntType_(theType) {
-    if (theType['bits'] < 1 || theType['bits'] > 53) {
-        throw new Error('Not a supported type.');
-    }
+  if (theType['bits'] < 1 || theType['bits'] > 53) {
+    throw new Error('Not a supported type.');
+  }
 }
 
 /**
@@ -593,12 +593,12 @@ function validateIntType_(theType) {
  * @private
  */
 function validateString_(value, theType) {
-    validateNotNull_(value);
-    if (value.length > theType['offset']) {
-        throw new Error('String is bigger than its type definition.');
-    } else if (value.length < theType['offset']) {
-        throw new Error('String is smaller than its type definition.');
-    }
+  validateNotNull_(value);
+  if (value.length > theType['offset']) {
+    throw new Error('String is bigger than its type definition.');
+  } else if (value.length < theType['offset']) {
+    throw new Error('String is smaller than its type definition.');
+  }
 }
 /**
  * Validate that the value is not null.
@@ -606,7 +606,7 @@ function validateString_(value, theType) {
  * @private
  */
 function validateNotNull_(value) {
-    if (value === null || value === undefined) {
-        throw new Error('Cannot pack null or undefined values.');
-    }
+  if (value === null || value === undefined) {
+    throw new Error('Cannot pack null or undefined values.');
+  }
 }
