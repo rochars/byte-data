@@ -304,10 +304,9 @@ function toBytes_(values, theType) {
  * @private
  */
 function writeBytes_(value, theType, buffer, index, len, validate, be) {
-  for(let i=index; i<len; i++) {
+  while (index < len) {
     validate(value, theType);
-    i = writer_(buffer, value, i);
-    index = i;
+    index = writer_(buffer, value, index);
   }
   if (be) {
     endianness(
