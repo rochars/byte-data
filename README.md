@@ -13,7 +13,7 @@ https://github.com/rochars/byte-data
 
 ## Pack/unpack:
 - Booleans
-- All integers from 2-Bit to 48-Bit, signed and unsigned
+- Integers, signed and unsigned
 - 16-bit half-precision floating point numbers
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
@@ -145,7 +145,7 @@ function unpackFrom(buffer, theType, start=0) {}
  * @return {number|string}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayFrom(buffer, theType, start=0, end=null) {}
+function unpackArrayFrom(buffer, theType, start=0, end=null) {}
 ```
 
 ## Types
