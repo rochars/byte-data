@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v11.0.2 (2018-06-24)
+- Fix ES6 dist to not rely on Node module path resolution.
+
 ## v11.0.1 (2018-06-23)
 - Fix: type declarations
 - Fix: remove unused exports
