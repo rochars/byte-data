@@ -24,13 +24,7 @@ module.exports = [
       libraryTarget: "commonjs"
     },
     externals: {
-      'byte-data': 'byte-data',
-      "alawmulaw": "alawmulaw",
-      "base64-arraybuffer": "base64-arraybuffer",
-      "bitdepth": "bitdepth",
-      "byte-data": "byte-data",
-      "imaadpcm": "imaadpcm",
-      "riff-chunks": "riff-chunks"
+      'endianness': 'endianness',
     }
   },
   // UMD with dependencies in the bundle.
