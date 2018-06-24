@@ -40,7 +40,7 @@ export {types} from './lib/types.js';
 /**
  * @constructor
  */
-import {default as Integer} from './lib/integer';
+import Integer from './lib/integer';
 
 /**
  * @type {!Function}
@@ -136,7 +136,7 @@ export function packTo(value, theType, buffer, index) {
 
 /**
  * Pack a number or a string as a byte buffer.
- * @param {number|string} value The value.
+ * @param {number|string} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number} index The buffer index to write.
@@ -207,9 +207,9 @@ export function unpackFrom(buffer, theType, index=0) {
  * Unpack a number or a string from a byte buffer.
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} theType The start index. Assumes 0.
- * @param {?number=} theType The end index. Assumes the array length.
- * @return {number|string}
+ * @param {number=} start The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the array length.
+ * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayFrom(buffer, theType, start=0, end=null) {
@@ -232,7 +232,7 @@ export function unpackArrayFrom(buffer, theType, start=0, end=null) {
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @return {!Array<number>}
+ * @return {number}
  * @private
  */
 function readBytes_(buffer, theType, start) {
@@ -293,10 +293,13 @@ function toBytes_(values, theType) {
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<number|string>} values The value to be packed.
+ * @param {number|string} value The value to be packed.
  * @param {!Object} theType The type definition.
  * @param {!Object} buffer The buffer to write the bytes to.
  * @param {number} index The index to start writing.
+ * @param {number} len The end index.
+ * @param {!Function} validate The function used to validate input.
+ * @param {boolean} be True if big-endian.
  * @return {number} the new index to be written.
  * @private
  */
@@ -468,7 +471,7 @@ function writeChar_(bytes, str, j) {
  * @param {!Object} theType The type definition.
  * @private
  */
-export function setReader(theType) {
+function setReader(theType) {
     if (theType['float']) {
         if (theType['bits'] == 16) {
             reader_ = read16F_;
@@ -489,7 +492,7 @@ export function setReader(theType) {
  * @param {!Object} theType The type definition.
  * @private
  */
-export function setWriter(theType) {
+function setWriter(theType) {
     if (theType['float']) {
         if (theType['bits'] == 16) {
             writer_ = write16F_;

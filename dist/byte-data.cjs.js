@@ -77,12 +77,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["unpackArray"] = unpackArray;
 /* harmony export (immutable) */ __webpack_exports__["unpackFrom"] = unpackFrom;
 /* harmony export (immutable) */ __webpack_exports__["unpackArrayFrom"] = unpackArrayFrom;
-/* harmony export (immutable) */ __webpack_exports__["setReader"] = setReader;
-/* harmony export (immutable) */ __webpack_exports__["setWriter"] = setWriter;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_types_js__ = __webpack_require__(1);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "types", function() { return __WEBPACK_IMPORTED_MODULE_0__lib_types_js__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_integer__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_endianness__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_endianness___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_endianness__);
 /*
  * byte-data: Pack and unpack binary data.
  * https://github.com/rochars/byte-data
@@ -221,7 +220,7 @@ function packTo(value, theType, buffer, index) {
 
 /**
  * Pack a number or a string as a byte buffer.
- * @param {number|string} value The value.
+ * @param {number|string} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number} index The buffer index to write.
@@ -292,15 +291,15 @@ function unpackFrom(buffer, theType, index=0) {
  * Unpack a number or a string from a byte buffer.
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} theType The start index. Assumes 0.
- * @param {?number=} theType The end index. Assumes the array length.
- * @return {number|string}
+ * @param {number=} start The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the array length.
+ * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
 function unpackArrayFrom(buffer, theType, start=0, end=null) {
     setUp_(theType);
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(buffer, theType['offset']);
     }
     let len = end || buffer.length;
     let values = [];
@@ -308,7 +307,7 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {
         values.push(reader_(buffer, i));
     }
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(buffer, theType['offset']);
     }
     return values;
 }
@@ -317,16 +316,16 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {
  * Turn a byte buffer into what the bytes represent.
  * @param {!Array<number|string>|!Uint8Array} buffer An array of bytes.
  * @param {!Object} theType The type definition.
- * @return {!Array<number>}
+ * @return {number}
  * @private
  */
 function readBytes_(buffer, theType, start) {
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset'], start, start + theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(buffer, theType['offset'], start, start + theType['offset']);
     }
     let value = reader_(buffer, start);
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset'], start, start + theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(buffer, theType['offset'], start, start + theType['offset']);
     }
     return value;
 }
@@ -340,7 +339,7 @@ function readBytes_(buffer, theType, start) {
  */
 function fromBytes_(buffer, theType) {
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(buffer, theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(buffer, theType['offset']);
     }
     let len = buffer.length;
     let values = [];
@@ -371,17 +370,20 @@ function toBytes_(values, theType) {
         j = writer_(bytes, values[i], j);
     }
     if (theType['be']) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(bytes, theType['offset']);
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(bytes, theType['offset']);
     }
     return bytes;
 }
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<number|string>} values The value to be packed.
+ * @param {number|string} value The value to be packed.
  * @param {!Object} theType The type definition.
  * @param {!Object} buffer The buffer to write the bytes to.
  * @param {number} index The index to start writing.
+ * @param {number} len The end index.
+ * @param {!Function} validate The function used to validate input.
+ * @param {boolean} be True if big-endian.
  * @return {number} the new index to be written.
  * @private
  */
@@ -392,7 +394,7 @@ function writeBytes_(value, theType, buffer, index, len, validate, be) {
         index = i;
     }
     if (be) {
-        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["a" /* endianness */])(
+        Object(__WEBPACK_IMPORTED_MODULE_2_endianness__["endianness"])(
             buffer, theType['offset'], index - theType['offset'], index);
     }
     return index;
@@ -1219,85 +1221,9 @@ class Integer {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = endianness;
-/*
- * endianness: Swap endianness in byte arrays.
- * https://github.com/rochars/endianness
- *
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
-/**
- * @fileoverview A function to swap endianness in byte buffers.
- */
-
-/**
- * @module endianness
- */
-
-/**
- * Swap the byte ordering in a buffer. The buffer is modified in place.
- * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
- * @param {number} offset The byte offset.
- * @param {number=} start The start index. Assumes 0.
- * @param {?number=} end The end index. Assumes the buffer length.
- * @throws {Error} If the buffer length is not valid.
- */
-function endianness(bytes, offset, start=0, end=null) {
-    let len = end || bytes.length;
-    let limit = parseInt(offset / 2, 10);
-    if (len % offset) {
-        throw new Error("Bad buffer length.");
-    }
-    let i = start;
-    while (i < len) {
-        swap(bytes, offset, i, limit);
-        i += offset;
-    }
-}
-
-/**
- * Swap the byte order of a value in a buffer. The buffer is modified in place.
- * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
- * @param {number} offset The byte offset.
- * @param {number} index The start index.
- * @private
- */
-function swap(bytes, offset, index, limit) {
-    let x = 0;
-    let y = offset - 1;
-    while(x < limit) {
-        let theByte = bytes[index + x];
-        bytes[index + x] = bytes[index + y];
-        bytes[index + y] = theByte;
-        x++;
-        y--;
-    }
-}
-
+module.exports = require("endianness");
 
 /***/ })
 /******/ ])));
