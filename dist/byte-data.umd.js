@@ -89,7 +89,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["unpackArrayFrom"] = unpackArrayFrom;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_types_js__ = __webpack_require__(1);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "types", function() { return __WEBPACK_IMPORTED_MODULE_0__lib_types_js__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_integer__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_integer_js__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_endianness__ = __webpack_require__(3);
 /*
  * byte-data: Pack and unpack binary data.
@@ -612,7 +612,7 @@ function setUp_(theType) {
   setReader(theType);
   setWriter(theType);
   if (!theType['char']) {
-    gInt_ = new __WEBPACK_IMPORTED_MODULE_1__lib_integer__["a" /* default */](
+    gInt_ = new __WEBPACK_IMPORTED_MODULE_1__lib_integer_js__["a" /* default */](
       theType['bits'] == 64 ? 32 : theType['bits'],
       theType['float'] ? false : theType['signed']);
   } else {
@@ -739,8 +739,6 @@ function validateNotNull_(value) {
 /**
  * @fileoverview Standard type definitions.
  */
-
-/** @module byteData/types */
 
 /**
  * byte-data standard types.
