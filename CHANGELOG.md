@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v11.0.1 (2018-06-23)
+- Fix: type declarations
+- Fix: remove unused exports
+
 ## v11.0.0 (2018-06-22)
 - ES6 module
 - New API with packTo, packToArray, unpackFrom, unpackArrayFrom
