@@ -1,253 +1,98 @@
-/*
- * byte-data: Pack and unpack binary data.
- * https://github.com/rochars/byte-data
- *
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
+window["byteData"] =
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-/**
- * @fileoverview Standard type definitions.
- */
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 
-/**
- * byte-data standard types.
- * @type {!Object}
- */
-const types = {
-  /**
-   * A char.
-   * @type {!Object}
-   * @export
-   */
-  chr: {'bits': 8, 'char': true},
-  /**
-   * A 4-char string
-   * @type {!Object}
-   * @export
-   */
-  fourCC: {'bits': 32, 'char': true},
-  /**
-   * Booleans
-   * @type {!Object}
-   * @export
-   */
-  bool: {'bits': 1},
-  /**
-   * Signed 2-bit integers
-   * @type {!Object}
-   * @export
-   */
-  int2: {'bits': 2, 'signed': true},
-  /**
-   * Unsigned 2-bit integers
-   * @type {!Object}
-   * @export
-   */
-  uInt2: {'bits': 2},
-  /**
-   * Signed 4-bit integers
-   * @type {!Object}
-   * @export
-   */
-  int4: {'bits': 4, 'signed': true},
-  /**
-   * Unsigned 4-bit integers
-   * @type {!Object}
-   * @export
-   */
-  uInt4: {'bits': 4},
-  /**
-   * Signed 8-bit integers
-   * @type {!Object}
-   * @export
-   */
-  int8: {'bits': 8, 'signed': true},
-  /**
-   * Unsigned 4-bit integers
-   * @type {!Object}
-   * @export
-   */
-  uInt8: {'bits': 8},
-  // LE
-  /**
-   * Signed 16-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  int16 : {'bits': 16, 'signed': true},
-  /**
-   * Unsigned 16-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt16: {'bits': 16},
-  /**
-   * Half-precision floating-point numbers little-endian
-   * @type {!Object}
-   * @export
-   */
-  float16: {'bits': 16, 'float': true},
-  /**
-   * Signed 24-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  int24: {'bits': 24, 'signed': true},
-  /**
-   * Unsigned 24-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt24: {'bits': 24},
-  /**
-   * Signed 32-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  int32: {'bits': 32, 'signed': true},
-  /**
-   * Unsigned 32-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt32: {'bits': 32},
-  /**
-   * Single-precision floating-point numbers little-endian
-   * @type {!Object}
-   * @export
-   */
-  float32: {'bits': 32, 'float': true},
-  /**
-   * Signed 40-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  int40: {'bits': 40, 'signed': true},
-  /**
-   * Unsigned 40-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt40: {'bits': 40},
-  /**
-   * Signed 48-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  int48: {'bits': 48, 'signed': true},
-  /**
-   * Unsigned 48-bit integers little-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt48: {'bits': 48},
-  /**
-   * Double-precision floating-point numbers little-endian
-   * @type {!Object}
-   * @export
-   */
-  float64: {'bits': 64, 'float': true},
-  // BE
-  /**
-   * Signed 16-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  int16BE : {'bits': 16, 'signed': true, 'be': true},
-  /**
-   * Unsigned 16-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt16BE: {'bits': 16, 'be': true},
-  /**
-   * Half-precision floating-point numbers big-endian
-   * @type {!Object}
-   * @export
-   */
-  float16BE: {'bits': 16, 'float': true, 'be': true},
-  /**
-   * Signed 24-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  int24BE: {'bits': 24, 'signed': true, 'be': true},
-  /**
-   * Unsigned 24-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt24BE: {'bits': 24, 'be': true},
-  /**
-   * Signed 32-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  int32BE: {'bits': 32, 'signed': true, 'be': true},
-  /**
-   * Unsigned 32-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt32BE: {'bits': 32, 'be': true},
-  /**
-   * Single-precision floating-point numbers big-endian
-   * @type {!Object}
-   * @export
-   */
-  float32BE: {'bits': 32, 'float': true, 'be': true},
-  /**
-   * Signed 40-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  int40BE: {'bits': 40, 'signed': true, 'be': true},
-  /**
-   * Unsigned 40-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt40BE: {'bits': 40, 'be': true},
-  /**
-   * Signed 48-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  int48BE: {'bits': 48, 'signed': true, 'be': true},
-  /**
-   * Unsigned 48-bit integers big-endian
-   * @type {!Object}
-   * @export
-   */
-  uInt48BE: {'bits': 48, 'be': true},
-  /**
-   * Double-precision floating-point numbers big-endian
-   * @type {!Object}
-   * @export
-   */
-  float64BE: {'bits': 64, 'float': true, 'be': true},
-};
-
+// CONCATENATED MODULE: ./lib/integer.js
 /*
  * byte-data: Pack and unpack binary data.
  * https://github.com/rochars/byte-data
@@ -277,6 +122,11 @@ const types = {
 
 /**
  * @fileoverview Pack and unpack two's complement ints and unsigned ints.
+ */
+
+/**
+ * @module byteData/integer
+ * @ignore
  */
 
 /**
@@ -503,6 +353,7 @@ class Integer {
   }
 }
 
+// CONCATENATED MODULE: ./node_modules/endianness/index.js
 /*
  * endianness: Swap endianness in byte arrays.
  * https://github.com/rochars/endianness
@@ -578,6 +429,7 @@ function swap(bytes, offset, index, limit) {
     }
 }
 
+// CONCATENATED MODULE: ./lib/types.js
 /*
  * byte-data: Pack and unpack binary data.
  * https://github.com/rochars/byte-data
@@ -604,41 +456,281 @@ function swap(bytes, offset, index, limit) {
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+
 /**
- * @type {!Int8Array}
- * @private
+ * @fileoverview Standard type definitions.
  */
-const int8_ = new Int8Array(8);
+
+/** @module byteData/types */
+
 /**
- * @type {!Uint32Array}
- * @private
+ * byte-data standard types.
+ * @type {!Object}
+ * @const
  */
-const ui32_ = new Uint32Array(int8_.buffer);
+/* harmony default export */ var types = ({
+  /**
+   * A char.
+   * @type {!Object}
+   * @export
+   */
+  chr: {'bits': 8, 'char': true},
+  /**
+   * A 4-char string
+   * @type {!Object}
+   * @export
+   */
+  fourCC: {'bits': 32, 'char': true},
+  /**
+   * Booleans
+   * @type {!Object}
+   * @export
+   */
+  bool: {'bits': 1},
+  /**
+   * Signed 2-bit integers
+   * @type {!Object}
+   * @export
+   */
+  int2: {'bits': 2, 'signed': true},
+  /**
+   * Unsigned 2-bit integers
+   * @type {!Object}
+   * @export
+   */
+  uInt2: {'bits': 2},
+  /**
+   * Signed 4-bit integers
+   * @type {!Object}
+   * @export
+   */
+  int4: {'bits': 4, 'signed': true},
+  /**
+   * Unsigned 4-bit integers
+   * @type {!Object}
+   * @export
+   */
+  uInt4: {'bits': 4},
+  /**
+   * Signed 8-bit integers
+   * @type {!Object}
+   * @export
+   */
+  int8: {'bits': 8, 'signed': true},
+  /**
+   * Unsigned 4-bit integers
+   * @type {!Object}
+   * @export
+   */
+  uInt8: {'bits': 8},
+  // LE
+  /**
+   * Signed 16-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int16 : {'bits': 16, 'signed': true},
+  /**
+   * Unsigned 16-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt16: {'bits': 16},
+  /**
+   * Half-precision floating-point numbers little-endian
+   * @type {!Object}
+   * @export
+   */
+  float16: {'bits': 16, 'float': true},
+  /**
+   * Signed 24-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int24: {'bits': 24, 'signed': true},
+  /**
+   * Unsigned 24-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt24: {'bits': 24},
+  /**
+   * Signed 32-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int32: {'bits': 32, 'signed': true},
+  /**
+   * Unsigned 32-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt32: {'bits': 32},
+  /**
+   * Single-precision floating-point numbers little-endian
+   * @type {!Object}
+   * @export
+   */
+  float32: {'bits': 32, 'float': true},
+  /**
+   * Signed 40-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int40: {'bits': 40, 'signed': true},
+  /**
+   * Unsigned 40-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt40: {'bits': 40},
+  /**
+   * Signed 48-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int48: {'bits': 48, 'signed': true},
+  /**
+   * Unsigned 48-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt48: {'bits': 48},
+  /**
+   * Double-precision floating-point numbers little-endian
+   * @type {!Object}
+   * @export
+   */
+  float64: {'bits': 64, 'float': true},
+  // BE
+  /**
+   * Signed 16-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int16BE : {'bits': 16, 'signed': true, 'be': true},
+  /**
+   * Unsigned 16-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt16BE: {'bits': 16, 'be': true},
+  /**
+   * Half-precision floating-point numbers big-endian
+   * @type {!Object}
+   * @export
+   */
+  float16BE: {'bits': 16, 'float': true, 'be': true},
+  /**
+   * Signed 24-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int24BE: {'bits': 24, 'signed': true, 'be': true},
+  /**
+   * Unsigned 24-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt24BE: {'bits': 24, 'be': true},
+  /**
+   * Signed 32-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int32BE: {'bits': 32, 'signed': true, 'be': true},
+  /**
+   * Unsigned 32-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt32BE: {'bits': 32, 'be': true},
+  /**
+   * Single-precision floating-point numbers big-endian
+   * @type {!Object}
+   * @export
+   */
+  float32BE: {'bits': 32, 'float': true, 'be': true},
+  /**
+   * Signed 40-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int40BE: {'bits': 40, 'signed': true, 'be': true},
+  /**
+   * Unsigned 40-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt40BE: {'bits': 40, 'be': true},
+  /**
+   * Signed 48-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int48BE: {'bits': 48, 'signed': true, 'be': true},
+  /**
+   * Unsigned 48-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt48BE: {'bits': 48, 'be': true},
+  /**
+   * Double-precision floating-point numbers big-endian
+   * @type {!Object}
+   * @export
+   */
+  float64BE: {'bits': 64, 'float': true, 'be': true},
+});
+
+// CONCATENATED MODULE: ./main.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pack", function() { return pack; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "packArray", function() { return packArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "packTo", function() { return packTo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "packArrayTo", function() { return packArrayTo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unpack", function() { return unpack; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unpackArray", function() { return unpackArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unpackFrom", function() { return unpackFrom; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unpackArrayFrom", function() { return unpackArrayFrom; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "types", function() { return types; });
+/*
+ * byte-data: Pack and unpack binary data.
+ * https://github.com/rochars/byte-data
+ *
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
 /**
- * @type {!Float32Array}
- * @private
+ * @fileoverview The byte-data API.
  */
-const f32_ = new Float32Array(int8_.buffer);
-/**
- * @type {!Float64Array}
- * @private
- */
-const f64_ = new Float64Array(int8_.buffer);
-/**
- * @type {Function}
- * @private
- */
-let reader_;
-/**
- * @type {Function}
- * @private
- */
-let writer_;
-/**
- * @type {Object}
- * @private
- */
-let gInt_ = {};
+
+/** @module byteData */
+
+
+
+
+
+
 
 /**
  * Pack a number or a string as a byte buffer.
@@ -655,7 +747,7 @@ function pack(value, theType) {
 
 /**
  * Pack an array of numbers or strings to a byte buffer.
- * @param {!Array<number|string>} values The values.
+ * @param {!Array<number|string>|string} values The values.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid.
@@ -667,7 +759,7 @@ function packArray(values, theType) {
 }
 
 /**
- * Pack a number or a string as a byte buffer.
+ * Pack a number or a string to a existing byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
@@ -692,8 +784,8 @@ function packTo(value, theType, buffer, index) {
 }
 
 /**
- * Pack a number or a string as a byte buffer.
- * @param {number|string} values The value.
+ * Pack a array of numbers or strings to a existing byte buffer.
+ * @param {!Array<number|string>} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number} index The buffer index to write.
@@ -748,7 +840,7 @@ function unpackArray(buffer, theType) {
 }
 
 /**
- * Unpack a number or a string from a byte buffer.
+ * Unpack a number or a string from a byte buffer index.
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read.
@@ -761,7 +853,7 @@ function unpackFrom(buffer, theType, index=0) {
 }
 
 /**
- * Unpack a number or a string from a byte buffer.
+ * Unpack a array of numbers strings from a byte buffer index.
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} start The start index. Assumes 0.
@@ -784,6 +876,42 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {
   }
   return values;
 }
+
+/**
+ * @type {!Int8Array}
+ * @private
+ */
+const int8_ = new Int8Array(8);
+/**
+ * @type {!Uint32Array}
+ * @private
+ */
+const ui32_ = new Uint32Array(int8_.buffer);
+/**
+ * @type {!Float32Array}
+ * @private
+ */
+const f32_ = new Float32Array(int8_.buffer);
+/**
+ * @type {!Float64Array}
+ * @private
+ */
+const f64_ = new Float64Array(int8_.buffer);
+/**
+ * @type {Function}
+ * @private
+ */
+let reader_;
+/**
+ * @type {Function}
+ * @private
+ */
+let writer_;
+/**
+ * @type {Object}
+ * @private
+ */
+let gInt_ = {};
 
 /**
  * Turn a byte buffer into what the bytes represent.
@@ -825,7 +953,7 @@ function fromBytes_(buffer, theType) {
 
 /**
  * Turn numbers and strings to bytes.
- * @param {!Array<number|string>} values The data.
+ * @param {!Array<number|string>|string} values The data.
  * @param {!Object} theType The type definition.
  * @return {!Array<number|string>} the data as a byte buffer.
  * @private
@@ -852,7 +980,7 @@ function toBytes_(values, theType) {
  * Turn numbers and strings to bytes.
  * @param {number|string} value The value to be packed.
  * @param {!Object} theType The type definition.
- * @param {!Object} buffer The buffer to write the bytes to.
+ * @param {!Uint8Array|!Array<number>} buffer The buffer to write the bytes to.
  * @param {number} index The index to start writing.
  * @param {number} len The end index.
  * @param {!Function} validate The function used to validate input.
@@ -1156,6 +1284,7 @@ function validateString_(value, theType) {
     throw new Error('String is smaller than its type definition.');
   }
 }
+
 /**
  * Validate that the value is not null.
  * @param {string|number} value The value.
@@ -1167,4 +1296,6 @@ function validateNotNull_(value) {
   }
 }
 
-export { pack, packArray, packTo, packArrayTo, unpack, unpackArray, unpackFrom, unpackArrayFrom, types };
+
+/***/ })
+/******/ ]);

@@ -5,19 +5,49 @@
 
 /**
  * @fileoverview rollup configuration file.
- * One dist file is created:
- * - byte-data.esm.js, ES6 module. All dependencies included.
  */
 
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default [
+  // cjs
+  {
+    input: 'main.js',
+    external: ['endianness'],
+    output: [
+      {
+        file: 'dist/byte-data.cjs.js',
+        name: 'byte-data',
+        format: 'cjs'
+      }
+    ],
+    plugins: [
+      nodeResolve(),
+      commonjs(),
+    ]
+  },
+  // umd
   {
     input: 'main.js',
     output: [
       {
-        file: 'dist/byte-data.esm.js',
+        file: 'dist/byte-data.umd.js',
+        name: 'byte-data',
+        format: 'umd'
+      }
+    ],
+    plugins: [
+      nodeResolve(),
+      commonjs(),
+    ]
+  },
+  // esm
+  {
+    input: 'main.js',
+    output: [
+      {
+        file: 'dist/byte-data.js',
         format: 'es'
       }
     ],

@@ -8,6 +8,7 @@ let byteData;
 
 // Browser bundle
 if (process.argv[3] == '--min') {
+	
 	console.log('min tests');
     require('browser-env')();
     require('../dist/byte-data.min.js');
@@ -26,7 +27,7 @@ if (process.argv[3] == '--min') {
 // ES6 dist
 } else if (process.argv[3] == '--esm') {
 	console.log("esm");
-	byteData = require('../dist/byte-data.esm.js');
+	byteData = require('../dist/byte-data.js');
 
 // Source
 } else {

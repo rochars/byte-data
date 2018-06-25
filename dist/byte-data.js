@@ -26,16 +26,592 @@
  */
 
 /**
- * @fileoverview The byte-data API.
+ * @fileoverview Pack and unpack two's complement ints and unsigned ints.
  */
 
-/** @module byteData */
+/**
+ * @module byteData/integer
+ * @ignore
+ */
 
-import Integer from './lib/integer.js';
+/**
+ * A class to pack and unpack two's complement ints and unsigned ints.
+ * 
+ */
+class Integer {
 
-import endianness from 'endianness';
+  /**
+   * @param {number} bits Number of bits used by the data.
+   * @param {boolean} signed True for signed types.
+   * @throws {Error} if the number of bits is smaller than 1 or greater than 64.
+   */
+  constructor(bits, signed) {
+    /**
+     * The max number of bits used by the data.
+     * @type {number}
+     */
+    this.bits = bits;
+    /**
+     * If this type it is signed or not.
+     * @type {boolean}
+     */
+    this.signed = signed;
+    /**
+     * The number of bytes used by the data.
+     * @type {number}
+     */
+    this.offset = 0;
+    /**
+     * Min value for numbers of this type.
+     * @type {number}
+     */
+    this.min = -Infinity;
+    /**
+     * Max value for numbers of this type.
+     * @type {number}
+     */
+    this.max = Infinity;
+    /**
+     * The practical number of bits used by the data.
+     * @type {number}
+     * @private
+     */
+    this.realBits_ = this.bits;
+    /**
+     * The mask to be used in the last byte.
+     * @type {number}
+     * @private
+     */
+    this.lastByteMask_ = 255;
+    this.build_();
+  }
 
-export {default as types} from './lib/types.js';
+  /**
+   * Read one integer number from a byte buffer.
+   * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
+   * @param {number=} i The index to read.
+   * @return {number}
+   */
+  read(bytes, i=0) {
+    let num = 0;
+    let x = this.offset - 1;
+    while (x > 0) {
+      num = (bytes[x + i] << x * 8) | num;
+      x--;
+    }
+    num = (bytes[i] | num) >>> 0;
+    return this.overflow_(this.sign_(num));
+  }
+
+  /**
+   * Write one integer number to a byte buffer.
+   * @param {!Array<number>} bytes An array of bytes.
+   * @param {number} number The number.
+   * @param {number=} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   */
+  write(bytes, number, j=0) {
+    number = this.overflow_(number);
+    bytes[j++] = number & 255;
+    for (let i = 2; i <= this.offset; i++) {
+      bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & 255;
+    }
+    return j;
+  }
+
+  /**
+   * Write one integer number to a byte buffer.
+   * @param {!Array<number>} bytes An array of bytes.
+   * @param {number} number The number.
+   * @param {number=} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  writeEsoteric_(bytes, number, j=0) {
+    number = this.overflow_(number);
+    j = this.writeFirstByte_(bytes, number, j);
+    for (let i = 2; i < this.offset; i++) {
+      bytes[j++] = Math.floor(number / Math.pow(2, ((i - 1) * 8))) & 255;
+    }
+    if (this.bits > 8) {
+      bytes[j++] = Math.floor(
+          number / Math.pow(2, ((this.offset - 1) * 8))) &
+        this.lastByteMask_;
+    }
+    return j;
+  }
+
+  /**
+   * Read a integer number from a byte buffer by turning int bytes
+   * to a string of bits. Used for data with more than 32 bits.
+   * @param {!Array<number>|!Uint8Array} bytes An array of bytes.
+   * @param {number=} i The index to read.
+   * @return {number}
+   * @private
+   */
+  readBits_(bytes, i=0) {
+    let binary = '';
+    let j = 0;
+    while(j < this.offset) {
+      let bits = bytes[i + j].toString(2);
+      binary = new Array(9 - bits.length).join('0') + bits + binary;
+      j++;
+    }
+    return this.overflow_(this.sign_(parseInt(binary, 2)));
+  }
+
+  /**
+   * Build the type.
+   * @throws {Error} if the number of bits is smaller than 1 or greater than 64.
+   * @private
+   */
+  build_() {
+    this.setRealBits_();
+    this.setLastByteMask_();
+    this.setMinMax_();
+    this.offset = this.bits < 8 ? 1 : Math.ceil(this.realBits_ / 8);
+    if ((this.realBits_ != this.bits) || this.bits < 8 || this.bits > 32) {
+      this.write = this.writeEsoteric_;
+      this.read = this.readBits_;
+    }
+  }
+
+  /**
+   * Sign a number.
+   * @param {number} num The number.
+   * @return {number}
+   * @private
+   */
+  sign_(num) {
+    if (num > this.max) {
+      num -= (this.max * 2) + 2;
+    }
+    return num;
+  }
+
+  /**
+   * Limit the value according to the bit depth in case of
+   * overflow or underflow.
+   * @param {number} value The data.
+   * @return {number}
+   * @private
+   */
+  overflow_(value) {
+    if (value > this.max) {
+      throw new Error('Overflow.');
+    } else if (value < this.min) {
+      throw new Error('Underflow.');
+    }
+    return value;
+  }
+
+  /**
+   * Set the minimum and maximum values for the type.
+   * @private
+   */
+  setMinMax_() {
+    let max = Math.pow(2, this.bits);
+    if (this.signed) {
+      this.max = max / 2 -1;
+      this.min = -max / 2;
+    } else {
+      this.max = max - 1;
+      this.min = 0;
+    }
+  }
+
+  /**
+   * Set the practical bit number for data with bit count different
+   * from the standard types (8, 16, 32, 40, 48, 64) and more than 8 bits.
+   * @private
+   */
+  setRealBits_() {
+    if (this.bits > 8) {
+      this.realBits_ = ((this.bits - 1) | 7) + 1;
+    }
+  }
+
+  /**
+   * Set the mask that should be used when writing the last byte.
+   * @private
+   */
+  setLastByteMask_() {
+    let r = 8 - (this.realBits_ - this.bits);
+    this.lastByteMask_ = Math.pow(2, r > 0 ? r : 8) -1;
+  }
+
+  /**
+   * Write the first byte of a integer number.
+   * @param {!Array<number>} bytes An array of bytes.
+   * @param {number} number The number.
+   * @param {number} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  writeFirstByte_(bytes, number, j) {
+    if (this.bits < 8) {
+      bytes[j++] = number < 0 ? number + Math.pow(2, this.bits) : number;
+    } else {
+      bytes[j++] = number & 255;
+    }
+    return j;
+  }
+}
+
+/*
+ * endianness: Swap endianness in byte arrays.
+ * https://github.com/rochars/endianness
+ *
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+/**
+ * @fileoverview A function to swap endianness in byte buffers.
+ */
+
+/**
+ * @module endianness
+ */
+
+/**
+ * Swap the byte ordering in a buffer. The buffer is modified in place.
+ * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
+ * @param {number} offset The byte offset.
+ * @param {number=} start The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the buffer length.
+ * @throws {Error} If the buffer length is not valid.
+ */
+function endianness(bytes, offset, start=0, end=null) {
+    let len = end || bytes.length;
+    let limit = parseInt(offset / 2, 10);
+    if (len % offset) {
+        throw new Error("Bad buffer length.");
+    }
+    let i = start;
+    while (i < len) {
+        swap(bytes, offset, i, limit);
+        i += offset;
+    }
+}
+
+/**
+ * Swap the byte order of a value in a buffer. The buffer is modified in place.
+ * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
+ * @param {number} offset The byte offset.
+ * @param {number} index The start index.
+ * @private
+ */
+function swap(bytes, offset, index, limit) {
+    let x = 0;
+    let y = offset - 1;
+    while(x < limit) {
+        let theByte = bytes[index + x];
+        bytes[index + x] = bytes[index + y];
+        bytes[index + y] = theByte;
+        x++;
+        y--;
+    }
+}
+
+/*
+ * byte-data: Pack and unpack binary data.
+ * https://github.com/rochars/byte-data
+ *
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+/**
+ * @fileoverview Standard type definitions.
+ */
+
+/** @module byteData/types */
+
+/**
+ * byte-data standard types.
+ * @type {!Object}
+ * @const
+ */
+var types = {
+  /**
+   * A char.
+   * @type {!Object}
+   * @export
+   */
+  chr: {'bits': 8, 'char': true},
+  /**
+   * A 4-char string
+   * @type {!Object}
+   * @export
+   */
+  fourCC: {'bits': 32, 'char': true},
+  /**
+   * Booleans
+   * @type {!Object}
+   * @export
+   */
+  bool: {'bits': 1},
+  /**
+   * Signed 2-bit integers
+   * @type {!Object}
+   * @export
+   */
+  int2: {'bits': 2, 'signed': true},
+  /**
+   * Unsigned 2-bit integers
+   * @type {!Object}
+   * @export
+   */
+  uInt2: {'bits': 2},
+  /**
+   * Signed 4-bit integers
+   * @type {!Object}
+   * @export
+   */
+  int4: {'bits': 4, 'signed': true},
+  /**
+   * Unsigned 4-bit integers
+   * @type {!Object}
+   * @export
+   */
+  uInt4: {'bits': 4},
+  /**
+   * Signed 8-bit integers
+   * @type {!Object}
+   * @export
+   */
+  int8: {'bits': 8, 'signed': true},
+  /**
+   * Unsigned 4-bit integers
+   * @type {!Object}
+   * @export
+   */
+  uInt8: {'bits': 8},
+  // LE
+  /**
+   * Signed 16-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int16 : {'bits': 16, 'signed': true},
+  /**
+   * Unsigned 16-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt16: {'bits': 16},
+  /**
+   * Half-precision floating-point numbers little-endian
+   * @type {!Object}
+   * @export
+   */
+  float16: {'bits': 16, 'float': true},
+  /**
+   * Signed 24-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int24: {'bits': 24, 'signed': true},
+  /**
+   * Unsigned 24-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt24: {'bits': 24},
+  /**
+   * Signed 32-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int32: {'bits': 32, 'signed': true},
+  /**
+   * Unsigned 32-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt32: {'bits': 32},
+  /**
+   * Single-precision floating-point numbers little-endian
+   * @type {!Object}
+   * @export
+   */
+  float32: {'bits': 32, 'float': true},
+  /**
+   * Signed 40-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int40: {'bits': 40, 'signed': true},
+  /**
+   * Unsigned 40-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt40: {'bits': 40},
+  /**
+   * Signed 48-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  int48: {'bits': 48, 'signed': true},
+  /**
+   * Unsigned 48-bit integers little-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt48: {'bits': 48},
+  /**
+   * Double-precision floating-point numbers little-endian
+   * @type {!Object}
+   * @export
+   */
+  float64: {'bits': 64, 'float': true},
+  // BE
+  /**
+   * Signed 16-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int16BE : {'bits': 16, 'signed': true, 'be': true},
+  /**
+   * Unsigned 16-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt16BE: {'bits': 16, 'be': true},
+  /**
+   * Half-precision floating-point numbers big-endian
+   * @type {!Object}
+   * @export
+   */
+  float16BE: {'bits': 16, 'float': true, 'be': true},
+  /**
+   * Signed 24-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int24BE: {'bits': 24, 'signed': true, 'be': true},
+  /**
+   * Unsigned 24-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt24BE: {'bits': 24, 'be': true},
+  /**
+   * Signed 32-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int32BE: {'bits': 32, 'signed': true, 'be': true},
+  /**
+   * Unsigned 32-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt32BE: {'bits': 32, 'be': true},
+  /**
+   * Single-precision floating-point numbers big-endian
+   * @type {!Object}
+   * @export
+   */
+  float32BE: {'bits': 32, 'float': true, 'be': true},
+  /**
+   * Signed 40-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int40BE: {'bits': 40, 'signed': true, 'be': true},
+  /**
+   * Unsigned 40-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt40BE: {'bits': 40, 'be': true},
+  /**
+   * Signed 48-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  int48BE: {'bits': 48, 'signed': true, 'be': true},
+  /**
+   * Unsigned 48-bit integers big-endian
+   * @type {!Object}
+   * @export
+   */
+  uInt48BE: {'bits': 48, 'be': true},
+  /**
+   * Double-precision floating-point numbers big-endian
+   * @type {!Object}
+   * @export
+   */
+  float64BE: {'bits': 64, 'float': true, 'be': true},
+};
+
+/*
+ * byte-data: Pack and unpack binary data.
+ * https://github.com/rochars/byte-data
+ *
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 /**
  * Pack a number or a string as a byte buffer.
@@ -45,7 +621,7 @@ export {default as types} from './lib/types.js';
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function pack(value, theType) {
+function pack(value, theType) {
   setUp_(theType);
   return toBytes_([value], theType);
 }
@@ -58,7 +634,7 @@ export function pack(value, theType) {
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
-export function packArray(values, theType) {
+function packArray(values, theType) {
   setUp_(theType);
   return toBytes_(values, theType);
 }
@@ -73,7 +649,7 @@ export function packArray(values, theType) {
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packTo(value, theType, buffer, index) {
+function packTo(value, theType, buffer, index) {
   setUp_(theType);
   let validate = validateNotNull_;
   if (theType['char']) {
@@ -98,7 +674,7 @@ export function packTo(value, theType, buffer, index) {
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packArrayTo(values, theType, buffer, index) {
+function packArrayTo(values, theType, buffer, index) {
   setUp_(theType);
   let validate = validateNotNull_;
   if (theType['char']) {
@@ -125,7 +701,7 @@ export function packArrayTo(values, theType, buffer, index) {
  * @return {number|string}
  * @throws {Error} If the type definition is not valid
  */
-export function unpack(buffer, theType) {
+function unpack(buffer, theType) {
   setUp_(theType);
   let values = fromBytes_(
     buffer.slice(0, theType['offset']), theType);
@@ -139,7 +715,7 @@ export function unpack(buffer, theType) {
  * @return {!Array<number|string>}
  * @throws {Error} If the type definition is not valid.
  */
-export function unpackArray(buffer, theType) {
+function unpackArray(buffer, theType) {
   setUp_(theType);
   return fromBytes_(buffer, theType);
 }
@@ -152,7 +728,7 @@ export function unpackArray(buffer, theType) {
  * @return {number|string}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackFrom(buffer, theType, index=0) {
+function unpackFrom(buffer, theType, index=0) {
   setUp_(theType);
   return readBytes_(buffer, theType, index);
 }
@@ -166,7 +742,7 @@ export function unpackFrom(buffer, theType, index=0) {
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayFrom(buffer, theType, start=0, end=null) {
+function unpackArrayFrom(buffer, theType, start=0, end=null) {
   setUp_(theType);
   if (theType['be']) {
     endianness(buffer, theType['offset']);
@@ -600,3 +1176,5 @@ function validateNotNull_(value) {
     throw new Error('Cannot pack null or undefined values.');
   }
 }
+
+export { pack, packArray, packTo, packArrayTo, unpack, unpackArray, unpackFrom, unpackArrayFrom, types };

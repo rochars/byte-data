@@ -25,23 +25,17 @@ https://github.com/rochars/byte-data
 npm install byte-data
 ```
 
-## Browser
-Use the compiled file in the */dist* folder:
-```html
-<script src="byte-data.min.js"></script>
+## Use
+
+### ES6
+```javascript
+import {pack, types} from 'byte-data.js';
+
+// Pack a usigned 8-bit number
+let packed = pack(128, types.uInt8);
 ```
 
-Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
-```html
-<script src="https://cdn.jsdelivr.net/npm/byte-data@11"></script>
-```
-
-Or get it from [unpkg](https://www.unpkg.com):
-```html
-<script src="https://unpkg.com/byte-data@11"></script>
-```
-
-## Example
+### Node
 ```javascript
 const byteData = require('byte-data');
 
@@ -62,6 +56,35 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16);
 // [65535, 0]
 ```
 
+### Browser
+Use the compiled file in the */dist* folder:
+```html
+<script src="byte-data.min.js"></script>
+<script>
+  // Pack a float32 number
+  byteData.pack(2.1474836, byteData.types.float32);
+  //[95, 112, 9, 64]
+</script>
+```
+
+Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
+```html
+<script src="https://cdn.jsdelivr.net/npm/byte-data@11"></script>
+```
+
+Or get it from [unpkg](https://www.unpkg.com):
+```html
+<script src="https://unpkg.com/byte-data@11"></script>
+```
+
+Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
+```html
+<script type="module">
+  import {pack, types} from 'https://dev.jspm.io/byte-data';
+  pack(-1200, types.int16);
+</script>
+```
+
 ## API
 ```javascript
 /**
@@ -79,13 +102,13 @@ function pack(value, theType) {}
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @return {number|string}
- * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the type definition is not valid
  */
 function unpack(buffer, theType) {}
 
 /**
  * Pack an array of numbers or strings to a byte buffer.
- * @param {!Array<number|string>} values The values.
+ * @param {!Array<number|string>|string} values The values.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid.
@@ -103,7 +126,7 @@ function packArray(values, theType) {}
 function unpackArray(buffer, theType) {}
 
 /**
- * Pack a number or a string as a byte buffer.
+ * Pack a number or a string to a existing byte buffer.
  * @param {number|string} value The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
@@ -115,8 +138,8 @@ function unpackArray(buffer, theType) {}
 function packTo(value, theType, buffer, index) {}
 
 /**
- * Pack a number or a string as a byte buffer.
- * @param {number|string} value The value.
+ * Pack a array of numbers or strings to a existing byte buffer.
+ * @param {!Array<number|string>} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number} index The buffer index to write.
@@ -127,7 +150,7 @@ function packTo(value, theType, buffer, index) {}
 function packArrayTo(values, theType, buffer, index) {}
 
 /**
- * Unpack a number or a string from a byte buffer.
+ * Unpack a number or a string from a byte buffer index.
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read.
@@ -137,12 +160,12 @@ function packArrayTo(values, theType, buffer, index) {}
 function unpackFrom(buffer, theType, start=0) {}
 
 /**
- * Unpack a number or a string from a byte buffer.
+ * Unpack a array of numbers strings from a byte buffer index.
  * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} theType The start index. Assumes 0.
- * @param {?number=} theType The end index. Assumes the array length.
- * @return {number|string}
+ * @param {number=} start The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the array length.
+ * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
 function unpackArrayFrom(buffer, theType, start=0, end=null) {}
@@ -204,11 +227,14 @@ Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) st
 Signed integers are two's complement.
 
 ## Distribution
-This library is implemented as a ES6 module and also distributed as a CommonJS module, UMD module and a compiled script for browsers.
-- The CommonJS is the one used by Node. It is served in the "main" field of package.json
-- The UMD module is compatible with Node, AMD and browsers. It is served in the "browser" field.
-- The compiled dist is browser-only and should be the one served by CDNs.
-- The ES6 dist is **./byte-data.esm.js**, served as "module" in package.json
+This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.
+
+- The **CommonJS** is the one used by Node. It is served in the "main" field of package.json
+- The **UMD** module is compatible with Node, AMD and browsers. It is served in the "browser" field.
+- The **compiled dist** is browser-only and should be the one served by CDNs.
+- The **ES6** dist is **byte-data.js**, served as "module" in package.json
+
+You may load both **byte-data.umd.js** and **byte-data.min.js** in the browser with ```<script>``` tags.
 
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.

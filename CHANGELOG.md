@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v11.0.3 (2018-06-25)
+- Allow better use of this lib as a dependency:
+	- package.json refactored with bundlers and ES6 envs in mind
+	- Fix inconsistent JSDoc declarations
+
 ## v11.0.2 (2018-06-24)
 - Fix ES6 dist to not rely on Node module path resolution.
 

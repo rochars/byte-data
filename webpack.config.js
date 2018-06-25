@@ -1,53 +1,25 @@
 /*
- * https://github.com/rochars/byte-data
+ * https://github.com/rochars/wavefile
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  */
 
 /**
  * @fileoverview webpack configuration file.
- * Three dist files are created:
- * - byte-data.cjs.js, CommonJS dist for Node. No dependencies included.
- * - byte-data.umd.js, UMD with dependencies included.
- * - byte-data.min.js, Compiled for browsers. All dependencies included.
  */
 
 const ClosureCompiler = require('google-closure-compiler-js').webpack;
 
 module.exports = [
-  // CommonJS dist, no dependencies in the bundle.
-  // Will be the one in the "main" field of package.json.
-  {
-    target: 'node',
-    entry: './main.js',
-    output: {
-      filename: './dist/byte-data.cjs.js',
-      libraryTarget: "commonjs"
-    },
-    externals: {
-      'endianness': 'endianness',
-    }
-  },
-  // UMD with dependencies in the bundle.
-  // Will be the one in the "browser" field of package.json.
-  {
-    entry: './main.js',
-    resolve: {
-      mainFields: ['module', 'main']
-    },
-    output: {
-      filename: './dist/byte-data.umd.js',
-      library: "byteData",
-      libraryTarget: "umd"
-    }
-  },
   // Browser dist with dependencies, compiled.
   {
     entry: './main.js',
+    mode: 'production',
     resolve: {
       mainFields: ['module', 'main']
     },
+    optimization: {minimize:false},
     output: {
-      filename: './dist/byte-data.min.js',
+      filename: 'byte-data.min.js',
       library: "byteData",
       libraryTarget: "window"
     },
@@ -59,9 +31,23 @@ module.exports = [
           compilationLevel: 'ADVANCED',
           warningLevel: 'VERBOSE',
           exportLocalPropertyDefinitions: true,
-          generateExports: true
-        },
+          generateExports: true,
+        }
       })
     ]
+  },
+  // Browser dist with dependencies, uncompiled.
+  {
+    entry: './main.js',
+    mode: 'production',
+    resolve: {
+      mainFields: ['module', 'main']
+    },
+    optimization: {minimize:false},
+    output: {
+      filename: 'byte-data.browser.js',
+      library: "byteData",
+      libraryTarget: "window"
+    }
   }
 ];
