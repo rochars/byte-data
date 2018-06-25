@@ -5,6 +5,6 @@ This library is a ES6 module also distributed as a CommonJS module, UMD and a co
 - The **CommonJS** is the one used by Node. It is served in the "main" field of package.json
 - The **UMD** module is compatible with Node, AMD and browsers. It is served in the "browser" field.
 - The **compiled dist** is browser-only and should be the one served by CDNs.
-- The **ES6** dist is **endianness.js**, served as "module" in package.json
+- The **ES6** dist is **byte-data.js**, served as "module" in package.json
 
-You may load both **endianness.umd.js** and **endianness.min.js** in the browser with ```<script>``` tags.
+You may load both **byte-data.umd.js** and **byte-data.min.js** in the browser with ```<script>``` tags.
