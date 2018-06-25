@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "11.0.3-alpha.4",
+  "version": "11.1.0-alpha.0",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
@@ -55,6 +55,10 @@
   },
   "bugs": {
     "url": "https://github.com/rochars/byte-data/issues"
+  },
+  "directories": {
+    "lib": "./lib",
+    "dist": "./dist"
   },
   "scripts": {
     "lint": "jshint main.js && jshint lib && jshint test",
