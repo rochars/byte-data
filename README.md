@@ -40,18 +40,6 @@ const byteData = require('byte-data');
 // Pack a float32 number
 byteData.pack(2.1474836, byteData.types.float32);
 //[95, 112, 9, 64]
-
-// Pack an array of uInt16 numbers
-byteData.packArray([65535, 0], byteData.types.uInt16);
-// [255, 255, 0, 0]);
-
-// Pack an array of int32 numbers
-byteData.packArray([-2147483648, 2147483647], byteData.types.int32);
-//[0, 0, 0, 128, 255, 255, 255, 127]
-
-// Unpack an array of uInt16 numbers
-byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16);
-// [65535, 0]
 ```
 
 ### Browser
@@ -81,6 +69,27 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
   import {pack, types} from 'https://dev.jspm.io/byte-data';
   pack(-1200, types.int16);
 </script>
+```
+
+## Example
+```javascript
+const byteData = require('byte-data');
+
+// Pack a float32 number
+byteData.pack(2.1474836, byteData.types.float32);
+//[95, 112, 9, 64]
+
+// Pack an array of uInt16 numbers
+byteData.packArray([65535, 0], byteData.types.uInt16);
+// [255, 255, 0, 0]);
+
+// Pack an array of int32 numbers
+byteData.packArray([-2147483648, 2147483647], byteData.types.int32);
+//[0, 0, 0, 128, 255, 255, 255, 127]
+
+// Unpack an array of uInt16 numbers
+byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16);
+// [65535, 0]
 ```
 
 ## API
