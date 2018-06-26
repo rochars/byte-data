@@ -16,7 +16,7 @@ https://github.com/rochars/byte-data
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
 - Little-endian and big-endian words
-- UTF-16 Strings
+- Strings
 
 ## Install
 ```
@@ -85,10 +85,10 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 
 ## API
 
-### UTF-16 strings:
+### Strings:
 ```javascript
 /**
- * Read a UTF-16 string from a byte buffer.
+ * Read a string from a byte buffer.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.

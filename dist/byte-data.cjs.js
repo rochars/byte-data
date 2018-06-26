@@ -612,9 +612,9 @@ var types = {
  *
  */
 
-// UTF-16 Strings
+// Strings
 /**
- * Read a UTF-16 string from a byte buffer.
+ * Read a string from a byte buffer.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
