@@ -2,7 +2,7 @@
  * Copyright (c) 2017 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
- */
+
 
 let assert = require('assert');
 let byteData = require('../../../test/loader.js');
@@ -24,3 +24,4 @@ describe('pack fourCC', function() {
             [97,98,99,100,97,98,99,100]);
     });
 });
+ */

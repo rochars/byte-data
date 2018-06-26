@@ -9,6 +9,11 @@ let byteData = require('../../test/loader.js');
 
 describe('interface', function() {
     // pack
+    it('pack null uInt16 (0, 0)', function() {
+        assert.deepEqual(
+            byteData.pack(null, byteData.types.uInt16),
+            [0, 0]);
+    });
     it('pack uInt16 (65535, 16)', function() {
         assert.deepEqual(
             byteData.pack(65535, byteData.types.uInt16),
@@ -26,14 +31,6 @@ describe('interface', function() {
     it('pack uInt4 (15)', function() {
         assert.deepEqual(byteData.pack(15, byteData.types.uInt4),
             [15]);
-    });
-    it('pack bool (1, 16) should return 1', function() {
-        assert.deepEqual(byteData.pack(1, byteData.types.bool),
-            [1]);
-    });
-    it('pack chr ("a")', function() {
-        assert.deepEqual(byteData.pack("a", byteData.types.chr),
-            [97]);
     });
     it('pack uInt8 (254)', function() {
         assert.deepEqual(byteData.pack(254, byteData.types.uInt8),
@@ -53,11 +50,6 @@ describe('interface', function() {
     });
 
     // unpack
-    it('unpack chr', function() {
-        assert.deepEqual(
-            byteData.unpack([97, 98, 99, 199], byteData.types.chr),
-            "a");
-    });
     it('unpack uInt16', function() {
         assert.deepEqual(
             byteData.unpack([255, 255], byteData.types.uInt16),
@@ -73,9 +65,6 @@ describe('interface', function() {
     });
     it('unpack uInt2', function() {
         assert.equal(byteData.unpack([3], byteData.types.uInt2), 3);
-    });
-    it('unpack chr', function() {
-        assert.deepEqual(byteData.unpack([97, 98], byteData.types.chr), "a");
     });
     it('unpack uInt16', function() {
         assert.equal(byteData.unpack(
@@ -95,10 +84,6 @@ describe('interface', function() {
     it('packArray float32', function() {
         assert.deepEqual(byteData.packArray([-1, 1], byteData.types.float32),
             [0,0,128,191,0,0,128,63]);
-    });
-    it('packArray chr', function() {
-        assert.deepEqual(byteData.packArray("ab", byteData.types.chr),
-            [97, 98]);
     });
 
     // unpackArray

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v12.0.0 (2018-06-26)
+- Functions from the old API can handle only numbers
+- new string functions: packString, packStringTo, unpackString
+- null values are packed as zero
+
 ## v11.1.0 (2018-06-25)
 - Allow better use of this lib as a dependency:
 	- package.json refactored with bundlers and ES6 envs in mind

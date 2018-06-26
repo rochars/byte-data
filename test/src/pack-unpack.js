@@ -7,8 +7,6 @@
 let assert = require('assert');
 let byteData = require('../../test/loader.js');
 
-let chr = byteData.types.chr;
-let bool = byteData.types.bool;
 let uInt2 = byteData.types.uInt2;
 let int2 = byteData.types.int2;
 let uInt4 = byteData.types.uInt4;
@@ -517,33 +515,6 @@ describe('pack-unpack', function() {
         let crumbs = byteData.packArray([-1], int2);
         let num = byteData.unpackArray(crumbs, int2);
         assert.deepEqual([-1], num);
-    });
-
-    // 1-bit
-    it('should turn 1-bit int to boolean (0s)', function() {
-        let vbool = byteData.packArray([0], bool);
-        let num = byteData.unpackArray(vbool, bool);
-        assert.deepEqual([0], num);
-    });
-    it('should turn 1-bit int to boolean (1)', function() {
-        let vbool = byteData.packArray([1], bool);
-        let num = byteData.unpackArray(vbool, bool);
-        assert.deepEqual([1], num);
-    });
-
-    // string
-    it('should turn a 2 char string to bytes and then to ["a","b"]', function() {
-        let bytes = byteData.packArray("ab", chr);
-        assert.deepEqual(bytes, [97, 98]);
-        let string = byteData.unpackArray(bytes, chr);
-        assert.deepEqual(["a","b"], string);
-    });
-
-    it('should turn a 2 array of ["a","b"] to bytes and back', function() {
-        let bytes = byteData.packArray(["a","b"], chr);
-        assert.deepEqual(bytes, [97, 98]);
-        let string = byteData.unpackArray(bytes, chr);
-        assert.deepEqual(["a","b"], string);
     });
 });
  

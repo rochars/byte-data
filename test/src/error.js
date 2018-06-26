@@ -11,57 +11,11 @@ let typeError = "Not a supported type.";
 let floatTypeError = "Not a supported float type.";
 
 describe('Errors', function() {
-
-    // strings
-    it("String overflow in array", function () {
-        testFunc = function() {
-            byteData.packArray(["abcde"], {"char": true, "bits": 32});
-        };
-        expect(testFunc).to.throw("String is bigger than its type definition.");
-    });
-    it("String underflow in array", function () {
-        testFunc = function() {
-            byteData.packArray(["abc"], {"char": true, "bits": 32});
-        };
-        expect(testFunc).to.throw("String is smaller than its type definition.");
-    });
-    it("String overflow", function () {
-        testFunc = function() {
-            byteData.pack("abcde", {"char": true, "bits": 32});
-        };
-        expect(testFunc).to.throw("String is bigger than its type definition.");
-    });
-    it("String underflow", function () {
-        testFunc = function() {
-            byteData.pack("abc", {"char": true, "bits": 32});
-        };
-        expect(testFunc).to.throw("String is smaller than its type definition.");
-    });
-    it("string with odd number of bits", function () {
-        testFunc = function() {
-            byteData.pack("a", {"char": true, "bits": 9});
-        };
-        expect(testFunc).to.throw("Wrong offset for type char.");
-    });
-    it("char with less than 8 bits", function () {
-        testFunc = function() {
-            byteData.pack("a", {"char": true, "bits": 7});
-        };
-        expect(testFunc).to.throw("Wrong offset for type char.");
-    });
-
-    // null and undefined
-    it("null value", function () {
-        testFunc = function() {
-            byteData.pack(null, {"bits": 8});
-        };
-        expect(testFunc).to.throw("Cannot pack null or undefined values.");
-    });
     it("undefined value", function () {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
         };
-        expect(testFunc).to.throw("Cannot pack null or undefined values.");
+        expect(testFunc).to.throw("Cannot pack undefined values.");
     });
 
     // overflow and underflow

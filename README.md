@@ -8,17 +8,15 @@ https://github.com/rochars/byte-data
 
 - Runs in the server and in the browser
 - Less than 3KB minified + compressed, less than 7KB minified
-- Tested against Python's struct module (for all common types)
 - Pack and unpack **single values** and entire **buffers**
 
 ## Pack/unpack:
-- Booleans
 - Integers, signed and unsigned
 - 16-bit half-precision floating point numbers
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
 - Little-endian and big-endian words
-- Strings
+- UTF-16 Strings
 
 ## Install
 ```
@@ -86,85 +84,118 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 ```
 
 ## API
+
+### UTF-16 strings:
 ```javascript
 /**
- * Pack a number or a string as a byte buffer.
- * @param {number|string} value The value.
+ * Read a UTF-16 string from a byte buffer.
+ * @param {!Uint8Array} bytes A byte buffer.
+ * @param {number=} index The index to read.
+ * @param {?number=} len The number of bytes to read.
+ * @return {string}
+ * @private
+ */
+function unpackString(bytes, index=0, len=null) {}
+
+/**
+ * Write a string as a byte buffer.
+ * @param {string} str The string to pack.
+ * @return {!Array<number>} The next index to write on the buffer.
+ * @private
+ */
+function packString(str) {}
+
+/**
+ * Write a string to a byte buffer.
+ * @param {string} str The string to pack.
+ * @param {!Uint8Array} bytes A byte buffer.
+ * @param {number=} index The index to write in the buffer.
+ * @return {number} The next index to write in the buffer.
+ * @private
+ */
+function packStringTo(str, bytes, index=0) {}
+```
+
+### Numbers
+```javascript
+/**
+ * Pack a number as a byte buffer.
+ * @param {number} value The number.
  * @param {!Object} theType The type definition.
- * @return {!Array<number>}
+ * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
 function pack(value, theType) {}
 
 /**
- * Unpack a number or a string from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * Pack an array of numbers as a byte buffer.
+ * @param {!Array<number>} values The values.
  * @param {!Object} theType The type definition.
- * @return {number|string}
- * @throws {Error} If the type definition is not valid
- */
-function unpack(buffer, theType) {}
-
-/**
- * Pack an array of numbers or strings to a byte buffer.
- * @param {!Array<number|string>|string} values The values.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>}
+ * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
 function packArray(values, theType) {}
 
 /**
- * Unpack an array of numbers or strings from a byte buffer.
- * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * Pack a number to a byte buffer.
+ * @param {number} value The value.
  * @param {!Object} theType The type definition.
- * @return {!Array<number|string>}
- * @throws {Error} If the type definition is not valid.
- */
-function unpackArray(buffer, theType) {}
-
-/**
- * Pack a number or a string to a existing byte buffer.
- * @param {number|string} value The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number} index The buffer index to write.
- * @return {number} The next index to start writing.
+ * @param {!Uint8Array} buffer The output buffer.
+ * @param {number} index The index to write.
+ * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
 function packTo(value, theType, buffer, index) {}
 
 /**
- * Pack a array of numbers or strings to a existing byte buffer.
- * @param {!Array<number|string>} values The value.
+ * Pack a array of numbers to a byte buffer.
+ * @param {!Array<number>} values The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {!Uint8Array} buffer The output buffer.
  * @param {number} index The buffer index to write.
- * @return {number} The next index to start writing.
+ * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
 function packArrayTo(values, theType, buffer, index) {}
 
 /**
- * Unpack a number or a string from a byte buffer index.
- * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * Unpack a number from a byte buffer.
+ * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to read.
- * @return {number|string}
+ * @return {number}
  * @throws {Error} If the type definition is not valid
  */
-function unpackFrom(buffer, theType, start=0) {}
+function unpack(buffer, theType) {}
 
 /**
- * Unpack a array of numbers strings from a byte buffer index.
- * @param {!Array<number>|!Uint8Array} buffer The byte buffer.
+ * Unpack an array of numbers from a byte buffer.
+ * @param {!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number>}
+ * @throws {Error} If the type definition is not valid.
+ */
+function unpackArray(buffer, theType) {}
+
+/**
+ * Unpack a number from a byte buffer by index.
+ * @param {!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} index The buffer index to read.
+ * @return {number}
+ * @throws {Error} If the type definition is not valid
+ */
+function unpackFrom(buffer, theType, index=0) {}
+
+/**
+ * Unpack a array of numbers from a byte buffer by index.
+ * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} start The start index. Assumes 0.
- * @param {?number=} end The end index. Assumes the array length.
+ * @param {?number=} end The end index. Assumes the buffer length.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
@@ -180,9 +211,6 @@ byteData.pack(value, byteData.types.float16);
 ```
 
 ### The default types:
-  - chr
-  - fourCC
-  - bool
   - int2
   - uInt2
   - int4
