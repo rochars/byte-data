@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v12.0.1 (2018-06-26)
+- Add TypeScript declaration file.
+
 ## v12.0.0 (2018-06-26)
 - Functions from the old API can handle only numbers
 - new string functions: packString, packStringTo, unpackString
