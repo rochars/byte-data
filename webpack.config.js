@@ -31,23 +31,9 @@ module.exports = [
           compilationLevel: 'ADVANCED',
           warningLevel: 'VERBOSE',
           exportLocalPropertyDefinitions: true,
-          generateExports: true,
+          generateExports: true
         }
       })
     ]
-  },
-  // Browser dist with dependencies, uncompiled.
-  {
-    entry: './main.js',
-    mode: 'production',
-    resolve: {
-      mainFields: ['module', 'main']
-    },
-    optimization: {minimize:false},
-    output: {
-      filename: 'byte-data.browser.js',
-      library: "byteData",
-      libraryTarget: "window"
-    }
   }
 ];
