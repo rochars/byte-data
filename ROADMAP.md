@@ -8,9 +8,6 @@ See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUT
 
 ## Planned features
 Items in this list should not require a major version update.
-- Functions that work only with strings
-- Functions that work only with numbers
-- Functions that work only with arrays
 - Add a TypeScript declaration file
 
 ## Chores
