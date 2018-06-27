@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.0.1 (2018-06-27)
+- Using dot notation to allow better compilation on hosts.
+
 ## v13.0.0 (2018-06-26)
 - No more standard types; types must be defined by the user.
 

@@ -72,12 +72,9 @@ export default [
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
-        compilationLevel: 'ADVANCED',
+        compilationLevel: 'SIMPLE',
         warningLevel: 'VERBOSE',
-        exportLocalPropertyDefinitions: true,
-        generateExports: true,
-        externs: [{src: externals}],
-        outputWrapper: license + 'window.byteData=%output%'
+        outputWrapper: license + '%output%window.byteData=byteData;'
       })
     ]
   }

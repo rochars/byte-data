@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "description": "Pack and unpack binary data.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
@@ -61,7 +61,7 @@
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
   "devDependencies": {
-    "binary-data-types": "0.0.5",
+    "binary-data-types": "0.1.0",
     "browser-env": "^3.2.5",
     "chai": "^4.1.2",
     "codecov": "^3.0.2",

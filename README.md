@@ -30,7 +30,7 @@ npm install byte-data
 import {pack} from 'byte-data.js';
 
 // Pack a usigned 8-bit number
-let packed = pack(128, {'bits': 8});
+let packed = pack(128, {bits: 8});
 ```
 
 ### Node
@@ -38,7 +38,7 @@ let packed = pack(128, {'bits': 8});
 const byteData = require('byte-data');
 
 // Pack a float32 number
-byteData.pack(2.1474836, {'bits': 32, 'float': true});
+byteData.pack(2.1474836, {bits: 32, float: true});
 //[95, 112, 9, 64]
 ```
 
@@ -48,7 +48,7 @@ Use the compiled file in the */dist* folder:
 <script src="byte-data.min.js"></script>
 <script>
   // Pack a float32 number
-  byteData.pack(2.1474836, {'bits': 32, 'float': true});
+  byteData.pack(2.1474836, {bits: 32, float: true});
   //[95, 112, 9, 64]
 </script>
 ```
@@ -67,7 +67,7 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 ```html
 <script type="module">
   import {pack} from 'https://dev.jspm.io/byte-data';
-  pack(-1200, {'bits': 16, 'signed': true});
+  pack(-1200, {bits: 16, signed: true});
 </script>
 ```
 
@@ -76,19 +76,19 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 const byteData = require('byte-data');
 
 // Pack a float32 number
-byteData.pack(2.1474836, {'bits': 32, 'float': true});
+byteData.pack(2.1474836, {bits: 32, float: true});
 //[95, 112, 9, 64]
 
 // Pack an array of uInt16 numbers
-byteData.packArray([65535, 0], {'bits': 16});
+byteData.packArray([65535, 0], {bits: 16});
 // [255, 255, 0, 0]);
 
 // Pack an array of int32 numbers
-byteData.packArray([-2147483648, 2147483647], {'bits': 32, 'signed': true});
+byteData.packArray([-2147483648, 2147483647], {bits: 32, signed: true});
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
 // Unpack an array of uInt16 numbers
-byteData.unpackArray([255, 255, 0, 0], {'bits': 16});
+byteData.unpackArray([255, 255, 0, 0], {bits: 16});
 // [65535, 0]
 ```
 
@@ -218,10 +218,10 @@ Signed integers are two's complement.
 Types are user-defined objects like this:
 ```javascript
 const float32 = {
-  "bits": 32, // required
-  "signed": true, // optional, defaults to false
-  "float": true, // optional, defaults to false
-  "be": false // optional, defaults to false, true for big-endian
+  bits: 32, // required
+  signed: true, // optional, defaults to false
+  float: true, // optional, defaults to false
+  be: false // optional, defaults to false, true for big-endian
 }
 ```
 

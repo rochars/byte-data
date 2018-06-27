@@ -26,7 +26,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 13.0.0
+ * @fileoverview Externs for byte-data 13.0.1
  *
  * @see https://github.com/rochars/byte-data
  * @externs

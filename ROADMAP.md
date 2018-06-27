@@ -6,6 +6,9 @@ Please feel free to file issues on this repository if you have questions, concer
 
 See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md) for information about how to contribute to this project.
 
+## Planned features:
+- Support big-endian envs
+
 ## Chores
 
 ### Unit testing

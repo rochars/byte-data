@@ -294,7 +294,6 @@ class Integer {
 /**
  * Validate that the value is not null or undefined.
  * @param {number} value The value.
- * @private
  */
 function validateNotUndefined(value) {
   if (value === undefined) {
@@ -306,13 +305,12 @@ function validateNotUndefined(value) {
  * Validate the type definition.
  * @param {!Object} theType The type definition.
  * @throws {Error} If the type definition is not valid.
- * @private
  */
 function validateType(theType) {
   if (!theType) {
     throw new Error('Undefined type.');
   }
-  if (theType['float']) {
+  if (theType.float) {
     validateFloatType_(theType);
   } else {
     validateIntType_(theType);
@@ -326,7 +324,7 @@ function validateType(theType) {
  * @private
  */
 function validateFloatType_(theType) {
-  if ([16,32,64].indexOf(theType['bits']) == -1) {
+  if ([16,32,64].indexOf(theType.bits) == -1) {
     throw new Error('Bad float type.');
   }
 }
@@ -338,7 +336,7 @@ function validateFloatType_(theType) {
  * @private
  */
 function validateIntType_(theType) {
-  if (theType['bits'] < 1 || theType['bits'] > 53) {
+  if (theType.bits < 1 || theType.bits > 53) {
     throw new Error('Bad type definition.');
   }
 }
@@ -458,9 +456,9 @@ function packTo(value, theType, buffer, index=0) {
     theType,
     buffer,
     index,
-    index + theType['offset'],
+    index + theType.offset,
     validateNotUndefined,
-    theType['be']);
+    theType.be);
 }
 
 /**
@@ -475,8 +473,8 @@ function packTo(value, theType, buffer, index=0) {
  */
 function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
-  let be = theType['be'];
-  let offset = theType['offset'];
+  let be = theType.be;
+  let offset = theType.offset;
   for (let i=0; i<values.length; i++) {
     index = writeBytes_(
       values[i],
@@ -500,7 +498,7 @@ function packArrayTo(values, theType, buffer, index=0) {
 function unpack(buffer, theType) {
   setUp_(theType);
   let values = fromBytes_(
-    buffer.slice(0, theType['offset']), theType);
+    buffer.slice(0, theType.offset), theType);
   return values[0];
 }
 
@@ -526,12 +524,12 @@ function unpackArray(buffer, theType) {
  */
 function unpackFrom(buffer, theType, index=0) {
   setUp_(theType);
-  if (theType['be']) {
-    endianness(buffer, theType['offset'], index, index + theType['offset']);
+  if (theType.be) {
+    endianness(buffer, theType.offset, index, index + theType.offset);
   }
   let value = reader_(buffer, index);
-  if (theType['be']) {
-    endianness(buffer, theType['offset'], index, index + theType['offset']);
+  if (theType.be) {
+    endianness(buffer, theType.offset, index, index + theType.offset);
   }
   return value;
 }
@@ -547,16 +545,16 @@ function unpackFrom(buffer, theType, index=0) {
  */
 function unpackArrayFrom(buffer, theType, start=0, end=null) {
   setUp_(theType);
-  if (theType['be']) {
-    endianness(buffer, theType['offset']);
+  if (theType.be) {
+    endianness(buffer, theType.offset);
   }
   let len = end || buffer.length;
   let values = [];
-  for (let i=start; i<len; i+=theType['offset']) {
+  for (let i=start; i<len; i+=theType.offset) {
     values.push(reader_(buffer, i));
   }
-  if (theType['be']) {
-    endianness(buffer, theType['offset']);
+  if (theType.be) {
+    endianness(buffer, theType.offset);
   }
   return values;
 }
@@ -616,7 +614,7 @@ function writeBytes_(value, theType, buffer, index, len, validate, be) {
   }
   if (be) {
     endianness(
-      buffer, theType['offset'], index - theType['offset'], index);
+      buffer, theType.offset, index - theType.offset, index);
   }
   return index;
 }
@@ -629,13 +627,13 @@ function writeBytes_(value, theType, buffer, index, len, validate, be) {
  * @private
  */
 function fromBytes_(buffer, theType) {
-  if (theType['be']) {
-    endianness(buffer, theType['offset']);
+  if (theType.be) {
+    endianness(buffer, theType.offset);
   }
   let len = buffer.length;
   let values = [];
-  len = len - (theType['offset'] - 1);
-  for (let i=0; i<len; i+=theType['offset']) {
+  len = len - (theType.offset - 1);
+  for (let i=0; i<len; i+=theType.offset) {
     values.push(reader_(buffer, i));
   }
   return values;
@@ -656,8 +654,8 @@ function toBytes_(values, theType) {
     validateNotUndefined(values[i]);
     j = writer_(bytes, values[i], j);
   }
-  if (theType['be']) {
-    endianness(bytes, theType['offset']);
+  if (theType.be) {
+    endianness(bytes, theType.offset);
   }
   return bytes;
 }
@@ -788,12 +786,12 @@ function write64F_(bytes, number, j) {
  * @private
  */
 function setReader(theType) {
-  if (theType['float']) {
-    if (theType['bits'] == 16) {
+  if (theType.float) {
+    if (theType.bits == 16) {
       reader_ = read16F_;
-    } else if(theType['bits'] == 32) {
+    } else if(theType.bits == 32) {
       reader_ = read32F_;
-    } else if(theType['bits'] == 64) {
+    } else if(theType.bits == 64) {
       reader_ = read64F_;
     }
   } else {
@@ -807,12 +805,12 @@ function setReader(theType) {
  * @private
  */
 function setWriter(theType) {
-  if (theType['float']) {
-    if (theType['bits'] == 16) {
+  if (theType.float) {
+    if (theType.bits == 16) {
       writer_ = write16F_;
-    } else if(theType['bits'] == 32) {
+    } else if(theType.bits == 32) {
       writer_ = write32F_;
-    } else if(theType['bits'] == 64) {
+    } else if(theType.bits == 64) {
       writer_ = write64F_;
     }
   } else {
@@ -828,12 +826,12 @@ function setWriter(theType) {
  */
 function setUp_(theType) {
   validateType(theType);
-  theType['offset'] = theType['bits'] < 8 ? 1 : Math.ceil(theType['bits'] / 8);
+  theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
   setReader(theType);
   setWriter(theType);
   gInt_ = new Integer(
-    theType['bits'] == 64 ? 32 : theType['bits'],
-    theType['float'] ? false : theType['signed']);
+    theType.bits == 64 ? 32 : theType.bits,
+    theType.float ? false : theType.signed);
 }
 
 exports.unpackString = unpackString;
