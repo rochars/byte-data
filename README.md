@@ -27,10 +27,10 @@ npm install byte-data
 
 ### ES6
 ```javascript
-import {pack, types} from 'byte-data.js';
+import {pack} from 'byte-data.js';
 
 // Pack a usigned 8-bit number
-let packed = pack(128, types.uInt8);
+let packed = pack(128, {'bits': 8});
 ```
 
 ### Node
@@ -38,7 +38,7 @@ let packed = pack(128, types.uInt8);
 const byteData = require('byte-data');
 
 // Pack a float32 number
-byteData.pack(2.1474836, byteData.types.float32);
+byteData.pack(2.1474836, {'bits': 32, 'float': true});
 //[95, 112, 9, 64]
 ```
 
@@ -48,7 +48,7 @@ Use the compiled file in the */dist* folder:
 <script src="byte-data.min.js"></script>
 <script>
   // Pack a float32 number
-  byteData.pack(2.1474836, byteData.types.float32);
+  byteData.pack(2.1474836, {'bits': 32, 'float': true});
   //[95, 112, 9, 64]
 </script>
 ```
@@ -66,8 +66,8 @@ Or get it from [unpkg](https://www.unpkg.com):
 Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 ```html
 <script type="module">
-  import {pack, types} from 'https://dev.jspm.io/byte-data';
-  pack(-1200, types.int16);
+  import {pack} from 'https://dev.jspm.io/byte-data';
+  pack(-1200, {'bits': 16, 'signed': true});
 </script>
 ```
 
@@ -76,19 +76,19 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 const byteData = require('byte-data');
 
 // Pack a float32 number
-byteData.pack(2.1474836, byteData.types.float32);
+byteData.pack(2.1474836, {'bits': 32, 'float': true});
 //[95, 112, 9, 64]
 
 // Pack an array of uInt16 numbers
-byteData.packArray([65535, 0], byteData.types.uInt16);
+byteData.packArray([65535, 0], {'bits': 16});
 // [255, 255, 0, 0]);
 
 // Pack an array of int32 numbers
-byteData.packArray([-2147483648, 2147483647], byteData.types.int32);
+byteData.packArray([-2147483648, 2147483647], {'bits': 32, 'signed': true});
 //[0, 0, 0, 128, 255, 255, 255, 127]
 
 // Unpack an array of uInt16 numbers
-byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16);
+byteData.unpackArray([255, 255, 0, 0], {'bits': 16});
 // [65535, 0]
 ```
 
