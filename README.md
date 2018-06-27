@@ -7,7 +7,7 @@ https://github.com/rochars/byte-data
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
 - Runs in the server and in the browser
-- Less than 3KB minified + compressed, less than 7KB minified
+- Less than 2KB minified + compressed, less than 5KB minified
 - Pack and unpack **single values** and entire **buffers**
 
 ## Pack/unpack:
@@ -102,7 +102,6 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16);
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
- * @private
  */
 function unpackString(bytes, index=0, len=null) {}
 
@@ -110,7 +109,6 @@ function unpackString(bytes, index=0, len=null) {}
  * Write a string as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The next index to write on the buffer.
- * @private
  */
 function packString(str) {}
 
@@ -120,7 +118,6 @@ function packString(str) {}
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
- * @private
  */
 function packStringTo(str, bytes, index=0) {}
 ```
@@ -211,15 +208,29 @@ function unpackFrom(buffer, theType, index=0) {}
 function unpackArrayFrom(buffer, theType, start=0, end=null) {}
 ```
 
-## Types
-**byte-data** default types are defined in the **types** object.
+## Floating-point numbers
+Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
-Example:
-```javascript
-byteData.pack(value, byteData.types.float16);
+## Signed integers
+Signed integers are two's complement.
+
+## Types
+Types are user-defined objects like this:
+```
+const float32 = {
+  "bits": 32, // required
+  "signed": true, // optional, defaults to false
+  "float": true, // optional, defaults to false
+  "be": false // true for big-endian
+}
 ```
 
-### The default types:
+There is a standard set of types that can be installed:
+```
+npm install binary-data-types
+```
+All types in **binary-data-types** are supported by byte-data. They are:
+
   - int2
   - uInt2
   - int4
@@ -256,12 +267,6 @@ byteData.pack(value, byteData.types.float16);
   - int48BE
   - uInt48BE
   - float64BE
-
-## Floating-point numbers
-Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
-
-## Signed integers
-Signed integers are two's complement.
 
 ## Distribution
 This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.

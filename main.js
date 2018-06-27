@@ -37,8 +37,6 @@ import endianness from 'endianness';
 
 import {validateType, validateNotUndefined} from './lib/validation.js';
 
-export {default as types} from './lib/types.js';
-
 // Strings
 /**
  * Read a string from a byte buffer.
@@ -46,7 +44,6 @@ export {default as types} from './lib/types.js';
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
- * @private
  */
 export function unpackString(bytes, index=0, len=null) {
   let chrs = '';
@@ -61,7 +58,6 @@ export function unpackString(bytes, index=0, len=null) {
  * Write a string as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The next index to write on the buffer.
- * @private
  */
 export function packString(str) {
   let bytes = [];
@@ -77,7 +73,6 @@ export function packString(str) {
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
- * @private
  */
 export function packStringTo(str, bytes, index=0) {
   for (let i = 0; i < str.length; i++) {
@@ -119,12 +114,12 @@ export function packArray(values, theType) {
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
- * @param {number} index The index to write.
+ * @param {number=} index The index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packTo(value, theType, buffer, index) {
+export function packTo(value, theType, buffer, index=0) {
   setUp_(theType);
   return writeBytes_(value,
     theType,
@@ -140,12 +135,12 @@ export function packTo(value, theType, buffer, index) {
  * @param {!Array<number>} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
- * @param {number} index The buffer index to write.
+ * @param {number=} index The buffer index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packArrayTo(values, theType, buffer, index) {
+export function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
   let be = theType['be'];
   let offset = theType['offset'];

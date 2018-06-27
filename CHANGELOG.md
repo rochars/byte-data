@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.0.0 (2018-06-26)
+- No more standard types; types must be defined by the user.
+
 ## v12.0.1 (2018-06-26)
 - Add TypeScript declaration file.
 

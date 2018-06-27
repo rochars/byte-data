@@ -5,6 +5,7 @@
  */
 
 let byteData;
+let types = require("binary-data-types");
 
 // Browser bundle
 if (process.argv[3] == '--min') {
@@ -35,4 +36,5 @@ if (process.argv[3] == '--min') {
 	byteData = require('../main.js');
 }
 
+byteData.types = types;
 module.exports = byteData;

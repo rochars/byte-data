@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayFrom">unpackArrayFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackFrom">unpackFrom</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayFrom">unpackArrayFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackFrom">unpackFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -50,7 +50,7 @@
 <p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a><br><a href="https://codecov.io/gh/rochars/byte-data"><img src="https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square" alt="Codecov"></a> <a href="https://travis-ci.org/rochars/byte-data"><img src="https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square" alt="Unix Build"></a> <a href="https://ci.appveyor.com/project/rochars/byte-data"><img src="https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&amp;logo=appveyor" alt="Windows Build"></a> <a href="https://scrutinizer-ci.com/g/rochars/byte-data/"><img src="https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&amp;logo=scrutinizer" alt="Scrutinizer"></a></p>
 <ul>
 <li>Runs in the server and in the browser</li>
-<li>Less than 3KB minified + compressed, less than 7KB minified</li>
+<li>Less than 2KB minified + compressed, less than 5KB minified</li>
 <li>Pack and unpack <strong>single values</strong> and entire <strong>buffers</strong></li>
 </ul>
 <h2>Pack/unpack:</h2><ul>
@@ -102,7 +102,6 @@ byteData.unpackArray([255, 255, 0, 0], byteData.types.uInt16);
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
- * @private
  */
 function unpackString(bytes, index=0, len=null) {}
 
@@ -110,7 +109,6 @@ function unpackString(bytes, index=0, len=null) {}
  * Write a string as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array&lt;number>} The next index to write on the buffer.
- * @private
  */
 function packString(str) {}
 
@@ -120,7 +118,6 @@ function packString(str) {}
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
- * @private
  */
 function packStringTo(str, bytes, index=0) {}</code></pre><h3>Numbers</h3><pre class="prettyprint source lang-javascript"><code>/**
  * Pack a number as a byte buffer.
@@ -203,9 +200,17 @@ function unpackFrom(buffer, theType, index=0) {}
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayFrom(buffer, theType, start=0, end=null) {}</code></pre><h2>Types</h2><p><strong>byte-data</strong> default types are defined in the <strong>types</strong> object.</p>
-<p>Example:</p>
-<pre class="prettyprint source lang-javascript"><code>byteData.pack(value, byteData.types.float16);</code></pre><h3>The default types:</h3><ul>
+function unpackArrayFrom(buffer, theType, start=0, end=null) {}</code></pre><h2>Floating-point numbers</h2><p>Floating-point numbers are <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</p>
+<h2>Signed integers</h2><p>Signed integers are two's complement.</p>
+<h2>Types</h2><p>Types are user-defined objects like this:</p>
+<pre class="prettyprint source"><code>const float32 = {
+  &quot;bits&quot;: 32, // required
+  &quot;signed&quot;: true, // optional, defaults to false
+  &quot;float&quot;: true, // optional, defaults to false
+  &quot;be&quot;: false // true for big-endian
+}</code></pre><p>There is a standard set of types that can be installed:</p>
+<pre class="prettyprint source"><code>npm install binary-data-types</code></pre><p>All types in <strong>binary-data-types</strong> are supported by byte-data. They are:</p>
+<ul>
 <li>int2</li>
 <li>uInt2</li>
 <li>int4</li>
@@ -243,8 +248,6 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {}</code></pre><h2>
 <li>uInt48BE</li>
 <li>float64BE</li>
 </ul>
-<h2>Floating-point numbers</h2><p>Floating-point numbers are <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</p>
-<h2>Signed integers</h2><p>Signed integers are two's complement.</p>
 <h2>Distribution</h2><p>This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.</p>
 <ul>
 <li>The <strong>CommonJS</strong> is the one used by Node. It is served in the &quot;main&quot; field of package.json</li>
@@ -382,7 +385,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jun 26 2018 07:44:16 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jun 26 2018 23:22:27 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -7,15 +7,15 @@
 let expect = require("chai").expect;
 let byteData = require('../../test/loader.js');
 let testFunc;
-let typeError = "Not a supported type.";
-let floatTypeError = "Not a supported float type.";
+let typeError = "Bad type definition.";
+let floatTypeError = "Bad float type.";
 
 describe('Errors', function() {
     it("undefined value", function () {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
         };
-        expect(testFunc).to.throw("Cannot pack undefined values.");
+        expect(testFunc).to.throw("Undefined value.");
     });
 
     // overflow and underflow
