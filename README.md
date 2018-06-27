@@ -55,12 +55,12 @@ Use the compiled file in the */dist* folder:
 
 Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/byte-data@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/byte-data@13"></script>
 ```
 
 Or get it from [unpkg](https://www.unpkg.com):
 ```html
-<script src="https://unpkg.com/byte-data@11"></script>
+<script src="https://unpkg.com/byte-data@13"></script>
 ```
 
 Or as a ES6 module in modern browsers from [jspm](https://jspm.io):

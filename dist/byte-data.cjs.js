@@ -38,13 +38,7 @@ var endianness = _interopDefault(require('endianness'));
  */
 
 /**
- * @module byteData/integer
- * @ignore
- */
-
-/**
  * A class to pack and unpack two's complement ints and unsigned ints.
- * 
  */
 class Integer {
 

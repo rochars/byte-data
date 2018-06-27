@@ -26,7 +26,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data.
+ * @fileoverview Externs for byte-data 13.0.0
  *
  * @see https://github.com/rochars/byte-data
  * @externs
@@ -82,24 +82,24 @@ function packArray(values, theType) {}
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
- * @param {number} index The index to write.
+ * @param {number=} index The index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function packTo(value, theType, buffer, index) {}
+function packTo(value, theType, buffer, index=0) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
- * @param {number} index The buffer index to write.
+ * @param {number=} index The buffer index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function packArrayTo(values, theType, buffer, index) {}
+function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
