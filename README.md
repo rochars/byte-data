@@ -94,7 +94,7 @@ byteData.unpackArray([255, 255, 0, 0], {'bits': 16});
 
 ## API
 
-### Strings:
+### Strings
 ```javascript
 /**
  * Read a string from a byte buffer.
@@ -149,24 +149,24 @@ function packArray(values, theType) {}
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
- * @param {number} index The index to write.
+ * @param {number=} index The index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function packTo(value, theType, buffer, index) {}
+function packTo(value, theType, buffer, index=0) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
- * @param {number} index The buffer index to write.
+ * @param {number=} index The buffer index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function packArrayTo(values, theType, buffer, index) {}
+function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
@@ -216,12 +216,12 @@ Signed integers are two's complement.
 
 ## Types
 Types are user-defined objects like this:
-```
+```javascript
 const float32 = {
   "bits": 32, // required
   "signed": true, // optional, defaults to false
   "float": true, // optional, defaults to false
-  "be": false // true for big-endian
+  "be": false // optional, defaults to false, true for big-endian
 }
 ```
 
