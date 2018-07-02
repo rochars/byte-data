@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v13.1.0 (2018-06-27)
+## v13.1.0 (2018-07-02)
 - Add unpackArrayTo(buffer, type, output) to output to typed arrays.
 
 ## v13.0.1 (2018-06-27)
