@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayFrom">unpackArrayFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackFrom">unpackFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayFrom">unpackArrayFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayTo">unpackArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.unpackFrom">unpackFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -2251,6 +2251,214 @@
 
     
 
+    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, output<span class="signature-attributes">non-null</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line238">line 238</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Unpack a array of numbers to a typed array.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buffer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The byte buffer.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>theType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The type definition.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">TypedArray</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The start index. Assumes 0.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If the type definition is not valid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id=".unpackFrom"><span class="type-signature">(static) </span>unpackFrom<span class="signature">(buffer<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
@@ -2747,7 +2955,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jun 27 2018 04:10:23 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 02 2018 05:24:10 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

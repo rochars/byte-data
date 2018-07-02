@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayFrom">unpackArrayFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackFrom">unpackFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayFrom">unpackArrayFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayTo">unpackArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.unpackFrom">unpackFrom</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -200,7 +200,16 @@ function unpackFrom(buffer, theType, index=0) {}
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayFrom(buffer, theType, start=0, end=null) {}</code></pre><h2>Floating-point numbers</h2><p>Floating-point numbers are <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</p>
+function unpackArrayFrom(buffer, theType, start=0, end=null) {}
+
+/**
+ * Unpack a array of numbers to a typed array.
+ * @param {!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {!TypedArray} output The start index. Assumes 0.
+ * @throws {Error} If the type definition is not valid
+ */
+function unpackArrayTo(buffer, theType, output) {}</code></pre><h2>Floating-point numbers</h2><p>Floating-point numbers are <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</p>
 <h2>Signed integers</h2><p>Signed integers are two's complement.</p>
 <h2>Types</h2><p>Types are user-defined objects like this:</p>
 <pre class="prettyprint source lang-javascript"><code>const float32 = {
@@ -248,14 +257,23 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {}</code></pre><h2>
 <li>uInt48BE</li>
 <li>float64BE</li>
 </ul>
-<h2>Distribution</h2><p>This library is a ES6 module also distributed as a CommonJS module, UMD and a compiled script for browsers.</p>
-<ul>
-<li>The <strong>CommonJS</strong> is the one used by Node. It is served in the &quot;main&quot; field of package.json</li>
-<li>The <strong>UMD</strong> module is compatible with Node, AMD and browsers. It is served in the &quot;browser&quot; field.</li>
-<li>The <strong>compiled dist</strong> is browser-only and should be the one served by CDNs.</li>
-<li>The <strong>ES6</strong> dist is <strong>byte-data.js</strong>, served as &quot;module&quot; in package.json</li>
+<h2>Distribution</h2><p>This library is a ES6 module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with <code>npm install byte-data</code>.</p>
+<h3>If you are using this lib in a browser:</h3><p>You may load both <strong>byte-data.umd.js</strong> and <strong>byte-data.min.js</strong> in the browser with <code>&lt;script&gt;</code> tags. Ideally you should use <strong>byte-data.min.js</strong>. You can load it via the https://unpkg.com and https://<a href="http://www.jsdelivr.com/">www.jsdelivr.com/</a> CDNs:</p>
+<p><a href="https://www.unpkg.com">unpkg</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><p><a href="https://www.jsdelivr.com">jsDelivr</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script></code></pre><h3>If you are using this lib as a dependency:</h3><ul>
+<li><p>The <strong>CommonJS</strong> is the dist file used by Node. It is served in the &quot;main&quot; field of package.json. It includes all the sources but no dependencies. Dependencies will be imported from the <strong>node_modules</strong> folder. This is the source you are running when you <strong>npm install byte-data</strong>.</p>
+</li>
+<li><p>The <strong>UMD</strong> module is compatible with Node, AMD and browsers. It is served in the &quot;browser&quot; field of package.json. It includes all dependencies. This file is not compiled/minified as it may be used by module bundlers. Compilation/minification should be up to the bundler consuming this file.</p>
+</li>
+<li><p>The <strong>compiled dist</strong> is browser-only and should be the one served by CDNs. It includes all the dependencies. It is used in the &quot;unpkg&quot; and &quot;jsdelivr&quot; fields of package.json.</p>
+</li>
+<li><p>The <strong>ES6 dist</strong> is <strong>byte-data.js</strong>, served as &quot;es2015&quot; in package.json. It includes all the dependencies. It is not compiled/minified.</p>
+</li>
+<li><p><strong>./main.js</strong> is served as &quot;module&quot; in package.json. It should be used by systems that support ES modules and are aware of Node's module path resolution (a module bundler, for instance). This should be the entry point for bundlers in most cases - this will avoid code duplication in the case of shared dependencies (as opposed to using &quot;browser&quot; as the entry point).</p>
+</li>
 </ul>
-<p>You may load both <strong>byte-data.umd.js</strong> and <strong>byte-data.min.js</strong> in the browser with <code>&lt;script&gt;</code> tags.</p>
+<p>If your module bundler is using &quot;browser&quot; as the entry point <strong>your dist should work the same</strong> but will be a larger file.</p>
 <h2>Contributing</h2><p><strong>byte-data</strong> welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.</p>
 <p>See <a href="https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for details.</p>
 <h3>Style guide</h3><p><strong>byte-data</strong> code should follow the Google JavaScript Style Guide:<br>https://google.github.io/styleguide/jsguide.html</p>
@@ -385,7 +403,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jun 27 2018 04:10:23 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 02 2018 05:24:10 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.1.0 (2018-06-27)
+- Add unpackArrayTo(buffer, type, output) to output to typed arrays.
+
 ## v13.0.1 (2018-06-27)
 - Using dot notation to allow better compilation on hosts.
 

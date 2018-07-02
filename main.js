@@ -229,6 +229,29 @@ export function unpackArrayFrom(buffer, theType, start=0, end=null) {
 }
 
 /**
+ * Unpack a array of numbers to a typed array.
+ * @param {!Uint8Array} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {!TypedArray} output The start index. Assumes 0.
+ * @throws {Error} If the type definition is not valid
+ */
+export function unpackArrayTo(buffer, theType, output) {
+  setUp_(theType);
+  if (theType.be) {
+    endianness(buffer, theType.offset);
+  }
+  let len = buffer.length;
+  let outputIndex = 0;
+  for (let i=0; i<len; i+=theType.offset) {
+    output.set([reader_(buffer, i)], outputIndex);
+    outputIndex++;
+  }
+  if (theType.be) {
+    endianness(buffer, theType.offset);
+  }
+}
+
+/**
  * @type {!Int8Array}
  * @private
  */
@@ -496,6 +519,7 @@ function setWriter(theType) {
 function setUp_(theType) {
   validateType(theType);
   theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
+  theType.be = theType.be || false;
   setReader(theType);
   setWriter(theType);
   gInt_ = new Integer(
