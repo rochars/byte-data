@@ -211,7 +211,7 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {}
  * Unpack a array of numbers to a typed array.
  * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {!TypedArray} output The start index. Assumes 0.
+ * @param {!TypedArray} output The output array.
  * @throws {Error} If the type definition is not valid
  */
 function unpackArrayTo(buffer, theType, output) {}
