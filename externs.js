@@ -1,7 +1,4 @@
 /*
- * byte-data: Pack and unpack binary data.
- * https://github.com/rochars/byte-data
- *
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -26,8 +23,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 13.0.1
- *
+ * @fileoverview Externs for byte-data 13.1.1
  * @see https://github.com/rochars/byte-data
  * @externs
  */

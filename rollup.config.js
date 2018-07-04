@@ -1,10 +1,10 @@
 /*
- * https://github.com/rochars/byte-data
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  */
 
 /**
  * @fileoverview rollup configuration file.
+ * @see https://github.com/rochars/byte-data
  */
 
 import commonjs from 'rollup-plugin-commonjs';
@@ -16,35 +16,15 @@ const license = '/*!\n'+
   ' * byte-data Copyright (c) 2017-2018 Rafael da Silva Rocha.\n'+
   ' */\n';
 
-// Read externs definitions
-const fs = require('fs');
-const externals = fs.readFileSync('./externs.js', 'utf8');
-
 export default [
-  // cjs
+  // cjs bundle, es bundle
   {
     input: 'main.js',
-    external: ['endianness'],
     output: [
       {
         file: 'dist/byte-data.cjs.js',
         name: 'byte-data',
         format: 'cjs'
-      }
-    ],
-    plugins: [
-      nodeResolve(),
-      commonjs(),
-    ]
-  },
-  // umd, es
-  {
-    input: 'main.js',
-    output: [
-      {
-        file: 'dist/byte-data.umd.js',
-        name: 'byte-data',
-        format: 'umd'
       },
       {
         file: 'dist/byte-data.js',
@@ -55,10 +35,25 @@ export default [
       nodeResolve(),
       commonjs(),
     ]
-  },  
-  // browser
+  },
+  // umd from the es bundle
   {
-    input: './main.js',
+    input: 'dist/byte-data.js',
+    output: [
+      {
+        file: 'dist/byte-data.umd.js',
+        name: 'byte-data',
+        format: 'umd'
+      }
+    ],
+    plugins: [
+      nodeResolve(),
+      commonjs(),
+    ]
+  },  
+  // browser version from the es bundle
+  {
+    input: 'dist/byte-data.js',
     output: [
       {
         file: 'dist/byte-data.min.js',

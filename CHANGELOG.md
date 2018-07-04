@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.1.1 (2018-07-04)
+- Zero dependencies.
+
 ## v13.1.0 (2018-07-02)
 - Add unpackArrayTo(buffer, type, output) to output to typed arrays.
 

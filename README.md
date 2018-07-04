@@ -6,9 +6,20 @@ https://github.com/rochars/byte-data
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/index.html)  
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
-- Runs in the server and in the browser
-- Less than 2KB minified + compressed, less than 5KB minified
-- Pack and unpack **single values** and entire **buffers**
+**byte-data** is a JavaScript module for the serialization and deserialization of numbers and strings.
+
+- **No dependencies**
+- **Use it out of the box in the browser**
+- **Use it out of the box in Node**
+- **Use it out of the box with TypeScript**
+- **Write to buffers**, option to define **start and end index to write**
+- **Read from buffers**, option to define **start and end index to read**
+- Use **typed arrays** or **arrays**
+- Pack and unpack 8-bit, 16-bit, 24-bit, 32-bit, 40-bit and 48-bit ints, signed and unsigned
+- Pack and unpack 16-bit, 32-bit and 64-bit floats
+- **MIT-licensed**
+- **Less than 2KB minified + compressed, less than 5KB minified**
+- Made with Closure Compiler in mind (works great with others, too)
 
 ## Pack/unpack:
 - Integers, signed and unsigned
@@ -16,7 +27,7 @@ https://github.com/rochars/byte-data
 - 32-bit single-precision floating point numbers
 - 64-bit double-precision floating point numbers
 - Little-endian and big-endian words
-- Strings
+- ASCII Strings
 
 ## Install
 ```
@@ -25,42 +36,47 @@ npm install byte-data
 
 ## Use
 
-### ES6
-```javascript
-import {pack} from 'byte-data.js';
-
-// Pack a usigned 8-bit number
-let packed = pack(128, {bits: 8});
-```
-
 ### Node
 ```javascript
 const byteData = require('byte-data');
 
 // Pack a float32 number
-byteData.pack(2.1474836, {bits: 32, float: true});
-//[95, 112, 9, 64]
+let packed = byteData.pack(2.1474836, {bits: 32, float: true});
+```
+
+### ES module
+```javascript
+import * as byteData from './dist/byte-data.js';
+
+// Pack a usigned 8-bit number
+let packed = byteData.pack(128, {bits: 8});
+```
+
+or 
+
+```javascript
+import {pack} from './dist/byte-data.js';
+let packed = pack(128, {bits: 8});
 ```
 
 ### Browser
 Use the compiled file in the */dist* folder:
 ```html
-<script src="byte-data.min.js"></script>
+<script src="./dist/byte-data.min.js"></script>
 <script>
   // Pack a float32 number
-  byteData.pack(2.1474836, {bits: 32, float: true});
-  //[95, 112, 9, 64]
+  var packed = byteData.pack(2.1474836, {bits: 32, float: true});
 </script>
 ```
 
-Or get it from the [jsDelivr](https://www.jsdelivr.com) CDN:
+Or get it from the [jsDelivr](https://cdn.jsdelivr.net/npm/byte-data) CDN:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/byte-data@13"></script>
+<script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
 ```
 
-Or get it from [unpkg](https://www.unpkg.com):
+Or get it from [unpkg](https://unpkg.com/byte-data):
 ```html
-<script src="https://unpkg.com/byte-data@13"></script>
+<script src="https://unpkg.com/byte-data"></script>
 ```
 
 Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
@@ -69,27 +85,6 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
   import {pack} from 'https://dev.jspm.io/byte-data';
   pack(-1200, {bits: 16, signed: true});
 </script>
-```
-
-## Example
-```javascript
-const byteData = require('byte-data');
-
-// Pack a float32 number
-byteData.pack(2.1474836, {bits: 32, float: true});
-//[95, 112, 9, 64]
-
-// Pack an array of uInt16 numbers
-byteData.packArray([65535, 0], {bits: 16});
-// [255, 255, 0, 0]);
-
-// Pack an array of int32 numbers
-byteData.packArray([-2147483648, 2147483647], {bits: 32, signed: true});
-//[0, 0, 0, 128, 255, 255, 255, 127]
-
-// Unpack an array of uInt16 numbers
-byteData.unpackArray([255, 255, 0, 0], {bits: 16});
-// [65535, 0]
 ```
 
 ## API
@@ -278,18 +273,18 @@ All types in **binary-data-types** are supported by byte-data. They are:
   - float64BE
 
 ## Distribution
-This library is a ES6 module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with ```npm install byte-data```.
+This library is a ES module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with ```npm install byte-data```.
 
 ### If you are using this lib in a browser:
 
-You may load both **byte-data.umd.js** and **byte-data.min.js** in the browser with ```<script>``` tags. Ideally you should use **byte-data.min.js**. You can load it via the https://unpkg.com and https://www.jsdelivr.com/ CDNs:
+You may load both **./dist/byte-data.umd.js** and **./dist/byte-data.min.js** in the browser with ```<script>``` tags. Ideally you should use **byte-data.min.js**. You can load it via the https://unpkg.com and https://www.jsdelivr.com/ CDNs:
 
-[unpkg](https://www.unpkg.com):
+[unpkg](https://unpkg.com/byte-data):
 ```html
 <script src="https://unpkg.com/byte-data"></script>
 ```
 
-[jsDelivr](https://www.jsdelivr.com):
+[jsDelivr](https://cdn.jsdelivr.net/npm/byte-data):
 ```html
 <script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
 ```
@@ -302,12 +297,11 @@ You may load both **byte-data.umd.js** and **byte-data.min.js** in the browser w
 
 - The **compiled dist** is browser-only and should be the one served by CDNs. It includes all the dependencies. It is used in the "unpkg" and "jsdelivr" fields of package.json.
 
-- The **ES6 dist** is **byte-data.js**, served as "es2015" in package.json. It includes all the dependencies. It is not compiled/minified.
+- The **ES6 dist** is **./dist/byte-data.js**, served as "es2015" in package.json. It includes all the dependencies. It is not compiled/minified.
 
 - **./main.js** is served as "module" in package.json. It should be used by systems that support ES modules and are aware of Node's module path resolution (a module bundler, for instance). This should be the entry point for bundlers in most cases - this will avoid code duplication in the case of shared dependencies (as opposed to using "browser" as the entry point).
 
 If your module bundler is using "browser" as the entry point **your dist should work the same** but will be a larger file.
-
 
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.
@@ -319,7 +313,7 @@ See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUT
 https://google.github.io/styleguide/jsguide.html
 
 ### Code of conduct
-This project adopt the [Contributor Covenant, version 1.4](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html), available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html as its code of conduct.
+This project is bound by a code of conduct: The [Contributor Covenant, version 1.4](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html), available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting rocha.rafaelsilva@gmail.com.
 

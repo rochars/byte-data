@@ -48,10 +48,20 @@
     <section class="readme">
         <article><h1>byte-data</h1><p>Pack and unpack binary data.<br>Copyright (c) 2017-2018 Rafael da Silva Rocha.<br>https://github.com/rochars/byte-data</p>
 <p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a><br><a href="https://codecov.io/gh/rochars/byte-data"><img src="https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square" alt="Codecov"></a> <a href="https://travis-ci.org/rochars/byte-data"><img src="https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square" alt="Unix Build"></a> <a href="https://ci.appveyor.com/project/rochars/byte-data"><img src="https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&amp;logo=appveyor" alt="Windows Build"></a> <a href="https://scrutinizer-ci.com/g/rochars/byte-data/"><img src="https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&amp;logo=scrutinizer" alt="Scrutinizer"></a></p>
+<p><strong>byte-data</strong> is a JavaScript module for the serialization and deserialization of numbers and strings.</p>
 <ul>
-<li>Runs in the server and in the browser</li>
-<li>Less than 2KB minified + compressed, less than 5KB minified</li>
-<li>Pack and unpack <strong>single values</strong> and entire <strong>buffers</strong></li>
+<li><strong>No dependencies</strong></li>
+<li><strong>Use it out of the box in the browser</strong></li>
+<li><strong>Use it out of the box in Node</strong></li>
+<li><strong>Use it out of the box with TypeScript</strong></li>
+<li><strong>Write to buffers</strong>, option to define <strong>start and end index to write</strong></li>
+<li><strong>Read from buffers</strong>, option to define <strong>start and end index to read</strong></li>
+<li>Use <strong>typed arrays</strong> or <strong>arrays</strong></li>
+<li>Pack and unpack 8-bit, 16-bit, 24-bit, 32-bit, 40-bit and 48-bit ints, signed and unsigned</li>
+<li>Pack and unpack 16-bit, 32-bit and 64-bit floats</li>
+<li><strong>MIT-licensed</strong></li>
+<li><strong>Less than 2KB minified + compressed, less than 5KB minified</strong></li>
+<li>Made with Closure Compiler in mind (works great with others, too)</li>
 </ul>
 <h2>Pack/unpack:</h2><ul>
 <li>Integers, signed and unsigned</li>
@@ -59,44 +69,28 @@
 <li>32-bit single-precision floating point numbers</li>
 <li>64-bit double-precision floating point numbers</li>
 <li>Little-endian and big-endian words</li>
-<li>Strings</li>
+<li>ASCII Strings</li>
 </ul>
-<h2>Install</h2><pre class="prettyprint source"><code>npm install byte-data</code></pre><h2>Use</h2><h3>ES6</h3><pre class="prettyprint source lang-javascript"><code>import {pack} from 'byte-data.js';
-
-// Pack a usigned 8-bit number
-let packed = pack(128, {bits: 8});</code></pre><h3>Node</h3><pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
+<h2>Install</h2><pre class="prettyprint source"><code>npm install byte-data</code></pre><h2>Use</h2><h3>Node</h3><pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
 
 // Pack a float32 number
-byteData.pack(2.1474836, {bits: 32, float: true});
-//[95, 112, 9, 64]</code></pre><h3>Browser</h3><p>Use the compiled file in the <em>/dist</em> folder:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;byte-data.min.js&quot;>&lt;/script>
+let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h3>ES module</h3><pre class="prettyprint source lang-javascript"><code>import * as byteData from './dist/byte-data.js';
+
+// Pack a usigned 8-bit number
+let packed = byteData.pack(128, {bits: 8});</code></pre><p>or </p>
+<pre class="prettyprint source lang-javascript"><code>import {pack} from './dist/byte-data.js';
+let packed = pack(128, {bits: 8});</code></pre><h3>Browser</h3><p>Use the compiled file in the <em>/dist</em> folder:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;./dist/byte-data.min.js&quot;>&lt;/script>
 &lt;script>
   // Pack a float32 number
-  byteData.pack(2.1474836, {bits: 32, float: true});
-  //[95, 112, 9, 64]
-&lt;/script></code></pre><p>Or get it from the <a href="https://www.jsdelivr.com">jsDelivr</a> CDN:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data@13&quot;>&lt;/script></code></pre><p>Or get it from <a href="https://www.unpkg.com">unpkg</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data@13&quot;>&lt;/script></code></pre><p>Or as a ES6 module in modern browsers from <a href="https://jspm.io">jspm</a>:</p>
+  var packed = byteData.pack(2.1474836, {bits: 32, float: true});
+&lt;/script></code></pre><p>Or get it from the <a href="https://cdn.jsdelivr.net/npm/byte-data">jsDelivr</a> CDN:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script></code></pre><p>Or get it from <a href="https://unpkg.com/byte-data">unpkg</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><p>Or as a ES6 module in modern browsers from <a href="https://jspm.io">jspm</a>:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script type=&quot;module&quot;>
   import {pack} from 'https://dev.jspm.io/byte-data';
   pack(-1200, {bits: 16, signed: true});
-&lt;/script></code></pre><h2>Example</h2><pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
-
-// Pack a float32 number
-byteData.pack(2.1474836, {bits: 32, float: true});
-//[95, 112, 9, 64]
-
-// Pack an array of uInt16 numbers
-byteData.packArray([65535, 0], {bits: 16});
-// [255, 255, 0, 0]);
-
-// Pack an array of int32 numbers
-byteData.packArray([-2147483648, 2147483647], {bits: 32, signed: true});
-//[0, 0, 0, 128, 255, 255, 255, 127]
-
-// Unpack an array of uInt16 numbers
-byteData.unpackArray([255, 255, 0, 0], {bits: 16});
-// [65535, 0]</code></pre><h2>API</h2><h3>Strings</h3><pre class="prettyprint source lang-javascript"><code>/**
+&lt;/script></code></pre><h2>API</h2><h3>Strings</h3><pre class="prettyprint source lang-javascript"><code>/**
  * Read a string from a byte buffer.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to read.
@@ -257,10 +251,10 @@ function unpackArrayTo(buffer, theType, output) {}</code></pre><h2>Floating-poin
 <li>uInt48BE</li>
 <li>float64BE</li>
 </ul>
-<h2>Distribution</h2><p>This library is a ES6 module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with <code>npm install byte-data</code>.</p>
-<h3>If you are using this lib in a browser:</h3><p>You may load both <strong>byte-data.umd.js</strong> and <strong>byte-data.min.js</strong> in the browser with <code>&lt;script&gt;</code> tags. Ideally you should use <strong>byte-data.min.js</strong>. You can load it via the https://unpkg.com and https://<a href="http://www.jsdelivr.com/">www.jsdelivr.com/</a> CDNs:</p>
-<p><a href="https://www.unpkg.com">unpkg</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><p><a href="https://www.jsdelivr.com">jsDelivr</a>:</p>
+<h2>Distribution</h2><p>This library is a ES module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with <code>npm install byte-data</code>.</p>
+<h3>If you are using this lib in a browser:</h3><p>You may load both <strong>./dist/byte-data.umd.js</strong> and <strong>./dist/byte-data.min.js</strong> in the browser with <code>&lt;script&gt;</code> tags. Ideally you should use <strong>byte-data.min.js</strong>. You can load it via the https://unpkg.com and https://<a href="http://www.jsdelivr.com/">www.jsdelivr.com/</a> CDNs:</p>
+<p><a href="https://unpkg.com/byte-data">unpkg</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><p><a href="https://cdn.jsdelivr.net/npm/byte-data">jsDelivr</a>:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script></code></pre><h3>If you are using this lib as a dependency:</h3><ul>
 <li><p>The <strong>CommonJS</strong> is the dist file used by Node. It is served in the &quot;main&quot; field of package.json. It includes all the sources but no dependencies. Dependencies will be imported from the <strong>node_modules</strong> folder. This is the source you are running when you <strong>npm install byte-data</strong>.</p>
 </li>
@@ -268,7 +262,7 @@ function unpackArrayTo(buffer, theType, output) {}</code></pre><h2>Floating-poin
 </li>
 <li><p>The <strong>compiled dist</strong> is browser-only and should be the one served by CDNs. It includes all the dependencies. It is used in the &quot;unpkg&quot; and &quot;jsdelivr&quot; fields of package.json.</p>
 </li>
-<li><p>The <strong>ES6 dist</strong> is <strong>byte-data.js</strong>, served as &quot;es2015&quot; in package.json. It includes all the dependencies. It is not compiled/minified.</p>
+<li><p>The <strong>ES6 dist</strong> is <strong>./dist/byte-data.js</strong>, served as &quot;es2015&quot; in package.json. It includes all the dependencies. It is not compiled/minified.</p>
 </li>
 <li><p><strong>./main.js</strong> is served as &quot;module&quot; in package.json. It should be used by systems that support ES modules and are aware of Node's module path resolution (a module bundler, for instance). This should be the entry point for bundlers in most cases - this will avoid code duplication in the case of shared dependencies (as opposed to using &quot;browser&quot; as the entry point).</p>
 </li>
@@ -277,7 +271,7 @@ function unpackArrayTo(buffer, theType, output) {}</code></pre><h2>Floating-poin
 <h2>Contributing</h2><p><strong>byte-data</strong> welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.</p>
 <p>See <a href="https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for details.</p>
 <h3>Style guide</h3><p><strong>byte-data</strong> code should follow the Google JavaScript Style Guide:<br>https://google.github.io/styleguide/jsguide.html</p>
-<h3>Code of conduct</h3><p>This project adopt the <a href="https://www.contributor-covenant.org/version/1/4/code-of-conduct.html">Contributor Covenant, version 1.4</a>, available at https://<a href="http://www.contributor-covenant.org/version/1/4/code-of-conduct.html">www.contributor-covenant.org/version/1/4/code-of-conduct.html</a> as its code of conduct.</p>
+<h3>Code of conduct</h3><p>This project is bound by a code of conduct: The <a href="https://www.contributor-covenant.org/version/1/4/code-of-conduct.html">Contributor Covenant, version 1.4</a>, available at https://<a href="http://www.contributor-covenant.org/version/1/4/code-of-conduct.html">www.contributor-covenant.org/version/1/4/code-of-conduct.html</a></p>
 <p>Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting <a href="mailto:rocha.rafaelsilva@gmail.com">rocha.rafaelsilva@gmail.com</a>.</p>
 <h2>Legal</h2><p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fbyte-data?ref=badge_large"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fbyte-data.svg?type=large" alt="FOSSA Status"></a></p>
 <h3>LICENSE</h3><p>Copyright (c) 2017-2018 Rafael da Silva Rocha.</p>
@@ -328,7 +322,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line28">line 28</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -358,6 +352,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://github.com/rochars/byte-data">https://github.com/rochars/byte-data</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -403,7 +404,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 02 2018 05:29:42 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jul 04 2018 17:25:17 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

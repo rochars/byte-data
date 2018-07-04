@@ -1,16 +1,16 @@
 # Distribution
-This library is a ES6 module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with ```npm install byte-data```.
+This library is a ES module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with ```npm install byte-data```.
 
 ## If you are using this lib in a browser:
 
-You may load both **byte-data.umd.js** and **byte-data.min.js** in the browser with ```<script>``` tags. Ideally you should use **byte-data.min.js**. You can load it via the https://unpkg.com and https://www.jsdelivr.com/ CDNs:
+You may load both **./dist/byte-data.umd.js** and **./dist/byte-data.min.js** in the browser with ```<script>``` tags. Ideally you should use **byte-data.min.js**. You can load it via the https://unpkg.com and https://www.jsdelivr.com/ CDNs:
 
-[unpkg](https://www.unpkg.com):
+[unpkg](https://unpkg.com/byte-data):
 ```html
 <script src="https://unpkg.com/byte-data"></script>
 ```
 
-[jsDelivr](https://www.jsdelivr.com):
+[jsDelivr](https://cdn.jsdelivr.net/npm/byte-data):
 ```html
 <script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
 ```
@@ -23,7 +23,7 @@ You may load both **byte-data.umd.js** and **byte-data.min.js** in the browser w
 
 - The **compiled dist** is browser-only and should be the one served by CDNs. It includes all the dependencies. It is used in the "unpkg" and "jsdelivr" fields of package.json.
 
-- The **ES6 dist** is **byte-data.js**, served as "es2015" in package.json. It includes all the dependencies. It is not compiled/minified.
+- The **ES6 dist** is **./dist/byte-data.js**, served as "es2015" in package.json. It includes all the dependencies. It is not compiled/minified.
 
 - **./main.js** is served as "module" in package.json. It should be used by systems that support ES modules and are aware of Node's module path resolution (a module bundler, for instance). This should be the entry point for bundlers in most cases - this will avoid code duplication in the case of shared dependencies (as opposed to using "browser" as the entry point).
 
