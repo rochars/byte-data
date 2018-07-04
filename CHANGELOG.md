@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.1.2 (unreleased)
+- Fix documentation issues.
+
 ## v13.1.1 (2018-07-04)
 - Zero dependencies.
 
