@@ -28,51 +28,62 @@
  */
 
 /** @module byteData */
+
 import endianness from './lib/endianness.js';
 import {reader_, setUp_, writeBytes_,
   fromBytes_, toBytes_} from './lib/packer.js';
-import {validateType, validateNotUndefined} from './lib/validation.js';
+import {validateType, validateNotUndefined,
+  validateASCIICode} from './lib/validation.js';
 
-// Strings
+// ASCII characters
 /**
- * Read a string from a byte buffer.
+ * Read a string of ASCII characters from a byte buffer.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
+ * @throws {Error} If a character in the string is not valid ASCII.
  */
 export function unpackString(bytes, index=0, len=null) {
   let chrs = '';
-  len = len || bytes.length - index;
-  for(let j = 0; j < len; j++) {
-    chrs += String.fromCharCode(bytes[index+j]);
+  len = len ? index + len : bytes.length;
+  while (index < len) {
+    validateASCIICode(bytes[index]);
+    chrs += String.fromCharCode(bytes[index]);
+    index++;
   }
   return chrs;
 }
 
 /**
- * Write a string as a byte buffer.
+ * Write a string of ASCII characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The next index to write on the buffer.
+ * @throws {Error} If a character in the string is not valid ASCII.
  */
 export function packString(str) {
   let bytes = [];
   for (let i = 0; i < str.length; i++) {
-    bytes[i] = str.charCodeAt(i);
+    let code = str.charCodeAt(i);
+    validateASCIICode(code);
+    bytes[i] = code;
   }
   return bytes;
 }
 
 /**
- * Write a string to a byte buffer.
+ * Write a string of ASCII characters to a byte buffer.
  * @param {string} str The string to pack.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
+ * @throws {Error} If a character in the string is not valid ASCII.
  */
 export function packStringTo(str, bytes, index=0) {
   for (let i = 0; i < str.length; i++) {
-    bytes[index] = str.charCodeAt(i);
+    let code = str.charCodeAt(i);
+    validateASCIICode(code);
+    bytes[index] = code;
     index++;
   }
   return index;

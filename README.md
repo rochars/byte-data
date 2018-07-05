@@ -40,7 +40,7 @@ npm install byte-data
 ```javascript
 const byteData = require('byte-data');
 
-// Pack a float32 number
+// Pack a 32-bit floating point number
 let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ```
 
@@ -48,7 +48,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ```javascript
 import * as byteData from './dist/byte-data.js';
 
-// Pack a usigned 8-bit number
+// Pack a usigned 8-bit unsigned integer
 let packed = byteData.pack(128, {bits: 8});
 ```
 
@@ -64,7 +64,7 @@ Use the compiled file in the */dist* folder:
 ```html
 <script src="./dist/byte-data.min.js"></script>
 <script>
-  // Pack a float32 number
+  // Pack a 32-bit floating point number
   var packed = byteData.pack(2.1474836, {bits: 32, float: true});
 </script>
 ```
@@ -83,6 +83,7 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 ```html
 <script type="module">
   import {pack} from 'https://dev.jspm.io/byte-data';
+  // Pack a 15-bit signed integer
   pack(-1200, {bits: 16, signed: true});
 </script>
 ```
@@ -92,27 +93,30 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 ### Strings
 ```javascript
 /**
- * Read a string from a byte buffer.
+ * Read a string of ASCII characters from a byte buffer.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
+ * @throws {Error} If a character in the string is not valid ASCII.
  */
 function unpackString(bytes, index=0, len=null) {}
 
 /**
- * Write a string as a byte buffer.
+ * Write a string of ASCII characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The next index to write on the buffer.
+ * @throws {Error} If a character in the string is not valid ASCII.
  */
 function packString(str) {}
 
 /**
- * Write a string to a byte buffer.
+ * Write a string of ASCII characters to a byte buffer.
  * @param {string} str The string to pack.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
+ * @throws {Error} If a character in the string is not valid ASCII.
  */
 function packStringTo(str, bytes, index=0) {}
 ```
@@ -217,6 +221,15 @@ Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) st
 
 ## Signed integers
 Signed integers are two's complement.
+
+## Strings
+Only ASCII characters are supported.
+
+## Overflow and underflow
+Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively. There is no overflow or underflow check for floating point values.
+
+## Host endianness
+This library works in little-endian hosts. Running it on big-endian hosts will cause errors when packing/unpacking floating point numbers.
 
 ## Types
 Types are user-defined objects like this:

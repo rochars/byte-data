@@ -1,6 +1,7 @@
 # CHANGELOG
 
-## v13.1.2 (unreleased)
+## v13.1.2 (2018-07-05)
+- Add validation of strings as ASCII.
 - Fix documentation issues.
 
 ## v13.1.1 (2018-07-04)

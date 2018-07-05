@@ -11,6 +11,13 @@ let typeError = "Bad type definition.";
 let floatTypeError = "Bad float type.";
 
 describe('Errors', function() {
+    it("invalid ASCII code", function () {
+        testFunc = function() {
+            byteData.packString('ƒ');
+        };
+        expect(testFunc).to.throw("Bad ASCII code.");
+    });
+
     it("undefined value", function () {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
