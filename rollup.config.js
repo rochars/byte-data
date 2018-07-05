@@ -11,6 +11,10 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import closure from 'rollup-plugin-closure-compiler-js';
 
+// Externs
+const fs = require('fs');
+const externsFile = fs.readFileSync('./externs.js', 'utf8');
+
 // Legal
 const license = '/*!\n'+
   ' * byte-data Copyright (c) 2017-2018 Rafael da Silva Rocha.\n'+
@@ -57,8 +61,10 @@ export default [
     output: [
       {
         file: 'dist/byte-data.min.js',
-        name: 'byteData',
-        format: 'iife'
+        name: 'bytedata',
+        format: 'iife',
+        banner: license,
+        footer: 'window.byteData=bytedata;'
       }
     ],
     plugins: [
@@ -67,9 +73,9 @@ export default [
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
-        compilationLevel: 'SIMPLE',
+        compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
-        outputWrapper: license + '%output%window.byteData=byteData;'
+        externs: [{src: externsFile}]
       })
     ]
   }

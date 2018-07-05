@@ -23,13 +23,24 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 13.1.1
+ * @fileoverview Externs for byte-data 13.1.2
  * @see https://github.com/rochars/byte-data
  * @externs
  */
 
+/** @type {!Object} */
+var byteData = {};
+
+/** @type {!Object} */
+var theType = {
+	bits: 0,
+	signed: false,
+	float: false,
+	be: false
+};
+
 /**
- * Read a string from a byte buffer.
+ * Read a string of ASCII characters from a byte buffer.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
@@ -38,14 +49,14 @@
 function unpackString(bytes, index=0, len=null) {}
 
 /**
- * Write a string as a byte buffer.
+ * Write a string of ASCII characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The next index to write on the buffer.
  */
 function packString(str) {}
 
 /**
- * Write a string to a byte buffer.
+ * Write a string of ASCII characters to a byte buffer.
  * @param {string} str The string to pack.
  * @param {!Uint8Array} bytes A byte buffer.
  * @param {number=} index The index to write in the buffer.

@@ -37,20 +37,19 @@
    * Swap the byte ordering in a buffer. The buffer is modified in place.
    * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
    * @param {number} offset The byte offset.
-   * @param {number=} start The start index. Assumes 0.
+   * @param {number=} index The start index. Assumes 0.
    * @param {?number=} end The end index. Assumes the buffer length.
    * @throws {Error} If the buffer length is not valid.
    */
-  function endianness(bytes, offset, start=0, end=null) {
+  function endianness(bytes, offset, index=0, end=null) {
     let len = end || bytes.length;
     let limit = parseInt(offset / 2, 10);
     if (len % offset) {
       throw new Error("Bad buffer length.");
     }
-    let i = start;
-    while (i < len) {
-      swap(bytes, offset, i, limit);
-      i += offset;
+    while (index < len) {
+      swap(bytes, offset, index, limit);
+      index += offset;
     }
   }
 
@@ -116,26 +115,31 @@
       /**
        * The max number of bits used by the data.
        * @type {number}
+       * @private
        */
       this.bits = bits;
       /**
        * If this type it is signed or not.
        * @type {boolean}
+       * @private
        */
       this.signed = signed;
       /**
        * The number of bytes used by the data.
        * @type {number}
+       * @private
        */
       this.offset = 0;
       /**
        * Min value for numbers of this type.
        * @type {number}
+       * @private
        */
       this.min = -Infinity;
       /**
        * Max value for numbers of this type.
        * @type {number}
+       * @private
        */
       this.max = Infinity;
       /**
@@ -355,8 +359,20 @@
    */
 
   /**
+   * Validate that the code is a valid ASCII code.
+   * @param {number} code The code.
+   * @throws {Error} If the code is not a valid ASCII code.
+   */
+  function validateASCIICode(code) {
+    if (code > 127) {
+      throw new Error ('Bad ASCII code.');
+    }
+  }
+
+  /**
    * Validate that the value is not null or undefined.
    * @param {number} value The value.
+   * @throws {Error} If the value is of type undefined.
    */
   function validateNotUndefined(value) {
     if (value === undefined) {
@@ -519,7 +535,8 @@
     let len = buffer.length;
     let values = [];
     len = len - (theType.offset - 1);
-    for (let i=0; i<len; i+=theType.offset) {
+    let step = theType.offset;
+    for (let i=0; i<len; i+=step) {
       values.push(reader_(buffer, i));
     }
     return values;
@@ -728,46 +745,55 @@
    *
    */
 
-  // Strings
+  // ASCII characters
   /**
-   * Read a string from a byte buffer.
+   * Read a string of ASCII characters from a byte buffer.
    * @param {!Uint8Array} bytes A byte buffer.
    * @param {number=} index The index to read.
    * @param {?number=} len The number of bytes to read.
    * @return {string}
+   * @throws {Error} If a character in the string is not valid ASCII.
    */
   function unpackString(bytes, index=0, len=null) {
     let chrs = '';
-    len = len || bytes.length - index;
-    for(let j = 0; j < len; j++) {
-      chrs += String.fromCharCode(bytes[index+j]);
+    len = len ? index + len : bytes.length;
+    while (index < len) {
+      validateASCIICode(bytes[index]);
+      chrs += String.fromCharCode(bytes[index]);
+      index++;
     }
     return chrs;
   }
 
   /**
-   * Write a string as a byte buffer.
+   * Write a string of ASCII characters as a byte buffer.
    * @param {string} str The string to pack.
    * @return {!Array<number>} The next index to write on the buffer.
+   * @throws {Error} If a character in the string is not valid ASCII.
    */
   function packString(str) {
     let bytes = [];
     for (let i = 0; i < str.length; i++) {
-      bytes[i] = str.charCodeAt(i);
+      let code = str.charCodeAt(i);
+      validateASCIICode(code);
+      bytes[i] = code;
     }
     return bytes;
   }
 
   /**
-   * Write a string to a byte buffer.
+   * Write a string of ASCII characters to a byte buffer.
    * @param {string} str The string to pack.
    * @param {!Uint8Array} bytes A byte buffer.
    * @param {number=} index The index to write in the buffer.
    * @return {number} The next index to write in the buffer.
+   * @throws {Error} If a character in the string is not valid ASCII.
    */
   function packStringTo(str, bytes, index=0) {
     for (let i = 0; i < str.length; i++) {
-      bytes[index] = str.charCodeAt(i);
+      let code = str.charCodeAt(i);
+      validateASCIICode(code);
+      bytes[index] = code;
       index++;
     }
     return index;
@@ -910,8 +936,10 @@
     }
     let len = end || buffer.length;
     let values = [];
-    for (let i=start; i<len; i+=theType.offset) {
-      values.push(reader_(buffer, i));
+    let step = theType.offset;
+    while (start < len) {
+      values.push(reader_(buffer, start));
+      start += step;
     }
     if (theType.be) {
       endianness(buffer, theType.offset);
@@ -933,7 +961,8 @@
     }
     let len = buffer.length;
     let outputIndex = 0;
-    for (let i=0; i<len; i+=theType.offset) {
+    let step = theType.offset;
+    for (let i=0; i<len; i+=step) {
       output.set([reader_(buffer, i)], outputIndex);
       outputIndex++;
     }
