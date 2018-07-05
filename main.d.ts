@@ -1,4 +1,4 @@
-// Type definitions for byte-data 13.1.1
+// Type definitions for byte-data 13.1.2
 // Project: https://github.com/rochars/byte-data
 // Definitions by: Rafael S. Rocha <https://github.com/rochars>
 // Definitions: https://github.com/rochars/byte-data
