@@ -32,8 +32,7 @@
 import endianness from './lib/endianness.js';
 import {reader_, setUp_, writeBytes_,
   fromBytes_, toBytes_} from './lib/packer.js';
-import {validateType, validateNotUndefined,
-  validateASCIICode} from './lib/validation.js';
+import {validateNotUndefined, validateASCIICode} from './lib/validation.js';
 
 // ASCII characters
 /**
