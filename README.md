@@ -88,6 +88,23 @@ Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
 </script>
 ```
 
+## About
+
+### Floating-point numbers
+Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
+
+### Signed integers
+Signed integers are two's complement.
+
+### Strings
+Only ASCII characters are supported. Packing and unpacking string with characters that are not ASCII will throw a *'Bad ASCII code.'* error.
+
+### Overflow and underflow
+Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
+
+### Host endianness
+This library works in little-endian hosts. Running it on big-endian hosts will cause errors when packing/unpacking floating point numbers.
+
 ## API
 
 ### Strings
@@ -215,21 +232,6 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {}
  */
 function unpackArrayTo(buffer, theType, output) {}
 ```
-
-## Floating-point numbers
-Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
-
-## Signed integers
-Signed integers are two's complement.
-
-## Strings
-Only ASCII characters are supported.
-
-## Overflow and underflow
-Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively. There is no overflow or underflow check for floating point values.
-
-## Host endianness
-This library works in little-endian hosts. Running it on big-endian hosts will cause errors when packing/unpacking floating point numbers.
 
 ## Types
 Types are user-defined objects like this:
