@@ -5,9 +5,9 @@
 
 export function pack(value: number, theType: object): Array<number>;
 
-export function packArray(values: Array<number>, theType: object): Array<number>;
+export function packArray(values: Array<number>|ArrayLike<number>, theType: object): Array<number>;
 
-export function packArrayTo(values: Array<number>, theType: object, buffer: Uint8Array, index?: number): number;
+export function packArrayTo(values: Array<number>|ArrayLike<number>, theType: object, buffer: Uint8Array, index?: number): number;
 
 export function packString(str: string): Array<number>;
 
@@ -21,7 +21,7 @@ export function unpackArray(buffer: Uint8Array, theType: object): Array<number>;
 
 export function unpackArrayFrom(buffer: Uint8Array, theType: object, start?: number, end?: number): Array<number>;
 
-export function unpackArrayTo(buffer: Uint8Array, theType: object, output: TypedArray): void;
+export function unpackArrayTo(buffer: Uint8Array, theType: object, output: ArrayLike<number>): void;
 
 export function unpackFrom(buffer: Uint8Array, theType: object, index?: number): number;
 
