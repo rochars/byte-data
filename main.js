@@ -226,8 +226,10 @@ export function unpackArrayFrom(buffer, theType, start=0, end=null) {
   }
   let len = end || buffer.length;
   let values = [];
-  for (let i=start; i<len; i+=theType.offset) {
-    values.push(reader_(buffer, i));
+  let step = theType.offset;
+  while (start < len) {
+    values.push(reader_(buffer, start));
+    start += step;
   }
   if (theType.be) {
     endianness(buffer, theType.offset);
@@ -249,7 +251,8 @@ export function unpackArrayTo(buffer, theType, output) {
   }
   let len = buffer.length;
   let outputIndex = 0;
-  for (let i=0; i<len; i+=theType.offset) {
+  let step = theType.offset;
+  for (let i=0; i<len; i+=step) {
     output.set([reader_(buffer, i)], outputIndex);
     outputIndex++;
   }
