@@ -30,7 +30,7 @@
     "half-precision",
     "single-precision",
     "double-precision",
-    "string"
+    "ASCII"
   ],
   "repository": {
     "type": "git",
@@ -62,7 +62,6 @@
     "chai": "^4.1.2",
     "codecov": "^3.0.2",
     "docdash": "^0.4.0",
-    "endianness": "^7.0.1",
     "esm": "^3.0.51",
     "google-closure-compiler": "^20180610.0.2",
     "jsdoc": "^3.5.5",
