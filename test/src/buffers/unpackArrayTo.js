@@ -27,24 +27,22 @@ describe('unpackArrayTo: LE', function() {
 
 });
 
-/*
 describe('unpackArrayTo: BE', function() {
     
     // Create a typed array
-    let file = new Uint8Array([255, 255, 2, 253]);
+    let file = new Uint8Array([2, 253, 0, 0]);
 
     // First position in the array to write
     let index = 0;
 
-    // Unpack to the typed array passing an index to read
-    let value = byteData.unpackFrom(file, byteData.types.uInt16BE, index);
+    let output = new Uint16Array(2);
 
-    // unpack
+    // Unpack to the typed array passing an index to read
+    byteData.unpackArrayTo(file, byteData.types.uInt16BE, output);
+
+    // pack
     it('Unpack the first value', function() {
-        assert.equal(value, 65535);
+        assert.deepEqual(output, new Uint16Array([765, 0]));
     });
-    it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 2, 253]));
-    });
+
 });
-*/
