@@ -213,22 +213,25 @@ export function unpackFrom(buffer, theType, index=0) {
  * Unpack a array of numbers from a byte buffer by index.
  * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} start The start index. Assumes 0.
+ * @param {number=} index The start index. Assumes 0.
  * @param {?number=} end The end index. Assumes the buffer length.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayFrom(buffer, theType, start=0, end=null) {
+export function unpackArrayFrom(buffer, theType, index=0, end=null) {
   setUp_(theType);
   if (theType.be) {
     endianness(buffer, theType.offset);
   }
-  let len = (end  || buffer.length) - (theType.offset - 1);
+  let len = end || buffer.length;
+  while ((len - index) % theType.offset) {
+    len--;
+  }
   let values = [];
   let step = theType.offset;
-  while (start < len) {
-    values.push(reader_(buffer, start));
-    start += step;
+  while (index < len) {
+    values.push(reader_(buffer, index));
+    index += step;
   }
   if (theType.be) {
     endianness(buffer, theType.offset);
@@ -241,19 +244,25 @@ export function unpackArrayFrom(buffer, theType, start=0, end=null) {
  * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {!TypedArray} output The output array.
+ * @param {number=} index The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the buffer length.
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayTo(buffer, theType, output) {
+export function unpackArrayTo(buffer, theType, output, index=0, end=null) {
   setUp_(theType);
   if (theType.be) {
     endianness(buffer, theType.offset);
   }
-  let len = buffer.length;
+  let len = end || buffer.length;
+  while ((len - index) % theType.offset) {
+    len--;
+  }
   let outputIndex = 0;
   let step = theType.offset;
-  for (let i=0; i<len; i+=step) {
-    output.set([reader_(buffer, i)], outputIndex);
+  while (index < len) {
+    output.set([reader_(buffer, index)], outputIndex);
     outputIndex++;
+    index += step;
   }
   if (theType.be) {
     endianness(buffer, theType.offset);

@@ -2,6 +2,7 @@
 
 ## v13.2.0 (unreleased)
 - Allow Array and Uint8Array as output buffer.
+- Fix: cases of unpacking extra elements on unpackArrayTo and unpackArrayFrom.
 
 ## v13.1.3 (2018-07-05)
 - Fix types in TypeScript declaration file.
