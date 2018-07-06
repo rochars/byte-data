@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v13.1.3 (2018-07-05)
+- Fix types in TypeScript declaration file.
+- Fix JSDoc: Typed Arrays as input for packArray and packArrayTo
+
 ## v13.1.2 (2018-07-05)
 - Add validation of strings as ASCII.
 - Fix documentation issues.

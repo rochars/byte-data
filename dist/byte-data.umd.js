@@ -544,7 +544,7 @@
 
   /**
    * Turn numbers to bytes.
-   * @param {!Array<number>} values The data.
+   * @param {!Array<number>|!TypedArray} values The data.
    * @param {!Object} theType The type definition.
    * @return {!Array<number>} the data as a byte buffer.
    * @private
@@ -815,7 +815,7 @@
 
   /**
    * Pack an array of numbers as a byte buffer.
-   * @param {!Array<number>} values The values.
+   * @param {!Array<number>|!TypedArray} values The values.
    * @param {!Object} theType The type definition.
    * @return {!Array<number>} The packed values.
    * @throws {Error} If the type definition is not valid.
@@ -849,7 +849,7 @@
 
   /**
    * Pack a array of numbers to a byte buffer.
-   * @param {!Array<number>} values The value.
+   * @param {!Array<number>|!TypedArray} values The value.
    * @param {!Object} theType The type definition.
    * @param {!Uint8Array} buffer The output buffer.
    * @param {number=} index The buffer index to write.

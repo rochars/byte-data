@@ -97,7 +97,7 @@ Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) st
 Signed integers are two's complement.
 
 ### Strings
-Only ASCII characters are supported. Packing and unpacking string with characters that are not ASCII will throw a *'Bad ASCII code.'* error.
+Only ASCII characters are supported. Packing and unpacking strings with characters that are not ASCII will throw a *'Bad ASCII code.'* error.
 
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
@@ -152,7 +152,7 @@ function pack(value, theType) {}
 
 /**
  * Pack an array of numbers as a byte buffer.
- * @param {!Array<number>} values The values.
+ * @param {!Array<number>|!TypedArray} values The values.
  * @param {!Object} theType The type definition.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
@@ -174,7 +174,7 @@ function packTo(value, theType, buffer, index=0) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
- * @param {!Array<number>} values The value.
+ * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array} buffer The output buffer.
  * @param {number=} index The buffer index to write.
