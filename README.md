@@ -130,7 +130,7 @@ function packString(str) {}
 /**
  * Write a string of ASCII characters to a byte buffer.
  * @param {string} str The string to pack.
- * @param {!Uint8Array} bytes A byte buffer.
+ * @param {!Uint8Array|!Array<number>} bytes The output buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
  * @throws {Error} If a character in the string is not valid ASCII.
@@ -164,7 +164,7 @@ function packArray(values, theType) {}
  * Pack a number to a byte buffer.
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
@@ -176,7 +176,7 @@ function packTo(value, theType, buffer, index=0) {}
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.

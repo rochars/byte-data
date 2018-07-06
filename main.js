@@ -30,8 +30,7 @@
 /** @module byteData */
 
 import endianness from './lib/endianness.js';
-import {reader_, setUp_, writeBytes_,
-  fromBytes_, toBytes_} from './lib/packer.js';
+import {reader_, setUp_, writeBytes_} from './lib/packer.js';
 import {validateNotUndefined, validateASCIICode} from './lib/validation.js';
 
 // ASCII characters
@@ -73,16 +72,16 @@ export function packString(str) {
 /**
  * Write a string of ASCII characters to a byte buffer.
  * @param {string} str The string to pack.
- * @param {!Uint8Array} bytes A byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
  * @throws {Error} If a character in the string is not valid ASCII.
  */
-export function packStringTo(str, bytes, index=0) {
+export function packStringTo(str, buffer, index=0) {
   for (let i = 0; i < str.length; i++) {
     let code = str.charCodeAt(i);
     validateASCIICode(code);
-    bytes[index] = code;
+    buffer[index] = code;
     index++;
   }
   return index;
@@ -98,8 +97,9 @@ export function packStringTo(str, bytes, index=0) {
  * @throws {Error} If the value is not valid.
  */
 export function pack(value, theType) {
-  setUp_(theType);
-  return toBytes_([value], theType);
+  let output = [];
+  packTo(value, theType, output);
+  return output;
 }
 
 /**
@@ -111,15 +111,16 @@ export function pack(value, theType) {
  * @throws {Error} If any of the values are not valid.
  */
 export function packArray(values, theType) {
-  setUp_(theType);
-  return toBytes_(values, theType);
+  let output = [];
+  packArrayTo(values, theType, output);
+  return output;
 }
 
 /**
  * Pack a number to a byte buffer.
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
@@ -140,7 +141,7 @@ export function packTo(value, theType, buffer, index=0) {
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
@@ -150,7 +151,8 @@ export function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
   let be = theType.be;
   let offset = theType.offset;
-  for (let i=0; i<values.length; i++) {
+  let len = values.length;
+  for (let i=0; i<len; i++) {
     index = writeBytes_(
       values[i],
       theType,
@@ -172,8 +174,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
  */
 export function unpack(buffer, theType) {
   setUp_(theType);
-  let values = fromBytes_(
-    buffer.slice(0, theType.offset), theType);
+  let values = unpackArrayFrom(buffer.slice(0, theType.offset), theType);
   return values[0];
 }
 
@@ -185,8 +186,7 @@ export function unpack(buffer, theType) {
  * @throws {Error} If the type definition is not valid.
  */
 export function unpackArray(buffer, theType) {
-  setUp_(theType);
-  return fromBytes_(buffer, theType);
+  return unpackArrayFrom(buffer, theType);
 }
 
 /**
@@ -223,7 +223,7 @@ export function unpackArrayFrom(buffer, theType, start=0, end=null) {
   if (theType.be) {
     endianness(buffer, theType.offset);
   }
-  let len = end || buffer.length;
+  let len = (end  || buffer.length) - (theType.offset - 1);
   let values = [];
   let step = theType.offset;
   while (start < len) {

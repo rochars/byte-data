@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.0 (unreleased)
+- Allow Array and Uint8Array as output buffer.
+
 ## v13.1.3 (2018-07-05)
 - Fix types in TypeScript declaration file.
 - Fix JSDoc: Typed Arrays as input for packArray and packArrayTo

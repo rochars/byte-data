@@ -495,7 +495,7 @@ function setUp_(theType) {
  * Turn numbers to bytes.
  * @param {number} value The value to be packed.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The buffer to write the bytes to.
+ * @param {!Uint8Array|!Array<number>} buffer The buffer to write the bytes to.
  * @param {number} index The index to start writing.
  * @param {number} len The end index.
  * @param {!Function} validate The function used to validate input.
@@ -513,48 +513,6 @@ function writeBytes_(value, theType, buffer, index, len, validate, be) {
       buffer, theType.offset, index - theType.offset, index);
   }
   return index;
-}
-
-/**
- * Turn a byte buffer into what the bytes represent.
- * @param {!Uint8Array} buffer An array of bytes.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>}
- * @private
- */
-function fromBytes_(buffer, theType) {
-  if (theType.be) {
-    endianness(buffer, theType.offset);
-  }
-  let len = buffer.length;
-  let values = [];
-  len = len - (theType.offset - 1);
-  let step = theType.offset;
-  for (let i=0; i<len; i+=step) {
-    values.push(reader_(buffer, i));
-  }
-  return values;
-}
-
-/**
- * Turn numbers to bytes.
- * @param {!Array<number>|!TypedArray} values The data.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>} the data as a byte buffer.
- * @private
- */
-function toBytes_(values, theType) {
-  let j = 0;
-  let bytes = [];
-  let len = values.length;
-  for(let i=0; i < len; i++) {
-    validateNotUndefined(values[i]);
-    j = writer_(bytes, values[i], j);
-  }
-  if (theType.be) {
-    endianness(bytes, theType.offset);
-  }
-  return bytes;
 }
 
 /**
@@ -778,16 +736,16 @@ function packString(str) {
 /**
  * Write a string of ASCII characters to a byte buffer.
  * @param {string} str The string to pack.
- * @param {!Uint8Array} bytes A byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
  * @throws {Error} If a character in the string is not valid ASCII.
  */
-function packStringTo(str, bytes, index=0) {
+function packStringTo(str, buffer, index=0) {
   for (let i = 0; i < str.length; i++) {
     let code = str.charCodeAt(i);
     validateASCIICode(code);
-    bytes[index] = code;
+    buffer[index] = code;
     index++;
   }
   return index;
@@ -803,8 +761,9 @@ function packStringTo(str, bytes, index=0) {
  * @throws {Error} If the value is not valid.
  */
 function pack(value, theType) {
-  setUp_(theType);
-  return toBytes_([value], theType);
+  let output = [];
+  packTo(value, theType, output);
+  return output;
 }
 
 /**
@@ -816,15 +775,16 @@ function pack(value, theType) {
  * @throws {Error} If any of the values are not valid.
  */
 function packArray(values, theType) {
-  setUp_(theType);
-  return toBytes_(values, theType);
+  let output = [];
+  packArrayTo(values, theType, output);
+  return output;
 }
 
 /**
  * Pack a number to a byte buffer.
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
@@ -845,7 +805,7 @@ function packTo(value, theType, buffer, index=0) {
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
- * @param {!Uint8Array} buffer The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to write.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
@@ -855,7 +815,8 @@ function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
   let be = theType.be;
   let offset = theType.offset;
-  for (let i=0; i<values.length; i++) {
+  let len = values.length;
+  for (let i=0; i<len; i++) {
     index = writeBytes_(
       values[i],
       theType,
@@ -877,8 +838,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  */
 function unpack(buffer, theType) {
   setUp_(theType);
-  let values = fromBytes_(
-    buffer.slice(0, theType.offset), theType);
+  let values = unpackArrayFrom(buffer.slice(0, theType.offset), theType);
   return values[0];
 }
 
@@ -890,8 +850,7 @@ function unpack(buffer, theType) {
  * @throws {Error} If the type definition is not valid.
  */
 function unpackArray(buffer, theType) {
-  setUp_(theType);
-  return fromBytes_(buffer, theType);
+  return unpackArrayFrom(buffer, theType);
 }
 
 /**
@@ -928,7 +887,7 @@ function unpackArrayFrom(buffer, theType, start=0, end=null) {
   if (theType.be) {
     endianness(buffer, theType.offset);
   }
-  let len = end || buffer.length;
+  let len = (end  || buffer.length) - (theType.offset - 1);
   let values = [];
   let step = theType.offset;
   while (start < len) {
