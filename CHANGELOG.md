@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.1 (2018-07-06)
+- Fix: lib name in UMD dist.
+
 ## v13.2.0 (2018-07-05)
 - Allow Array and Uint8Array as output buffer.
 - Fix: cases of unpacking extra elements on unpackArrayTo and unpackArrayFrom.
