@@ -46,7 +46,7 @@ export default [
     output: [
       {
         file: 'dist/byte-data.umd.js',
-        name: 'byte-data',
+        name: 'byteData',
         format: 'umd'
       }
     ],
