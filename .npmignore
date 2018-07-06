@@ -14,6 +14,7 @@ test/
 appveyor.yml
 webpack.config.js
 rollup.config.js
+BUILDING.md
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
-BUILDING.md
+ROADMAP.md
