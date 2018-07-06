@@ -4,8 +4,9 @@
  *
  */
 
-let assert = require('assert');
-let byteData = require('../../test/loader.js');
+var chai = chai || require("chai");
+var byteData = byteData || require('../../test/loader.js');
+var assert = chai.assert;
 
 describe('pack strings', function() {
     it('should turn a string to a byte array', function() {
@@ -17,7 +18,7 @@ describe('pack strings', function() {
         let buffer = new Uint8Array(12);
         byteData.packStringTo("abcd", buffer, 4);
         assert.deepEqual(
-            buffer, [0, 0, 0, 0, 97,98,99,100, 0, 0, 0, 0]);
+            buffer, new Uint8Array([0, 0, 0, 0, 97,98,99,100, 0, 0, 0, 0]));
     });
 });
 

@@ -4,8 +4,9 @@
  *
  */
 
-let assert = require('assert');
-let byteData = require('../../test/loader.js');
+var chai = chai || require("chai");
+var byteData = byteData || require('../../test/loader.js');
+var assert = chai.assert;
 
 describe('esoteric bit depths', function() {
     

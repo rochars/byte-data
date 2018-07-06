@@ -4,8 +4,8 @@
  *
  */
 
-let expect = require("chai").expect;
-let byteData = require('../../test/loader.js');
+var chai = chai || require("chai");
+var byteData = byteData || require('../../test/loader.js');
 let testFunc;
 let typeError = "Bad type definition.";
 let floatTypeError = "Bad float type.";
@@ -15,14 +15,14 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.packString('ƒ');
         };
-        expect(testFunc).to.throw("Bad ASCII code.");
+        chai.expect(testFunc).to.throw("Bad ASCII code.");
     });
 
     it("undefined value", function () {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
         };
-        expect(testFunc).to.throw("Undefined value.");
+        chai.expect(testFunc).to.throw("Undefined value.");
     });
 
     // overflow and underflow
@@ -30,13 +30,13 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
-        expect(testFunc).to.throw("Overflow.");
+        chai.expect(testFunc).to.throw("Overflow.");
     });
     it("8-bit underflow", function () {
         testFunc = function() {
             byteData.pack(-1, {"bits": 8});
         };
-        expect(testFunc).to.throw("Underflow.");
+        chai.expect(testFunc).to.throw("Underflow.");
     });
     
     // Invalid types
@@ -44,30 +44,30 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(2);
         };
-        expect(testFunc).to.throw("Undefined type.");
+        chai.expect(testFunc).to.throw("Undefined type.");
     });
     it("More than 64 bits", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 65});
         };
-        expect(testFunc).to.throw(typeError);
+        chai.expect(testFunc).to.throw(typeError);
     });
     it("Less than 1 bit (0)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 0});
         };
-        expect(testFunc).to.throw(typeError);
+        chai.expect(testFunc).to.throw(typeError);
     });
     it("Less than 1 bit (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": -1});
         };
-        expect(testFunc).to.throw(typeError);
+        chai.expect(testFunc).to.throw(typeError);
     });
     it("17 float (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 17, "float": true});
         };
-        expect(testFunc).to.throw(floatTypeError);
+        chai.expect(testFunc).to.throw(floatTypeError);
     });
 });

@@ -1,0 +1,52 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>byte-data: browser tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://unpkg.com/mocha@4.0.1/mocha.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+</head>
+<body>
+
+	<div class="container">
+		<h1>byte-data</h1>
+		<p>Pack and unpack binary data.<br>
+			Copyright (c) 2017-2018 Rafael da Silva Rocha.<br>
+			<a href="https://github.com/rochars/byte-data">https://github.com/rochars/byte-data</a></p>
+		<p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a><br><a href="https://codecov.io/gh/rochars/byte-data"><img src="https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square" alt="Codecov"></a> <a href="https://travis-ci.org/rochars/byte-data"><img src="https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square" alt="Unix Build"></a> <a href="https://ci.appveyor.com/project/rochars/byte-data"><img src="https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&amp;logo=appveyor" alt="Windows Build"></a> <a href="https://scrutinizer-ci.com/g/rochars/byte-data/"><img src="https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&amp;logo=scrutinizer" alt="Scrutinizer"></a></p>
+	</div>
+
+	<!-- Load Mocha -->
+	<div class="container">
+		<div id="mocha"></div>
+	</div>
+
+	<script src="https://unpkg.com/chai@4.1.2/chai.js"></script>
+	<script src="https://unpkg.com/mocha@4.0.1/mocha.js"></script>
+	<script>mocha.setup('bdd')</script>
+
+	<!-- Load browser dist, load types -->
+	<script src="../dist/byte-data.umd.js"></script>
+	<script src="https://unpkg.com/binary-data-types@0.1.0/dist/binary-data-types.min.js"></script>
+	<script>
+		byteData.types = BinaryDataTypes;
+	</script>
+
+	<!-- Load the tests -->
+	<script src="dist/buffers.js"></script>
+	<script src="dist/error.js"></script>
+	<script src="dist/esoteric.js"></script>
+	<script src="dist/interface.js"></script>
+	<script src="dist/pack-unpack.js"></script>
+	<script src="dist/packArray.js"></script>
+	<script src="dist/strings.js"></script>
+	<script src="dist/unpackArray.js"></script>
+
+	<!-- Run the tests -->
+	<script>
+	    mocha.checkLeaks();
+	    mocha.run();
+	</script>
+
+</body>
+</html>

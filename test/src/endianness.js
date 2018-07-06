@@ -4,16 +4,16 @@
  *
  */
 
-var assert = require('assert');
-const expect = require("chai").expect;
+var chai = chai || require("chai");
+var byteData = byteData || require('../../test/loader.js');
+var assert = chai.assert;
+var endianness =  endianness || require("../../lib/endianness.js").default;
 
 describe('little endiand and big endian swap', function() {
     
-    const endianness = require("../../lib/endianness.js").default;
-    
     // Errors
     it("should throw an error if input do not have enought bytes", function () {
-        expect(function() {
+        chai.expect(function() {
             values = [1, 2, 3, 4,  5, 6, 7, 8,   9, 10];
             endianness(values, 4);
         }).to.throw("Bad buffer length.");
@@ -166,14 +166,14 @@ describe('little endiand and big endian swap', function() {
         values = new Uint8Array([24, 45, 68, 84, 251, 33, 9]);
         endianness(values, 7);
         assert.deepEqual(values,
-            [9, 33, 251, 84, 68, 45, 24]);
+            new Uint8Array([9, 33, 251, 84, 68, 45, 24]));
     });
     it('should swap 2 56-bit values', function() {
         values = new Uint8Array(
             [24, 45, 68, 84, 251, 33, 9, 24, 45, 68, 84, 251, 33, 23]);
         endianness(values, 7);
         assert.deepEqual(values,
-            [9, 33, 251, 84, 68, 45, 24, 23, 33, 251, 84, 68, 45, 24]);
+            new Uint8Array([9, 33, 251, 84, 68, 45, 24, 23, 33, 251, 84, 68, 45, 24]));
     });
 
     // 64-bit
