@@ -2,6 +2,7 @@ language: node_js
 os:
   - linux
   - osx
+  - powerpc64-unknown-linux-gnu
 node_js:
   - "8"
   - "9"
