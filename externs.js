@@ -143,18 +143,20 @@ function unpackFrom(buffer, theType, index=0) {}
  * Unpack a array of numbers from a byte buffer by index.
  * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} start The start index. Assumes 0.
+ * @param {number=} index The start index. Assumes 0.
  * @param {?number=} end The end index. Assumes the buffer length.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayFrom(buffer, theType, start=0, end=null) {}
+function unpackArrayFrom(buffer, theType, index=0, end=null) {}
 
 /**
  * Unpack a array of numbers to a typed array.
  * @param {!Uint8Array} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {!TypedArray} output The output array.
+ * @param {number=} index The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the buffer length.
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayTo(buffer, theType, output) {}
+function unpackArrayTo(buffer, theType, output, index=0, end=null) {}

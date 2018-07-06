@@ -19,9 +19,9 @@ export function unpack(buffer: Uint8Array, theType: object): number;
 
 export function unpackArray(buffer: Uint8Array, theType: object): Array<number>;
 
-export function unpackArrayFrom(buffer: Uint8Array, theType: object, start?: number, end?: number): Array<number>;
+export function unpackArrayFrom(buffer: Uint8Array, theType: object, index?: number, end?: number): Array<number>;
 
-export function unpackArrayTo(buffer: Uint8Array, theType: object, output: ArrayLike<number>): void;
+export function unpackArrayTo(buffer: Uint8Array, theType: object, output: ArrayLike<number>, index?: number, end?: number): void;
 
 export function unpackFrom(buffer: Uint8Array, theType: object, index?: number): number;
 
