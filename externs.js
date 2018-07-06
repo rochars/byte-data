@@ -23,7 +23,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 13.1.2
+ * @fileoverview Externs for byte-data 13.1.3
  * @see https://github.com/rochars/byte-data
  * @externs
  */
