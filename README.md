@@ -103,7 +103,7 @@ Only ASCII characters are supported. Packing and unpacking strings with characte
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
 
 ### Host endianness
-This library works in little-endian hosts. Running it on big-endian hosts will cause errors when packing/unpacking floating point numbers.
+This library works in little-endian hosts.
 
 ## API
 

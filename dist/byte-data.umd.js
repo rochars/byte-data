@@ -939,6 +939,11 @@
     }
   }
 
+  // Issue warning if running on big-endian env
+  if (new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12) {
+    console.log('This library is for little-endian environments only.');
+  }
+
   exports.unpackString = unpackString;
   exports.packString = packString;
   exports.packStringTo = packStringTo;
