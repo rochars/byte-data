@@ -445,13 +445,12 @@
    */
 
   /**
+   * Use a Typed Array to check if the host is BE or LE. This will impact
+   * on how 64-bit floating point numbers are handled.
    * @type {boolean}
    * @private
    */
-  let HOST_BE = false;
-  if (new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12) {
-    HOST_BE = true;
-  }
+  let HOST_BE_ = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
 
   /**
    * @type {!Int8Array}
@@ -583,7 +582,7 @@
    * @private
    */
   function read64F_(bytes, i) {
-    if (HOST_BE) {
+    if (HOST_BE_) {
       ui32_[1] = gInt_.read(bytes, i);
       ui32_[0] = gInt_.read(bytes, i + 4);
     } else {
@@ -651,17 +650,14 @@
    */
   function write64F_(bytes, number, j) {
     f64_[0] = number;
-    if (HOST_BE) {
+    if (HOST_BE_) {
       j = gInt_.write(bytes, ui32_[1], j);
-      return gInt_.write(bytes, ui32_[0], j);
+      j = gInt_.write(bytes, ui32_[0], j);
     } else {
       j = gInt_.write(bytes, ui32_[0], j);
-      return gInt_.write(bytes, ui32_[1], j);
+      j = gInt_.write(bytes, ui32_[1], j);
     }
-    /*
-    j = gInt_.write(bytes, ui32_[0], j);
-    return gInt_.write(bytes, ui32_[1], j);
-    */
+    return j;
   }
 
   /**
