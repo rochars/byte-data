@@ -12,6 +12,7 @@ https://github.com/rochars/byte-data
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node**
 - **Use it out of the box with TypeScript**
+- **Use it in little-endian and big-endian hosts**
 - **Write to buffers**, option to define **start and end index to write**
 - **Read from buffers**, option to define **start and end index to read**
 - Use **typed arrays** or **arrays**
@@ -101,9 +102,6 @@ Only ASCII characters are supported. Packing and unpacking strings with characte
 
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
-
-### Host endianness
-This library works in little-endian hosts. Trying to use **byte-data** in a big-endian environment will issue an error.
 
 ## API
 

@@ -8,8 +8,3 @@ See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUT
 
 ## Planned features:
 - Support big-endian envs
-
-## Chores
-
-### Unit testing
-The current test suite is actually a high level test suite aimed to run against dist files - as a consequence, it only tests public methods and properties. There should be a test suite aimed at the source files to test all aspects of the lib.

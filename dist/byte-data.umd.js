@@ -445,6 +445,15 @@
    */
 
   /**
+   * @type {boolean}
+   * @private
+   */
+  let HOST_BE = false;
+  if (new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12) {
+    HOST_BE = true;
+  }
+
+  /**
    * @type {!Int8Array}
    * @private
    */
@@ -574,8 +583,13 @@
    * @private
    */
   function read64F_(bytes, i) {
-    ui32_[0] = gInt_.read(bytes, i);
-    ui32_[1] = gInt_.read(bytes, i + 4);
+    if (HOST_BE) {
+      ui32_[1] = gInt_.read(bytes, i);
+      ui32_[0] = gInt_.read(bytes, i + 4);
+    } else {
+      ui32_[0] = gInt_.read(bytes, i);
+      ui32_[1] = gInt_.read(bytes, i + 4);
+    }
     return f64_[0];
   }
 
@@ -637,8 +651,17 @@
    */
   function write64F_(bytes, number, j) {
     f64_[0] = number;
+    if (HOST_BE) {
+      j = gInt_.write(bytes, ui32_[1], j);
+      return gInt_.write(bytes, ui32_[0], j);
+    } else {
+      j = gInt_.write(bytes, ui32_[0], j);
+      return gInt_.write(bytes, ui32_[1], j);
+    }
+    /*
     j = gInt_.write(bytes, ui32_[0], j);
     return gInt_.write(bytes, ui32_[1], j);
+    */
   }
 
   /**
@@ -937,11 +960,6 @@
     if (theType.be) {
       endianness(buffer, theType.offset);
     }
-  }
-
-  // Issue warning if running on big-endian env
-  if (new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12) {
-    throw new Error('This library is for little-endian environments only.');
   }
 
   exports.unpackString = unpackString;
