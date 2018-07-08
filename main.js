@@ -271,5 +271,5 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=null) {
 
 // Issue warning if running on big-endian env
 if (new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12) {
-  console.log('This library is for little-endian environments only.');
+  throw new Error('This library is for little-endian environments only.');
 }
