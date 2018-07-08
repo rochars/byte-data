@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.2 (2018-07-08)
+- Fix: Support big-endian hosts.
+
 ## v13.2.1 (2018-07-06)
 - Fix: lib name in UMD dist.
 
