@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.3 (2018-07-08)
+- UMD dist transpiled to ES5.
+
 ## v13.2.2 (2018-07-08)
 - Fix: Support big-endian hosts.
 
