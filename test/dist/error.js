@@ -6,9 +6,9 @@
 
 var chai = chai || require("chai");
 var byteData = byteData || require('../../test/loader.js');
-let testFunc;
-let typeError = "Bad type definition.";
-let floatTypeError = "Bad float type.";
+var testFunc;
+var typeError = "Bad type definition.";
+var floatTypeError = "Bad float type.";
 
 describe('Errors', function() {
     it("invalid ASCII code", function () {

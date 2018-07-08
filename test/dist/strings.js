@@ -15,7 +15,7 @@ describe('pack strings', function() {
     });
 
     it('should pack a string to a buffer', function() {
-        let buffer = new Uint8Array(12);
+        var buffer = new Uint8Array(12);
         byteData.packStringTo("abcd", buffer, 4);
         assert.deepEqual(
             buffer, new Uint8Array([0, 0, 0, 0, 97,98,99,100, 0, 0, 0, 0]));
