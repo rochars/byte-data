@@ -103,6 +103,9 @@ Only ASCII characters are supported. Packing and unpacking strings with characte
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
 
+### IE compatibility
+IE 10+
+
 ## API
 
 ### Strings
