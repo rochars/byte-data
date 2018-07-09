@@ -30,7 +30,14 @@
     "half-precision",
     "single-precision",
     "double-precision",
-    "ASCII"
+    "ASCII",
+    "8-bit",
+    "16-bit",
+    "24-bit",
+    "32-bit",
+    "40-bit",
+    "48-bit",
+    "64-bit"
   ],
   "repository": {
     "type": "git",
