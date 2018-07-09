@@ -448,7 +448,9 @@ function validateIntType_(theType) {
  * @type {boolean}
  * @private
  */
-let HOST_BE_ = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
+const is_be = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
+const HIGH = is_be ? 1 : 0;
+const LOW = is_be ? 0 : 1;
 
 /**
  * @type {!Int8Array}
@@ -580,13 +582,8 @@ function read32F_(bytes, i) {
  * @private
  */
 function read64F_(bytes, i) {
-  if (HOST_BE_) {
-    ui32_[1] = gInt_.read(bytes, i);
-    ui32_[0] = gInt_.read(bytes, i + 4);
-  } else {
-    ui32_[0] = gInt_.read(bytes, i);
-    ui32_[1] = gInt_.read(bytes, i + 4);
-  }
+    ui32_[HIGH] = gInt_.read(bytes, i);
+    ui32_[LOW] = gInt_.read(bytes, i + 4);
   return f64_[0];
 }
 
@@ -648,13 +645,8 @@ function write32F_(bytes, number, j) {
  */
 function write64F_(bytes, number, j) {
   f64_[0] = number;
-  if (HOST_BE_) {
-    j = gInt_.write(bytes, ui32_[1], j);
-    j = gInt_.write(bytes, ui32_[0], j);
-  } else {
-    j = gInt_.write(bytes, ui32_[0], j);
-    j = gInt_.write(bytes, ui32_[1], j);
-  }
+  j = gInt_.write(bytes, ui32_[HIGH], j);
+  j = gInt_.write(bytes, ui32_[LOW], j);
   return j;
 }
 
