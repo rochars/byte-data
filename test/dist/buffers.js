@@ -292,6 +292,9 @@ describe('unpackArrayFrom: LE', function() {
     it('Check the unpacked 16-bit values', function() {
         assert.deepEqual(output, [65535]);
     });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]));
+    });
 });
 
 describe('unpackArrayFrom: LE (read from the middle of array)', function() {
@@ -306,6 +309,9 @@ describe('unpackArrayFrom: LE (read from the middle of array)', function() {
     it('Check the unpacked 16-bit values', function() {
         assert.deepEqual(output, [765]);
     });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]));
+    });
 });
 
 describe('unpackArrayFrom: LE (read 2 values)', function() {
@@ -319,6 +325,9 @@ describe('unpackArrayFrom: LE (read 2 values)', function() {
     // unpack
     it('Check the unpacked 16-bit values', function() {
         assert.deepEqual(output, [65535, 765]);
+    });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]));
     });
 });
 
@@ -379,6 +388,9 @@ describe('unpackArrayTo: LE', function() {
         byteData.unpackArrayTo(file, byteData.types.uInt16, output, 1);
         assert.deepEqual(output, new Uint16Array([255]));
     });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([255, 255, 0, 0]));
+    });
 });
 
 describe('unpackArrayTo: BE', function() {
@@ -389,6 +401,9 @@ describe('unpackArrayTo: BE', function() {
 
     it('Unpack the first value', function() {
         assert.deepEqual(output, new Uint16Array([765, 0]));
+    });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([2, 253, 0, 0]));
     });
 });
 
@@ -408,6 +423,9 @@ describe('unpackFrom: LE', function() {
     it('Unpack the first value', function() {
         assert.equal(value, 65535);
     });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2]));
+    });
 
 });
 
@@ -425,6 +443,9 @@ describe('unpackFrom: LE (read to the middle of array)', function() {
     // pack
     it('Unpack the second value', function() {
         assert.equal(value, 765);
+    });
+    it('Original buffer should be untouched', function() {
+        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2]));
     });
 });
 

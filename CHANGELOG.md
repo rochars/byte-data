@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.4 (2018-07-09)
+- Handle big-endian data more efficiently.
+
 ## v13.2.3 (2018-07-08)
 - UMD dist transpiled to ES5.
 

@@ -903,21 +903,20 @@ function unpackFrom(buffer, theType, index=0) {
  */
 function unpackArrayFrom(buffer, theType, index=0, end=null) {
   setUp_(theType);
-  if (theType.be) {
-    endianness(buffer, theType.offset);
-  }
   let len = end || buffer.length;
   while ((len - index) % theType.offset) {
     len--;
   }
+  if (theType.be) {
+    endianness(buffer, theType.offset, index, len);
+  }
   let values = [];
   let step = theType.offset;
-  while (index < len) {
-    values.push(reader_(buffer, index));
-    index += step;
+  for (let i=index; i < len; i+=step) {
+    values.push(reader_(buffer, i));
   }
   if (theType.be) {
-    endianness(buffer, theType.offset);
+    endianness(buffer, theType.offset, index, len);
   }
   return values;
 }
@@ -933,22 +932,21 @@ function unpackArrayFrom(buffer, theType, index=0, end=null) {
  */
 function unpackArrayTo(buffer, theType, output, index=0, end=null) {
   setUp_(theType);
-  if (theType.be) {
-    endianness(buffer, theType.offset);
-  }
   let len = end || buffer.length;
   while ((len - index) % theType.offset) {
     len--;
   }
+  if (theType.be) {
+    endianness(buffer, theType.offset, index, len);
+  }
   let outputIndex = 0;
   let step = theType.offset;
-  while (index < len) {
-    output.set([reader_(buffer, index)], outputIndex);
+  for (let i=index; i < len; i+=step) {
+    output.set([reader_(buffer, i)], outputIndex);
     outputIndex++;
-    index += step;
   }
   if (theType.be) {
-    endianness(buffer, theType.offset);
+    endianness(buffer, theType.offset, index, len);
   }
 }
 
