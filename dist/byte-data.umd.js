@@ -83,8 +83,8 @@ function validateFloatType_(theType){if([16,32,64].indexOf(theType.bits)==-1)thr
  @param {!Object} theType
  @throws {Error}
  */
-function validateIntType_(theType){if(theType.bits<1||theType.bits>53)throw new Error("Bad type definition.");}/** @private @const @type {boolean} */ var is_be=(new Uint8Array((new Uint32Array([305419896])).buffer))[0]===18;/** @const */ var HIGH=is_be?1:0;/** @const */ var LOW=is_be?0:1;/** @private @const @type {!Int8Array} */ var int8_=new Int8Array(8);/** @private @const @type {!Uint32Array} */ var ui32_=new Uint32Array(int8_.buffer);/** @private @const @type {!Float32Array} */ var f32_=new Float32Array(int8_.buffer);
-/** @private @const @type {!Float64Array} */ var f64_=new Float64Array(int8_.buffer);/** @private @type {Function} */ var reader_;/** @private @type {Function} */ var writer_;/** @private @type {Object} */ var gInt_={};/**
+function validateIntType_(theType){if(theType.bits<1||theType.bits>53)throw new Error("Bad type definition.");}/** @private @const @type {boolean} */ var BE_ENV=(new Uint8Array((new Uint32Array([305419896])).buffer))[0]===18;/** @const */ var HIGH=BE_ENV?1:0;/** @const */ var LOW=BE_ENV?0:1;/** @private @type {!Int8Array} */ var int8_=new Int8Array(8);/** @private @type {!Uint32Array} */ var ui32_=new Uint32Array(int8_.buffer);/** @private @type {!Float32Array} */ var f32_=new Float32Array(int8_.buffer);
+/** @private @type {!Float64Array} */ var f64_=new Float64Array(int8_.buffer);/** @private @type {Function} */ var reader_;/** @private @type {Function} */ var writer_;/** @private @type {Object} */ var gInt_={};/**
  @private
  @param {!Object} theType
  @throws {Error}

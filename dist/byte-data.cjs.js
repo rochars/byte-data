@@ -448,30 +448,30 @@ function validateIntType_(theType) {
  * @type {boolean}
  * @private
  */
-const is_be = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
-const HIGH = is_be ? 1 : 0;
-const LOW = is_be ? 0 : 1;
+const BE_ENV = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
+const HIGH = BE_ENV ? 1 : 0;
+const LOW = BE_ENV ? 0 : 1;
 
 /**
  * @type {!Int8Array}
  * @private
  */
-const int8_ = new Int8Array(8);
+let int8_ = new Int8Array(8);
 /**
  * @type {!Uint32Array}
  * @private
  */
-const ui32_ = new Uint32Array(int8_.buffer);
+let ui32_ = new Uint32Array(int8_.buffer);
 /**
  * @type {!Float32Array}
  * @private
  */
-const f32_ = new Float32Array(int8_.buffer);
+let f32_ = new Float32Array(int8_.buffer);
 /**
  * @type {!Float64Array}
  * @private
  */
-const f64_ = new Float64Array(int8_.buffer);
+let f64_ = new Float64Array(int8_.buffer);
 /**
  * @type {Function}
  * @private
