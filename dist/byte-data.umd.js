@@ -112,7 +112,7 @@ function readInt_(bytes,i){return gInt_.read(bytes,i)}/**
  @param {number} i
  @return {number}
  */
-function read16F_(bytes,i){var int=gInt_.read(bytes,i);var exponent=(int&31744)>>10;var fraction=int&1023;var floatValue;if(exponent)floatValue=Math.pow(2,exponent-15)*(1+fraction/1024);else floatValue=.00006103515625*(fraction/1024);return floatValue*(int>>15?-1:1)}/**
+function read16F_(bytes,i){/** @type {number} */ var int=gInt_.read(bytes,i);/** @type {number} */ var exponent=(int&31744)>>10;/** @type {number} */ var fraction=int&1023;/** @type {number} */ var floatValue;if(exponent)floatValue=Math.pow(2,exponent-15)*(1+fraction/1024);else floatValue=.00006103515625*(fraction/1024);return floatValue*(int>>15?-1:1)}/**
  @private
  @param {!Uint8Array} bytes
  @param {number} i
@@ -138,7 +138,7 @@ function writeInt_(bytes,number,j){return gInt_.write(bytes,number,j)}/**
  @param {number} j
  @return {number}
  */
-function write16F_(bytes,number,j){f32_[0]=number;var x=ui32_[0];var bits=x>>16&32768;var m=x>>12&2047;var e=x>>23&255;if(e>=103){bits|=e-112<<10|m>>1;bits+=m&1}bytes[j++]=bits&255;bytes[j++]=bits>>>8&255;return j}/**
+function write16F_(bytes,number,j){f32_[0]=number;/** @type {number} */ var x=ui32_[0];/** @type {number} */ var bits=x>>16&32768;/** @type {number} */ var m=x>>12&2047;/** @type {number} */ var e=x>>23&255;if(e>=103){bits|=e-112<<10|m>>1;bits+=m&1}bytes[j++]=bits&255;bytes[j++]=bits>>>8&255;return j}/**
  @private
  @param {!Uint8Array} bytes
  @param {number} number
@@ -152,7 +152,7 @@ function write32F_(bytes,number,j){f32_[0]=number;return gInt_.write(bytes,ui32_
  @param {number} j
  @return {number}
  */
-function write64F_(bytes,number,j){f64_[0]=number;j=gInt_.write(bytes,ui32_[HIGH],j);j=gInt_.write(bytes,ui32_[LOW],j);return j}/**
+function write64F_(bytes,number,j){f64_[0]=number;j=gInt_.write(bytes,ui32_[HIGH],j);return gInt_.write(bytes,ui32_[LOW],j)}/**
  @private
  @param {!Object} theType
  */

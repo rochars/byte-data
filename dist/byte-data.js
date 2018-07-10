@@ -543,9 +543,13 @@ function readInt_(bytes, i) {
  * @private
  */
 function read16F_(bytes, i) {
+  /** @type {number} */
   let int = gInt_.read(bytes, i);
+  /** @type {number} */
   let exponent = (int & 0x7C00) >> 10;
+  /** @type {number} */
   let fraction = int & 0x03FF;
+  /** @type {number} */
   let floatValue;
   if (exponent) {
     floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
@@ -576,8 +580,8 @@ function read32F_(bytes, i) {
  * @private
  */
 function read64F_(bytes, i) {
-    ui32_[HIGH] = gInt_.read(bytes, i);
-    ui32_[LOW] = gInt_.read(bytes, i + 4);
+  ui32_[HIGH] = gInt_.read(bytes, i);
+  ui32_[LOW] = gInt_.read(bytes, i + 4);
   return f64_[0];
 }
 
@@ -603,9 +607,13 @@ function writeInt_(bytes, number, j) {
  */
 function write16F_(bytes, number, j) {
   f32_[0] = number;
+  /** @type {number} */
   let x = ui32_[0];
+  /** @type {number} */
   let bits = (x >> 16) & 0x8000;
+  /** @type {number} */
   let m = (x >> 12) & 0x07ff;
+  /** @type {number} */
   let e = (x >> 23) & 0xff;
   if (e >= 103) {
     bits |= ((e - 112) << 10) | (m >> 1);
@@ -640,8 +648,7 @@ function write32F_(bytes, number, j) {
 function write64F_(bytes, number, j) {
   f64_[0] = number;
   j = gInt_.write(bytes, ui32_[HIGH], j);
-  j = gInt_.write(bytes, ui32_[LOW], j);
-  return j;
+  return gInt_.write(bytes, ui32_[LOW], j);
 }
 
 /**
