@@ -40,13 +40,11 @@ Object.defineProperty(exports, '__esModule', { value: true });
  * @throws {Error} If the buffer length is not valid.
  */
 function endianness(bytes, offset, index=0, end=bytes.length) {
-  /** @type {number} */
-  const limit = parseInt(offset / 2, 10);
   if (end % offset) {
     throw new Error("Bad buffer length.");
   }
   for (; index < end; index += offset) {
-    swap(bytes, offset, index, limit);
+    swap(bytes, offset, index);
   }
 }
 
@@ -57,7 +55,7 @@ function endianness(bytes, offset, index=0, end=bytes.length) {
  * @param {number} index The start index.
  * @private
  */
-function swap(bytes, offset, index, limit) {
+function swap(bytes, offset, index) {
   offset--;
   for(let x = 0; x < offset; x++) {
     /** @type {number|string} */
