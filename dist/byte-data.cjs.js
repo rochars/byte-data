@@ -36,18 +36,17 @@ Object.defineProperty(exports, '__esModule', { value: true });
  * @param {!Array<number|string>|!Uint8Array} bytes The bytes.
  * @param {number} offset The byte offset.
  * @param {number=} index The start index. Assumes 0.
- * @param {?number=} end The end index. Assumes the buffer length.
+ * @param {number=} end The end index. Assumes the buffer length.
  * @throws {Error} If the buffer length is not valid.
  */
-function endianness(bytes, offset, index=0, end=null) {
-  let len = end || bytes.length;
-  let limit = parseInt(offset / 2, 10);
-  if (len % offset) {
+function endianness(bytes, offset, index=0, end=bytes.length) {
+  /** @type {number} */
+  const limit = parseInt(offset / 2, 10);
+  if (end % offset) {
     throw new Error("Bad buffer length.");
   }
-  while (index < len) {
+  for (; index < end; index += offset) {
     swap(bytes, offset, index, limit);
-    index += offset;
   }
 }
 
@@ -59,14 +58,13 @@ function endianness(bytes, offset, index=0, end=null) {
  * @private
  */
 function swap(bytes, offset, index, limit) {
-  let x = 0;
-  let y = offset - 1;
-  while(x < limit) {
+  offset--;
+  for(let x = 0; x < offset; x++) {
+    /** @type {number|string} */
     let theByte = bytes[index + x];
-    bytes[index + x] = bytes[index + y];
-    bytes[index + y] = theByte;
-    x++;
-    y--;
+    bytes[index + x] = bytes[index + offset];
+    bytes[index + offset] = theByte;
+    offset--;
   }
 }
 
@@ -908,7 +906,7 @@ function unpackArrayFrom(buffer, theType, index=0, end=null) {
   }
   let values = [];
   let step = theType.offset;
-  for (let i=index; i < len; i+=step) {
+  for (let i = index; i < len; i += step) {
     values.push(reader_(buffer, i));
   }
   if (theType.be) {
@@ -937,7 +935,7 @@ function unpackArrayTo(buffer, theType, output, index=0, end=null) {
   }
   let outputIndex = 0;
   let step = theType.offset;
-  for (let i=index; i < len; i+=step) {
+  for (let i = index; i < len; i += step) {
     output.set([reader_(buffer, i)], outputIndex);
     outputIndex++;
   }

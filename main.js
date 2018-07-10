@@ -229,7 +229,7 @@ export function unpackArrayFrom(buffer, theType, index=0, end=null) {
   }
   let values = [];
   let step = theType.offset;
-  for (let i=index; i < len; i+=step) {
+  for (let i = index; i < len; i += step) {
     values.push(reader_(buffer, i));
   }
   if (theType.be) {
@@ -258,7 +258,7 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=null) {
   }
   let outputIndex = 0;
   let step = theType.offset;
-  for (let i=index; i < len; i+=step) {
+  for (let i = index; i < len; i += step) {
     output.set([reader_(buffer, i)], outputIndex);
     outputIndex++;
   }
