@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017 Rafael da Silva Rocha.
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  * https://github.com/rochars/byte-data
  *
  */
@@ -9,9 +9,8 @@ let types = require("binary-data-types");
 
 // Browser bundle
 if (process.argv[3] == '--min') {
-	
 	console.log('min tests');
-    require('browser-env')();
+    global.window = {};
     require('../dist/byte-data.min.js');
     byteData = window.byteData;
 
@@ -27,11 +26,15 @@ if (process.argv[3] == '--min') {
 
 // ES6 dist
 } else if (process.argv[3] == '--esm') {
+	require = require("esm")(module);
+	global.module = module;
 	console.log("esm");
 	byteData = require('../dist/byte-data.js');
 
 // Source
 } else {
+	require = require("esm")(module);
+	global.module = module;
 	console.log('Source tests');
 	byteData = require('../main.js');
 }

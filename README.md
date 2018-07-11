@@ -30,14 +30,37 @@ https://github.com/rochars/byte-data
 - Little-endian and big-endian words
 - ASCII Strings
 
+
 ## Install
+
+### NPM
 ```
 npm install byte-data
 ```
 
+### Yarn
+```
+yarn add byte-data
+```
+
+### GitHub
+This is not recommended as it will also include test and build assets in your installation. If this is what you want, you can:
+```
+git clone https://github.com/rochars/byte-data
+```
+
+And then import/require what you want from the *byte-data* folder:
+```
+const byteData = require('./byte-data/dist/byte-data.umd.js');
+```
+
+You can also download one of the files in the *./dist* folder:  
+https://github.com/rochars/byte-data/tree/master/dist
+
 ## Use
 
 ### Node
+If you installed via [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com), require byteData from **byte-data**:
 ```javascript
 const byteData = require('byte-data');
 
@@ -46,6 +69,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ```
 
 ### ES module
+Import byteData from **byte-data.js** in the *./dist* folder of this package:
 ```javascript
 import * as byteData from './dist/byte-data.js';
 
@@ -53,15 +77,14 @@ import * as byteData from './dist/byte-data.js';
 let packed = byteData.pack(128, {bits: 8});
 ```
 
-or 
-
+or import just what you need:
 ```javascript
 import {pack} from './dist/byte-data.js';
 let packed = pack(128, {bits: 8});
 ```
 
 ### Browser
-Use the compiled file in the */dist* folder:
+Use the compiled file in the */dist* folder of this package:
 ```html
 <script src="./dist/byte-data.min.js"></script>
 <script>
@@ -80,7 +103,7 @@ Or get it from [unpkg](https://unpkg.com/byte-data):
 <script src="https://unpkg.com/byte-data"></script>
 ```
 
-Or as a ES6 module in modern browsers from [jspm](https://jspm.io):
+Or use ir as a ES6 module from [jspm](https://jspm.io):
 ```html
 <script type="module">
   import {pack} from 'https://dev.jspm.io/byte-data';
@@ -315,7 +338,7 @@ You may load both **./dist/byte-data.umd.js** and **./dist/byte-data.min.js** in
 
 - The **browser-only** dist is **./dist/byte-data.min.js**. It is transpiled to ES5 and compiled. It is used in the "unpkg" and "jsdelivr" fields of package.json.
 
-- The **ES6 dist** is **./dist/byte-data.js**, served as "es2015" in package.json. It is not compiled/minified.
+- The **ES6 bundle** is **./dist/byte-data.js**, served as "es2015" in package.json. It is not compiled/minified.
 
 - **./main.js** is served as "module" in package.json. This should be the entry point for bundlers.
 

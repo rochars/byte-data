@@ -7,8 +7,6 @@
  * @see https://github.com/rochars/byte-data
  */
 
-import commonjs from 'rollup-plugin-commonjs';
-import nodeResolve from 'rollup-plugin-node-resolve';
 import closure from 'rollup-plugin-closure-compiler-js';
 
 // Externs
@@ -58,10 +56,6 @@ export default [
         file: 'dist/byte-data.js',
         format: 'es'
       }
-    ],
-    plugins: [
-      nodeResolve(),
-      commonjs(),
     ]
   },
   // umd bundle
@@ -75,8 +69,6 @@ export default [
       }
     ],
     plugins: [
-      nodeResolve(),
-      commonjs(),
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
@@ -100,8 +92,6 @@ export default [
       }
     ],
     plugins: [
-      nodeResolve(),
-      commonjs(),
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',

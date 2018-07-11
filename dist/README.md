@@ -25,7 +25,7 @@ You may load both **./dist/byte-data.umd.js** and **./dist/byte-data.min.js** in
 
 - The **browser-only** dist is **./dist/byte-data.min.js**. It is transpiled to ES5 and compiled. It is used in the "unpkg" and "jsdelivr" fields of package.json.
 
-- The **ES6 dist** is **./dist/byte-data.js**, served as "es2015" in package.json. It is not compiled/minified.
+- The **ES6 bundle** is **./dist/byte-data.js**, served as "es2015" in package.json. It is not compiled/minified.
 
 - **./main.js** is served as "module" in package.json. This should be the entry point for bundlers.
 
