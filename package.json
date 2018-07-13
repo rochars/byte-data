@@ -7,6 +7,7 @@
   "license": "MIT",
   "main": "./dist/byte-data.cjs.js",
   "module": "./main.js",
+  "es2015": "./dist/byte-data.js",
   "browser": "./dist/byte-data.umd.js",
   "jsdelivr": "./dist/byte-data.min.js",
   "unpkg": "./dist/byte-data.min.js",
