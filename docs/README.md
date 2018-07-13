@@ -67,7 +67,7 @@ let packed = byteData.pack(128, {bits: 8});
 
 Or **import** just what you need:
 ```javascript
-import {pack} from './dist/byte-data.js';
+import {pack} from 'byte-data';
 let packed = pack(128, {bits: 8});
 ```
 
