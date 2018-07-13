@@ -1,22 +1,24 @@
 /*
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/endianness
- *
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  */
 
-var chai = chai || require("chai");
+/**
+ * @fileoverview tests for the endianness functions.
+ * @see https://github.com/rochars/byte-data
+ */
+
 var byteData = byteData || require('../../test/loader.js');
-var assert = chai.assert;
+var assert = assert || require('assert');
 var endianness =  endianness || require("../../lib/endianness.js").default;
 
 describe('little endiand and big endian swap', function() {
     
     // Errors
     it("should throw an error if input do not have enought bytes", function () {
-        chai.expect(function() {
-            values = [1, 2, 3, 4,  5, 6, 7, 8,   9, 10];
-            endianness(values, 4);
-        }).to.throw("Bad buffer length.");
+        assert.throws(function() {
+                values = [1, 2, 3, 4,  5, 6, 7, 8,   9, 10];
+                endianness(values, 4);
+            }, /Bad buffer length./);
     });
 
     // 16-bit

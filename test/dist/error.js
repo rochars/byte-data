@@ -1,28 +1,31 @@
-/**
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
- *
+/*
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  */
 
-var chai = chai || require("chai");
+/**
+ * @fileoverview Test errors.
+ * @see https://github.com/rochars/byte-data
+ */
+
 var byteData = byteData || require('../../test/loader.js');
 var testFunc;
 var typeError = "Bad type definition.";
 var floatTypeError = "Bad float type.";
+var assert = assert || require('assert');
 
 describe('Errors', function() {
     it("invalid ASCII code", function () {
         testFunc = function() {
             byteData.packString('ƒ');
         };
-        chai.expect(testFunc).to.throw("Bad ASCII code.");
+        assert.throws(testFunc, /Bad ASCII code./);
     });
 
     it("undefined value", function () {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
         };
-        chai.expect(testFunc).to.throw("Undefined value.");
+        assert.throws(testFunc, /Undefined value./);
     });
 
     // overflow and underflow
@@ -30,13 +33,13 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
-        chai.expect(testFunc).to.throw("Overflow.");
+        assert.throws(testFunc, /Overflow./);
     });
     it("8-bit underflow", function () {
         testFunc = function() {
             byteData.pack(-1, {"bits": 8});
         };
-        chai.expect(testFunc).to.throw("Underflow.");
+        assert.throws(testFunc, /Underflow./);
     });
     
     // Invalid types
@@ -44,30 +47,30 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(2);
         };
-        chai.expect(testFunc).to.throw("Undefined type.");
+        assert.throws(testFunc, /Undefined type./);
     });
     it("More than 64 bits", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 65});
         };
-        chai.expect(testFunc).to.throw(typeError);
+        assert.throws(testFunc, typeError);
     });
     it("Less than 1 bit (0)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 0});
         };
-        chai.expect(testFunc).to.throw(typeError);
+        assert.throws(testFunc, typeError);
     });
     it("Less than 1 bit (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": -1});
         };
-        chai.expect(testFunc).to.throw(typeError);
+        assert.throws(testFunc, typeError);
     });
     it("17 float (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 17, "float": true});
         };
-        chai.expect(testFunc).to.throw(floatTypeError);
+        assert.throws(testFunc, floatTypeError);
     });
 });

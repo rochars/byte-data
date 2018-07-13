@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.6 (2018-07-13)
+- Fix documentation issues.
+
 ## v13.2.5 (2018-07-09)
 - Faster 64-bit fp number read/write.
 

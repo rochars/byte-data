@@ -1,12 +1,14 @@
-/**
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
- *
+/*
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  */
 
-var chai = chai || require("chai");
+/**
+ * @fileoverview Old tests. Those are the first tests for byte-data.
+ * @see https://github.com/rochars/byte-data
+ */
+
 var byteData = byteData || require('../../test/loader.js');
-var assert = chai.assert;
+var assert = assert || require('assert');
 
 describe('interface', function() {
     // pack

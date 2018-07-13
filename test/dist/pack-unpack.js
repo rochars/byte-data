@@ -1,12 +1,14 @@
-/*!
- * Copyright (c) 2017 Rafael da Silva Rocha.
- * https://github.com/rochars/byte-data
- *
+/*
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  */
 
-var chai = chai || require("chai");
+/**
+ * @fileoverview Test packing and then unpacking the same values.
+ * @see https://github.com/rochars/byte-data
+ */
+
 var byteData = byteData || require('../../test/loader.js');
-var assert = chai.assert;
+var assert = assert || require('assert');
 
 var uInt2 = byteData.types.uInt2;
 var int2 = byteData.types.int2;

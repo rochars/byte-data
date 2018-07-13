@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ */
 
-//var assert = require('assert');
-//var byteData = require('../../../test/loader.js');
+/**
+ * @fileoverview Tests for the packArray function.
+ * @see https://github.com/rochars/byte-data
+ */
 
-var chai = chai || require("chai");
 var byteData = byteData || require('../../test/loader.js');
-var assert = chai.assert;
+var assert = assert || require('assert');
 
 var uInt2 = byteData.types.uInt2;
 var int2 = byteData.types.int2;

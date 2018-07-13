@@ -1,9 +1,9 @@
 {
   "name": "byte-data",
-  "version": "13.2.5",
+  "version": "13.2.6",
   "description": "Serialization and deserialization of numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
-  "author": "Rafael S. Rocha <rocha.rafaelsilva@gmail.com>",
+  "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
   "main": "./dist/byte-data.cjs.js",
   "module": "./main.js",
@@ -16,6 +16,7 @@
   },
   "keywords": [
     "byte",
+    "buffer",
     "binary",
     "parser",
     "struct",
@@ -26,7 +27,7 @@
     "network order",
     "integer",
     "float",
-    "IEEE",
+    "IEEE-754",
     "half-precision",
     "single-precision",
     "double-precision",
@@ -47,13 +48,14 @@
     "url": "https://github.com/rochars/byte-data/issues"
   },
   "directories": {
-    "lib": "./lib",
-    "dist": "./dist"
+    "dist": "dist",
+    "externs": "externs",
+    "lib": "lib"
   },
   "files": [
-    "dist/",
-    "lib/",
-    "externs.js",
+    "dist",
+    "externs",
+    "lib",
     "main.js",
     "main.d.ts",
     "LICENSE",
@@ -62,7 +64,7 @@
     "README.md"
   ],
   "scripts": {
-    "lint": "jshint main.js && jshint lib && jshint test",
+    "lint": "jshint main.js lib test externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test --recursive -R dot",
     "test-min": "node ./node_modules/mocha/bin/_mocha test/dist --min --recursive -R dot",
     "test-cjs": "node ./node_modules/mocha/bin/_mocha test/dist --cjs --recursive -R dot",
@@ -70,13 +72,15 @@
     "test-esm": "node ./node_modules/mocha/bin/_mocha test/dist --esm --recursive -R dot",
     "test-dist": "npm run test-min && npm run test-cjs && npm run test-umd && npm run test-esm",
     "pack": "npm run test && rollup -c && npm run test-dist",
-    "doc": "./node_modules/.bin/jsdoc main.js -d docs -t node_modules/docdash -r README.md",
+    "doc": "./node_modules/.bin/jsdoc main.js -d docs/api -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
     "binary-data-types": "0.1.0",
-    "chai": "^4.1.2",
     "codecov": "^3.0.2",
     "docdash": "^0.4.0",
     "esm": "^3.0.51",
@@ -87,6 +91,7 @@
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^12.0.2",
     "rollup": "^0.61.2",
+    "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-closure-compiler-js": "^1.0.6"
   },
   "dependencies": {}
