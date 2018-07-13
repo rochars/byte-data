@@ -17,8 +17,6 @@ https://github.com/rochars/byte-data
 - **Write to buffers**, option to define **start and end index to write**
 - **Read from buffers**, option to define **start and end index to read**
 - Use **typed arrays** or **arrays**
-- Pack and unpack 8-bit, 16-bit, 24-bit, 32-bit, 40-bit and 48-bit ints, signed and unsigned
-- Pack and unpack 16-bit, 32-bit and 64-bit floats
 - **Less than 2KB minified + compressed, less than 5KB minified**
 - Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
