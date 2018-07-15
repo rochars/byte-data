@@ -108,7 +108,7 @@ Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* er
 **byte-data** need IE10+ to run. All moderns browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).
 
 ### Tests on big-endian systems
-Use [QEMU](https://www.qemu.org/) using this PowerPC/Debian image:  
+Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
 https://people.debian.org/~aurel32/qemu/powerpc/
 
 ## API

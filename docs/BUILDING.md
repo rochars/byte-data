@@ -15,10 +15,8 @@ The dist files are created in the *dist/* folder.
 The API documentation is generated in the *docs/* folder.
 
 ## Compilation
-
 **byte-data** uses [Google Closure Compiler](https://github.com/google/closure-compiler-js) with compilation level set to ADVANCED, so properties that have not been exported will be renamed (and likely result in errors in the compiled browser version).
 
-## Tests on big-endian systems
-
-Tests for big-endian hosts are done with [QEMU](https://www.qemu.org/) using this PowerPC/Debian image:  
+### Tests on big-endian systems
+Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
 https://people.debian.org/~aurel32/qemu/powerpc/
