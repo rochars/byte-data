@@ -22,10 +22,13 @@
 	</div>
 
 	<script src="https://unpkg.com/chai@4.1.2/chai.js"></script>
+	<script>
+		var assert = chai.assert;
+	</script>
 	<script src="https://unpkg.com/mocha@4.0.1/mocha.js"></script>
 	<script>mocha.setup('bdd')</script>
 
-	<!-- Load browser dist, load types -->
+	<!-- Load browser dist, load types, load LIB -->
 	<script src="../dist/byte-data.umd.js"></script>
 	<script src="https://unpkg.com/binary-data-types@0.1.0/dist/binary-data-types.min.js"></script>
 	<script>
@@ -41,8 +44,8 @@
 	<script src="dist/packArray.js"></script>
 	<script src="dist/strings.js"></script>
 	<script src="dist/unpackArray.js"></script>
-	<script src="dist/UTF8.js"></script>
-
+	<script src="src/UTF8.js"></script>
+	
 	<!-- Run the tests -->
 	<script>
 	    mocha.checkLeaks();
