@@ -64,7 +64,7 @@ describe('interface', function() {
             0.33325);
     });
     it('unpack int2', function() {
-        assert.equal(byteData.unpack(['11'], byteData.types.int2, 2), -1);
+        assert.equal(byteData.unpack(['11'], byteData.types.int2), -1);
     });
     it('unpack uInt2', function() {
         assert.equal(byteData.unpack([3], byteData.types.uInt2), 3);

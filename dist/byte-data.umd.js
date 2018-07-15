@@ -197,9 +197,8 @@
 
         var num = 0;
         var x = this.offset - 1;
-        while (x > 0) {
+        for (; x > 0; x--) {
           num = bytes[x + i] << x * 8 | num;
-          x--;
         }
         num = (bytes[i] | num) >>> 0;
         return this.overflow_(this.sign_(num));
@@ -266,11 +265,9 @@
         var i = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
         var binary = '';
-        var j = 0;
-        while (j < this.offset) {
-          var bits = bytes[i + j].toString(2);
+        for (var _j = 0; _j < this.offset; _j++) {
+          var bits = bytes[i + _j].toString(2);
           binary = new Array(9 - bits.length).join('0') + bits + binary;
-          j++;
         }
         return this.overflow_(this.sign_(parseInt(binary, 2)));
       }
@@ -426,17 +423,6 @@
    */
 
   /**
-   * Validate that the code is a valid ASCII code.
-   * @param {number} code The code.
-   * @throws {Error} If the code is not a valid ASCII code.
-   */
-  function validateASCIICode(code) {
-    if (code > 127) {
-      throw new Error('Bad ASCII code.');
-    }
-  }
-
-  /**
    * Validate that the value is not null or undefined.
    * @param {number} value The value.
    * @throws {Error} If the value is of type undefined.
@@ -517,10 +503,17 @@
    * @type {boolean}
    * @private
    */
-  var BE_ENV = new Uint8Array(new Uint32Array([0x12345678]).buffer)[0] === 0x12;
+  var BE_ENV = new Uint8Array(new Uint32Array([1]).buffer)[0] === 0;
+  /**
+   * @type {number}
+   * @private
+   */
   var HIGH = BE_ENV ? 1 : 0;
+  /**
+   * @type {number}
+   * @private
+   */
   var LOW = BE_ENV ? 0 : 1;
-
   /**
    * @type {!Int8Array}
    * @private
@@ -734,7 +727,7 @@
         reader_ = read16F_;
       } else if (theType.bits == 32) {
         reader_ = read32F_;
-      } else if (theType.bits == 64) {
+      } else {
         reader_ = read64F_;
       }
     } else {
@@ -753,7 +746,7 @@
         writer_ = write16F_;
       } else if (theType.bits == 32) {
         writer_ = write32F_;
-      } else if (theType.bits == 64) {
+      } else {
         writer_ = write64F_;
       }
     } else {
@@ -785,47 +778,96 @@
    *
    */
 
-  // ASCII characters
   /**
-   * Read a string of ASCII characters from a byte buffer.
-   * @param {!Uint8Array} bytes A byte buffer.
+   * Read a string of UTF-8 characters from a byte buffer.
+   * @see https://encoding.spec.whatwg.org/#the-encoding
+   * @see https://stackoverflow.com/a/34926911
+   * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
    * @param {number=} index The index to read.
    * @param {?number=} len The number of bytes to read.
    * @return {string}
-   * @throws {Error} If a character in the string is not valid ASCII.
+   * @throws {Error} If read a value that is not UTF-8.
    */
-  function unpackString(bytes) {
+  function unpackString(buffer) {
     var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var len = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-    var chrs = '';
-    len = len ? index + len : bytes.length;
+    len = len !== null ? index + len : buffer.length;
+    /** @type {string} */
+    var str = "";
     while (index < len) {
-      validateASCIICode(bytes[index]);
-      chrs += String.fromCharCode(bytes[index]);
-      index++;
+      /** @type {number} */
+      var charCode = buffer[index++];
+      if (charCode >> 7 == 0) {
+        str += String.fromCharCode(charCode);
+      } else {
+        /** @type {number} */
+        var count = 0;
+        if (charCode >> 5 == 0x06) {
+          count = 1;
+        } else if (charCode >> 4 == 0x0e) {
+          count = 2;
+        } else if (charCode >> 3 == 0x1e) {
+          count = 3;
+        }
+        charCode = charCode & (1 << 8 - count - 1) - 1;
+        for (var i = 0; i < count; i++) {
+          charCode = charCode << 6 | buffer[index++] & 0x3f;
+        }
+        if (charCode <= 0xffff) {
+          str += String.fromCharCode(charCode);
+        } else {
+          charCode -= 0x10000;
+          str += String.fromCharCode((charCode >> 10 & 0x3ff) + 0xd800, (charCode & 0x3ff) + 0xdc00);
+        }
+      }
     }
-    return chrs;
+    return str;
   }
 
   /**
-   * Write a string of ASCII characters as a byte buffer.
+   * Write a string of UTF-8 characters as a byte buffer.
+   * @see https://encoding.spec.whatwg.org/#utf-8-encoder
    * @param {string} str The string to pack.
    * @return {!Array<number>} The next index to write on the buffer.
-   * @throws {Error} If a character in the string is not valid ASCII.
+   * @throws {Error} If a character in the string is not UTF-8.
    */
   function packString(str) {
+    /** @type {!Array<!number>} */
     var bytes = [];
     for (var i = 0; i < str.length; i++) {
-      var code = str.charCodeAt(i);
-      validateASCIICode(code);
-      bytes[i] = code;
+      /** @type {number} */
+      var codePoint = str.codePointAt(i);
+      if (codePoint < 128) {
+        bytes.push(codePoint);
+      } else {
+        /** @type {number} */
+        var count = 0;
+        /** @type {number} */
+        var offset = 0;
+        if (codePoint <= 0x07FF) {
+          count = 1;
+          offset = 0xC0;
+        } else if (codePoint <= 0xFFFF) {
+          count = 2;
+          offset = 0xE0;
+        } else if (codePoint <= 0x10FFFF) {
+          count = 3;
+          offset = 0xF0;
+          i++;
+        }
+        bytes.push((codePoint >> 6 * count) + offset);
+        while (count > 0) {
+          bytes.push(0x80 | codePoint >> 6 * (count - 1) & 0x3F);
+          count--;
+        }
+      }
     }
     return bytes;
   }
 
   /**
-   * Write a string of ASCII characters to a byte buffer.
+   * Write a string of UTF-8 characters to a byte buffer.
    * @param {string} str The string to pack.
    * @param {!Uint8Array|!Array<number>} buffer The output buffer.
    * @param {number=} index The index to write in the buffer.
@@ -835,11 +877,10 @@
   function packStringTo(str, buffer) {
     var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
-    for (var i = 0; i < str.length; i++) {
-      var code = str.charCodeAt(i);
-      validateASCIICode(code);
-      buffer[index] = code;
-      index++;
+    /** @type {!Array<!number>} */
+    var bytes = packString(str);
+    for (var i = 0; i < bytes.length; i++) {
+      buffer[index++] = bytes[i];
     }
     return index;
   }
@@ -854,6 +895,7 @@
    * @throws {Error} If the value is not valid.
    */
   function pack(value, theType) {
+    /** @type {!Array<!number>} */
     var output = [];
     packTo(value, theType, output);
     return output;
@@ -868,6 +910,7 @@
    * @throws {Error} If any of the values are not valid.
    */
   function packArray(values, theType) {
+    /** @type {!Array<!number>} */
     var output = [];
     packArrayTo(values, theType, output);
     return output;
@@ -904,54 +947,28 @@
     var index = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
     setUp_(theType);
-    var be = theType.be;
-    var offset = theType.offset;
-    var len = values.length;
-    for (var i = 0; i < len; i++) {
-      index = writeBytes_(values[i], theType, buffer, index, index + offset, validateNotUndefined, be);
+    for (var i = 0; i < values.length; i++) {
+      index = writeBytes_(values[i], theType, buffer, index, index + theType.offset, validateNotUndefined, theType.be);
     }
     return index;
   }
 
   /**
    * Unpack a number from a byte buffer.
-   * @param {!Uint8Array} buffer The byte buffer.
-   * @param {!Object} theType The type definition.
-   * @return {number}
-   * @throws {Error} If the type definition is not valid
-   */
-  function unpack(buffer, theType) {
-    setUp_(theType);
-    var values = unpackArrayFrom(buffer.slice(0, theType.offset), theType);
-    return values[0];
-  }
-
-  /**
-   * Unpack an array of numbers from a byte buffer.
-   * @param {!Uint8Array} buffer The byte buffer.
-   * @param {!Object} theType The type definition.
-   * @return {!Array<number>}
-   * @throws {Error} If the type definition is not valid.
-   */
-  function unpackArray(buffer, theType) {
-    return unpackArrayFrom(buffer, theType);
-  }
-
-  /**
-   * Unpack a number from a byte buffer by index.
-   * @param {!Uint8Array} buffer The byte buffer.
+   * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
    * @param {!Object} theType The type definition.
    * @param {number=} index The buffer index to read.
    * @return {number}
    * @throws {Error} If the type definition is not valid
    */
-  function unpackFrom(buffer, theType) {
+  function unpack(buffer, theType) {
     var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
     setUp_(theType);
     if (theType.be) {
       endianness(buffer, theType.offset, index, index + theType.offset);
     }
+    /** @type {number} */
     var value = reader_(buffer, index);
     if (theType.be) {
       endianness(buffer, theType.offset, index, index + theType.offset);
@@ -960,66 +977,49 @@
   }
 
   /**
-   * Unpack a array of numbers from a byte buffer by index.
-   * @param {!Uint8Array} buffer The byte buffer.
+   * Unpack an array of numbers from a byte buffer.
+   * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
    * @param {!Object} theType The type definition.
    * @param {number=} index The start index. Assumes 0.
    * @param {?number=} end The end index. Assumes the buffer length.
    * @return {!Array<number>}
    * @throws {Error} If the type definition is not valid
    */
-  function unpackArrayFrom(buffer, theType) {
+  function unpackArray(buffer, theType) {
     var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-    var end = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+    var end = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : buffer.length;
 
-    setUp_(theType);
-    var len = end || buffer.length;
-    while ((len - index) % theType.offset) {
-      len--;
-    }
-    if (theType.be) {
-      endianness(buffer, theType.offset, index, len);
-    }
-    var values = [];
-    var step = theType.offset;
-    for (var i = index; i < len; i += step) {
-      values.push(reader_(buffer, i));
-    }
-    if (theType.be) {
-      endianness(buffer, theType.offset, index, len);
-    }
-    return values;
+    /** @type {!Array<!number>} */
+    var output = [];
+    unpackArrayTo(buffer, theType, output, index, end);
+    return output;
   }
 
   /**
    * Unpack a array of numbers to a typed array.
-   * @param {!Uint8Array} buffer The byte buffer.
+   * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
    * @param {!Object} theType The type definition.
-   * @param {!TypedArray} output The output array.
+   * @param {!TypedArray|!Array<!number>} output The output array.
    * @param {number=} index The start index. Assumes 0.
    * @param {?number=} end The end index. Assumes the buffer length.
    * @throws {Error} If the type definition is not valid
    */
   function unpackArrayTo(buffer, theType, output) {
     var index = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-    var end = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+    var end = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : buffer.length;
 
     setUp_(theType);
-    var len = end || buffer.length;
-    while ((len - index) % theType.offset) {
-      len--;
+    while ((end - index) % theType.offset) {
+      end--;
     }
     if (theType.be) {
-      endianness(buffer, theType.offset, index, len);
+      endianness(buffer, theType.offset);
     }
-    var outputIndex = 0;
-    var step = theType.offset;
-    for (var i = index; i < len; i += step) {
-      output.set([reader_(buffer, i)], outputIndex);
-      outputIndex++;
+    for (var i = 0; index < end; index += theType.offset, i++) {
+      output[i] = reader_(buffer, index);
     }
     if (theType.be) {
-      endianness(buffer, theType.offset, index, len);
+      endianness(buffer, theType.offset);
     }
   }
 
@@ -1032,8 +1032,6 @@
   exports.packArrayTo = packArrayTo;
   exports.unpack = unpack;
   exports.unpackArray = unpackArray;
-  exports.unpackFrom = unpackFrom;
-  exports.unpackArrayFrom = unpackArrayFrom;
   exports.unpackArrayTo = unpackArrayTo;
 
   Object.defineProperty(exports, '__esModule', { value: true });

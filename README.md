@@ -9,7 +9,7 @@ https://github.com/rochars/byte-data
 **byte-data** is a JavaScript module for the serialization and deserialization of numbers and strings.
 
 - **No dependencies**
-- **MIT-licensed**
+- **MIT licensed**
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
@@ -17,7 +17,7 @@ https://github.com/rochars/byte-data
 - **Write to buffers**, option to define **start and end index to write**
 - **Read from buffers**, option to define **start and end index to read**
 - Use **typed arrays** or **arrays**
-- **Less than 2KB minified + compressed, less than 5KB minified**
+- **less than 6KB minified, less than 3KB minified + compressed**
 - Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
@@ -26,29 +26,11 @@ https://github.com/rochars/byte-data
 - 32-bit IEEE single-precision floating point numbers
 - 64-bit IEEE double-precision floating point numbers
 - Little-endian and big-endian words
-- ASCII Strings (with validation)
+- UTF-8 strings
 
 ## Install
-
-### NPM
 ```
 npm install byte-data
-```
-
-### Yarn
-```
-yarn add byte-data
-```
-
-### GitHub
-This is not recommended as it will also include test and build assets in your installation. If this is what you want, you can:
-```
-git clone https://github.com/rochars/byte-data
-```
-
-And then import/require what you want from the *byte-data* folder:
-```
-const byteData = require('./byte-data/dist/byte-data.umd.js');
 ```
 
 You can also download one of the files in the *./dist* folder:  
@@ -108,25 +90,16 @@ Or load it as a module using [jspm](https://jspm.io):
 </script>
 ```
 
-### ES bundle
-Import byteData from **byte-data.js** in the *./dist* folder of this package:
-```javascript
-import * as byteData from './dist/byte-data.js';
-
-// Pack a usigned 8-bit unsigned integer
-let packed = byteData.pack(128, {bits: 8});
-```
-
 ## About
 
 ### Floating-point numbers
 Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
 ### Signed integers
-Signed integers are two's complement.
+Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
 ### Strings
-Only ASCII characters are supported. Packing and unpacking strings with characters that are not ASCII will throw a *'Bad ASCII code.'* error.
+Only UTF-8 strings are supported. **BOM** is kept untouched.
 
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
@@ -134,41 +107,45 @@ Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* er
 ### Browser compatibility
 **byte-data** need IE10+ to run. All moderns browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).
 
-## API
+### Tests on big-endian systems
+Use [QEMU](https://www.qemu.org/) using this PowerPC/Debian image:  
+https://people.debian.org/~aurel32/qemu/powerpc/
 
-### Strings
+## API
 ```javascript
+// Strings
 /**
- * Read a string of ASCII characters from a byte buffer.
- * @param {!Uint8Array} bytes A byte buffer.
+ * Read a string of UTF-8 characters from a byte buffer.
+ * @see https://encoding.spec.whatwg.org/#the-encoding
+ * @see https://stackoverflow.com/a/34926911
+ * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
- * @throws {Error} If a character in the string is not valid ASCII.
+ * @throws {Error} If read a value that is not UTF-8.
  */
-function unpackString(bytes, index=0, len=null) {}
+export function unpackString(buffer, index=0, len=null) {}
 
 /**
- * Write a string of ASCII characters as a byte buffer.
+ * Write a string of UTF-8 characters as a byte buffer.
+ * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
  * @return {!Array<number>} The next index to write on the buffer.
- * @throws {Error} If a character in the string is not valid ASCII.
+ * @throws {Error} If a character in the string is not UTF-8.
  */
-function packString(str) {}
+export function packString(str) {}
 
 /**
- * Write a string of ASCII characters to a byte buffer.
+ * Write a string of UTF-8 characters to a byte buffer.
  * @param {string} str The string to pack.
- * @param {!Uint8Array|!Array<number>} bytes The output buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
  * @throws {Error} If a character in the string is not valid ASCII.
  */
-function packStringTo(str, bytes, index=0) {}
-```
+export function packStringTo(str, buffer, index=0) {}
 
-### Numbers
-```javascript
+// Numbers
 /**
  * Pack a number as a byte buffer.
  * @param {number} value The number.
@@ -177,7 +154,7 @@ function packStringTo(str, bytes, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function pack(value, theType) {}
+export function pack(value, theType) {}
 
 /**
  * Pack an array of numbers as a byte buffer.
@@ -187,7 +164,7 @@ function pack(value, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
-function packArray(values, theType) {}
+export function packArray(values, theType) {}
 
 /**
  * Pack a number to a byte buffer.
@@ -199,7 +176,7 @@ function packArray(values, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function packTo(value, theType, buffer, index=0) {}
+export function packTo(value, theType, buffer, index=0) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -211,55 +188,39 @@ function packTo(value, theType, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function packArrayTo(values, theType, buffer, index=0) {}
+export function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
- * @param {!Uint8Array} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @return {number}
- * @throws {Error} If the type definition is not valid
- */
-function unpack(buffer, theType) {}
-
-/**
- * Unpack an array of numbers from a byte buffer.
- * @param {!Uint8Array} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>}
- * @throws {Error} If the type definition is not valid.
- */
-function unpackArray(buffer, theType) {}
-
-/**
- * Unpack a number from a byte buffer by index.
- * @param {!Uint8Array} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read.
  * @return {number}
  * @throws {Error} If the type definition is not valid
  */
-function unpackFrom(buffer, theType, index=0) {}
+export function unpack(buffer, theType, index=0) {}
 
 /**
- * Unpack a array of numbers from a byte buffer by index.
- * @param {!Uint8Array} buffer The byte buffer.
+ * Unpack an array of numbers from a byte buffer.
+ * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} start The start index. Assumes 0.
+ * @param {number=} index The start index. Assumes 0.
  * @param {?number=} end The end index. Assumes the buffer length.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayFrom(buffer, theType, start=0, end=null) {}
+export function unpackArray(buffer, theType, index=0, end=buffer.length) {}
 
 /**
  * Unpack a array of numbers to a typed array.
- * @param {!Uint8Array} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {!TypedArray} output The output array.
+ * @param {!TypedArray|!Array<!number>} output The output array.
+ * @param {number=} index The start index. Assumes 0.
+ * @param {?number=} end The end index. Assumes the buffer length.
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayTo(buffer, theType, output) {}
+export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {}
 ```
 
 ## Types

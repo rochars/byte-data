@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v14.0.0-alpha.0 (2018-07-14)
+- UTF-8 string support on packString, unpackString and packStringTo
+- Remove unpackFrom and unpackArrayFrom from the API; unpack and unpackArray now accept the same optional index param as unpackFrom and unpackArrayFrom received.
+
 ## v13.2.6 (2018-07-13)
 - Fix es2015 field in package.json
 - Fix documentation issues.

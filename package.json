@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "13.2.6",
+  "version": "14.0.0-alpha.0",
   "description": "Serialization and deserialization of numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -33,6 +33,7 @@
     "single-precision",
     "double-precision",
     "ASCII",
+    "UTF-8",
     "8-bit",
     "16-bit",
     "24-bit",

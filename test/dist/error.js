@@ -12,12 +12,12 @@ var testFunc;
 var assert = assert || require('assert');
 
 describe('Errors', function() {
-    it("invalid ASCII code", function () {
-        testFunc = function() {
-            byteData.packString('ƒ');
-        };
-        assert.throws(testFunc, /Bad ASCII code./);
-    });
+    //it("invalid ASCII code", function () {
+    //    testFunc = function() {
+    //        byteData.packString('ƒ');
+    //    };
+    //    assert.throws(testFunc, /Bad ASCII code./);
+    //});
 
     it("undefined value", function () {
         testFunc = function() {
