@@ -265,8 +265,8 @@
         var i = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
         var binary = '';
-        for (var _j = 0; _j < this.offset; _j++) {
-          var bits = bytes[i + _j].toString(2);
+        for (var j = 0; j < this.offset; j++) {
+          var bits = bytes[i + j].toString(2);
           binary = new Array(9 - bits.length).join('0') + bits + binary;
         }
         return this.overflow_(this.sign_(parseInt(binary, 2)));
@@ -798,16 +798,16 @@
     while (index < len) {
       /** @type {number} */
       var charCode = buffer[index++];
-      if (charCode >> 7 == 0) {
+      if (charCode >> 7 === 0) {
         str += String.fromCharCode(charCode);
       } else {
         /** @type {number} */
         var count = 0;
-        if (charCode >> 5 == 0x06) {
+        if (charCode >> 5 === 0x06) {
           count = 1;
-        } else if (charCode >> 4 == 0x0e) {
+        } else if (charCode >> 4 === 0x0e) {
           count = 2;
-        } else if (charCode >> 3 == 0x1e) {
+        } else if (charCode >> 3 === 0x1e) {
           count = 3;
         }
         charCode = charCode & (1 << 8 - count - 1) - 1;

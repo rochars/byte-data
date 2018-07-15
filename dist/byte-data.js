@@ -721,16 +721,16 @@ function unpackString(buffer, index=0, len=null) {
   while(index < len) {
     /** @type {number} */
     let charCode = buffer[index++];
-    if (charCode >> 7 == 0) {
+    if (charCode >> 7 === 0) {
       str += String.fromCharCode(charCode);
     } else {
       /** @type {number} */
       let count = 0;
-      if (charCode >> 5 == 0x06) {
+      if (charCode >> 5 === 0x06) {
         count = 1;
-      } else if (charCode >> 4 == 0x0e) {
+      } else if (charCode >> 4 === 0x0e) {
         count = 2;
-      } else if (charCode >> 3 == 0x1e) {
+      } else if (charCode >> 3 === 0x1e) {
         count = 3;
       }
       charCode = charCode & (1 << (8 - count - 1)) - 1;
