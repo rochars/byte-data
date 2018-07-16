@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "14.0.1",
+  "version": "14.0.1-alpha.0",
   "description": "Serialization and deserialization of numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -66,14 +66,15 @@
     "README.md"
   ],
   "scripts": {
-    "lint": "jshint main.js lib test externs",
+    "lint": "jshint main.js lib externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test --recursive -R dot",
     "test-min": "node ./node_modules/mocha/bin/_mocha test/dist --min --recursive -R dot",
     "test-cjs": "node ./node_modules/mocha/bin/_mocha test/dist --cjs --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/dist --umd --recursive -R dot",
     "test-esm": "node ./node_modules/mocha/bin/_mocha test/dist --esm --recursive -R dot",
+    "test-tsc": "tsc ./test/TypeScript/main.ts",
     "test-dist": "npm run test-min && npm run test-cjs && npm run test-umd && npm run test-esm",
-    "pack": "npm run test && rollup -c && npm run test-dist",
+    "pack": "npm run test && rollup -c && npm run test-dist && npm run test-tsc",
     "doc": "./node_modules/.bin/jsdoc main.js -d docs/api -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
@@ -90,7 +91,8 @@
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^12.0.2",
     "rollup": "^0.61.2",
-    "rollup-plugin-closure-compiler-js": "^1.0.6"
+    "rollup-plugin-closure-compiler-js": "^1.0.6",
+    "typescript": "^2.9.2"
   },
   "dependencies": {}
 }

@@ -92,6 +92,15 @@ Or load it as a module using [jspm](https://jspm.io):
 
 ## About
 
+### Unpacking numbers and input buffer length
+- When unpacking a single value, a error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
+- When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array**
+
+### *null*, *false*, *true*, *undefined*
+- Packing *undefined* values throw *'Undefined value.'* error
+- *null* and *false* are packed as 0
+- *true* is packed as 1
+
 ### Floating-point numbers
 Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
@@ -276,10 +285,6 @@ All types in **binary-data-types** are supported by byte-data. They are:
   - int48BE
   - uInt48BE
   - float64BE
-
-## Tests on big-endian systems
-Tests in big-endian hosts are done with [QEMU](https://www.qemu.org/) using this PowerPC/Debian image:  
-https://people.debian.org/~aurel32/qemu/powerpc/
 
 ## Distribution
 This library is a ES module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with ```npm install byte-data```. It includes a [TypeScript](https://www.typescriptlang.org/) definition file: **./main.d.ts**.
