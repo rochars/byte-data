@@ -467,7 +467,6 @@ let gInt_ = {};
 function setUp_(theType) {
   validateType(theType);
   theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
-  theType.be = theType.be || false;
   setReader(theType);
   setWriter(theType);
   gInt_ = new Integer(
@@ -870,11 +869,14 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read.
- * @return {number}
+ * @return {number|undefined}
  * @throws {Error} If the type definition is not valid
  */
 function unpack(buffer, theType, index=0) {
   setUp_(theType);
+  if ((theType.offset + index) > buffer.length) {
+    throw Error('Bad buffer length.');
+  }
   if (theType.be) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
@@ -912,18 +914,13 @@ function unpackArray(buffer, theType, index=0, end=buffer.length) {
  * @throws {Error} If the type definition is not valid
  */
 function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {
-  setUp_(theType);
   while ((end - index) % theType.offset) {
-    end--;
-  }
-  if (theType.be) {
-    endianness(buffer, theType.offset);
+      end--;
   }
   for (let i = 0; index < end; index += theType.offset, i++) {
-    output[i] = reader_(buffer, index);
-  }
-  if (theType.be) {
-    endianness(buffer, theType.offset);
+    //if ((theType.offset + index - 1) < buffer.length) {
+    output[i] = unpack(buffer, theType, index);
+    //}
   }
 }
 

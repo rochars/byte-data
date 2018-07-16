@@ -25,6 +25,14 @@ describe('Errors', function() {
         assert.throws(testFunc, /Undefined value./);
     });
 
+    // Bad buffer length on unpack
+    it("Bad buffer length on unpack", function () {
+        testFunc = function() {
+            byteData.unpack([1], {"bits": 16});
+        };
+        assert.throws(testFunc, /Bad buffer length./);
+    });
+
     // overflow and underflow
     it("8-bit overflow", function () {
         testFunc = function() {

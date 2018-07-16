@@ -92,6 +92,15 @@ Or load it as a module using [jspm](https://jspm.io):
 
 ## About
 
+### Unpacking numbers and input buffer length
+- When unpacking a single value, a error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
+- When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array**
+
+### *null*, *false*, *true*, *undefined*
+- Packing *undefined* values throw *'Undefined value.'* error
+- *null* and *false* are packed as 0
+- *true* is packed as 1
+
 ### Floating-point numbers
 Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
 
@@ -103,11 +112,6 @@ Only UTF-8 strings are supported. **BOM** is kept untouched.
 
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
-
-### *null*, *false*, *true* and *undefined*
-- *undefined* values throw 'Undefined value.' error
-- *null* and *false* are packed as 0
-- *true* is packed as 1
 
 ### Browser compatibility
 **byte-data** need IE10+ to run. All moderns browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).

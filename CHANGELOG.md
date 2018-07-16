@@ -2,6 +2,8 @@
 
 ## v14.0.1 (2018-07-16)
 - Fix errors with strings in ES5 dists (transpile String.codePointAt())
+- Throw Error if packing anything other than Number, Boolean or null with pack, packTo, packArray and packArrayTo
+- Throw Error for bad buffer length on unpack (not unpackArray or unpackArrayTo; see README for details)
 
 ## v14.0.0 (2018-07-15)
 - UTF-8 string support on packString, unpackString and packStringTo
