@@ -501,17 +501,15 @@ function setUp_(theType) {
  * @param {!Uint8Array|!Array<number>} buffer The buffer to write the bytes to.
  * @param {number} index The index to start writing.
  * @param {number} len The end index.
- * @param {!Function} validate The function used to validate input.
- * @param {boolean} be True if big-endian.
  * @return {number} the new index to be written.
  * @private
  */
-function writeBytes_(value, theType, buffer, index, len, validate, be) {
+function writeBytes_(value, theType, buffer, index, len) {
+  validateNotUndefined(value);
   while (index < len) {
-    validate(value, theType);
     index = writer_(buffer, value, index);
   }
-  if (be) {
+  if (theType.be) {
     endianness(
       buffer, theType.offset, index - theType.offset, index);
   }
@@ -859,9 +857,7 @@ function packTo(value, theType, buffer, index=0) {
     theType,
     buffer,
     index,
-    index + theType.offset,
-    validateNotUndefined,
-    theType.be);
+    index + theType.offset);
 }
 
 /**
@@ -882,9 +878,7 @@ function packArrayTo(values, theType, buffer, index=0) {
       theType,
       buffer,
       index,
-      index + theType.offset,
-      validateNotUndefined,
-      theType.be);
+      index + theType.offset);
   }
   return index;
 }

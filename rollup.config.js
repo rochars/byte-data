@@ -8,7 +8,6 @@
  */
 
 import closure from 'rollup-plugin-closure-compiler-js';
-import babel from 'rollup-plugin-babel';
 import fs from 'fs';
 
 // Externs
@@ -18,6 +17,28 @@ const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 const license = '/*!\n'+
   ' * byte-data Copyright (c) 2017-2018 Rafael da Silva Rocha. MIT license.\n'+
   ' */\n';
+
+// Use GCC to transpile
+let CJSBanner = "'use strict';Object.defineProperty(" +
+  "exports, '__esModule', { value: true });";
+let CJSFooter = 'exports.unpackString = byteData.unpackString;' +
+  'exports.packString = byteData.packString;' +
+  'exports.packStringTo = byteData.packStringTo;' +
+  'exports.pack = byteData.pack;' +
+  'exports.packArray = byteData.packArray;' +
+  'exports.packTo = byteData.packTo;' +
+  'exports.packArrayTo = byteData.packArrayTo;' +
+  'exports.unpack = byteData.unpack;' +
+  'exports.unpackArray = byteData.unpackArray;' +
+  'exports.unpackArrayTo = byteData.unpackArrayTo;';
+let UMDBanner = '(function (global, factory) {' +
+  "typeof exports === 'object' && " +
+  "typeof module !== 'undefined' ? factory(exports) :" +
+  "typeof define === 'function' && define.amd ? " +
+  "define(['exports'], factory) :" +
+  '(factory((global.byteData = {})));' +
+  '}(this, (function (exports) {;' + CJSBanner;
+let UMDFooter = CJSFooter + '})));';
 
 export default [
   // cjs bundle, es bundle
@@ -42,11 +63,18 @@ export default [
       {
         file: 'dist/byte-data.umd.js',
         name: 'byteData',
-        format: 'umd'
+        format: 'iife'
       }
     ],
     plugins: [
-      babel()
+      //babel()
+      closure({
+        languageIn: 'ECMASCRIPT6',
+        languageOut: 'ECMASCRIPT5',
+        compilationLevel: 'SIMPLE',
+        warningLevel: 'VERBOSE',
+        outputWrapper: UMDBanner + '%output%' + UMDFooter
+      })
     ]
   },  
   // browser bundle
