@@ -12,13 +12,12 @@ var testFunc;
 var assert = assert || require('assert');
 
 describe('Errors', function() {
-    //it("invalid ASCII code", function () {
-    //    testFunc = function() {
-    //        byteData.packString('ƒ');
-    //    };
-    //    assert.throws(testFunc, /Bad ASCII code./);
-    //});
-
+    it('thows error if packing something other than Number, Boolean or null', function() {
+        testFunc = function() {
+            byteData.pack({some: 'thing'}, byteData.types.uInt16);
+        };
+        assert.throws(testFunc, Error);
+    });
     it("undefined value", function () {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});

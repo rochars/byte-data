@@ -104,6 +104,11 @@ Only UTF-8 strings are supported. **BOM** is kept untouched.
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
 
+### *null*, *false*, *true* and *undefined*
+- *undefined* values throw 'Undefined value.' error
+- *null* and *false* are packed as 0
+- *true* is packed as 1
+
 ### Browser compatibility
 **byte-data** need IE10+ to run. All moderns browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).
 

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v14.0.1 (2018-07-16)
+- Fix errors with strings in ES5 dists (transpile String.codePointAt())
+
 ## v14.0.0 (2018-07-15)
 - UTF-8 string support on packString, unpackString and packStringTo
 - Remove unpackFrom and unpackArrayFrom from the API; unpack and unpackArray now accept the same optional params as unpackFrom and unpackArrayFrom received.

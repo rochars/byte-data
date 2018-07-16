@@ -12,6 +12,16 @@ var assert = assert || require('assert');
 
 describe('interface', function() {
     // pack
+    it('pack true uInt16 (1, 0)', function() {
+        assert.deepEqual(
+            byteData.pack(true, byteData.types.uInt16),
+            [1, 0]);
+    });
+    it('pack false uInt16 (0, 0)', function() {
+        assert.deepEqual(
+            byteData.pack(false, byteData.types.uInt16),
+            [0, 0]);
+    });
     it('pack null uInt16 (0, 0)', function() {
         assert.deepEqual(
             byteData.pack(null, byteData.types.uInt16),
