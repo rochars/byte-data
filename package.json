@@ -67,7 +67,7 @@
   ],
   "scripts": {
     "lint": "jshint main.js lib externs",
-    "test": "nyc ./node_modules/mocha/bin/_mocha test --recursive -R dot",
+    "test": "nyc ./node_modules/mocha/bin/_mocha test/dist test/src --recursive -R dot",
     "test-min": "node ./node_modules/mocha/bin/_mocha test/dist --min --recursive -R dot",
     "test-cjs": "node ./node_modules/mocha/bin/_mocha test/dist --cjs --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/dist --umd --recursive -R dot",
