@@ -130,6 +130,7 @@ class Integer {
      * @private
      */
     this.lastByteMask_ = 255;
+    // Set the min and max values according to the number of bits
     /** @type {number} */
     let max = Math.pow(2, this.bits_);
     if (signed) {
@@ -149,31 +150,11 @@ class Integer {
    * @return {number}
    */
   read(bytes, i=0) {
-    /** @type {number} */
     let num = 0;
-    /** @type {number} */
-    let x = this.offset_ - 1;
-    for (; x > 0; x--) {
-      num = (bytes[x + i] << x * 8) | num;
+    for(let x=0; x<this.offset_; x++) {
+      num += bytes[i + x] * Math.pow(256, x);
     }
-    num = (bytes[i] | num) >>> 0;
-    return this.overflow_(this.sign_(num));
-  }
-
-  /**
-   * Write one integer number to a byte buffer.
-   * @param {!Array<number>} bytes An array of bytes.
-   * @param {number} num The number.
-   * @param {number=} j The index being written in the byte buffer.
-   * @return {number} The next index to write on the byte buffer.
-   */
-  write(bytes, num, j=0) {
-    bytes[j] = this.overflow_(num) & 255;
-    j++;
-    for (let i = 2; i <= this.offset_; i++, j++) {
-      bytes[j] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
-    }
-    return j;
+    return this.overflow_(this.sign_(num)); 
   }
 
   /**
@@ -184,7 +165,7 @@ class Integer {
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  writeEsoteric_(bytes, num, j=0) {
+  write(bytes, num, j=0) {
     j = this.writeFirstByte_(bytes, this.overflow_(num), j);
     for (let i = 2; i < this.offset_; i++, j++) {
       bytes[j] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
@@ -198,25 +179,6 @@ class Integer {
   }
 
   /**
-   * Read a integer number from a byte buffer by turning int bytes
-   * to a string of bits. Used for data with more than 32 bits.
-   * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number=} i The index to read.
-   * @return {number}
-   * @private
-   */
-  readBits_(bytes, i=0) {
-    /** @type {string} */
-    let binary = '';
-    for (let j = 0; j < this.offset_; j++) {
-      /** @type {string} */
-      let bits = bytes[i + j].toString(2);
-      binary = new Array(9 - bits.length).join('0') + bits + binary;
-    }
-    return this.overflow_(this.sign_(parseInt(binary, 2)));
-  }
-
-  /**
    * Build the type.
    * @throws {Error} if the number of bits is smaller than 1 or greater than 64.
    * @private
@@ -225,10 +187,6 @@ class Integer {
     this.setRealBits_();
     this.setLastByteMask_();
     this.offset_ = this.bits_ < 8 ? 1 : Math.ceil(this.realBits_ / 8);
-    if ((this.realBits_ != this.bits_) || this.bits_ < 8 || this.bits_ > 32) {
-      this.write = this.writeEsoteric_;
-      this.read = this.readBits_;
-    }
   }
 
   /**
