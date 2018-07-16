@@ -31,7 +31,6 @@
 
 import endianness from './lib/endianness.js';
 import {reader_, setUp_, writeBytes_} from './lib/packer.js';
-import {validateNotUndefined} from './lib/validation.js';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -184,9 +183,7 @@ export function packTo(value, theType, buffer, index=0) {
     theType,
     buffer,
     index,
-    index + theType.offset,
-    validateNotUndefined,
-    theType.be);
+    index + theType.offset);
 }
 
 /**
@@ -207,9 +204,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
       theType,
       buffer,
       index,
-      index + theType.offset,
-      validateNotUndefined,
-      theType.be);
+      index + theType.offset);
   }
   return index;
 }
