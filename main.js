@@ -245,6 +245,7 @@ export function unpack(buffer, theType, index=0) {
 export function unpackArray(buffer, theType, index=0, end=buffer.length) {
   /** @type {!Array<!number>} */
   let output = [];
+  setUp_(theType);
   unpackArrayTo(buffer, theType, output, index, end);
   return output;
 }
@@ -259,6 +260,7 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {
+  setUp_(theType);
   while ((end - index) % theType.offset) {
       end--;
   }

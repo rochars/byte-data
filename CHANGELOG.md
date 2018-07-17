@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v14.0.2 (2018-07-17)
+- Fix: unpackArrayTo and unpackArray
+
 ## v14.0.1 (2018-07-16)
 - Fix errors with strings in ES5 dists (transpile String.codePointAt())
 - Throw Error if packing anything other than Number, Boolean or null with pack, packTo, packArray and packArrayTo
