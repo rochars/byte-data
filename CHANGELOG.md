@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v14.0.3 (2018-07-18)
+- Fix: JSDoc unpack() return signature (remove 'undefined').
+
 ## v14.0.2 (2018-07-17)
 - Fix: unpackArrayTo and unpackArray
 

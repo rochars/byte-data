@@ -214,7 +214,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
  * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read.
- * @return {number|undefined}
+ * @return {number}
  * @throws {Error} If the type definition is not valid
  */
 export function unpack(buffer, theType, index=0) {

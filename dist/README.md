@@ -17,7 +17,7 @@ You may load both **./dist/byte-data.umd.js** and **./dist/byte-data.min.js** in
 <script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
 ```
 
-## If you are using this lib as a dependency:
+## Explanation of the dist files:
 
 - The **CommonJS** dist is **./dist/byte-data.cjs.js**. It is the dist file used by Node. It is served in the "main" field of package.json and is the source you are running when you **npm install byte-data**. It is not compiled or minified.
 
