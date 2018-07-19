@@ -31,7 +31,7 @@
 
 import endianness from './lib/endianness.js';
 import {reader_, setUp_, writer_} from './lib/packer.js';
-import {validateType, validateNotUndefined, validateValueType} from './lib/validation.js';
+import {validateNotUndefined, validateValueType} from './lib/validation.js';
 
 const UTF8_ERROR = 'Invalid UTF-8 character.';
 
