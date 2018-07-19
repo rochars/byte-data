@@ -694,8 +694,7 @@ function unpackString(buffer, index=0, len=null) {
  * Write a string of UTF-8 characters as a byte buffer.
  * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
- * @return {!Array<number>} The next index to write on the buffer.
- * @throws {Error} If a character in the string is not UTF-8.
+ * @return {!Array<number>} The packed string.
  */
 function packString(str) {
   /** @type {!Array<!number>} */
