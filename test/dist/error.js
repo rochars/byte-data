@@ -34,6 +34,18 @@ describe('Errors', function() {
         };
         assert.throws(testFunc, /Invalid UTF-8 character./);
     });
+    it('thows error unpacking invalid 3 byte UTF-8 char (3rd byte)', function() {
+        testFunc = function() {
+            console.log(byteData.unpackString([0xe2,0xE0,0x28]));
+        };
+        assert.throws(testFunc, /Invalid UTF-8 character./);
+    });
+    it('thows error unpacking invalid 3 byte UTF-8 char (3rd byte)', function() {
+        testFunc = function() {
+            console.log(byteData.unpackString([0xe2,0xED,0x28]));
+        };
+        assert.throws(testFunc, /Invalid UTF-8 character./);
+    });
     // 4 bytes
     it('thows error unpacking invalid 4 byte UTF-8 char (2th byte', function() {
         testFunc = function() {
@@ -50,6 +62,18 @@ describe('Errors', function() {
     it('thows error unpacking invalid 4 byte UTF-8 char (4th byte', function() {
         testFunc = function() {
             console.log(byteData.unpackString([0xf0,0x28,0x8c,0x28]));
+        };
+        assert.throws(testFunc, /Invalid UTF-8 character./);
+    });
+    it('thows error unpacking invalid 4 byte UTF-8 char (4th byte', function() {
+        testFunc = function() {
+            console.log(byteData.unpackString([0xf0,0xF4,0x8c,0x28]));
+        };
+        assert.throws(testFunc, /Invalid UTF-8 character./);
+    });
+    it('thows error unpacking invalid 4 byte UTF-8 char (4th byte', function() {
+        testFunc = function() {
+            console.log(byteData.unpackString([0xf0,0xF0,0x8c,0x28]));
         };
         assert.throws(testFunc, /Invalid UTF-8 character./);
     });
