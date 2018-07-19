@@ -30,7 +30,10 @@
 /** @module byteData */
 
 import endianness from './lib/endianness.js';
-import {reader_, setUp_, writeBytes_} from './lib/packer.js';
+import {reader_, setUp_, writer_} from './lib/packer.js';
+import {validateType, validateNotUndefined, validateValueType} from './lib/validation.js';
+
+const UTF8_ERROR = 'Invalid UTF-8 character.';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -47,23 +50,43 @@ export function unpackString(buffer, index=0, len=null) {
   /** @type {string} */
   let str = "";
   while(index < len) {
+    let lowerBoundary = 0x80;
+    let upperBoundary = 0xBF;
     /** @type {number} */
     let charCode = buffer[index++];
-    if (charCode >> 7 === 0) {
+    if (charCode >= 0x00 && charCode <= 0x7F) {
       str += String.fromCharCode(charCode);
     } else {
       /** @type {number} */
       let count = 0;
-      if (charCode >> 5 === 0x06) {
+      if (charCode >= 0xC2 && charCode <= 0xDF) {
         count = 1;
-      } else if (charCode >> 4 === 0x0e) {
+      } else if (charCode >= 0xE0 && charCode <= 0xEF ) {
         count = 2;
-      } else if (charCode >> 3 === 0x1e) {
+        if (buffer[index] === 0xE0) {
+          lowerBoundary = 0xA0;
+        }
+        if (buffer[index] === 0xED) {
+          upperBoundary = 0x9F;
+        }
+      } else if (charCode >= 0xF0 && charCode <= 0xF4 ) {
         count = 3;
+        if (buffer[index] === 0xF0) {
+          lowerBoundary = 0x90;
+        }
+        if (buffer[index] === 0xF4) {
+          upperBoundary = 0x8F;
+        }
+      } else {
+        throw new Error(UTF8_ERROR);
       }
       charCode = charCode & (1 << (8 - count - 1)) - 1;
       for (let i = 0; i < count; i++) {
-        charCode = (charCode << 6) | (buffer[index++] & 0x3f);
+        charCode = (charCode << 6) | (buffer[index] & 0x3f);
+        if (buffer[index] < lowerBoundary || buffer[index] > upperBoundary) {
+          throw new Error(UTF8_ERROR);
+        }
+        index++;
       }
       if (charCode <= 0xffff) {
         str += String.fromCharCode(charCode);
@@ -153,6 +176,20 @@ export function pack(value, theType) {
 }
 
 /**
+ * Pack a number to a byte buffer.
+ * @param {number} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number=} index The index to write.
+ * @return {number} The next index to write.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+export function packTo(value, theType, buffer, index=0) {
+  return packArrayTo([value], theType, buffer, index);
+}
+
+/**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array<number>|!TypedArray} values The values.
  * @param {!Object} theType The type definition.
@@ -168,25 +205,6 @@ export function packArray(values, theType) {
 }
 
 /**
- * Pack a number to a byte buffer.
- * @param {number} value The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The index to write.
- * @return {number} The next index to write.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-export function packTo(value, theType, buffer, index=0) {
-  setUp_(theType);
-  return writeBytes_(value,
-    theType,
-    buffer,
-    index,
-    index + theType.offset);
-}
-
-/**
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
@@ -199,12 +217,17 @@ export function packTo(value, theType, buffer, index=0) {
 export function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
   for (let i=0; i < values.length; i++) {
-    index = writeBytes_(
-      values[i],
-      theType,
-      buffer,
-      index,
-      index + theType.offset);
+    validateNotUndefined(values[i]);
+    validateValueType(values[i]);
+    /** @type {number} */
+    let len = index + theType.offset;
+    while (index < len) {
+      index = writer_(buffer, values[i], index);
+    }
+    if (theType.be) {
+      endianness(
+        buffer, theType.offset, index - theType.offset, index);
+    }
   }
   return index;
 }
@@ -245,7 +268,6 @@ export function unpack(buffer, theType, index=0) {
 export function unpackArray(buffer, theType, index=0, end=buffer.length) {
   /** @type {!Array<!number>} */
   let output = [];
-  setUp_(theType);
   unpackArrayTo(buffer, theType, output, index, end);
   return output;
 }
@@ -265,8 +287,6 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.lengt
       end--;
   }
   for (let i = 0; index < end; index += theType.offset, i++) {
-    //if ((theType.offset + index - 1) < buffer.length) {
     output[i] = unpack(buffer, theType, index);
-    //}
   }
 }

@@ -283,7 +283,7 @@ class Integer {
 function validateValueType(value) {
   if (value !== null) {
     if ([Number, Boolean].indexOf(value.constructor) == -1) {
-      throw new Error('Expected number, boolean or null; found ' + value.constructor);
+      throw new Error('Expected Number, Boolean or Null; found ' + value.constructor);
     }
   }
 }
@@ -430,29 +430,6 @@ function setUp_(theType) {
   gInt_ = new Integer(
     theType.bits == 64 ? 32 : theType.bits,
     theType.float ? false : theType.signed);
-}
-
-/**
- * Turn numbers to bytes.
- * @param {number} value The value to be packed.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The buffer to write the bytes to.
- * @param {number} index The index to start writing.
- * @param {number} len The end index.
- * @return {number} the new index to be written.
- * @private
- */
-function writeBytes_(value, theType, buffer, index, len) {
-  validateNotUndefined(value);
-  validateValueType(value);
-  while (index < len) {
-    index = writer_(buffer, value, index);
-  }
-  if (theType.be) {
-    endianness(
-      buffer, theType.offset, index - theType.offset, index);
-  }
-  return index;
 }
 
 /**
@@ -645,6 +622,8 @@ function setWriter(theType) {
  *
  */
 
+const UTF8_ERROR = 'Invalid UTF-8 character.';
+
 /**
  * Read a string of UTF-8 characters from a byte buffer.
  * @see https://encoding.spec.whatwg.org/#the-encoding
@@ -660,23 +639,43 @@ function unpackString(buffer, index=0, len=null) {
   /** @type {string} */
   let str = "";
   while(index < len) {
+    let lowerBoundary = 0x80;
+    let upperBoundary = 0xBF;
     /** @type {number} */
     let charCode = buffer[index++];
-    if (charCode >> 7 === 0) {
+    if (charCode >= 0x00 && charCode <= 0x7F) {
       str += String.fromCharCode(charCode);
     } else {
       /** @type {number} */
       let count = 0;
-      if (charCode >> 5 === 0x06) {
+      if (charCode >= 0xC2 && charCode <= 0xDF) {
         count = 1;
-      } else if (charCode >> 4 === 0x0e) {
+      } else if (charCode >= 0xE0 && charCode <= 0xEF ) {
         count = 2;
-      } else if (charCode >> 3 === 0x1e) {
+        if (buffer[index] === 0xE0) {
+          lowerBoundary = 0xA0;
+        }
+        if (buffer[index] === 0xED) {
+          upperBoundary = 0x9F;
+        }
+      } else if (charCode >= 0xF0 && charCode <= 0xF4 ) {
         count = 3;
+        if (buffer[index] === 0xF0) {
+          lowerBoundary = 0x90;
+        }
+        if (buffer[index] === 0xF4) {
+          upperBoundary = 0x8F;
+        }
+      } else {
+        throw new Error(UTF8_ERROR);
       }
       charCode = charCode & (1 << (8 - count - 1)) - 1;
       for (let i = 0; i < count; i++) {
-        charCode = (charCode << 6) | (buffer[index++] & 0x3f);
+        charCode = (charCode << 6) | (buffer[index] & 0x3f);
+        if (buffer[index] < lowerBoundary || buffer[index] > upperBoundary) {
+          throw new Error(UTF8_ERROR);
+        }
+        index++;
       }
       if (charCode <= 0xffff) {
         str += String.fromCharCode(charCode);
@@ -766,6 +765,20 @@ function pack(value, theType) {
 }
 
 /**
+ * Pack a number to a byte buffer.
+ * @param {number} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number=} index The index to write.
+ * @return {number} The next index to write.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+function packTo(value, theType, buffer, index=0) {
+  return packArrayTo([value], theType, buffer, index);
+}
+
+/**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array<number>|!TypedArray} values The values.
  * @param {!Object} theType The type definition.
@@ -781,25 +794,6 @@ function packArray(values, theType) {
 }
 
 /**
- * Pack a number to a byte buffer.
- * @param {number} value The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The index to write.
- * @return {number} The next index to write.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-function packTo(value, theType, buffer, index=0) {
-  setUp_(theType);
-  return writeBytes_(value,
-    theType,
-    buffer,
-    index,
-    index + theType.offset);
-}
-
-/**
  * Pack a array of numbers to a byte buffer.
  * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
@@ -812,12 +806,17 @@ function packTo(value, theType, buffer, index=0) {
 function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
   for (let i=0; i < values.length; i++) {
-    index = writeBytes_(
-      values[i],
-      theType,
-      buffer,
-      index,
-      index + theType.offset);
+    validateNotUndefined(values[i]);
+    validateValueType(values[i]);
+    /** @type {number} */
+    let len = index + theType.offset;
+    while (index < len) {
+      index = writer_(buffer, values[i], index);
+    }
+    if (theType.be) {
+      endianness(
+        buffer, theType.offset, index - theType.offset, index);
+    }
   }
   return index;
 }
@@ -858,7 +857,6 @@ function unpack(buffer, theType, index=0) {
 function unpackArray(buffer, theType, index=0, end=buffer.length) {
   /** @type {!Array<!number>} */
   let output = [];
-  setUp_(theType);
   unpackArrayTo(buffer, theType, output, index, end);
   return output;
 }
@@ -878,10 +876,8 @@ function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {
       end--;
   }
   for (let i = 0; index < end; index += theType.offset, i++) {
-    //if ((theType.offset + index - 1) < buffer.length) {
     output[i] = unpack(buffer, theType, index);
-    //}
   }
 }
 
-export { unpackString, packString, packStringTo, pack, packArray, packTo, packArrayTo, unpack, unpackArray, unpackArrayTo };
+export { unpackString, packString, packStringTo, pack, packTo, packArray, packArrayTo, unpack, unpackArray, unpackArrayTo };

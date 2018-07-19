@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v14.0.4 (2018-07-19)
+- Validation when reading UTF-8.
+
 ## v14.0.3 (2018-07-18)
 - Fix: JSDoc unpack() return signature (remove 'undefined').
 

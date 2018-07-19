@@ -108,7 +108,7 @@ Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) st
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
 ### Strings
-Only UTF-8 strings are supported. **BOM** is kept untouched.
+Only UTF-8 strings with a max of 4 bytes per character are supported. **BOM** is kept untouched.
 
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
