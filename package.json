@@ -70,7 +70,7 @@
     "test-tsc": "tsc ./test/TypeScript/main.ts && node ./test/TypeScript/main.js",
     "test-dist": "npm run test-umd && npm run test-esm",
     "pack": "npm run test && rollup -c && npm run test-dist && npm run test-tsc",
-    "doc": "./node_modules/.bin/jsdoc main.js -d docs/api -t node_modules/docdash",
+    "doc": "./node_modules/.bin/jsdoc main.js -d docs -r README.md -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",
     "coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
   },
