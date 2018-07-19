@@ -698,16 +698,18 @@ function unpackString(buffer, index=0, len=null) {
  * Write a string of UTF-8 characters as a byte buffer.
  * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
- * @return {!Array<number>} The packed string.
+ * @return {!Uint8Array} The packed string.
  */
 function packString(str) {
-  /** @type {!Array<!number>} */
-  let bytes = [];
+  /** @type {!Uint8Array} */
+  let bytes = new Uint8Array(countString(str));
+  let bufferIndex = 0;
   for (let i = 0; i < str.length; i++) {
     /** @type {number} */
     let codePoint = str.codePointAt(i);
     if (codePoint < 128) {
-      bytes.push(codePoint);
+      bytes[bufferIndex] = codePoint;
+      bufferIndex++;
     } else {
       /** @type {number} */
       let count = 0;
@@ -724,9 +726,11 @@ function packString(str) {
         offset = 0xF0;
         i++;
       }
-      bytes.push((codePoint >> (6 * count)) + offset);
+      bytes[bufferIndex] = (codePoint >> (6 * count)) + offset;
+      bufferIndex++;
       while (count > 0) {
-        bytes.push(0x80 | (codePoint >> (6 * (count - 1)) & 0x3F));
+        bytes[bufferIndex] = 0x80 | (codePoint >> (6 * (count - 1)) & 0x3F);
+        bufferIndex++;
         count--;
       }
     }
