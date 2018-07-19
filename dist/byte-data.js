@@ -445,7 +445,7 @@ function readInt_(bytes, i) {
 
 /**
  * Read 1 16-bit float from bytes.
- * Thanks https://stackoverflow.com/a/8796597
+ * @see https://stackoverflow.com/a/8796597
  * @param {!Uint8Array} bytes An array of bytes.
  * @param {number} i The index to read.
  * @return {number}
@@ -749,21 +749,15 @@ function countString(str) {
     if (codePoint < 128) {
       bytes++;
     } else {
-      /** @type {number} */
-      let count = 0;
-      if (codePoint <= 0x07FF) {
-        count = 1;
-      } else if(codePoint <= 0xFFFF) {
-        count = 2;
-      } else if(codePoint <= 0x10FFFF) {
-        count = 3;
+      if (codePoint <= 2047) {
+        bytes++;
+      } else if(codePoint <= 65535) {
+        bytes+=2;
+      } else if(codePoint <= 1114111) {
         i++;
+        bytes+=3;
       }
       bytes++;
-      while (count > 0) {
-        bytes++;
-        count--;
-      }
     }
   }
   return bytes;

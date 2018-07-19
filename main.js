@@ -160,26 +160,15 @@ export function countString(str) {
     if (codePoint < 128) {
       bytes++;
     } else {
-      /** @type {number} */
-      let count = 0;
-      /** @type {number} */
-      let offset = 0;
-      if (codePoint <= 0x07FF) {
-        count = 1;
-        offset = 0xC0;
-      } else if(codePoint <= 0xFFFF) {
-        count = 2;
-        offset = 0xE0;
-      } else if(codePoint <= 0x10FFFF) {
-        count = 3;
-        offset = 0xF0;
+      if (codePoint <= 2047) {
+        bytes++;
+      } else if(codePoint <= 65535) {
+        bytes+=2;
+      } else if(codePoint <= 1114111) {
         i++;
+        bytes+=3;
       }
       bytes++;
-      while (count > 0) {
-        bytes++;
-        count--;
-      }
     }
   }
   return bytes;
