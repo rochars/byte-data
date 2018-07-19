@@ -622,8 +622,6 @@ function setWriter(theType) {
  *
  */
 
-const UTF8_ERROR = 'Invalid UTF-8 character.';
-
 /**
  * Read a string of UTF-8 characters from a byte buffer.
  * @see https://encoding.spec.whatwg.org/#the-encoding
@@ -639,8 +637,12 @@ function unpackString(buffer, index=0, len=null) {
   /** @type {string} */
   let str = "";
   while(index < len) {
+    /** @type {number} */
     let lowerBoundary = 0x80;
+    /** @type {number} */
     let upperBoundary = 0xBF;
+    /** @type {boolean} */
+    let replace = false;
     /** @type {number} */
     let charCode = buffer[index++];
     if (charCode >= 0x00 && charCode <= 0x7F) {
@@ -667,17 +669,25 @@ function unpackString(buffer, index=0, len=null) {
           upperBoundary = 0x8F;
         }
       } else {
-        throw new Error(UTF8_ERROR);
+        //throw new Error(UTF8_ERROR);
+        replace = true;
       }
       charCode = charCode & (1 << (8 - count - 1)) - 1;
       for (let i = 0; i < count; i++) {
-        charCode = (charCode << 6) | (buffer[index] & 0x3f);
         if (buffer[index] < lowerBoundary || buffer[index] > upperBoundary) {
-          throw new Error(UTF8_ERROR);
+          //throw new Error(UTF8_ERROR);
+          replace = true;
+          //break;
         }
+        //else {
+          charCode = (charCode << 6) | (buffer[index] & 0x3f);
+        //}
         index++;
       }
-      if (charCode <= 0xffff) {
+      if (replace) {
+        str += String.fromCharCode(0xFFFD);
+      } 
+      else if (charCode <= 0xffff) {
         str += String.fromCharCode(charCode);
       } else {
         charCode -= 0x10000;

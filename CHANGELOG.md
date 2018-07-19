@@ -1,23 +1,24 @@
 # CHANGELOG
 
 ## v14.0.5 (2018-07-19)
+- Fix: replace invalid UTF-8 characters with U+FFFD instead of throwing errors
 - Fix: packStringTo docstring (remove @throws {Error}).
 
-## v14.0.4 (2018-07-19)
+## v14.0.4 (2018-07-19) [DEPRECATED]
 - Validation when reading UTF-8.
 
-## v14.0.3 (2018-07-18)
+## v14.0.3 (2018-07-18) [DEPRECATED]
 - Fix: JSDoc unpack() return signature (remove 'undefined').
 
-## v14.0.2 (2018-07-17)
+## v14.0.2 (2018-07-17) [DEPRECATED]
 - Fix: unpackArrayTo and unpackArray
 
-## v14.0.1 (2018-07-16)
+## v14.0.1 (2018-07-16) [DEPRECATED]
 - Fix errors with strings in ES5 dists (transpile String.codePointAt())
 - Throw Error if packing anything other than Number, Boolean or null with pack, packTo, packArray and packArrayTo
 - Throw Error for bad buffer length on unpack (not unpackArray or unpackArrayTo; see README for details)
 
-## v14.0.0 (2018-07-15)
+## v14.0.0 (2018-07-15) [DEPRECATED]
 - UTF-8 string support on packString, unpackString and packStringTo
 - Remove unpackFrom and unpackArrayFrom from the API; unpack and unpackArray now accept the same optional params as unpackFrom and unpackArrayFrom received.
 
