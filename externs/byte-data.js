@@ -29,9 +29,6 @@
  */
 
 /** @type {!Object} */
-var byteData = {};
-
-/** @type {!Object} */
 var theType = {
 	bits: 0,
 	signed: false,

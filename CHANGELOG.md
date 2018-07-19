@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v15.0.0 (unreleased)
+- unpackString() now returns a Uint8Array.
+- Only UMD and ES bundle dist files.
+
 ## v14.1.0 (2018-07-19)
 - Add countString(string) the API; returns the number of bytes needed to serialize a UTF-8 string.
 

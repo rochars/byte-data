@@ -775,7 +775,7 @@ function countString(str) {
  * @return {number} The next index to write in the buffer.
  */
 function packStringTo(str, buffer, index=0) {
-  /** @type {!Array<!number>} */
+  /** @type {!Uint8Array} */
   let bytes = packString(str);
   for (let i = 0; i < bytes.length; i++) {
     buffer[index++] = bytes[i];
