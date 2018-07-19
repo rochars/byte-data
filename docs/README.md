@@ -132,7 +132,6 @@ https://people.debian.org/~aurel32/qemu/powerpc/
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
- * @throws {Error} If read a value that is not UTF-8.
  */
 export function unpackString(buffer, index=0, len=null) {}
 

@@ -630,7 +630,6 @@ function setWriter(theType) {
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
- * @throws {Error} If read a value that is not UTF-8.
  */
 function unpackString(buffer, index=0, len=null) {
   len = len !== null ? index + len : buffer.length;
@@ -669,19 +668,14 @@ function unpackString(buffer, index=0, len=null) {
           upperBoundary = 0x8F;
         }
       } else {
-        //throw new Error(UTF8_ERROR);
         replace = true;
       }
       charCode = charCode & (1 << (8 - count - 1)) - 1;
       for (let i = 0; i < count; i++) {
         if (buffer[index] < lowerBoundary || buffer[index] > upperBoundary) {
-          //throw new Error(UTF8_ERROR);
           replace = true;
-          //break;
         }
-        //else {
-          charCode = (charCode << 6) | (buffer[index] & 0x3f);
-        //}
+        charCode = (charCode << 6) | (buffer[index] & 0x3f);
         index++;
       }
       if (replace) {
