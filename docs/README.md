@@ -18,6 +18,7 @@ https://github.com/rochars/byte-data
 - **Read from buffers**, option to define **start and end index to read**
 - Use **typed arrays** or **arrays**
 - **less than 6KB minified, less than 3KB minified + compressed**
+- [Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 27kb
 - Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
@@ -26,7 +27,7 @@ https://github.com/rochars/byte-data
 - 32-bit IEEE single-precision floating point numbers
 - 64-bit IEEE double-precision floating point numbers
 - Little-endian and big-endian words
-- UTF-8 strings
+- UTF-8 strings (1 to 4 bytes per character, with validation)
 
 ## Install
 ```

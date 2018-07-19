@@ -740,7 +740,6 @@ function packString(str) {
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The index to write in the buffer.
  * @return {number} The next index to write in the buffer.
- * @throws {Error} If a character in the string is not valid ASCII.
  */
 function packStringTo(str, buffer, index=0) {
   /** @type {!Array<!number>} */

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v14.0.5 (2018-07-19)
+- Fix: packStringTo docstring (remove @throws {Error}).
+
 ## v14.0.4 (2018-07-19)
 - Validation when reading UTF-8.
 
