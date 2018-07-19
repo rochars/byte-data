@@ -735,6 +735,41 @@ function packString(str) {
 }
 
 /**
+ * Returns how many bytes are needed to serialize a UTF-8 string.
+ * @see https://encoding.spec.whatwg.org/#utf-8-encoder
+ * @param {string} str The string to pack.
+ * @return {number} The number of bytes needed to serialize the string.
+ */
+function countString(str) {
+  /** @type {number} */
+  let bytes = 0;
+  for (let i = 0; i < str.length; i++) {
+    /** @type {number} */
+    let codePoint = str.codePointAt(i);
+    if (codePoint < 128) {
+      bytes++;
+    } else {
+      /** @type {number} */
+      let count = 0;
+      if (codePoint <= 0x07FF) {
+        count = 1;
+      } else if(codePoint <= 0xFFFF) {
+        count = 2;
+      } else if(codePoint <= 0x10FFFF) {
+        count = 3;
+        i++;
+      }
+      bytes++;
+      while (count > 0) {
+        bytes++;
+        count--;
+      }
+    }
+  }
+  return bytes;
+}
+
+/**
  * Write a string of UTF-8 characters to a byte buffer.
  * @param {string} str The string to pack.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
@@ -882,4 +917,4 @@ function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {
   }
 }
 
-export { unpackString, packString, packStringTo, pack, packTo, packArray, packArrayTo, unpack, unpackArray, unpackArrayTo };
+export { unpackString, packString, countString, packStringTo, pack, packTo, packArray, packArrayTo, unpack, unpackArray, unpackArrayTo };

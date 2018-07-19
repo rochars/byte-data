@@ -9,6 +9,8 @@ export function packString(str: string): Array<number>;
 
 export function packStringTo(str: string, buffer: ArrayLike<number>, index?: number): number;
 
+export function countString(str: string): number;
+
 export function pack(value: number, theType: object): Array<number>;
 
 export function packTo(value: number, theType: object, buffer: ArrayLike<number>, index?: number): number;

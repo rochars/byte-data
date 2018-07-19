@@ -109,7 +109,7 @@ Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) st
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
 ### Strings
-Only UTF-8 strings with a max of 4 bytes per character are supported. **BOM** is kept untouched. Invalid characters are replace with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
+Only UTF-8 strings with a max of 4 bytes per character are supported. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
 
 ### Overflow and underflow
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
@@ -151,6 +151,14 @@ export function packString(str) {}
  * @return {number} The next index to write in the buffer.
  */
 export function packStringTo(str, buffer, index=0) {}
+
+/**
+ * Returns how many bytes are needed to serialize a UTF-8 string.
+ * @see https://encoding.spec.whatwg.org/#utf-8-encoder
+ * @param {string} str The string to pack.
+ * @return {number} The number of bytes needed to serialize the string.
+ */
+export function countString(str) {}
 
 // Numbers
 /**

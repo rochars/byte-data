@@ -33,8 +33,6 @@ import endianness from './lib/endianness.js';
 import {reader_, setUp_, writer_} from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
 
-const UTF8_ERROR = 'Invalid UTF-8 character.';
-
 /**
  * Read a string of UTF-8 characters from a byte buffer.
  * @see https://encoding.spec.whatwg.org/#the-encoding
@@ -140,6 +138,46 @@ export function packString(str) {
       bytes.push((codePoint >> (6 * count)) + offset);
       while (count > 0) {
         bytes.push(0x80 | (codePoint >> (6 * (count - 1)) & 0x3F));
+        count--;
+      }
+    }
+  }
+  return bytes;
+}
+
+/**
+ * Returns how many bytes are needed to serialize a UTF-8 string.
+ * @see https://encoding.spec.whatwg.org/#utf-8-encoder
+ * @param {string} str The string to pack.
+ * @return {number} The number of bytes needed to serialize the string.
+ */
+export function countString(str) {
+  /** @type {number} */
+  let bytes = 0;
+  for (let i = 0; i < str.length; i++) {
+    /** @type {number} */
+    let codePoint = str.codePointAt(i);
+    if (codePoint < 128) {
+      bytes++;
+    } else {
+      /** @type {number} */
+      let count = 0;
+      /** @type {number} */
+      let offset = 0;
+      if (codePoint <= 0x07FF) {
+        count = 1;
+        offset = 0xC0;
+      } else if(codePoint <= 0xFFFF) {
+        count = 2;
+        offset = 0xE0;
+      } else if(codePoint <= 0x10FFFF) {
+        count = 3;
+        offset = 0xF0;
+        i++;
+      }
+      bytes++;
+      while (count > 0) {
+        bytes++;
         count--;
       }
     }
