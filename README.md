@@ -16,8 +16,7 @@ https://github.com/rochars/byte-data
 - **Use it in little-endian and big-endian hosts**
 - **Write to buffers**, option to define **start and end index to write**
 - **Read from buffers**, option to define **start and end index to read**
-- Use **typed arrays** or **arrays**
-- **less than 6KB minified, less than 3KB minified + compressed**
+- **Less than 6KB minified, less than 3KB minified + compressed**
 - [Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 30kb
 - Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
@@ -106,7 +105,7 @@ Only UTF-8 strings with a max of 4 bytes per character are supported. **BOM** is
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
 
 ### Browser compatibility
-All modern browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/ROADMAP.md).
+Should work in all modern browsers. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/ROADMAP.md).
 
 ### Tests on big-endian systems
 Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
