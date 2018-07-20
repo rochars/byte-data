@@ -15,7 +15,6 @@ var num = byteData.unpack(arr, theType);
 arr = byteData.packString('abc');
 var str = byteData.unpackString(arr, 0);
 byteData.packStringTo(str, arr, 0);
-byteData.countString(str);
 // Numbers
 var output = [];
 byteData.pack(num, theType);

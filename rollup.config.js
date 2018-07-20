@@ -15,7 +15,7 @@ const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
 // Legal
 const license = '/*!\n'+
-  ' * byte-data Copyright (c) 2017-2018 Rafael da Silva Rocha. MIT license.\n'+
+  ' * https://github.com/rochars/byte-data.\n'+
   ' */\n';
 
 // GCC wrapper

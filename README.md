@@ -115,7 +115,7 @@ Only UTF-8 strings with a max of 4 bytes per character are supported. **BOM** is
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
 
 ### Browser compatibility
-**byte-data** need IE10+ to run. All moderns browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).
+All modern browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).
 
 ### Tests on big-endian systems
 Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
@@ -151,14 +151,6 @@ export function packString(str) {}
  * @return {number} The next index to write in the buffer.
  */
 export function packStringTo(str, buffer, index=0) {}
-
-/**
- * Returns how many bytes are needed to serialize a UTF-8 string.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
- * @param {string} str The string to pack.
- * @return {number} The number of bytes needed to serialize the string.
- */
-export function countString(str) {}
 
 // Numbers
 /**

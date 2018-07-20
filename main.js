@@ -30,6 +30,7 @@
 /** @module byteData */
 
 import endianness from './lib/endianness.js';
+import utf8BufferSize from './lib/utf8-buffer-size.js';
 import {reader_, setUp_, writer_} from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
 
@@ -113,7 +114,7 @@ export function unpackString(buffer, index=0, len=null) {
  */
 export function packString(str) {
   /** @type {!Uint8Array} */
-  let bytes = new Uint8Array(countString(str));
+  let bytes = new Uint8Array(utf8BufferSize(str));
   let bufferIndex = 0;
   for (let i = 0; i < str.length; i++) {
     /** @type {number} */
@@ -144,35 +145,6 @@ export function packString(str) {
         bufferIndex++;
         count--;
       }
-    }
-  }
-  return bytes;
-}
-
-/**
- * Returns how many bytes are needed to serialize a UTF-8 string.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
- * @param {string} str The string to pack.
- * @return {number} The number of bytes needed to serialize the string.
- */
-export function countString(str) {
-  /** @type {number} */
-  let bytes = 0;
-  for (let i = 0; i < str.length; i++) {
-    /** @type {number} */
-    let codePoint = str.codePointAt(i);
-    if (codePoint < 128) {
-      bytes++;
-    } else {
-      if (codePoint <= 2047) {
-        bytes++;
-      } else if(codePoint <= 65535) {
-        bytes+=2;
-      } else if(codePoint <= 1114111) {
-        i++;
-        bytes+=3;
-      }
-      bytes++;
     }
   }
   return bytes;

@@ -10,51 +10,6 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 
-// countString
-describe('countString UTF-8 strings, 4 bytes', function() {
-    it('should turn one UTF-8 char to a byte array', function() {
-        let chars = '\ufeff輸'; // 輸   CJK COMPATIBILITY IDEOGRAPH-2F9DF (U+2F9DF) f0 af a7 9f // 240,175,167,159
-        assert.equal(
-            byteData.countString(chars),
-            byteData.packString(chars).length);
-    });
-});
-describe('countString UTF-8 strings, 4 bytes', function() {
-    it('should turn one UTF-8 char to a byte array', function() {
-        let chars = '輸\ufeff輸'; // 輸   CJK COMPATIBILITY IDEOGRAPH-2F9DF (U+2F9DF) f0 af a7 9f // 240,175,167,159
-        assert.equal(
-            byteData.countString(chars),
-            byteData.packString(chars).length);
-    });
-});
-describe('countString UTF-8 strings, 4 bytes', function() {
-    it('should turn one UTF-8 char to a byte array', function() {
-        let chars = '輸'; // 輸   CJK COMPATIBILITY IDEOGRAPH-2F9DF (U+2F9DF) f0 af a7 9f // 240,175,167,159
-        assert.equal(
-            byteData.countString(chars),
-            byteData.packString(chars).length);
-    });
-    it('countString UTF-8 strings, 4 bytes', function() {
-        let chars = '輸輸';
-        assert.equal(
-            byteData.countString(chars),
-            byteData.packString(chars).length);
-    });
-    it('countString UTF-8 strings, 4 bytes', function() {
-        let chars = '輸輸笠߹~$';
-        assert.equal(
-            byteData.countString(chars),
-            byteData.packString(chars).length);
-    });
-    it('countString UTF-8 strings, 4 bytes', function() {
-        let chars = '輸輸笠߹~$輸';
-        assert.equal(
-            byteData.countString(chars),
-            byteData.packString(chars).length);
-    });
-});
-
-
 // packStringTo
 describe('packStringTo UTF-8 strings', function() {
     it('1 char, 4 bytes', function() {

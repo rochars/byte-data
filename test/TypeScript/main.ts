@@ -18,7 +18,6 @@ let num = byteData.unpack(arr, theType);
 arr = byteData.packString('abc');
 let str = byteData.unpackString(arr, 0);
 byteData.packStringTo(str, arr, 0);
-byteData.countString(str);
 
 // Numbers
 let output = [];

@@ -1,15 +1,13 @@
-// Type definitions for byte-data 14.0
+// Type definitions for byte-data 15.0
 // Project: https://github.com/rochars/byte-data
 // Definitions by: Rafael S. Rocha <https://github.com/rochars>
 // Definitions: https://github.com/rochars/byte-data
 
 export function unpackString(buffer: Uint8Array|ArrayLike<number>, index?: number, len?: number): string;
 
-export function packString(str: string): Array<number>;
+export function packString(str: string): ArrayLike<number>;
 
 export function packStringTo(str: string, buffer: ArrayLike<number>, index?: number): number;
-
-export function countString(str: string): number;
 
 export function pack(value: number, theType: object): Array<number>;
 

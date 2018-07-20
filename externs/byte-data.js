@@ -23,7 +23,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 14.0
+ * @fileoverview Externs for byte-data 15.0
  * @see https://github.com/rochars/byte-data
  * @externs
  */
@@ -63,14 +63,6 @@ function packString(str) {}
  * @return {number} The next index to write in the buffer.
  */
 function packStringTo(str, buffer, index=0) {}
-
-/**
- * Returns how many bytes are needed to serialize a UTF-8 string.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
- * @param {string} str The string to pack.
- * @return {number} The number of bytes needed to serialize the string.
- */
-function countString(str) {}
 
 // Numbers
 /**
