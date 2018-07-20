@@ -66,6 +66,7 @@
     "lint": "jshint main.js lib externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/dist test/src --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/dist --umd --recursive -R dot",
+    "test-amd": "node ./node_modules/mocha/bin/_mocha test/dist --amd --recursive -R dot",
     "test-esm": "node ./node_modules/mocha/bin/_mocha test/dist --esm --recursive -R dot",
     "test-tsc": "tsc ./test/TypeScript/main.ts && node ./test/TypeScript/main.js",
     "test-dist": "npm run test-umd && npm run test-esm",

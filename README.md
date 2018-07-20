@@ -292,25 +292,6 @@ All types in **binary-data-types** are supported by byte-data. They are:
   - uInt48BE
   - float64BE
 
-## Distribution
-This library is a ES module also distributed as a UMD module. It works out of the box in Node when installed with ```npm install byte-data```. It includes a [TypeScript](https://www.typescriptlang.org/) definition file: **./main.d.ts**.
-
-If you use the [Closure Compiler](https://github.com/google/closure-compiler), this package includes a externs file: **./externs/byte-data.js**.
-
-### If you are using this lib in a browser:
-
-You can load both **./dist/byte-data.umd.js** in the browser with ```<script>``` tags. You can load it via the https://unpkg.com and https://www.jsdelivr.com/ CDNs:
-
-[unpkg](https://unpkg.com/byte-data):
-```html
-<script src="https://unpkg.com/byte-data"></script>
-```
-
-[jsDelivr](https://cdn.jsdelivr.net/npm/byte-data):
-```html
-<script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
-```
-
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.
 

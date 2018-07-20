@@ -18,45 +18,45 @@ const license = '/*!\n'+
   ' * byte-data Copyright (c) 2017-2018 Rafael da Silva Rocha. MIT license.\n'+
   ' */\n';
 
-let UMDBanner = "(function (global, factory) {" +
-  "typeof exports === 'object' && typeof module !== 'undefined' ? " +
-  "module.exports = factory() :" +
-  "typeof define === 'function' && define.amd ? define(factory) :" +
-  "(global.byteData = factory());" +
-  "}(this, (function () { 'use strict';";
-let UMDFooter = "return byteData; })));"
+// GCC wrapper
+const outputWrapper = license + 'var window=window||{};'+
+  '%output%' +
+  'var module=module||{};module.exports=exports;' +
+  'var define=define||function(){};' +
+  'define(["exports"],function(exports){return module.exports;});'
 
 export default [
-  // es bundle
+  // ES6 bundle
   {
     input: 'main.js',
     output: [
       {
         file: 'dist/byte-data.js',
         format: 'es'
-      }
+      },
     ]
   },
-  // umd bundle
+  // ES5 UMD
   {
     input: 'main.js',
     output: [
       {
         file: 'dist/byte-data.umd.js',
         name: 'byteData',
-        format: 'iife'
+        format: 'cjs',
+        banner: 'var exports=exports||{};' +
+        'window["byteData"]=exports;'
       }
     ],
     plugins: [
-      //babel()
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
-        compilationLevel: 'SIMPLE',
+        compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
-        outputWrapper: UMDBanner + '%output%' + UMDFooter,
-        externs: [{src: externsFile}]
-      })
+        outputWrapper: outputWrapper,
+        externs: [{src: externsFile + 'exports={};'}]
+      }),
     ]
   },
 ];
