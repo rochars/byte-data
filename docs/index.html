@@ -60,7 +60,7 @@
 <li><strong>Read from buffers</strong>, option to define <strong>start and end index to read</strong></li>
 <li>Use <strong>typed arrays</strong> or <strong>arrays</strong></li>
 <li><strong>less than 6KB minified, less than 3KB minified + compressed</strong></li>
-<li><a href="https://github.com/rochars/byte-data/blob/master/dist/byte-data.js">Unminified bundle</a> is less than 27kb</li>
+<li><a href="https://github.com/rochars/byte-data/blob/master/dist/byte-data.js">Unminified bundle</a> is less than 30kb</li>
 <li>Made with <strong><a href="https://github.com/google/closure-compiler">Closure Compiler</a></strong> in mind (works great with others, too)</li>
 </ul>
 <h2>Pack/unpack:</h2><ul>
@@ -82,19 +82,14 @@ let packed = pack(128, {bits: 8});</code></pre><p>Or <strong>require</strong>:</
 <pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
 
 // Pack a 32-bit floating point number
-let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h3>Browser</h3><p>Use the compiled file in the <em>/dist</em> folder of this package:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;./dist/byte-data.min.js&quot;>&lt;/script>
+let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h3>Browser</h3><p>Use <strong>byte-data.umd.js</strong> in the <em>/dist</em> folder of this package:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;./dist/byte-data.umd.js&quot;>&lt;/script>
 &lt;script>
   // Pack a 32-bit floating point number
   var packed = byteData.pack(2.1474836, {bits: 32, float: true});
-&lt;/script></code></pre><p>Or get it from the <a href="https://cdn.jsdelivr.net/npm/byte-data">jsDelivr</a> CDN:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script></code></pre><p>Or get it from <a href="https://unpkg.com/byte-data">unpkg</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><p>Or load it as a module using <a href="https://jspm.io">jspm</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script type=&quot;module&quot;>
-  import {pack} from 'https://dev.jspm.io/byte-data';
-  // Pack a 15-bit signed integer
-  pack(-1200, {bits: 16, signed: true});
-&lt;/script></code></pre><h2>About</h2><h3>Unpacking numbers and input buffer length</h3><ul>
+&lt;/script></code></pre><p>Or load it from the <a href="https://cdn.jsdelivr.net/npm/byte-data">jsDelivr</a> CDN:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script></code></pre><p>Or load it from <a href="https://unpkg.com/byte-data">unpkg</a>:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><h2>About</h2><h3>Unpacking numbers and input buffer length</h3><ul>
 <li>When unpacking a single value, a error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)</li>
 <li>When unpacking a array of values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong></li>
 </ul>
@@ -107,7 +102,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h3>
 <h3>Signed integers</h3><p>Signed integers are <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two's complement</a>.</p>
 <h3>Strings</h3><p>Only UTF-8 strings with a max of 4 bytes per character are supported. <strong>BOM</strong> is kept untouched. Invalid characters are replaced with <em>Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)</em>.</p>
 <h3>Overflow and underflow</h3><p>Overflow or underflow on integers will throw <em>&quot;Overflow.&quot;</em> and <em>&quot;Underflow.&quot;</em> errors, respectively.</p>
-<h3>Browser compatibility</h3><p>All modern browsers should work fine. Cross-browser tests are on the <a href="https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md">ROADMAP</a>.</p>
+<h3>Browser compatibility</h3><p>All modern browsers should work fine. Cross-browser tests are on the <a href="https://github.com/rochars/byte-data/blob/master/ROADMAP.md">ROADMAP</a>.</p>
 <h3>Tests on big-endian systems</h3><p>Use <a href="https://www.qemu.org/">QEMU</a> with this PowerPC/Debian image:<br>https://people.debian.org/~aurel32/qemu/powerpc/</p>
 <h2>API</h2><pre class="prettyprint source lang-javascript"><code>// Strings
 /**
@@ -150,16 +145,6 @@ export function packStringTo(str, buffer, index=0) {}
 export function pack(value, theType) {}
 
 /**
- * Pack an array of numbers as a byte buffer.
- * @param {!Array&lt;number>|!TypedArray} values The values.
- * @param {!Object} theType The type definition.
- * @return {!Array&lt;number>} The packed values.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values are not valid.
- */
-export function packArray(values, theType) {}
-
-/**
  * Pack a number to a byte buffer.
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
@@ -170,6 +155,16 @@ export function packArray(values, theType) {}
  * @throws {Error} If the value is not valid.
  */
 export function packTo(value, theType, buffer, index=0) {}
+
+/**
+ * Pack an array of numbers as a byte buffer.
+ * @param {!Array&lt;number>|!TypedArray} values The values.
+ * @param {!Object} theType The type definition.
+ * @return {!Array&lt;number>} The packed values.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If any of the values are not valid.
+ */
+export function packArray(values, theType) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -229,7 +224,7 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.lengt
 <li>int8</li>
 <li>uInt8</li>
 </ul>
-<h4>little-endian</h4><ul>
+<h3>little-endian</h3><ul>
 <li>int16</li>
 <li>uInt16</li>
 <li>float16</li>
@@ -244,7 +239,7 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.lengt
 <li>uInt48</li>
 <li>float64</li>
 </ul>
-<h4>big-endian:</h4><ul>
+<h3>big-endian:</h3><ul>
 <li>int16BE</li>
 <li>uInt16BE</li>
 <li>float16BE</li>
@@ -260,9 +255,9 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.lengt
 <li>float64BE</li>
 </ul>
 <h2>Contributing</h2><p><strong>byte-data</strong> welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.</p>
-<p>See <a href="https://github.com/rochars/byte-data/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a> for details.</p>
+<p>See <a href="https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for details.</p>
 <h3>Style guide</h3><p><strong>byte-data</strong> code should follow the Google JavaScript Style Guide:<br>https://google.github.io/styleguide/jsguide.html</p>
-<h3>Code of conduct</h3><p>This project is bound by a code of conduct: The <a href="https://github.com/rochars/byte-data/blob/master/docs/CODE_OF_CONDUCT.md">Contributor Covenant, version 1.4</a>, also available at https://<a href="http://www.contributor-covenant.org/version/1/4/code-of-conduct.html">www.contributor-covenant.org/version/1/4/code-of-conduct.html</a></p>
+<h3>Code of conduct</h3><p>This project is bound by a code of conduct: The <a href="https://github.com/rochars/byte-data/blob/master/CODE_OF_CONDUCT.md">Contributor Covenant, version 1.4</a>, also available at https://<a href="http://www.contributor-covenant.org/version/1/4/code-of-conduct.html">www.contributor-covenant.org/version/1/4/code-of-conduct.html</a></p>
 <p>Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting <a href="mailto:rocha.rafaelsilva@gmail.com">rocha.rafaelsilva@gmail.com</a>.</p>
 <h2>Legal</h2><p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fbyte-data?ref=badge_large"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fbyte-data.svg?type=large" alt="FOSSA Status"></a></p>
 <h3>LICENSE</h3><p>Copyright (c) 2017-2018 Rafael da Silva Rocha.</p>
@@ -395,7 +390,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jul 20 2018 08:29:25 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jul 20 2018 08:43:35 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

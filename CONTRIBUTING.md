@@ -14,14 +14,14 @@ npm test
 ```
 npm run build
 ```
-Look at [BUILDING.md](https://github.com/rochars/byte-data/blob/master/docs/BUILDING.md) for details on building **byte-data**.
+Look at [BUILDING.md](https://github.com/rochars/byte-data/blob/master/BUILDING.md) for details on building **byte-data**.
 
 ## Style guide
 **byte-data** code should follow the Google JavaScript Style Guide:  
 https://google.github.io/styleguide/jsguide.html
 
 ## Code of conduct
-This project is bound by a code of conduct: The [Contributor Covenant, version 1.4](https://github.com/rochars/byte-data/blob/master/docs/CODE_OF_CONDUCT.md), also available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+This project is bound by a code of conduct: The [Contributor Covenant, version 1.4](https://github.com/rochars/byte-data/blob/master/CODE_OF_CONDUCT.md), also available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting rocha.rafaelsilva@gmail.com.
 

@@ -18,7 +18,7 @@ https://github.com/rochars/byte-data
 - **Read from buffers**, option to define **start and end index to read**
 - Use **typed arrays** or **arrays**
 - **less than 6KB minified, less than 3KB minified + compressed**
-- [Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 27kb
+- [Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 30kb
 - Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
@@ -63,32 +63,23 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ```
 
 ### Browser
-Use the compiled file in the */dist* folder of this package:
+Use **byte-data.umd.js** in the */dist* folder of this package:
 ```html
-<script src="./dist/byte-data.min.js"></script>
+<script src="./dist/byte-data.umd.js"></script>
 <script>
   // Pack a 32-bit floating point number
   var packed = byteData.pack(2.1474836, {bits: 32, float: true});
 </script>
 ```
 
-Or get it from the [jsDelivr](https://cdn.jsdelivr.net/npm/byte-data) CDN:
+Or load it from the [jsDelivr](https://cdn.jsdelivr.net/npm/byte-data) CDN:
 ```html
 <script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
 ```
 
-Or get it from [unpkg](https://unpkg.com/byte-data):
+Or load it from [unpkg](https://unpkg.com/byte-data):
 ```html
 <script src="https://unpkg.com/byte-data"></script>
-```
-
-Or load it as a module using [jspm](https://jspm.io):
-```html
-<script type="module">
-  import {pack} from 'https://dev.jspm.io/byte-data';
-  // Pack a 15-bit signed integer
-  pack(-1200, {bits: 16, signed: true});
-</script>
 ```
 
 ## About
@@ -115,7 +106,7 @@ Only UTF-8 strings with a max of 4 bytes per character are supported. **BOM** is
 Overflow or underflow on integers will throw *"Overflow."* and *"Underflow."* errors, respectively.
 
 ### Browser compatibility
-All modern browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/docs/ROADMAP.md).
+All modern browsers should work fine. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/ROADMAP.md).
 
 ### Tests on big-endian systems
 Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
@@ -164,16 +155,6 @@ export function packStringTo(str, buffer, index=0) {}
 export function pack(value, theType) {}
 
 /**
- * Pack an array of numbers as a byte buffer.
- * @param {!Array<number>|!TypedArray} values The values.
- * @param {!Object} theType The type definition.
- * @return {!Array<number>} The packed values.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values are not valid.
- */
-export function packArray(values, theType) {}
-
-/**
  * Pack a number to a byte buffer.
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
@@ -184,6 +165,16 @@ export function packArray(values, theType) {}
  * @throws {Error} If the value is not valid.
  */
 export function packTo(value, theType, buffer, index=0) {}
+
+/**
+ * Pack an array of numbers as a byte buffer.
+ * @param {!Array<number>|!TypedArray} values The values.
+ * @param {!Object} theType The type definition.
+ * @return {!Array<number>} The packed values.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If any of the values are not valid.
+ */
+export function packArray(values, theType) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -254,7 +245,7 @@ All types in **binary-data-types** are supported by byte-data. They are:
   - int8
   - uInt8
 
-#### little-endian
+### little-endian
   - int16
   - uInt16
   - float16
@@ -269,7 +260,7 @@ All types in **binary-data-types** are supported by byte-data. They are:
   - uInt48
   - float64
 
-#### big-endian:
+### big-endian:
   - int16BE
   - uInt16BE
   - float16BE
@@ -287,14 +278,14 @@ All types in **binary-data-types** are supported by byte-data. They are:
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.
 
-See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/docs/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md) for details.
 
 ### Style guide
 **byte-data** code should follow the Google JavaScript Style Guide:  
 https://google.github.io/styleguide/jsguide.html
 
 ### Code of conduct
-This project is bound by a code of conduct: The [Contributor Covenant, version 1.4](https://github.com/rochars/byte-data/blob/master/docs/CODE_OF_CONDUCT.md), also available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+This project is bound by a code of conduct: The [Contributor Covenant, version 1.4](https://github.com/rochars/byte-data/blob/master/CODE_OF_CONDUCT.md), also available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting rocha.rafaelsilva@gmail.com.
 
