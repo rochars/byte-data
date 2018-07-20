@@ -116,7 +116,7 @@ export function packString(str) {
   /** @type {!Uint8Array} */
   let bytes = new Uint8Array(utf8BufferSize(str));
   let bufferIndex = 0;
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0, len = str.length; i < len; i++) {
     /** @type {number} */
     let codePoint = str.codePointAt(i);
     if (codePoint < 128) {
@@ -160,7 +160,7 @@ export function packString(str) {
 export function packStringTo(str, buffer, index=0) {
   /** @type {!Uint8Array} */
   let bytes = packString(str);
-  for (let i = 0; i < bytes.length; i++) {
+  for (let i = 0, len = bytes.length; i < len; i++) {
     buffer[index++] = bytes[i];
   }
   return index;
@@ -223,7 +223,7 @@ export function packArray(values, theType) {
  */
 export function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
-  for (let i=0; i < values.length; i++) {
+  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */

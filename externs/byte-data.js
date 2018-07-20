@@ -41,7 +41,7 @@ var theType = {
  * @see https://encoding.spec.whatwg.org/#the-encoding
  * @see https://stackoverflow.com/a/34926911
  * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
- * @param {number=} index The index to read.
+ * @param {number=} index The buffer index to start reading.
  * @param {?number=} len The number of bytes to read.
  * @return {string}
  */

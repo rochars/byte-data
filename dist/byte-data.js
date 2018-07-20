@@ -223,7 +223,7 @@ class Integer {
    */
   write(bytes, num, j=0) {
     j = this.writeFirstByte_(bytes, this.overflow_(num), j);
-    for (let i = 2; i < this.offset_; i++, j++) {
+    for (let i = 2, len = this.offset_; i < len; i++, j++) {
       bytes[j] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
     }
     if (this.bits_ > 8) {
@@ -764,7 +764,7 @@ function packString(str) {
   /** @type {!Uint8Array} */
   let bytes = new Uint8Array(utf8BufferSize(str));
   let bufferIndex = 0;
-  for (let i = 0; i < str.length; i++) {
+  for (let i = 0, len = str.length; i < len; i++) {
     /** @type {number} */
     let codePoint = str.codePointAt(i);
     if (codePoint < 128) {
@@ -808,7 +808,7 @@ function packString(str) {
 function packStringTo(str, buffer, index=0) {
   /** @type {!Uint8Array} */
   let bytes = packString(str);
-  for (let i = 0; i < bytes.length; i++) {
+  for (let i = 0, len = bytes.length; i < len; i++) {
     buffer[index++] = bytes[i];
   }
   return index;
@@ -871,7 +871,7 @@ function packArray(values, theType) {
  */
 function packArrayTo(values, theType, buffer, index=0) {
   setUp_(theType);
-  for (let i=0; i < values.length; i++) {
+  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
