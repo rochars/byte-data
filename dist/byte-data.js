@@ -689,10 +689,11 @@ function setWriter(theType) {
  * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
+ *    If len is undefined will read until the end of the buffer.
  * @return {string}
  */
-function unpackString(buffer, index=0, len=null) {
-  len = len !== null ? index + len : buffer.length;
+function unpackString(buffer, index=0, len=undefined) {
+  len = len !== undefined ? index + len : buffer.length;
   /** @type {string} */
   let str = "";
   while(index < len) {
@@ -802,7 +803,8 @@ function packString(str) {
  * Write a string of UTF-8 characters to a byte buffer.
  * @param {string} str The string to pack.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The index to write in the buffer.
+ * @param {number=} index The buffer index to start writing.
+ *   Assumes zero if undefined.
  * @return {number} The next index to write in the buffer.
  */
 function packStringTo(str, buffer, index=0) {
@@ -835,7 +837,7 @@ function pack(value, theType) {
  * @param {number} value The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The index to write.
+ * @param {number=} index The buffer index to write. Assumes 0 if undefined.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
@@ -864,7 +866,8 @@ function packArray(values, theType) {
  * @param {!Array<number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The buffer index to write.
+ * @param {number=} index The buffer index to start writing.
+ *   Assumes zero if undefined.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
@@ -891,9 +894,10 @@ function packArrayTo(values, theType, buffer, index=0) {
  * Unpack a number from a byte buffer.
  * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to read.
+ * @param {number=} index The buffer index to read. Assumes zero if undefined.
  * @return {number}
  * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
  */
 function unpack(buffer, theType, index=0) {
   setUp_(theType);
@@ -915,8 +919,10 @@ function unpack(buffer, theType, index=0) {
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The start index. Assumes 0.
- * @param {?number=} end The end index. Assumes the buffer length.
+ * @param {number=} index The buffer index to start reading.
+ *   Assumes zero if undefined.
+ * @param {number=} end The buffer index to stop reading.
+ *   Assumes the buffer length if undefined.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
@@ -932,11 +938,14 @@ function unpackArray(buffer, theType, index=0, end=buffer.length) {
  * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {!TypedArray|!Array<!number>} output The output array.
- * @param {number=} index The start index. Assumes 0.
- * @param {?number=} end The end index. Assumes the buffer length.
+ * @param {number=} index The buffer index to start reading.
+ *   Assumes zero if undefined.
+ * @param {number=} end The buffer index to stop reading.
+ *   Assumes the buffer length if undefined.
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {
+function unpackArrayTo(
+    buffer, theType, output, index=0, end=buffer.length) {
   setUp_(theType);
   while ((end - index) % theType.offset) {
       end--;

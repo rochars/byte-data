@@ -84,7 +84,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line178">line 178</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line180">line 180</a>
     </li></ul></dd>
     
 
@@ -318,7 +318,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line207">line 207</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line209">line 209</a>
     </li></ul></dd>
     
 
@@ -555,7 +555,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line224">line 224</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line227">line 227</a>
     </li></ul></dd>
     
 
@@ -760,7 +760,7 @@
 
             
 
-            <td class="description last">The buffer index to write.</td>
+            <td class="description last">The buffer index to start writing.  Assumes zero if undefined.</td>
         </tr>
 
     
@@ -877,7 +877,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line115">line 115</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -1039,7 +1039,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line160">line 160</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line162">line 162</a>
     </li></ul></dd>
     
 
@@ -1210,7 +1210,7 @@
 
             
 
-            <td class="description last">The index to write in the buffer.</td>
+            <td class="description last">The buffer index to start writing.  Assumes zero if undefined.</td>
         </tr>
 
     
@@ -1271,7 +1271,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line195">line 195</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -1473,7 +1473,7 @@
 
             
 
-            <td class="description last">The index to write.</td>
+            <td class="description last">The buffer index to write. Assumes 0 if undefined.</td>
         </tr>
 
     
@@ -1590,7 +1590,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line250">line 250</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line254">line 254</a>
     </li></ul></dd>
     
 
@@ -1761,7 +1761,7 @@
 
             
 
-            <td class="description last">The buffer index to read.</td>
+            <td class="description last">The buffer index to read. Assumes zero if undefined.</td>
         </tr>
 
     
@@ -1780,8 +1780,8 @@
 
 
 <h5>Throws:</h5>
-
-        
+<ul>
+        <li>
 
 <dl>
     <dt>
@@ -1806,8 +1806,35 @@
     <dd></dd>
 </dl>
 
-
+</li>
     
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        On bad buffer length.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
 
 
 <h5>Returns:</h5>
@@ -1835,7 +1862,7 @@
 
     
 
-    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -1847,7 +1874,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line275">line 275</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -2018,7 +2045,7 @@
 
             
 
-            <td class="description last">The start index. Assumes 0.</td>
+            <td class="description last">The buffer index to start reading.  Assumes zero if undefined.</td>
         </tr>
 
     
@@ -2044,8 +2071,6 @@
                 
 
                 
-                    &lt;nullable><br>
-                
 
                 
                 </td>
@@ -2053,7 +2078,7 @@
 
             
 
-            <td class="description last">The end index. Assumes the buffer length.</td>
+            <td class="description last">The buffer index to stop reading.  Assumes the buffer length if undefined.</td>
         </tr>
 
     
@@ -2127,7 +2152,7 @@
 
     
 
-    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, output, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, output, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2139,7 +2164,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line291">line 291</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line299">line 299</a>
     </li></ul></dd>
     
 
@@ -2344,7 +2369,7 @@
 
             
 
-            <td class="description last">The start index. Assumes 0.</td>
+            <td class="description last">The buffer index to start reading.  Assumes zero if undefined.</td>
         </tr>
 
     
@@ -2370,8 +2395,6 @@
                 
 
                 
-                    &lt;nullable><br>
-                
 
                 
                 </td>
@@ -2379,7 +2402,7 @@
 
             
 
-            <td class="description last">The end index. Assumes the buffer length.</td>
+            <td class="description last">The buffer index to stop reading.  Assumes the buffer length if undefined.</td>
         </tr>
 
     
@@ -2447,7 +2470,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line46">line 46</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -2631,7 +2654,7 @@
 
             
 
-            <td class="description last">The number of bytes to read.</td>
+            <td class="description last">The number of bytes to read.   If len is undefined will read until the end of the buffer.</td>
         </tr>
 
     
@@ -2689,7 +2712,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jul 20 2018 09:26:25 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jul 20 2018 09:53:31 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
