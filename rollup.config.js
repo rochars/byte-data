@@ -25,7 +25,7 @@ const outputWrapper = license + '"use strict";if(typeof exports!=="undefined"){v
   '%output%' +
   'var module=module||{};module.exports=exports;' +
   'var define=define||function(){};' +
-  'define(["exports"],function(exports){return module.exports;});'
+  'define(["exports"],function(e){return module.exports;});'
 
 export default [
   // ES6 bundle
@@ -50,9 +50,9 @@ export default [
         file: 'dist/byte-data.umd.js',
         name: 'byteData',
         format: 'cjs',
-        use_strict: false,
+        strict: false,
         banner: 'var exports=exports||{};' +
-        'if (window) {window["byteData"]=exports;}'
+        'if(window){window["byteData"]=exports;}'
       }
     ],
     plugins: [

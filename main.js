@@ -31,8 +31,10 @@
 
 import endianness from 'endianness';
 import utf8BufferSize from 'utf8-buffer-size';
-import {reader, setUp, writer} from './lib/packer.js';
+import Packer from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
+
+let packer = new Packer();
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -225,14 +227,14 @@ export function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(values, theType, buffer, index=0) {
-  setUp(theType);
+  packer.setUp(theType);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
     let len = index + theType.offset;
     while (index < len) {
-      index = writer(buffer, values[i], index);
+      index = packer.write(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
@@ -252,7 +254,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 export function unpack(buffer, theType, index=0) {
-  setUp(theType);
+  packer.setUp(theType);
   if ((theType.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
@@ -260,7 +262,7 @@ export function unpack(buffer, theType, index=0) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
   /** @type {number} */
-  let value = reader(buffer, index);
+  let value = packer.read(buffer, index);
   if (theType.be) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
@@ -298,7 +300,7 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
  */
 export function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
-  setUp(theType);
+  packer.setUp(theType);
   while ((end - index) % theType.offset) {
       end--;
   }

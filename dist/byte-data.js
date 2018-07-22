@@ -423,221 +423,238 @@ function validateIntType_(theType) {
  *
  */
 
-/**
- * Use a Typed Array to check if the host is BE or LE. This will impact
- * on how 64-bit floating point numbers are handled.
- * @type {boolean}
- * @private
- */
-const BE_ENV = new Uint8Array(new Uint32Array([1]).buffer)[0] === 0;
-/**
- * @type {number}
- * @private
- */
-const HIGH = BE_ENV ? 1 : 0;
-/**
- * @type {number}
- * @private
- */
-const LOW = BE_ENV ? 0 : 1;
-/**
- * @type {!Int8Array}
- * @private
- */
-let int8_ = new Int8Array(8);
-/**
- * @type {!Uint32Array}
- * @private
- */
-let ui32_ = new Uint32Array(int8_.buffer);
-/**
- * @type {!Float32Array}
- * @private
- */
-let f32_ = new Float32Array(int8_.buffer);
-/**
- * @type {!Float64Array}
- * @private
- */
-let f64_ = new Float64Array(int8_.buffer);
-/**
- * @type {Object}
- * @private
- */
-let gInt_ = {};
+class Packer {
 
-/**
- * @type {Function}
- */
-let reader;
-/**
- * @type {Function}
- */
-let writer;
-/**
- * Validate the type and set up the packing/unpacking functions.
- * @param {!Object} theType The type definition.
- * @throws {Error} If the type definition is not valid.
- */
-function setUp(theType) {
-  validateType(theType);
-  theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
-  setReaderAndWriter_(theType);
-  gInt_ = new Integer(
-    theType.bits == 64 ? 32 : theType.bits,
-    theType.float ? false : theType.signed);
-}
-
-/**
- * Read int values from bytes.
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function readInt_(bytes, i) {
-  return gInt_.read(bytes, i);
-}
-
-/**
- * Read 1 16-bit float from bytes.
- * @see https://stackoverflow.com/a/8796597
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function read16F_(bytes, i) {
-  /** @type {number} */
-  let int = gInt_.read(bytes, i);
-  /** @type {number} */
-  let exponent = (int & 0x7C00) >> 10;
-  /** @type {number} */
-  let fraction = int & 0x03FF;
-  /** @type {number} */
-  let floatValue;
-  if (exponent) {
-    floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
-  } else {
-    floatValue = 6.103515625e-5 * (fraction / 0x400);
+  constructor() {
+    /**
+     * Use a Typed Array to check if the host is BE or LE. This will impact
+     * on how 64-bit floating point numbers are handled.
+     * @type {boolean}
+     * @private
+     */
+    const BE_ENV = new Uint8Array(new Uint32Array([1]).buffer)[0] === 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.HIGH = BE_ENV ? 1 : 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.LOW = BE_ENV ? 0 : 1;
+    /**
+     * @type {!Int8Array}
+     * @private
+     */
+    let int8_ = new Int8Array(8);
+    /**
+     * @type {!Uint32Array}
+     * @private
+     */
+    this.ui32_ = new Uint32Array(int8_.buffer);
+    /**
+     * @type {!Float32Array}
+     * @private
+     */
+    this.f32_ = new Float32Array(int8_.buffer);
+    /**
+     * @type {!Float64Array}
+     * @private
+     */
+    this.f64_ = new Float64Array(int8_.buffer);
+    /**
+     * @type {Object}
+     * @private
+     */
+    this.gInt_ = {};
   }
-  return floatValue * (int >> 15 ? -1 : 1);
-}
 
-/**
- * Read 1 32-bit float from bytes.
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function read32F_(bytes, i) {
-  ui32_[0] = gInt_.read(bytes, i);
-  return f32_[0];
-}
+  /**
+   * Read a number from a byte buffer.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} i The index to read.
+   * @return {number}
+   */
+  read(bytes, i) {}
 
-/**
- * Read 1 64-bit float from bytes.
- * Thanks https://gist.github.com/kg/2192799
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} i The index to read.
- * @return {number}
- * @private
- */
-function read64F_(bytes, i) {
-  ui32_[HIGH] = gInt_.read(bytes, i);
-  ui32_[LOW] = gInt_.read(bytes, i + 4);
-  return f64_[0];
-}
+  /**
+   * Write a number to a byte buffer.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number} j The index being written in the byte buffer.
+   * @return {!number} The next index to write on the byte buffer.
+   */
+  write(bytes, number, j) {}
 
-/**
- * Write a integer value to a byte buffer.
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {!number} The next index to write on the byte buffer.
- * @private
- */
-function writeInt_(bytes, number, j) {
-  return gInt_.write(bytes, number, j);
-}
-
-/**
- * Write one 16-bit float as a binary value.
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function write16F_(bytes, number, j) {
-  f32_[0] = number;
-  /** @type {number} */
-  let x = ui32_[0];
-  /** @type {number} */
-  let bits = (x >> 16) & 0x8000;
-  /** @type {number} */
-  let m = (x >> 12) & 0x07ff;
-  /** @type {number} */
-  let e = (x >> 23) & 0xff;
-  if (e >= 103) {
-    bits |= ((e - 112) << 10) | (m >> 1);
-    bits += m & 1;
+  /**
+   * Validate the type and set up the packing/unpacking functions.
+   * @param {!Object} theType The type definition.
+   * @throws {Error} If the type definition is not valid.
+   */
+  setUp(theType) {
+    validateType(theType);
+    theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
+    this.setReaderAndWriter_(theType);
+    this.gInt_ = new Integer(
+      theType.bits == 64 ? 32 : theType.bits,
+      theType.float ? false : theType.signed);
   }
-  bytes[j++] = bits & 0xFF;
-  bytes[j++] = bits >>> 8 & 0xFF;
-  return j;
-}
 
-/**
- * Write one 32-bit float as a binary value.
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function write32F_(bytes, number, j) {
-  f32_[0] = number;
-  return gInt_.write(bytes, ui32_[0], j);
-}
+  /**
+   * Read int values from bytes.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} i The index to read.
+   * @return {number}
+   * @private
+   */
+  readInt_(bytes, i) {
+    return this.gInt_.read(bytes, i);
+  }
 
-/**
- * Write one 64-bit float as a binary value.
- * @param {!Uint8Array} bytes An array of bytes.
- * @param {number} number The number to write as bytes.
- * @param {number} j The index being written in the byte buffer.
- * @return {number} The next index to write on the byte buffer.
- * @private
- */
-function write64F_(bytes, number, j) {
-  f64_[0] = number;
-  j = gInt_.write(bytes, ui32_[HIGH], j);
-  return gInt_.write(bytes, ui32_[LOW], j);
-}
-
-/**
- * Set the functions to pack and unpack numbers.
- * @param {!Object} theType The type definition.
- * @private
- */
-function setReaderAndWriter_(theType) {
-  if (theType.float) {
-    if (theType.bits == 16) {
-      reader = read16F_;
-      writer = write16F_;
-    } else if(theType.bits == 32) {
-      reader = read32F_;
-      writer = write32F_;
+  /**
+   * Read 1 16-bit float from bytes.
+   * @see https://stackoverflow.com/a/8796597
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} i The index to read.
+   * @return {number}
+   * @private
+   */
+  read16F_(bytes, i) {
+    /** @type {number} */
+    let int = this.gInt_.read(bytes, i);
+    /** @type {number} */
+    let exponent = (int & 0x7C00) >> 10;
+    /** @type {number} */
+    let fraction = int & 0x03FF;
+    /** @type {number} */
+    let floatValue;
+    if (exponent) {
+      floatValue =  Math.pow(2, exponent - 15) * (1 + fraction / 0x400);
     } else {
-      reader = read64F_;
-      writer = write64F_;
+      floatValue = 6.103515625e-5 * (fraction / 0x400);
     }
-  } else {
-    reader = readInt_;
-    writer = writeInt_;
+    return floatValue * (int >> 15 ? -1 : 1);
   }
+
+  /**
+   * Read 1 32-bit float from bytes.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} i The index to read.
+   * @return {number}
+   * @private
+   */
+  read32F_(bytes, i) {
+    this.ui32_[0] = this.gInt_.read(bytes, i);
+    return this.f32_[0];
+  }
+
+  /**
+   * Read 1 64-bit float from bytes.
+   * Thanks https://gist.github.com/kg/2192799
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} i The index to read.
+   * @return {number}
+   * @private
+   */
+  read64F_(bytes, i) {
+    this.ui32_[this.HIGH] = this.gInt_.read(bytes, i);
+    this.ui32_[this.LOW] = this.gInt_.read(bytes, i + 4);
+    return this.f64_[0];
+  }
+
+  /**
+   * Write a integer value to a byte buffer.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number} j The index being written in the byte buffer.
+   * @return {!number} The next index to write on the byte buffer.
+   * @private
+   */
+  writeInt_(bytes, number, j) {
+    return this.gInt_.write(bytes, number, j);
+  }
+
+  /**
+   * Write one 16-bit float as a binary value.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  write16F_(bytes, number, j) {
+    this.f32_[0] = number;
+    /** @type {number} */
+    let x = this.ui32_[0];
+    /** @type {number} */
+    let bits = (x >> 16) & 0x8000;
+    /** @type {number} */
+    let m = (x >> 12) & 0x07ff;
+    /** @type {number} */
+    let e = (x >> 23) & 0xff;
+    if (e >= 103) {
+      bits |= ((e - 112) << 10) | (m >> 1);
+      bits += m & 1;
+    }
+    bytes[j++] = bits & 0xFF;
+    bytes[j++] = bits >>> 8 & 0xFF;
+    return j;
+  }
+
+  /**
+   * Write one 32-bit float as a binary value.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  write32F_(bytes, number, j) {
+    this.f32_[0] = number;
+    return this.gInt_.write(bytes, this.ui32_[0], j);
+  }
+
+  /**
+   * Write one 64-bit float as a binary value.
+   * @param {!Uint8Array} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  write64F_(bytes, number, j) {
+    this.f64_[0] = number;
+    j = this.gInt_.write(bytes, this.ui32_[this.HIGH], j);
+    return this.gInt_.write(bytes, this.ui32_[this.LOW], j);
+  }
+
+  /**
+   * Set the functions to pack and unpack numbers.
+   * @param {!Object} theType The type definition.
+   * @private
+   */
+  setReaderAndWriter_(theType) {
+    if (theType.float) {
+      if (theType.bits == 16) {
+        this.read = this.read16F_;
+        this.write = this.write16F_;
+      } else if(theType.bits == 32) {
+        this.read = this.read32F_;
+        this.write = this.write32F_;
+      } else {
+        this.read = this.read64F_;
+        this.write = this.write64F_;
+      }
+    } else {
+      this.read = this.readInt_;
+      this.write = this.writeInt_;
+    }
+  }
+
 }
+
+//export {reader, writer, setUp};
 
 /*
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
@@ -662,6 +679,8 @@ function setReaderAndWriter_(theType) {
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+
+let packer = new Packer();
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -854,14 +873,14 @@ function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 function packArrayTo(values, theType, buffer, index=0) {
-  setUp(theType);
+  packer.setUp(theType);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
     let len = index + theType.offset;
     while (index < len) {
-      index = writer(buffer, values[i], index);
+      index = packer.write(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
@@ -881,7 +900,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 function unpack(buffer, theType, index=0) {
-  setUp(theType);
+  packer.setUp(theType);
   if ((theType.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
@@ -889,7 +908,7 @@ function unpack(buffer, theType, index=0) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
   /** @type {number} */
-  let value = reader(buffer, index);
+  let value = packer.read(buffer, index);
   if (theType.be) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
@@ -927,7 +946,7 @@ function unpackArray(buffer, theType, index=0, end=buffer.length) {
  */
 function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
-  setUp(theType);
+  packer.setUp(theType);
   while ((end - index) % theType.offset) {
       end--;
   }
