@@ -461,32 +461,28 @@ let f32_ = new Float32Array(int8_.buffer);
  */
 let f64_ = new Float64Array(int8_.buffer);
 /**
- * @type {Function}
- * @private
- */
-let reader_;
-/**
- * @type {Function}
- * @private
- */
-let writer_;
-/**
  * @type {Object}
  * @private
  */
 let gInt_ = {};
 
 /**
+ * @type {Function}
+ */
+let reader;
+/**
+ * @type {Function}
+ */
+let writer;
+/**
  * Validate the type and set up the packing/unpacking functions.
  * @param {!Object} theType The type definition.
  * @throws {Error} If the type definition is not valid.
- * @private
  */
-function setUp_(theType) {
+function setUp(theType) {
   validateType(theType);
   theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
-  setReaderAndWriter(theType);
-  //setWriter(theType);
+  setReaderAndWriter_(theType);
   gInt_ = new Integer(
     theType.bits == 64 ? 32 : theType.bits,
     theType.float ? false : theType.signed);
@@ -625,21 +621,21 @@ function write64F_(bytes, number, j) {
  * @param {!Object} theType The type definition.
  * @private
  */
-function setReaderAndWriter(theType) {
+function setReaderAndWriter_(theType) {
   if (theType.float) {
     if (theType.bits == 16) {
-      reader_ = read16F_;
-      writer_ = write16F_;
+      reader = read16F_;
+      writer = write16F_;
     } else if(theType.bits == 32) {
-      reader_ = read32F_;
-      writer_ = write32F_;
+      reader = read32F_;
+      writer = write32F_;
     } else {
-      reader_ = read64F_;
-      writer_ = write64F_;
+      reader = read64F_;
+      writer = write64F_;
     }
   } else {
-    reader_ = readInt_;
-    writer_ = writeInt_;
+    reader = readInt_;
+    writer = writeInt_;
   }
 }
 
@@ -858,14 +854,14 @@ function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 function packArrayTo(values, theType, buffer, index=0) {
-  setUp_(theType);
+  setUp(theType);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
     let len = index + theType.offset;
     while (index < len) {
-      index = writer_(buffer, values[i], index);
+      index = writer(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
@@ -885,7 +881,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 function unpack(buffer, theType, index=0) {
-  setUp_(theType);
+  setUp(theType);
   if ((theType.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
@@ -893,7 +889,7 @@ function unpack(buffer, theType, index=0) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
   /** @type {number} */
-  let value = reader_(buffer, index);
+  let value = reader(buffer, index);
   if (theType.be) {
     endianness(buffer, theType.offset, index, index + theType.offset);
   }
@@ -931,7 +927,7 @@ function unpackArray(buffer, theType, index=0, end=buffer.length) {
  */
 function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
-  setUp_(theType);
+  setUp(theType);
   while ((end - index) % theType.offset) {
       end--;
   }
