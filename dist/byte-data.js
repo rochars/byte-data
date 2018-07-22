@@ -156,47 +156,61 @@ function utf8BufferSize(str) {
  */
 class Integer {
 
+  constructor() {
+    /**
+     * @type {number}
+     */
+    this.offset = 0;
+    /**
+     * @type {number}
+     */
+    this.realOffset_ = 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.bits_ = 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.lastByteMask_ = 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.max_ = 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.min_ = 0;
+  }
+
   /**
-   * @param {number} bits Number of bits used by the data.
-   * @param {boolean} signed True for signed types.
-   * @throws {Error} if the number of bits is smaller than 1 or greater than 64.
+   * Set up the object to start serializing/deserializing a data type..
+   * @param {!Object} theType The type definition.
    */
-  constructor(bits, signed) {
+  setUp(theType) {
     /**
      * The max number of bits used by the data.
      * @type {number}
      * @private
      */
-    this.bits_ = bits;
-    /**
-     * The number of bytes used by the data.
-     * @type {number}
-     * @private
-     */
-    this.offset_ = 0;
-    /**
-     * The practical number of bits used by the data.
-     * @type {number}
-     * @private
-     */
-    this.realBits_ = this.bits_;
-    /**
-     * The mask to be used in the last byte.
-     * @type {number}
-     * @private
-     */
-    this.lastByteMask_ = 255;
+    this.bits_ = theType.bits;
     // Set the min and max values according to the number of bits
     /** @type {number} */
     let max = Math.pow(2, this.bits_);
-    if (signed) {
+    if (theType.signed) {
       this.max_ = max / 2 -1;
       this.min_ = -max / 2;
     } else {
       this.max_ = max - 1;
       this.min_ = 0;
     }
-    this.build_();
+    this.setLastByteMask_();
+    this.offset = this.bits_ < 8 ? 1 : Math.ceil(this.bits_ / 8);
+    this.realOffset_ = this.bits_ === 64 ? 4 : this.offset;
   }
 
   /**
@@ -207,7 +221,7 @@ class Integer {
    */
   read(bytes, i=0) {
     let num = 0;
-    for(let x=0; x<this.offset_; x++) {
+    for(let x=0; x<this.realOffset_; x++) {
       num += bytes[i + x] * Math.pow(256, x);
     }
     return this.overflow_(this.sign_(num)); 
@@ -215,7 +229,7 @@ class Integer {
 
   /**
    * Write one integer number to a byte buffer.
-   * @param {!Array<number>} bytes An array of bytes.
+   * @param {!Uint8Array} bytes An array of bytes.
    * @param {number} num The number.
    * @param {number=} j The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
@@ -223,26 +237,15 @@ class Integer {
    */
   write(bytes, num, j=0) {
     j = this.writeFirstByte_(bytes, this.overflow_(num), j);
-    for (let i = 2, len = this.offset_; i < len; i++, j++) {
+    for (let i = 2, len = this.realOffset_; i < len; i++, j++) {
       bytes[j] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
     }
     if (this.bits_ > 8) {
       bytes[j] = Math.floor(
-          num / Math.pow(2, ((this.offset_ - 1) * 8))) & this.lastByteMask_;
+          num / Math.pow(2, ((this.realOffset_ - 1) * 8))) & this.lastByteMask_;
       j++;
     }
     return j;
-  }
-
-  /**
-   * Build the type.
-   * @throws {Error} if the number of bits is smaller than 1 or greater than 64.
-   * @private
-   */
-  build_() {
-    this.setRealBits_();
-    this.setLastByteMask_();
-    this.offset_ = this.bits_ < 8 ? 1 : Math.ceil(this.realBits_ / 8);
   }
 
   /**
@@ -275,27 +278,18 @@ class Integer {
   }
 
   /**
-   * Set the practical bit number for data with bit count different
-   * from the standard types (8, 16, 32, 40, 48, 64).
-   * @private
-   */
-  setRealBits_() {
-    this.realBits_ = ((this.bits_ - 1) | 7) + 1;
-  }
-
-  /**
    * Set the mask that should be used when writing the last byte.
    * @private
    */
   setLastByteMask_() {
     /** @type {number} */
-    let r = 8 - (this.realBits_ - this.bits_);
+    let r = 8 - ((((this.bits_ - 1) | 7) + 1) - this.bits_);
     this.lastByteMask_ = Math.pow(2, r > 0 ? r : 8) - 1;
   }
 
   /**
    * Write the first byte of a integer number.
-   * @param {!Array<number>} bytes An array of bytes.
+   * @param {!Uint8Array} bytes An array of bytes.
    * @param {number} number The number.
    * @param {number} j The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
@@ -423,106 +417,75 @@ function validateIntType_(theType) {
  *
  */
 
-class Packer {
+/**
+ * A class to pack and unpack integers and floating-point numbers.
+ * @extends {Integer}
+ */
+class Packer extends Integer {
 
   constructor() {
+    super();
     /**
      * Use a Typed Array to check if the host is BE or LE. This will impact
      * on how 64-bit floating point numbers are handled.
      * @type {boolean}
-     * @private
      */
     const BE_ENV = new Uint8Array(new Uint32Array([1]).buffer)[0] === 0;
     /**
      * @type {number}
      * @private
      */
-    this.HIGH = BE_ENV ? 1 : 0;
+    this.HIGH_ = BE_ENV ? 1 : 0;
     /**
      * @type {number}
      * @private
      */
-    this.LOW = BE_ENV ? 0 : 1;
+    this.LOW_ = BE_ENV ? 0 : 1;
     /**
-     * @type {!Int8Array}
-     * @private
+     * @type {!Uint8Array}
      */
-    let int8_ = new Int8Array(8);
+    let uInt8 = new Uint8Array(8);
     /**
      * @type {!Uint32Array}
      * @private
      */
-    this.ui32_ = new Uint32Array(int8_.buffer);
+    this.ui32_ = new Uint32Array(uInt8.buffer);
     /**
      * @type {!Float32Array}
      * @private
      */
-    this.f32_ = new Float32Array(int8_.buffer);
+    this.f32_ = new Float32Array(uInt8.buffer);
     /**
      * @type {!Float64Array}
      * @private
      */
-    this.f64_ = new Float64Array(int8_.buffer);
-    /**
-     * @type {Object}
-     * @private
-     */
-    this.gInt_ = {};
+    this.f64_ = new Float64Array(uInt8.buffer);
   }
 
   /**
-   * Read a number from a byte buffer.
-   * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} i The index to read.
-   * @return {number}
-   */
-  read(bytes, i) {}
-
-  /**
-   * Write a number to a byte buffer.
-   * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} number The number to write as bytes.
-   * @param {number} j The index being written in the byte buffer.
-   * @return {!number} The next index to write on the byte buffer.
-   */
-  write(bytes, number, j) {}
-
-  /**
-   * Validate the type and set up the packing/unpacking functions.
+   * Set up the object to start serializing/deserializing a data type..
    * @param {!Object} theType The type definition.
    * @throws {Error} If the type definition is not valid.
    */
   setUp(theType) {
     validateType(theType);
-    theType.offset = theType.bits < 8 ? 1 : Math.ceil(theType.bits / 8);
+    super.setUp({
+      bits: theType.bits,
+      signed: theType.float ? false : theType.signed});
     this.setReaderAndWriter_(theType);
-    this.gInt_ = new Integer(
-      theType.bits == 64 ? 32 : theType.bits,
-      theType.float ? false : theType.signed);
-  }
-
-  /**
-   * Read int values from bytes.
-   * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} i The index to read.
-   * @return {number}
-   * @private
-   */
-  readInt_(bytes, i) {
-    return this.gInt_.read(bytes, i);
   }
 
   /**
    * Read 1 16-bit float from bytes.
    * @see https://stackoverflow.com/a/8796597
    * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} i The index to read.
+   * @param {number=} i The index to read.
    * @return {number}
    * @private
    */
-  read16F_(bytes, i) {
+  read16F_(bytes, i=0) {
     /** @type {number} */
-    let int = this.gInt_.read(bytes, i);
+    let int = super.read(bytes, i);
     /** @type {number} */
     let exponent = (int & 0x7C00) >> 10;
     /** @type {number} */
@@ -540,12 +503,12 @@ class Packer {
   /**
    * Read 1 32-bit float from bytes.
    * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} i The index to read.
+   * @param {number=} i The index to read.
    * @return {number}
    * @private
    */
-  read32F_(bytes, i) {
-    this.ui32_[0] = this.gInt_.read(bytes, i);
+  read32F_(bytes, i=0) {
+    this.ui32_[0] = super.read(bytes, i);
     return this.f32_[0];
   }
 
@@ -553,37 +516,25 @@ class Packer {
    * Read 1 64-bit float from bytes.
    * Thanks https://gist.github.com/kg/2192799
    * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} i The index to read.
+   * @param {number=} i The index to read.
    * @return {number}
    * @private
    */
-  read64F_(bytes, i) {
-    this.ui32_[this.HIGH] = this.gInt_.read(bytes, i);
-    this.ui32_[this.LOW] = this.gInt_.read(bytes, i + 4);
+  read64F_(bytes, i=0) {
+    this.ui32_[this.HIGH_] = super.read(bytes, i);
+    this.ui32_[this.LOW_] = super.read(bytes, i + 4);
     return this.f64_[0];
-  }
-
-  /**
-   * Write a integer value to a byte buffer.
-   * @param {!Uint8Array} bytes An array of bytes.
-   * @param {number} number The number to write as bytes.
-   * @param {number} j The index being written in the byte buffer.
-   * @return {!number} The next index to write on the byte buffer.
-   * @private
-   */
-  writeInt_(bytes, number, j) {
-    return this.gInt_.write(bytes, number, j);
   }
 
   /**
    * Write one 16-bit float as a binary value.
    * @param {!Uint8Array} bytes An array of bytes.
    * @param {number} number The number to write as bytes.
-   * @param {number} j The index being written in the byte buffer.
+   * @param {number=} j The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  write16F_(bytes, number, j) {
+  write16F_(bytes, number, j=0) {
     this.f32_[0] = number;
     /** @type {number} */
     let x = this.ui32_[0];
@@ -606,27 +557,27 @@ class Packer {
    * Write one 32-bit float as a binary value.
    * @param {!Uint8Array} bytes An array of bytes.
    * @param {number} number The number to write as bytes.
-   * @param {number} j The index being written in the byte buffer.
+   * @param {number=} j The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  write32F_(bytes, number, j) {
+  write32F_(bytes, number, j=0) {
     this.f32_[0] = number;
-    return this.gInt_.write(bytes, this.ui32_[0], j);
+    return super.write(bytes, this.ui32_[0], j);
   }
 
   /**
    * Write one 64-bit float as a binary value.
    * @param {!Uint8Array} bytes An array of bytes.
    * @param {number} number The number to write as bytes.
-   * @param {number} j The index being written in the byte buffer.
+   * @param {number=} j The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  write64F_(bytes, number, j) {
+  write64F_(bytes, number, j=0) {
     this.f64_[0] = number;
-    j = this.gInt_.write(bytes, this.ui32_[this.HIGH], j);
-    return this.gInt_.write(bytes, this.ui32_[this.LOW], j);
+    j = super.write(bytes, this.ui32_[this.HIGH_], j);
+    return super.write(bytes, this.ui32_[this.LOW_], j);
   }
 
   /**
@@ -647,14 +598,11 @@ class Packer {
         this.write = this.write64F_;
       }
     } else {
-      this.read = this.readInt_;
-      this.write = this.writeInt_;
+      this.read = super.read;
+      this.write = super.write;
     }
   }
-
 }
-
-//export {reader, writer, setUp};
 
 /*
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
@@ -878,13 +826,13 @@ function packArrayTo(values, theType, buffer, index=0) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
-    let len = index + theType.offset;
+    let len = index + packer.offset;
     while (index < len) {
       index = packer.write(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
-        buffer, theType.offset, index - theType.offset, index);
+        buffer, packer.offset, index - packer.offset, index);
     }
   }
   return index;
@@ -901,16 +849,16 @@ function packArrayTo(values, theType, buffer, index=0) {
  */
 function unpack(buffer, theType, index=0) {
   packer.setUp(theType);
-  if ((theType.offset + index) > buffer.length) {
+  if ((packer.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
   if (theType.be) {
-    endianness(buffer, theType.offset, index, index + theType.offset);
+    endianness(buffer, packer.offset, index, index + packer.offset);
   }
   /** @type {number} */
   let value = packer.read(buffer, index);
   if (theType.be) {
-    endianness(buffer, theType.offset, index, index + theType.offset);
+    endianness(buffer, packer.offset, index, index + packer.offset);
   }
   return value;
 }
@@ -947,11 +895,19 @@ function unpackArray(buffer, theType, index=0, end=buffer.length) {
 function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
   packer.setUp(theType);
-  while ((end - index) % theType.offset) {
+  /** @type {number} */
+  let originalIndex = index;
+  while ((end - index) % packer.offset) {
       end--;
   }
-  for (let i = 0; index < end; index += theType.offset, i++) {
-    output[i] = unpack(buffer, theType, index);
+  if (theType.be) {
+    endianness(buffer, packer.offset, index, end);
+  }
+  for (let i = 0; index < end; index += packer.offset, i++) {
+    output[i] = packer.read(buffer, index);
+  }
+  if (theType.be) {
+    endianness(buffer, packer.offset, originalIndex, end);
   }
 }
 

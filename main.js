@@ -232,13 +232,13 @@ export function packArrayTo(values, theType, buffer, index=0) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
-    let len = index + theType.offset;
+    let len = index + packer.offset;
     while (index < len) {
       index = packer.write(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
-        buffer, theType.offset, index - theType.offset, index);
+        buffer, packer.offset, index - packer.offset, index);
     }
   }
   return index;
@@ -255,16 +255,16 @@ export function packArrayTo(values, theType, buffer, index=0) {
  */
 export function unpack(buffer, theType, index=0) {
   packer.setUp(theType);
-  if ((theType.offset + index) > buffer.length) {
+  if ((packer.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
   if (theType.be) {
-    endianness(buffer, theType.offset, index, index + theType.offset);
+    endianness(buffer, packer.offset, index, index + packer.offset);
   }
   /** @type {number} */
   let value = packer.read(buffer, index);
   if (theType.be) {
-    endianness(buffer, theType.offset, index, index + theType.offset);
+    endianness(buffer, packer.offset, index, index + packer.offset);
   }
   return value;
 }
@@ -301,10 +301,18 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
 export function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
   packer.setUp(theType);
-  while ((end - index) % theType.offset) {
+  /** @type {number} */
+  let originalIndex = index;
+  while ((end - index) % packer.offset) {
       end--;
   }
-  for (let i = 0; index < end; index += theType.offset, i++) {
-    output[i] = unpack(buffer, theType, index);
+  if (theType.be) {
+    endianness(buffer, packer.offset, index, end);
+  }
+  for (let i = 0; index < end; index += packer.offset, i++) {
+    output[i] = packer.read(buffer, index);
+  }
+  if (theType.be) {
+    endianness(buffer, packer.offset, originalIndex, end);
   }
 }
