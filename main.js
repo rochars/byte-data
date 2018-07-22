@@ -29,8 +29,8 @@
 
 /** @module byteData */
 
-import endianness from './lib/endianness.js';
-import utf8BufferSize from './lib/utf8-buffer-size.js';
+import endianness from 'endianness';
+import utf8BufferSize from 'utf8-buffer-size';
 import {reader_, setUp_, writer_} from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
 

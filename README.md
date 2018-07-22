@@ -8,16 +8,13 @@ https://github.com/rochars/byte-data
 
 **byte-data** is a JavaScript module for the serialization and deserialization of numbers and strings.
 
-- **No dependencies**
 - **MIT licensed**
 - **Use it out of the box in the browser**
-- **Use it out of the box in Node**
+- **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
-- **Use it in little-endian and big-endian hosts**
-- **Write to buffers**, option to define **start and end index to write**
-- **Read from buffers**, option to define **start and end index to read**
+- **Use it in little-endian and big-endian hosts!**
 - **Less than 6KB minified, less than 3KB minified + compressed**
-- [Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 30kb
+- **[Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 30kb**
 - Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
@@ -83,7 +80,7 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 
 ## About
 
-### Unpacking numbers and input buffer length
+### Unpacking and input buffer length
 - When unpacking a single value, a error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
 - When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array**
 

@@ -64,7 +64,7 @@
   ],
   "scripts": {
     "lint": "jshint main.js lib externs",
-    "test": "nyc ./node_modules/mocha/bin/_mocha test/dist test/src --recursive -R dot",
+    "test": "nyc ./node_modules/mocha/bin/_mocha test/dist --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/dist --umd --recursive -R dot",
     "test-amd": "node ./node_modules/mocha/bin/_mocha test/dist --amd --recursive -R dot",
     "test-esm": "node ./node_modules/mocha/bin/_mocha test/dist --esm --recursive -R dot",
@@ -88,7 +88,12 @@
     "nyc": "^12.0.2",
     "rollup": "^0.61.2",
     "rollup-plugin-closure-compiler-js": "^1.0.6",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "typescript": "^2.9.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "endianness": "^7.0.3",
+    "utf8-buffer-size": "0.0.4"
+  }
 }

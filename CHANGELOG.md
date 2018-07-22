@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v15.0.0 (unreleased)
+## v15.0.0 (2018-07-22)
 - unpackString() now returns a Uint8Array.
 - Only UMD and ES bundle dist files.
 

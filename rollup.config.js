@@ -8,6 +8,8 @@
  */
 
 import closure from 'rollup-plugin-closure-compiler-js';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
 import fs from 'fs';
 
 // Externs
@@ -34,6 +36,10 @@ export default [
         file: 'dist/byte-data.js',
         format: 'es'
       },
+    ],
+    plugins: [
+      resolve(),
+      commonjs()
     ]
   },
   // ES5 UMD
@@ -49,6 +55,8 @@ export default [
       }
     ],
     plugins: [
+      resolve(),
+      commonjs(),
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT5',
