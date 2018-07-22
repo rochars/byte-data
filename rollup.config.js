@@ -21,7 +21,7 @@ const license = '/*!\n'+
   ' */\n';
 
 // GCC wrapper
-const outputWrapper = license + 'var window=window||{};'+
+const outputWrapper = license + '"use strict";if(typeof exports!=="undefined"){var window={};}'+
   '%output%' +
   'var module=module||{};module.exports=exports;' +
   'var define=define||function(){};' +
@@ -50,8 +50,9 @@ export default [
         file: 'dist/byte-data.umd.js',
         name: 'byteData',
         format: 'cjs',
+        use_strict: false,
         banner: 'var exports=exports||{};' +
-        'window["byteData"]=exports;'
+        'if (window) {window["byteData"]=exports;}'
       }
     ],
     plugins: [
