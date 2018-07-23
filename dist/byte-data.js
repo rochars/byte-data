@@ -536,20 +536,31 @@ class Packer extends Integer {
    */
   write16F_(bytes, number, j=0) {
     this.f32_[0] = number;
-    /** @type {number} */
-    let x = this.ui32_[0];
-    /** @type {number} */
-    let bits = (x >> 16) & 0x8000;
-    /** @type {number} */
-    let m = (x >> 12) & 0x07ff;
-    /** @type {number} */
-    let e = (x >> 23) & 0xff;
-    if (e >= 103) {
-      bits |= ((e - 112) << 10) | (m >> 1);
-      bits += m & 1;
+    if (isNaN(number)) {
+      bytes[j++] = 0;
+      bytes[j++] = 126;
+    } else if (number === Infinity) {
+      bytes[j++] = 0;
+      bytes[j++] = 124;
+    } else if (number === -Infinity) {
+      bytes[j++] = 0;
+      bytes[j++] = 252;
+    } else {
+      /** @type {number} */
+      let x = this.ui32_[0];
+      /** @type {number} */
+      let bits = (x >> 16) & 0x8000;
+      /** @type {number} */
+      let m = (x >> 12) & 0x07ff;
+      /** @type {number} */
+      let e = (x >> 23) & 0xff;
+      if (e >= 103) {
+        bits |= ((e - 112) << 10) | (m >> 1);
+        bits += m & 1;
+      }
+      bytes[j++] = bits & 0xFF;
+      bytes[j++] = bits >>> 8 & 0xFF;
     }
-    bytes[j++] = bits & 0xFF;
-    bytes[j++] = bits >>> 8 & 0xFF;
     return j;
   }
 

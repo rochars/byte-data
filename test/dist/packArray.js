@@ -222,29 +222,26 @@ describe('pack float16', function() {
     });
 });
 
-
-
 describe('pack float32', function() {     
 
-    it('should turn 2 signed 32-bit floats to 8 bytes (0s)', function() {
-        assert.deepEqual(byteData.packArray([0, 0], byteData.types.float32), 
-            [0,0,0,0,0,0,0,0]);
-    });
-    it('should turn 1 signed 32-bit float to 4 bytes (pi)', function() {
-        assert.deepEqual(byteData.packArray([2.147483647], byteData.types.float32), 
-            [95,112,9,64]);
-    });
-    it('should turn 1 signed 32-bit float to 4 bytes', function() {
-        assert.deepEqual(byteData.packArray([2.147483647], byteData.types.float32, 16), 
-            [95,112,9,64]);
-    });
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
         assert.deepEqual(byteData.packArray([214748364.7], byteData.types.float32), 
-            [205,204,76,77]);
+            [205,204,76,77]); // cd cc 4c 4d
+    });
+    it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+        assert.deepEqual(byteData.packArray([21474.83647], byteData.types.float32), 
+            [0xac,0xc5,0xa7,0x46]);
+    });
+    it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+        assert.deepEqual(byteData.packArray([214.7483647], byteData.types.float32), 
+            [0x95,0xbf,0x56,0x43]);
+    });
+    
+    it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+        assert.deepEqual(byteData.packArray([0.9], byteData.types.float32), 
+            [0x66,0x66,0x66,0x3f]);
     });
 });
-
-
 
 
 describe('pack float64', function() {
@@ -323,6 +320,18 @@ describe('pack float64', function() {
         assert.deepEqual(
             byteData.packArray([314159265358979.3], byteData.types.float64),
             [53,72,162,118,158,219,241,66]);
+    });
+    it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+        assert.deepEqual(byteData.packArray([Infinity], byteData.types.float64), 
+            [0,0,0,0,0x00,0x00,0xf0,0x7f]); // 240 127 0xf0 0x7f
+    });
+    it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+        assert.deepEqual(byteData.packArray([-Infinity], byteData.types.float64), 
+            [0,0,0,0,0x00,0x00,0xf0,0xff]); // 240 127 0xf0 0x7f
+    });
+    it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
+        assert.deepEqual(byteData.packArray([NaN], byteData.types.float64), 
+            [0,0,0,0,0,0,248,127]); // 248 127 0xf8 0x7f
     });
 });
 
