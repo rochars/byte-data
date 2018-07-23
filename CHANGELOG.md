@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## v15.0.0 (unreleased)
+- Fix: unpack binary16 Infinity, -Infinity and NaN
 - Fix: pack binary16 Infinity, -Infinity and NaN
 - unpackString() now returns a Uint8Array.
 - Only UMD and ES bundle dist files.

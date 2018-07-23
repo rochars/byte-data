@@ -3,7 +3,7 @@
  */
 
 /**
- * @fileoverview Test IEEE-754 binary16 numbers.
+ * @fileoverview Test IEEE-754 binary64 numbers.
  * @see https://github.com/rochars/byte-data
  * @see https://en.wikipedia.org/wiki/Double-precision_floating-point_format
  */

@@ -42,7 +42,7 @@ describe('Binary16 numbers', function() {
             [0, 126]); // Python struct.pack('e', math.nan)
     });
     it('unpack NaN', function() {
-        //assert.ok(isNaN(byteData.unpack([0, 126], float16)));
+        assert.ok(isNaN(byteData.unpack([0, 126], float16)));
     });
 
     // Infinity
@@ -52,9 +52,9 @@ describe('Binary16 numbers', function() {
             [0, 124]); // Python struct.pack('e', math.inf)
     });
     it('unpack Infinity', function() {
-        //assert.equal(
-        //	byteData.unpack([0, 124], float16), 
-        //    Infinity);
+        assert.equal(
+        	byteData.unpack([0, 124], float16), 
+            Infinity);
     });
     it('pack -Infinity', function() {
         assert.deepEqual(
@@ -62,9 +62,9 @@ describe('Binary16 numbers', function() {
             [0x00, 0xfc]); // Python struct.pack('e', -math.inf)
     });
     it('unpack -Infinity', function() {
-        //assert.equal(
-        //	byteData.unpack([0x00, 0xfc], float16), 
-        //    -Infinity);
+        assert.equal(
+        	byteData.unpack([0x00, 0xfc], float16), 
+            -Infinity);
     });
     // Python throws a error on overlow
     // the spec says to round to Infinity
@@ -84,13 +84,12 @@ describe('Binary16 numbers', function() {
         assert.deepEqual(byteData.pack(3.14159, float16), 
             [0x48,0x42]); // Python struct.pack('e', 3.14159)
     });
-    it('unpack pi as 3.14062', function() {
-        // Python struct.unpack('e', b'\x48\x42') rounds up here;
-        // byte-data down
-        //assert.equal(byteData.unpack([0x48,0x42], float16).toFixed(5), 
-        //    '3.14062');
+    it('unpack pi as 3.140625', function() {
+        // Use toFixed(6) here to avoid JS rounding differences with Python.
+        // Python struct.pack is used to check the data in most of the tests
+        assert.equal(byteData.unpack([0x48,0x42], float16).toFixed(6), 
+            '3.140625');
     });
-    
     
     // Exact representations
     // Integers in [-16777216, 16777216] can be exactly represented
