@@ -703,15 +703,16 @@ function utf8BufferSize(str) {
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
+ * Invalid characters are replaced with 'REPLACEMENT CHARACTER' (U+FFFD).
  * @see https://encoding.spec.whatwg.org/#the-encoding
  * @see https://stackoverflow.com/a/34926911
  * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
- * @param {number} index The index to read.
- * @param {?number} len The number of bytes to read.
+ * @param {number=} index The index to read.
+ * @param {?number=} len The number of bytes to read.
  *    If len is undefined will read until the end of the buffer.
  * @return {string}
  */
-function unpackUTF8(buffer, index, len) {
+function unpack(buffer, index=0, len=undefined) {
   len = len !== undefined ? index + len : buffer.length;
   /** @type {string} */
   let str = "";
@@ -780,7 +781,7 @@ function unpackUTF8(buffer, index, len) {
  * @param {string} str The string to pack.
  * @return {!Uint8Array} The packed string.
  */
-function packUTF8(str) {
+function pack(str) {
   /** @type {!Uint8Array} */
   let bytes = new Uint8Array(utf8BufferSize(str));
   let bufferIndex = 0;
@@ -853,7 +854,7 @@ let packer = new Packer();
  * @return {string}
  */
 function unpackString(buffer, index=0, len=undefined) {
-  return unpackUTF8(buffer, index, len);
+  return unpack(buffer, index, len);
 }
 
 /**
@@ -862,7 +863,7 @@ function unpackString(buffer, index=0, len=undefined) {
  * @return {!Uint8Array} The packed string.
  */
 function packString(str) {
-  return packUTF8(str);
+  return pack(str);
 }
 
 /**
@@ -891,7 +892,7 @@ function packStringTo(str, buffer, index=0) {
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-function pack(value, theType) {
+function pack$1(value, theType) {
   /** @type {!Array<!number>} */
   let output = [];
   packTo(value, theType, output);
@@ -965,7 +966,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
  */
-function unpack(buffer, theType, index=0) {
+function unpack$1(buffer, theType, index=0) {
   packer.setUp(theType);
   if ((packer.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
@@ -1029,4 +1030,4 @@ function unpackArrayTo(
   }
 }
 
-export { unpackString, packString, packStringTo, pack, packTo, packArray, packArrayTo, unpack, unpackArray, unpackArrayTo };
+export { unpackString, packString, packStringTo, pack$1 as pack, packTo, packArray, packArrayTo, unpack$1 as unpack, unpackArray, unpackArrayTo };

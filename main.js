@@ -32,7 +32,7 @@
 import endianness from 'endianness';
 import Packer from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
-import {packUTF8, unpackUTF8} from './lib/UTF-8.js';
+import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 
 let packer = new Packer();
 
