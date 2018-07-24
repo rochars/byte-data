@@ -9,6 +9,49 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
+var Buffer = Buffer || false;
+
+describe('replace invalid characters', function() {
+    it('replaces invalid 2 byte UTF-8 char (2nd byte)', function() {
+        assert.equal(byteData.unpackString([0xa0,0xa1]), '\uFFFD\uFFFD');
+    });
+    // 3 bytes
+    it('replaces invalid 3 byte UTF-8 char (2rd byte)', function() {
+        assert.equal(byteData.unpackString([0xe2,0x28,0xa1]), '\uFFFD');
+    });
+    it('replaces invalid 3 byte UTF-8 char (2rd byte)', function() {
+        assert.equal(byteData.unpackString(
+            [97,0xe2,0x28,0xa1,98]), 'a\uFFFDb');
+    });
+    it('replaces invalid 3 byte UTF-8 char (3rd byte)', function() {
+        assert.equal(byteData.unpackString([0xe2,0x82,0x28]), '\uFFFD');
+    });
+    it('replaces invalid 3 byte UTF-8 char (3rd byte)', function() {
+        assert.equal(byteData.unpackString([0xe2,0xE0,0x28]), '\uFFFD');
+    });
+    it('replaces invalid 3 byte UTF-8 char (3rd byte)', function() {
+        assert.equal(byteData.unpackString([0xe2,0xED,0x28]), '\uFFFD');
+    });
+    // 4 bytes
+    it('replaces invalid 4 byte UTF-8 char (2th byte)', function() {
+        assert.equal(byteData.unpackString([0xf0,0x28,0x8c,0xbc]), '\uFFFD');
+    });
+    it('replaces invalid 4 byte UTF-8 char (3th byte)', function() {
+        assert.equal(byteData.unpackString([0xf0,0x90,0x28,0xbc]), '\uFFFD');
+    });
+    it('replaces invalid 4 byte UTF-8 char (4th byte)', function() {
+        assert.equal(byteData.unpackString(
+            [97,0xf0,0x28,0x8c,0x28,240,175,167,159,240,175,167,159]),
+        'a\uFFFD輸輸');
+    });
+    it('replaces invalid 4 byte UTF-8 char (4th byte)', function() {
+        assert.equal(byteData.unpackString([0xf0,0xF4,0x8c,0x28]), '\uFFFD');
+    });
+    it('replaces invalid 4 byte UTF-8 char (4th byte)', function() {
+        assert.equal(byteData.unpackString([0xf0,0xF0,0x8c,0x28]), '\uFFFD');
+    });
+
+})
 
 // packStringTo
 describe('packStringTo UTF-8 strings', function() {

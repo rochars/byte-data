@@ -3,11 +3,11 @@
  */
 
 /**
- * @fileoverview TypeScript declaration tests.
+ * @fileoverview TypeScript declaration tests (with UMD).
  * @see https://github.com/rochars/byte-data
  */
 
-import * as byteData from '../../dist/byte-data.umd.js'
+import * as byteData from '../../../dist/byte-data.umd.js'
 
 let theType = {bits: 16}
 

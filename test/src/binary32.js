@@ -11,6 +11,7 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 var float32 = byteData.types.float32;
+var float32BE = byteData.types.float32BE;
 
 describe('Binary32 numbers', function() {     
     // Zeros
@@ -116,14 +117,90 @@ describe('Binary32 numbers', function() {
     // round to a multiple of 2
 
     // Random values
-    it('unpacks 0.000000001', function() {
+    it('pack 0.000000001', function() {
         assert.deepEqual(
-        	byteData.unpack([0x5f,0x70,0x89,0x30], float32).toFixed(9), 
+            byteData.pack(0.000000001, float32), 
+            [0x5f,0x70,0x89,0x30]);
+    });
+    it('unpack 0.000000001', function() {
+        assert.deepEqual(
+        	byteData.unpack([0x5f,0x70,0x89,0x30], float32).toFixed(9),
             '0.000000001');
     });
-    it('unpacks -0.000000001', function() {
+    it('pack -0.000000001', function() {
+        assert.deepEqual(
+            byteData.pack(-0.000000001, float32), 
+            [0x5f,0x70,0x89,0xb0]);
+    });
+    it('unpack -0.000000001', function() {
         assert.equal(
-        	byteData.unpack([0x5f,0x70,0x89,0xb0], float32).toFixed(9), 
+        	byteData.unpack([0x5f,0x70,0x89,0xb0], float32).toFixed(9),
             '-0.000000001');
+    });
+    it('pack 214748364.7', function() {
+        // struct.pack('f', 214748364.7) == '\xcd\xcc\x4c\x4d'
+        assert.deepEqual(
+            byteData.pack(214748364.7, byteData.types.float32), 
+            [205,204,76,77]);
+    });
+    it('unpack 214748364.7', function() {
+        // struct.unpack('f', b'\xcd\xcc\x4c\x4d') == 214748368.0
+        assert.deepEqual(
+            byteData.unpack([205,204,76,77], byteData.types.float32).toFixed(1), 
+            '214748368.0');
+    });
+    it('pack 21474.83647', function() {
+        // struct.pack('f', 21474.83647) == '\xac\xc5\xa7\x46'
+        assert.deepEqual(
+            byteData.pack(21474.83647, byteData.types.float32), 
+            [0xac,0xc5,0xa7,0x46]);
+    });
+    it('unpack 21474.83647', function() {
+        // struct.unpack('f', b'\xac\xc5\xa7\x46') == 21474.8359375
+        assert.deepEqual(
+            byteData.unpack([0xac,0xc5,0xa7,0x46], byteData.types.float32).toFixed(7),
+            '21474.8359375');
+    });
+    it('pack 214.7483647', function() {
+        // struct.pack('f', 214.7483647) == b'\x95\xbf\x56\x43'
+        assert.deepEqual(
+            byteData.pack(214.7483647, byteData.types.float32), 
+            [0x95,0xbf,0x56,0x43]);
+    });
+    it('unpack 214.7483647', function() {
+        // struct.unpack('f', b'\x95\xbf\x56\x43') == 214.7483673095703
+        assert.deepEqual(
+            byteData.unpack([0x95,0xbf,0x56,0x43], byteData.types.float32).toFixed(13), 
+            '214.7483673095703');
+    });
+    it('should turn 4 bytes hex to 1 32-bit float', function() {
+        assert.deepEqual(
+            byteData.unpackArray(
+                [95,112,9,64], float32)[0].toFixed(7),
+            '2.1474836');
+    });
+    it('pack 0.9', function() {
+        assert.deepEqual(
+            byteData.pack(0.9, byteData.types.float32), 
+            [0x66,0x66,0x66,0x3f]);
+    });
+    it('unpack 0.9', function() {
+        assert.deepEqual(
+            byteData.unpack([0x66,0x66,0x66,0x3f], byteData.types.float32).toFixed(1), 
+            '0.9');
+    });
+    it('should turn 8 bytes to 2 32-bit floats', function() {
+        assert.deepEqual(
+            byteData.unpackArray([0,0,0,0,0,0,0,0], float32),
+            [0,0]);
+    });
+
+    // big endian
+    it('should turn 1 32-bit float from 4 bytes BE hex (2.1474836)', function() {
+        assert.deepEqual(
+            byteData.unpackArray(
+                [64,9,112,95],
+                float32BE)[0].toFixed(7),
+            '2.1474836');
     });
 });

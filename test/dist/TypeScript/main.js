@@ -4,10 +4,10 @@
  */
 exports.__esModule = true;
 /**
- * @fileoverview TypeScript declaration tests.
+ * @fileoverview TypeScript declaration tests (with UMD).
  * @see https://github.com/rochars/byte-data
  */
-var byteData = require("../../dist/byte-data.umd.js");
+var byteData = require("../../../dist/byte-data.umd.js");
 var theType = { bits: 16 };
 var arr = byteData.pack(1, theType);
 var num = byteData.unpack(arr, theType);

@@ -29,24 +29,25 @@
 	<script>mocha.setup('bdd')</script>
 
 	<!-- Load browser dist, load types, load LIB -->
-	<script src="../dist/byte-data.umd.js"></script>
+	<script src="../../dist/byte-data.umd.js"></script>
 	<script src="https://unpkg.com/binary-data-types@0.1.0/dist/binary-data-types.min.js"></script>
 	<script>
 		byteData.types = BinaryDataTypes;
 	</script>
 
 	<!-- Load the tests -->
-	<script src="dist/binary16.js"></script>
-	<script src="dist/binary32.js"></script>
-	<script src="dist/binary64.js"></script>
-	<script src="dist/buffers.js"></script>
-	<script src="dist/error.js"></script>
-	<script src="dist/esoteric.js"></script>
-	<script src="dist/interface.js"></script>
-	<script src="dist/pack-unpack.js"></script>
-	<script src="dist/packArray.js"></script>
-	<script src="dist/unpackArray.js"></script>
-	<script src="dist/UTF-8.js"></script>
+	<script src="../src/binary16.js"></script>
+	<script src="../src/binary32.js"></script>
+	<script src="../src/binary64.js"></script>
+	<script src="../src/buffers.js"></script>
+	<script src="../src/esoteric.js"></script>
+	<script src="../src/int16.js"></script>
+	<script src="../src/int24.js"></script>
+	<script src="../src/int32.js"></script>
+	<script src="../src/int8.js"></script>
+	<script src="../src/interface.js"></script>
+	<script src="../src/pack-unpack.js"></script>
+	<script src="../src/UTF-8.js"></script>
 	
 	<!-- Run the tests -->
 	<script>

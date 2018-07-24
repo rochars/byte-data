@@ -9,6 +9,9 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
+var uInt24 = byteData.types.uInt24;
+var float32 = byteData.types.float32;
+var int32 = byteData.types.int32;
 
 describe('interface', function() {
     // pack
@@ -119,5 +122,106 @@ describe('interface', function() {
                     ),
                     [1]
              );
+    });
+});
+
+describe('unpackArray behaviour tests', function() {
+    it('Returns a empty array if not enough bytes (32-bit)', function() {
+        assert.deepEqual(
+            byteData.unpackArray([95,112,9], float32),
+            []);
+    });
+    it('Ignores extra bytes for 32-bit values', function() {
+        assert.deepEqual(
+            byteData.unpackArray(
+                [0,0,0,128, 255,255,255,127,255,128], int32),
+            [-2147483648,2147483647]);
+    });
+    it('Ignores extra bytes for 24-bit values',
+            function() {
+        assert.deepEqual(
+            byteData.unpackArray([0,0,0,255,255,255,255],uInt24),
+            [0,16777215]);
+    });
+    it('Returns a empty array if not enough bytes (24-bit)', function() {
+        assert.deepEqual(
+            byteData.unpackArray([255,255], uInt24),
+            []);
+    });
+});
+
+
+var byteData = byteData || require('../../test/loader.js');
+var testFunc;
+var assert = assert || require('assert');
+
+describe('Errors', function() {
+
+    // undefined
+    it('thows error if packing something other than Number, Boolean or null', function() {
+        testFunc = function() {
+            byteData.pack({some: 'thing'}, byteData.types.uInt16);
+        };
+        assert.throws(testFunc, Error);
+    });
+    it("undefined value", function () {
+        testFunc = function() {
+            byteData.pack(undefined, {"bits": 8});
+        };
+        assert.throws(testFunc, /Undefined value./);
+    });
+
+    // Bad buffer length on unpack
+    it("Bad buffer length on unpack", function () {
+        testFunc = function() {
+            byteData.unpack([1], {"bits": 16});
+        };
+        assert.throws(testFunc, /Bad buffer length./);
+    });
+
+    // overflow and underflow
+    it("8-bit overflow", function () {
+        testFunc = function() {
+            byteData.pack(256, {"bits": 8});
+        };
+        assert.throws(testFunc, /Overflow./);
+    });
+    it("8-bit underflow", function () {
+        testFunc = function() {
+            byteData.pack(-1, {"bits": 8});
+        };
+        assert.throws(testFunc, /Underflow./);
+    });
+    
+    // Invalid types
+    it("More than 64 bits", function () {
+        testFunc = function() {
+            byteData.pack(2);
+        };
+        assert.throws(testFunc, /Undefined type./);
+    });
+    it("More than 64 bits", function () {
+        testFunc = function() {
+            byteData.pack(2, {"bits": 65});
+        };
+        assert.throws(testFunc, /Bad type definition./);
+    });
+    it("Less than 1 bit (0)", function () {
+        testFunc = function() {
+            byteData.pack(2, {"bits": 0});
+        };
+        assert.throws(testFunc, /Bad type definition./);
+    });
+    it("Less than 1 bit (-1)", function () {
+        testFunc = function() {
+            byteData.pack(2, {"bits": -1});
+        };
+        assert.throws(testFunc, /Bad type definition./);
+    });
+    it("17 float (-1)", function () {
+        testFunc = function() {
+            byteData.pack(2, {"bits": 17, "float": true});
+        };
+        assert.throws(testFunc, /Bad float type./);
     });
 });
