@@ -419,6 +419,12 @@ function validateIntType_(theType) {
  */
 
 /**
+ * @fileoverview Functions to work with IEEE 754 floating point numbers.
+ * @see https://github.com/rochars/byte-data
+ * @see https://github.com/kazuho/ieee754.js
+ */
+
+/**
  * Unpack a IEEE754 floating point number.
  *
  * Derived from IEEE754 by DeNA Co., Ltd., MIT License.
@@ -434,14 +440,11 @@ function unpackIEEE754(bytes, offset, numBytes, exponentBits, exponentBias) {
   let eMax = (1 << exponentBits) - 1;
   let bias = Math.pow(2, -(8 * numBytes - 1 - exponentBits));
   let significand;
-  endianness(bytes, numBytes, offset, offset + numBytes);
   let leftBits = "";
-  for (let i = 0; i != numBytes; ++i) {
+  for (let i = numBytes - 1; i >= 0 ; i--) {
     let t = bytes[i + offset].toString(2);
-    t = "00000000".substring(t.length) + t;
-    leftBits += t;
+    leftBits += "00000000".substring(t.length) + t;
   }
-  endianness(bytes, numBytes, offset, offset + numBytes);
   let sign = leftBits.charAt(0) == "1" ? -1 : 1;
   leftBits = leftBits.substring(1);
   let exponent = parseInt(leftBits.substring(0, exponentBits), 2);
