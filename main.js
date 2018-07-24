@@ -30,16 +30,14 @@
 /** @module byteData */
 
 import endianness from 'endianness';
-import utf8BufferSize from 'utf8-buffer-size';
 import Packer from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
+import {packUTF8, unpackUTF8} from './lib/UTF-8.js';
 
 let packer = new Packer();
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
- * @see https://encoding.spec.whatwg.org/#the-encoding
- * @see https://stackoverflow.com/a/34926911
  * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
  * @param {number=} index The index to read.
  * @param {?number=} len The number of bytes to read.
@@ -47,110 +45,16 @@ let packer = new Packer();
  * @return {string}
  */
 export function unpackString(buffer, index=0, len=undefined) {
-  len = len !== undefined ? index + len : buffer.length;
-  /** @type {string} */
-  let str = "";
-  while(index < len) {
-    /** @type {number} */
-    let lowerBoundary = 0x80;
-    /** @type {number} */
-    let upperBoundary = 0xBF;
-    /** @type {boolean} */
-    let replace = false;
-    /** @type {number} */
-    let charCode = buffer[index++];
-    if (charCode >= 0x00 && charCode <= 0x7F) {
-      str += String.fromCharCode(charCode);
-    } else {
-      /** @type {number} */
-      let count = 0;
-      if (charCode >= 0xC2 && charCode <= 0xDF) {
-        count = 1;
-      } else if (charCode >= 0xE0 && charCode <= 0xEF ) {
-        count = 2;
-        if (buffer[index] === 0xE0) {
-          lowerBoundary = 0xA0;
-        }
-        if (buffer[index] === 0xED) {
-          upperBoundary = 0x9F;
-        }
-      } else if (charCode >= 0xF0 && charCode <= 0xF4 ) {
-        count = 3;
-        if (buffer[index] === 0xF0) {
-          lowerBoundary = 0x90;
-        }
-        if (buffer[index] === 0xF4) {
-          upperBoundary = 0x8F;
-        }
-      } else {
-        replace = true;
-      }
-      charCode = charCode & (1 << (8 - count - 1)) - 1;
-      for (let i = 0; i < count; i++) {
-        if (buffer[index] < lowerBoundary || buffer[index] > upperBoundary) {
-          replace = true;
-        }
-        charCode = (charCode << 6) | (buffer[index] & 0x3f);
-        index++;
-      }
-      if (replace) {
-        str += String.fromCharCode(0xFFFD);
-      } 
-      else if (charCode <= 0xffff) {
-        str += String.fromCharCode(charCode);
-      } else {
-        charCode -= 0x10000;
-        str += String.fromCharCode(
-          ((charCode >> 10) & 0x3ff) + 0xd800,
-          (charCode & 0x3ff) + 0xdc00);
-      }
-    }
-  }
-  return str;
+  return unpackUTF8(buffer, index, len);
 }
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
  * @return {!Uint8Array} The packed string.
  */
 export function packString(str) {
-  /** @type {!Uint8Array} */
-  let bytes = new Uint8Array(utf8BufferSize(str));
-  let bufferIndex = 0;
-  for (let i = 0, len = str.length; i < len; i++) {
-    /** @type {number} */
-    let codePoint = str.codePointAt(i);
-    if (codePoint < 128) {
-      bytes[bufferIndex] = codePoint;
-      bufferIndex++;
-    } else {
-      /** @type {number} */
-      let count = 0;
-      /** @type {number} */
-      let offset = 0;
-      if (codePoint <= 0x07FF) {
-        count = 1;
-        offset = 0xC0;
-      } else if(codePoint <= 0xFFFF) {
-        count = 2;
-        offset = 0xE0;
-      } else if(codePoint <= 0x10FFFF) {
-        count = 3;
-        offset = 0xF0;
-        i++;
-      }
-      bytes[bufferIndex] = (codePoint >> (6 * count)) + offset;
-      bufferIndex++;
-      while (count > 0) {
-        bytes[bufferIndex] = 0x80 | (codePoint >> (6 * (count - 1)) & 0x3F);
-        bufferIndex++;
-        count--;
-      }
-    }
-  }
-  return bytes;
+  return packUTF8(str);
 }
 
 /**
