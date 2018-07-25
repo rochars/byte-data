@@ -206,9 +206,9 @@ class Integer {
   }
 
   /**
-   * Trows error in case of underflow or overflow.
+   * Trows error in case of overflow.
    * @param {number} num The number.
-   * @throws {Error} on overflow or underflow.
+   * @throws {Error} on overflow.
    * @private
    */
   overflow_(num) {
@@ -352,7 +352,7 @@ function validateIntType_(theType) {
 /**
  * Pack a IEEE754 floating point number.
  * Derived from typedarray.js by Linden Research, MIT License.
- * Adapted to round overflows and underflows to Infinity and -Infinity.
+ * Adapted to round overflows to Infinity and -Infinity.
  * @see https://bitbucket.org/lindenlab/llsd/raw/7d2646cd3f9b4c806e73aebc4b32bd81e4047fdc/js/typedarray.js
  * @param {!Uint8Array|!Array<number>} buffer The buffer.
  * @param {number} index The index to write on the buffer.
@@ -364,7 +364,7 @@ function validateIntType_(theType) {
 function pack(buffer, index, num, ebits, fbits) {
   /** @type {number} */
   let bias = (1 << (ebits - 1)) - 1;
-  // Round overflows and underflows
+  // Round overflows
   if (Math.abs(num) > Math.pow(2, bias + 1) - ((ebits + fbits) * 2)) {
     num = num < 0 ? -Infinity : Infinity;
   }
