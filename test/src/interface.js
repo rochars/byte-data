@@ -157,7 +157,20 @@ var assert = assert || require('assert');
 
 describe('Errors', function() {
 
-    // NaN
+    // pack Infinity, -Infinity as integer
+    it('thows "Integer overflow" if packing Infinity as a integer', function() {
+        testFunc = function() {
+            byteData.pack(Infinity, byteData.types.uInt16);
+        };
+        assert.throws(testFunc, /Integer overflow/);
+    });
+    it('thows "Integer overflow" if packing -Infinity as a integer', function() {
+        testFunc = function() {
+            byteData.pack(-Infinity, byteData.types.int16);
+        };
+        assert.throws(testFunc, /Integer overflow/);
+    });
+    // pack NaN as integer
     it('thows error if packing NaN as a integer', function() {
         testFunc = function() {
             byteData.pack(NaN, byteData.types.uInt16);
