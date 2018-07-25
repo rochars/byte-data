@@ -157,6 +157,14 @@ var assert = assert || require('assert');
 
 describe('Errors', function() {
 
+    // NaN
+    it('thows error if packing NaN as a integer', function() {
+        testFunc = function() {
+            byteData.pack(NaN, byteData.types.uInt16);
+        };
+        assert.throws(testFunc, /NaN/);
+    });
+
     // undefined
     it('thows error if packing something other than Number, Boolean or null', function() {
         testFunc = function() {
@@ -179,7 +187,7 @@ describe('Errors', function() {
         assert.throws(testFunc, /Bad buffer length./);
     });
 
-    // overflow and underflow
+    // integer overflow
     it("8-bit overflow, positive", function () {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
