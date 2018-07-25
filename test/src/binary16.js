@@ -36,6 +36,17 @@ describe('Binary16 numbers', function() {
             -0);
     });
 
+    it('pack 1e-25', function() {
+        assert.deepEqual(
+            byteData.pack(1e-25, float16), 
+            [0,0]);
+    });
+    it('unpack 0', function() {
+        assert.equal(
+            byteData.unpack([0,0], float16), 
+            0);
+    });
+
     // NaN
     it('pack NaN', function() {
         assert.deepEqual(
@@ -129,9 +140,9 @@ describe('Binary16 numbers', function() {
     // Rounding
     // Integers between 2048 and 4096 round to a multiple of 2 (even number)
     it('pack 2049 like it pack 2048', function() {
-        //assert.deepEqual(
-        //    byteData.pack(2049, float16), 
-        //    [0x00,0x68]);
+        assert.deepEqual(
+            byteData.pack(2049, float16), 
+            [0x00,0x68]);
     });
     it('pack 2050', function() {
         assert.deepEqual(
@@ -144,55 +155,55 @@ describe('Binary16 numbers', function() {
             2050);
     });
     it('pack 2051 like it pack 2050', function() {
-        //assert.deepEqual(
-        //    byteData.pack(2051, float16), 
-        //    [0x01,0x68]);
+        assert.deepEqual(
+            byteData.pack(2051, float16), 
+            [0x01,0x68]);
     });
 
     // Random values
     it('pack 1/3', function() {
         assert.deepEqual(
-            byteData.pack(0.33325, float16, 16),
+            byteData.pack(0.33325, float16),
             [85,53]);
     });
     it('pack -2', function() {
         assert.deepEqual(
-            byteData.pack(-2, float16, 16),
+            byteData.pack(-2, float16),
             [0, 192]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(100, byteData.types.float16, 16),
+            byteData.pack(100, byteData.types.float16),
             [64, 86]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(500, byteData.types.float16, 16),
+            byteData.pack(500, byteData.types.float16),
             [208, 95]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(1000, byteData.types.float16, 16),
+            byteData.pack(1000, byteData.types.float16),
             [208, 99]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(10000, byteData.types.float16, 16),
+            byteData.pack(10000, byteData.types.float16),
             [226, 112]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(30000, byteData.types.float16, 16),
+            byteData.pack(30000, byteData.types.float16),
             [83, 119]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(40000, byteData.types.float16, 16),
+            byteData.pack(40000, byteData.types.float16),
             [226, 120]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(65504, byteData.types.float16, 16),
+            byteData.pack(65504, byteData.types.float16),
             [255, 123]);
     });
 

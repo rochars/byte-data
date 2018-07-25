@@ -13,8 +13,7 @@ https://github.com/rochars/byte-data
 - **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Use it in little-endian and big-endian hosts!**
-- **Less than 7KB minified, less than 3KB minified + compressed**
-- **[Unminified bundle](https://github.com/rochars/byte-data/blob/master/dist/byte-data.js) is less than 30kb**
+- **Less than 7KB minified!**
 - **Made with [Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
@@ -29,9 +28,6 @@ https://github.com/rochars/byte-data
 ```
 npm install byte-data
 ```
-
-You can also download one of the files in the *./dist* folder:  
-https://github.com/rochars/byte-data/tree/master/dist
 
 ## Use
 

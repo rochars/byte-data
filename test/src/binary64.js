@@ -147,6 +147,18 @@ describe('Binary64 numbers', function() {
     });
     */
     
+    // struct.unpack('d', b'\xd9\x7d\xda\xf5\xd0\xf2\xbe\x3a')
+    it('pack 1e-25', function() {
+        assert.deepEqual(
+            byteData.pack(1e-25, float64),
+            [0xd9,0x7d,0xda,0xf5,0xd0,0xf2,0xbe,0x3a]);
+    });
+    it('unpack 1e-25', function() {
+        assert.equal(
+            byteData.unpack([0xd9,0x7d,0xda,0xf5,0xd0,0xf2,0xbe,0x3a], float64),
+            1e-25);
+    });
+
     // Random values
     it('pack -1', function() {
         assert.deepEqual(

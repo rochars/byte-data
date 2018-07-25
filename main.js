@@ -34,6 +34,7 @@ import Packer from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 
+/** @type {Packer} */
 let packer = new Packer();
 
 /**

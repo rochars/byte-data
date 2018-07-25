@@ -16,11 +16,7 @@ import fs from 'fs';
 const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
 // Legal
-const license = '/*!\n'+
-  ' * https://github.com/rochars/byte-data.\n'+
-  ' * Copyright (c) 2017-2018 Rafael da Silva Rocha.\n' +
-  ' * Copyright (c) 2013 DeNA Co., Ltd.\n' +
-  ' */\n';
+const license = '// https://github.com/rochars/byte-data\n'
 
 // GCC wrapper
 const outputWrapper = license + '"use strict";if(typeof exports!=="undefined"){var window={};}'+
