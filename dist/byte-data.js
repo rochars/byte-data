@@ -212,10 +212,8 @@ class Integer {
    * @private
    */
   overflow_(num) {
-    if (num > this.max_) {
-      throw new Error('Overflow.');
-    } else if (num < this.min_) {
-      throw new Error('Underflow.');
+    if (num > this.max_ || num < this.min_) {
+      throw new Error('Integer overflow');
     }
   }
 

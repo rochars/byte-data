@@ -180,17 +180,17 @@ describe('Errors', function() {
     });
 
     // overflow and underflow
-    it("8-bit overflow", function () {
+    it("8-bit overflow, positive", function () {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
-        assert.throws(testFunc, /Overflow./);
+        assert.throws(testFunc, /Integer overflow/);
     });
-    it("8-bit underflow", function () {
+    it("8-bit overflow, negative", function () {
         testFunc = function() {
             byteData.pack(-1, {"bits": 8});
         };
-        assert.throws(testFunc, /Underflow./);
+        assert.throws(testFunc, /Integer overflow/);
     });
     
     // Invalid types

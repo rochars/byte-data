@@ -86,13 +86,10 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 - *true* is packed as 1
 
 ### Floating-point numbers
-Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
-
-**Overflows** are rounded towards **Infinity** and **-Infinity**.
-
-**NaN** is packed as quiet NaN. Both **quiet NaN** and **signaling NaN** can be unpacked.
-
-Support **negative zeros**.
+- Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
+- **Overflows** are rounded towards **Infinity** and **-Infinity**.
+- **NaN** is packed as quiet NaN. Both **quiet NaN** and **signaling NaN** can be unpacked.
+- Support **negative zeros**.
 
 ### Signed integers
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
@@ -101,7 +98,7 @@ Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_com
 **UTF-8 strings** with a max of 4 bytes per character are supported. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
 
 ### Overflow on integers
-Overflow on integers will throw a *"Overflow."* error.
+Overflow on integers will throw a *"Integer overflow"* error.
 
 ### Browser compatibility
 Should work in all modern browsers. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/ROADMAP.md).
