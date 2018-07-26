@@ -8,6 +8,7 @@
  */
 
 import closure from 'rollup-plugin-closure-compiler-js';
+import {terser} from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import fs from 'fs';
@@ -15,15 +16,23 @@ import fs from 'fs';
 // Externs
 const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
+// Shims for the UMD
+const shims = fs.readFileSync('./test/dist/shims.js', 'utf8');
+
 // Legal
 const license = '// https://github.com/rochars/byte-data\n'
 
-// GCC wrapper
-const outputWrapper = license + '"use strict";if(typeof exports!=="undefined"){var window={};}'+
+// GCC UMD wrapper
+const outputWrapper = license + "'use strict';" +
+  shims +
+  ';if(typeof exports!=="undefined"){' +
+  '  var window={};' +
+  '}' +
   '%output%' +
   'var module=module||{};module.exports=exports;' +
   'var define=define||function(){};' +
-  'define(["exports"],function(e){return module.exports;});'
+  'define(["exports"],function(e){return module.exports;});' +
+  'var byteData=exports;'
 
 export default [
   // ES6 bundle
@@ -40,17 +49,29 @@ export default [
       commonjs()
     ]
   },
-  // ES5 UMD
+  // ES6 bundle, minified
   {
-    input: 'main.js',
+    input: 'dist/byte-data.js',
+    output: [
+      {
+        file: 'dist/byte-data.min.js',
+        format: 'es'
+      },
+    ],
+    plugins: [
+      terser()
+    ]
+  },
+  // UMD, shims included, minified
+  {
+    input: 'dist/byte-data.js',
     output: [
       {
         file: 'dist/byte-data.umd.js',
         name: 'byteData',
         format: 'cjs',
         strict: false,
-        banner: 'var exports=exports||{};' +
-        'if(window){window["byteData"]=exports;}'
+        banner: 'var exports=exports||{};'
       }
     ],
     plugins: [
@@ -58,12 +79,36 @@ export default [
       commonjs(),
       closure({
         languageIn: 'ECMASCRIPT6',
-        languageOut: 'ECMASCRIPT5',
+        languageOut: 'ECMASCRIPT3',
         compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
         outputWrapper: outputWrapper,
         externs: [{src: externsFile + 'exports={};'}]
       }),
+      terser()
+    ]
+  },
+  // CJS, minified
+  // This version is intended to run in Node.js. It does not
+  // include any dependency to ensure they are loaded from the
+  // ./node_modules folder.
+  {
+    input: 'dist/byte-data.js',
+    output: [
+      {
+        file: 'dist/byte-data.cjs.js',
+        name: 'byteData',
+        format: 'cjs',
+      }
+    ],
+    external: [
+      'endianness',
+      'utf8-buffer'
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      terser()
     ]
   },
 ];

@@ -7,6 +7,8 @@
  * @see https://github.com/rochars/byte-data
  */
 
+if (typeof Uint8Array === 'function') {
+
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 var Buffer = Buffer || false;
@@ -561,3 +563,5 @@ describe('unpackString strings', function() {
             byteData.unpackString(new Uint8Array([97,98,99,100]), 2, 1), "c");
     });
 });
+
+}

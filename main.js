@@ -32,7 +32,7 @@
 import endianness from 'endianness';
 import Packer from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
-import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
+import {pack as packUTF8, unpack as unpackUTF8} from './lib/utf8-buffer.js';
 
 /** @type {Packer} */
 let packer = new Packer();
@@ -69,7 +69,8 @@ export function packString(str) {
 export function packStringTo(str, buffer, index=0) {
   /** @type {!Uint8Array} */
   let bytes = packString(str);
-  for (let i = 0, len = bytes.length; i < len; i++) {
+  let len = bytes.length;
+  for (let i = 0; i < len; i++) {
     buffer[index++] = bytes[i];
   }
   return index;
@@ -133,7 +134,8 @@ export function packArray(values, theType) {
  */
 export function packArrayTo(values, theType, buffer, index=0) {
   packer.setUp(theType);
-  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
+  let valuesLen = values.length;
+  for (let i = 0; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
@@ -214,8 +216,9 @@ export function unpackArrayTo(
   if (theType.be) {
     endianness(buffer, packer.offset, index, end);
   }
-  for (let i = 0; index < end; index += packer.offset, i++) {
+  for (let i = 0; index < end; index += packer.offset) {
     output[i] = packer.read(buffer, index);
+    i++;
   }
   if (theType.be) {
     endianness(buffer, packer.offset, originalIndex, end);

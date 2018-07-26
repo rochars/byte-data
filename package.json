@@ -5,8 +5,9 @@
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
-  "main": "./dist/byte-data.umd.js",
   "module": "./main.js",
+  "main": "./dist/byte-data.cjs.js",
+  "browser": "./dist/byte-data.umd.js",
   "es2015": "./dist/byte-data.js",
   "types": "./main.d.ts",
   "engines": {
@@ -65,11 +66,13 @@
   "scripts": {
     "lint": "jshint main.js lib externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive -R dot",
+    "test-cjs": "node ./node_modules/mocha/bin/_mocha test/src --cjs --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/src --umd --recursive -R dot",
-    "test-amd": "node ./node_modules/mocha/bin/_mocha test/src --amd --recursive -R dot",
+    "test-umd-notypes": "node ./node_modules/mocha/bin/_mocha test/src --umd-notypes --recursive -R dot",
     "test-esm": "node ./node_modules/mocha/bin/_mocha test/src --esm --recursive -R dot",
+    "test-esm-min": "node ./node_modules/mocha/bin/_mocha test/src --esm-min --recursive -R dot",
     "test-tsc": "tsc ./test/dist/TypeScript/main.ts && node ./test/dist/TypeScript/main.js",
-    "test-dist": "npm run test-umd && npm run test-esm",
+    "test-dist": "npm run test-cjs && npm run test-umd && npm run test-umd-notypes && npm run test-esm && npm run test-esm-min",
     "pack": "npm run test && rollup -c && npm run test-dist && npm run test-tsc",
     "doc": "./node_modules/.bin/jsdoc main.js -d docs -r README.md -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",
@@ -90,6 +93,8 @@
     "rollup-plugin-closure-compiler-js": "^1.0.6",
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-terser": "^1.0.1",
+    "terser": "^3.8.1",
     "typescript": "^2.9.2"
   },
   "dependencies": {

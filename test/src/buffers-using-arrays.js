@@ -7,8 +7,6 @@
  * @see https://github.com/rochars/byte-data
  */
 
-if (typeof Uint8Array === 'function') {
-
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 var float64 = byteData.types.float64;
@@ -130,7 +128,7 @@ describe('pack to typed array: LE', function() {
 describe('pack to typed array: LE (write to the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([1, 7, 0, 0]);
+    var file = [1, 7, 0, 0];
 
     // First position in the array to write
     var index = 2;
@@ -140,7 +138,7 @@ describe('pack to typed array: LE (write to the middle of array)', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([1, 7, 253, 2]));
+        assert.deepEqual(file, [1, 7, 253, 2]);
     });
 
     // index
@@ -152,7 +150,7 @@ describe('pack to typed array: LE (write to the middle of array)', function() {
 describe('pack to typed array: BE', function() {
     
     // Create a typed array
-    var file = new Uint8Array(4);
+    var file = [0,0,0,0];
 
     // First position in the array to write
     var index = 0;
@@ -163,7 +161,7 @@ describe('pack to typed array: BE', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 2, 253]));
+        assert.deepEqual(file, [255, 255, 2, 253]);
     });
 
     // index
@@ -175,7 +173,7 @@ describe('pack to typed array: BE', function() {
 describe('pack to typed array: BE (write to the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([1, 7, 0, 0]);
+    var file = [1, 7, 0, 0];
 
     // First position in the array to write
     var index = 2;
@@ -185,7 +183,7 @@ describe('pack to typed array: BE (write to the middle of array)', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([1, 7, 2, 253]));
+        assert.deepEqual(file, [1, 7, 2, 253]);
     });
 
     // index
@@ -198,7 +196,7 @@ describe('pack to typed array: BE (write to the middle of array)', function() {
 describe('pack to typed array: float32 LE', function() {
     
     // Create a typed array
-    var file = new Uint8Array([0,0,0,0,0,0,0,0]);
+    var file = [0,0,0,0,0,0,0,0];
 
     // First position in the array to write
     var index = 0;
@@ -209,7 +207,7 @@ describe('pack to typed array: float32 LE', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([95,112,9,64,  205,204,76,77]));
+        assert.deepEqual(file, [95,112,9,64,  205,204,76,77]);
     });
 
     // index
@@ -221,7 +219,7 @@ describe('pack to typed array: float32 LE', function() {
 describe('pack to typed array: LE (write to the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([0,0,0,0,0,0,0,0]);
+    var file = [0,0,0,0,0,0,0,0];
 
     // First position in the array to write
     var index = 4;
@@ -231,7 +229,7 @@ describe('pack to typed array: LE (write to the middle of array)', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([0,0,0,0,  205,204,76,77]));
+        assert.deepEqual(file, [0,0,0,0,  205,204,76,77]);
     });
 
     // index
@@ -243,7 +241,7 @@ describe('pack to typed array: LE (write to the middle of array)', function() {
 describe('pack to typed array: BE', function() {
     
     // Create a typed array
-    var file = new Uint8Array([0,0,0,0,0,0,0,0]);
+    var file = [0,0,0,0,0,0,0,0];
 
     // First position in the array to write
     var index = 0;
@@ -254,7 +252,7 @@ describe('pack to typed array: BE', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([64,9,112,95,  77,76,204,205]));
+        assert.deepEqual(file, [64,9,112,95,  77,76,204,205]);
     });
 
     // index
@@ -266,7 +264,7 @@ describe('pack to typed array: BE', function() {
 describe('pack to typed array: BE (write to the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([0,0,0,0,0,0,0,0,0,0,0,0]);
+    var file = [0,0,0,0,0,0,0,0,0,0,0,0];
 
     // First position in the array to write
     var index = 4;
@@ -276,7 +274,7 @@ describe('pack to typed array: BE (write to the middle of array)', function() {
 
     // pack
     it('Check the packed 16-bit values', function() {
-        assert.deepEqual(file, new Uint8Array([0,0,0,0,  77,76,204,205,  0,0,0,0]));
+        assert.deepEqual(file, [0,0,0,0,  77,76,204,205,  0,0,0,0]);
     });
 
     // index
@@ -289,7 +287,7 @@ describe('pack to typed array: BE (write to the middle of array)', function() {
 describe('unpackArray: LE', function() {
 
     // Create a typed array
-    var file = new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]);
+    var file = [255, 255, 253, 2, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
     var output = byteData.unpackArray(file, byteData.types.uInt16, 0, 2);
@@ -299,14 +297,14 @@ describe('unpackArray: LE', function() {
         assert.deepEqual(output, [65535]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]));
+        assert.deepEqual(file, [255, 255, 253, 2, 0, 0, 0, 0]);
     });
 });
 
 describe('unpackArray: LE (read from the middle of array)', function() {
 
     // Create a typed array
-    var file = new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]);
+    var file = [255, 255, 253, 2, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
     var output = byteData.unpackArray(file, byteData.types.uInt16, 2, 4);
@@ -316,14 +314,14 @@ describe('unpackArray: LE (read from the middle of array)', function() {
         assert.deepEqual(output, [765]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]));
+        assert.deepEqual(file, [255, 255, 253, 2, 0, 0, 0, 0]);
     });
 });
 
 describe('unpackArray: LE (read 2 values)', function() {
 
     // Create a typed array
-    var file = new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]);
+    var file = [255, 255, 253, 2, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
     var output = byteData.unpackArray(file, byteData.types.uInt16, 0, 4);
@@ -333,25 +331,22 @@ describe('unpackArray: LE (read 2 values)', function() {
         assert.deepEqual(output, [65535, 765]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2, 0, 0, 0, 0]));
+        assert.deepEqual(file, [255, 255, 253, 2, 0, 0, 0, 0]);
     });
 
     it('should turn 8 bytes to 1 64-bit float (Uint8Array)', function() {
         assert.equal(
-            byteData.unpackArray(
-                new Uint8Array([75,40,253,58,221,154,191,63]), float64)[0],
+            byteData.unpackArray([75,40,253,58,221,154,191,63], float64)[0],
             0.123456789876543);
     });
     it('should turn 8 bytes to 1 64-bit float (Buffer)', function() {
         if (Buffer) {
             assert.equal(
-                byteData.unpackArray(
-                    new Buffer.from([75,40,253,58,221,154,191,63]), float64)[0],
+                byteData.unpackArray([75,40,253,58,221,154,191,63], float64)[0],
                 0.123456789876543);
         } else {
             assert.equal(
-                byteData.unpackArray(
-                    new Uint8Array([75,40,253,58,221,154,191,63]), float64)[0],
+                byteData.unpackArray([75,40,253,58,221,154,191,63], float64)[0],
                 0.123456789876543);
         }
     });
@@ -359,12 +354,12 @@ describe('unpackArray: LE (read 2 values)', function() {
         if (Buffer) {
             assert.equal(
                 byteData.unpackArray(
-                    new Buffer.from([75,40,253,58,221,154,191,63,0]), float64)[0],
+                    [75,40,253,58,221,154,191,63,0], float64)[0],
                 0.123456789876543);
         } else {
             assert.equal(
                 byteData.unpackArray(
-                    new Uint8Array([75,40,253,58,221,154,191,63,0]), float64)[0],
+                    [75,40,253,58,221,154,191,63,0], float64)[0],
                 0.123456789876543);
         }
     });
@@ -373,7 +368,7 @@ describe('unpackArray: LE (read 2 values)', function() {
 describe('unpackArray: BE', function() {
 
     // Create a typed array
-    var file = new Uint8Array([255, 255, 2, 253, 0, 0, 0, 0]);
+    var file = [255, 255, 2, 253, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
     var output = byteData.unpackArray(file, byteData.types.uInt16BE, 0, 2);
@@ -383,14 +378,14 @@ describe('unpackArray: BE', function() {
         assert.deepEqual(output, [65535]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 2, 253, 0, 0, 0, 0]));
+        assert.deepEqual(file, [255, 255, 2, 253, 0, 0, 0, 0]);
     });
 });
 
 describe('unpackArray: BE (read from the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([255, 255, 2, 253, 0, 0, 0, 0]);
+    var file = [255, 255, 2, 253, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
     var output = byteData.unpackArray(file, byteData.types.uInt16BE, 2, 4);
@@ -400,7 +395,7 @@ describe('unpackArray: BE (read from the middle of array)', function() {
         assert.deepEqual(output, [765]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 2, 253, 0, 0, 0, 0]));
+        assert.deepEqual(file, [255, 255, 2, 253, 0, 0, 0, 0]);
     });
 
 });
@@ -408,7 +403,7 @@ describe('unpackArray: BE (read from the middle of array)', function() {
 
 describe('unpackArrayTo: LE', function() {
     
-    var file = new Uint8Array([255, 255, 0, 0]);
+    var file = [255, 255, 0, 0];
 
     it('should unpack the values to the provided array', function() {
         var output = [0,0];
@@ -428,13 +423,13 @@ describe('unpackArrayTo: LE', function() {
         assert.deepEqual(output, [255]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 0, 0]));
+        assert.deepEqual(file, [255, 255, 0, 0]);
     });
 });
 
 describe('unpackArrayTo: BE', function() {
 
-    var file = new Uint8Array([2, 253, 0, 0]);
+    var file = [2, 253, 0, 0];
     var output = [0,0]
     byteData.unpackArrayTo(file, byteData.types.uInt16BE, output);
 
@@ -442,7 +437,7 @@ describe('unpackArrayTo: BE', function() {
         assert.deepEqual(output, [765, 0]);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([2, 253, 0, 0]));
+        assert.deepEqual(file, [2, 253, 0, 0]);
     });
 });
 
@@ -450,7 +445,7 @@ describe('unpackArrayTo: BE', function() {
 describe('unpackFrom: LE', function() {
     
     // Create a typed array
-    var file = new Uint8Array([255, 255, 253, 2]);
+    var file = [255, 255, 253, 2];
 
     // First position in the array to write
     var index = 0;
@@ -463,7 +458,7 @@ describe('unpackFrom: LE', function() {
         assert.equal(value, 65535);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2]));
+        assert.deepEqual(file, [255, 255, 253, 2]);
     });
 
 });
@@ -471,7 +466,7 @@ describe('unpackFrom: LE', function() {
 describe('unpackFrom: LE (read to the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([255, 255, 253, 2]);
+    var file = [255, 255, 253, 2];
 
     // First position in the array to write
     var index = 2;
@@ -484,14 +479,14 @@ describe('unpackFrom: LE (read to the middle of array)', function() {
         assert.equal(value, 765);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 253, 2]));
+        assert.deepEqual(file, [255, 255, 253, 2]);
     });
 });
 
 describe('unpackFrom: BE', function() {
     
     // Create a typed array
-    var file = new Uint8Array([255, 255, 2, 253]);
+    var file = [255, 255, 2, 253];
 
     // First position in the array to write
     var index = 0;
@@ -504,14 +499,14 @@ describe('unpackFrom: BE', function() {
         assert.equal(value, 65535);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 2, 253]));
+        assert.deepEqual(file, [255, 255, 2, 253]);
     });
 });
 
 describe('unpackFrom: BE (read to the middle of array)', function() {
     
     // Create a typed array
-    var file = new Uint8Array([255, 255, 2, 253]);
+    var file = [255, 255, 2, 253];
 
     // First position in the array to write
     var index = 2;
@@ -524,8 +519,6 @@ describe('unpackFrom: BE (read to the middle of array)', function() {
         assert.equal(value, 765);
     });
     it('Original buffer should be untouched', function() {
-        assert.deepEqual(file, new Uint8Array([255, 255, 2, 253]));
+        assert.deepEqual(file, [255, 255, 2, 253]);
     });
 });
-
-}

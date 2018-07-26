@@ -14,7 +14,6 @@ https://github.com/rochars/byte-data
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Use it in little-endian and big-endian hosts!**
 - **Less than 7KB minified!**
-- **Made with [Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)

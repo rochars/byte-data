@@ -13,6 +13,8 @@ var assert = assert || require('assert');
 var float64 = byteData.types.float64;
 var float64BE = byteData.types.float64BE;
 
+var Buffer = Buffer || false;
+
 describe('Binary64 numbers', function() {     
     // Zeros
     it('pack 0', function() {
@@ -83,8 +85,8 @@ describe('Binary64 numbers', function() {
     });
     it('unpack pi as 3.1415926535897931', function() {
         assert.equal(
-            byteData.unpack([0x18,0x2d,0x44,0x54,0xfb,0x21,0x09,0x40], float64).toFixed(16), 
-            '3.1415926535897931');
+            byteData.unpack([0x18,0x2d,0x44,0x54,0xfb,0x21,0x09,0x40], float64).toFixed(15), 
+            '3.141592653589793');
     });
     
     /*
@@ -191,9 +193,16 @@ describe('Binary64 numbers', function() {
             [94,56,85,41,122,106,63,64]);
     });
     it('pack 314159265358979.3', function() {
+        // struct.pack() == b'\x35\x48\xa2\x76\x9e\xdb\xf1\x42'
         assert.deepEqual(
             byteData.pack(314159265358979.3, float64),
-            [53,72,162,118,158,219,241,66]);
+            //[53,72,162,118,158,219,241,66]);
+            [0x35,0x48,0xa2,0x76,0x9e,0xdb,0xf1,0x42]);
+    });
+    it('unpack 314159265358979.3', function() {
+        assert.deepEqual(
+            byteData.unpack([0x35,0x48,0xa2,0x76,0x9e,0xdb,0xf1,0x42], float64),
+            314159265358979.3);
     });
     it('pack 0', function() {
         assert.deepEqual(
@@ -204,11 +213,6 @@ describe('Binary64 numbers', function() {
         assert.deepEqual(
             byteData.pack(2, float64, 16),
             [0,0,0,0,0,0,0,64]);
-    });
-    it('pack 314159265358979.3', function() {
-        assert.deepEqual(
-            byteData.pack(314159265358979.3, float64),
-            [53,72,162,118,158,219,241,66]);
     });
 
     // Old tests, need refactoring
@@ -232,68 +236,26 @@ describe('Binary64 numbers', function() {
             byteData.unpackArray([75,40,253,58,221,154,191], float64),
             []);
     });
-    it('should turn 8 bytes to 1 64-bit float (Uint8Array)', function() {
-        assert.equal(
-            byteData.unpackArray(
-                new Uint8Array([75,40,253,58,221,154,191,63]), float64)[0],
-            0.123456789876543);
-    });
-    it('should turn 8 bytes to 1 64-bit float (Buffer)', function() {
-        if (Buffer) {
-            assert.equal(
-                byteData.unpackArray(
-                    new Buffer.from([75,40,253,58,221,154,191,63]), float64)[0],
-                0.123456789876543);
-        } else {
-            assert.equal(
-                byteData.unpackArray(
-                    new Uint8Array([75,40,253,58,221,154,191,63]), float64)[0],
-                0.123456789876543);
-        }
-    });
-    it('should turn 9 bytes to 1 64-bit float (ignore the extra byte) (Buffer)', function() {
-        if (Buffer) {
-            assert.equal(
-                byteData.unpackArray(
-                    new Buffer.from([75,40,253,58,221,154,191,63,0]), float64)[0],
-                0.123456789876543);
-        } else {
-            assert.equal(
-                byteData.unpackArray(
-                    new Uint8Array([75,40,253,58,221,154,191,63,0]), float64)[0],
-                0.123456789876543);
-        }
-        
-    });
     it('should turn 8 bytes to 1 64-bit float', function() {
         assert.equal(
             byteData.unpackArray(
-                [0,0,0,0,0,0,0,0], float64)[0].toFixed(15),
+                [0,0,0,0,0,0,0,0], float64)[0],
             0);
     });
     it('should turn 16 bytes to 2 64-bit floats', function() {
         assert.equal(
             byteData.unpackArray(
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], float64)[0].toFixed(15),
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], float64)[0],
             0);
         assert.equal(
             byteData.unpackArray(
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], float64)[1].toFixed(15),
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], float64)[1],
             0);
     });
     it('should turn 8 bytes bin to 1 64-bit float', function() {
         assert.equal(
             byteData.unpackArray(
-                [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ], float64)[0].toFixed(15),
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], float64)[0],
             0);
     });
     it('should turn 8 bytes bin to 1 64-bit float', function() {

@@ -40,7 +40,7 @@ describe('pack-unpack', function() {
     it('should turn 8 bytes to 1 64-bit float and back (1', function() {
         var bytes = byteData.packArray([612345678.9876543], float64);
         var num = byteData.unpackArray(bytes, float64);
-        assert.deepEqual(num, [612345678.9876543]);
+        assert.deepEqual(num[0], 612345678.9876543);
     });
     it('should turn 8 bytes to 1 64-bit float and back (1', function() {
         var bytes = byteData.packArray([612345678.9876543], float64);

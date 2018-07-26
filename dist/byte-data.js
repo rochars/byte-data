@@ -161,7 +161,7 @@ class Integer {
    */
   read(bytes, i=0) {
     let num = 0;
-    for(let x=0; x<this.realOffset_; x++) {
+    for(let x = 0; x < this.realOffset_; x++) {
       num += bytes[i + x] * Math.pow(256, x);
     }
     num = this.sign_(num);
@@ -185,8 +185,10 @@ class Integer {
     this.overflow_(num);
     bytes[j] = (num < 0 ? num + Math.pow(2, this.bits_) : num) & 255;
     j++;
-    for (let i = 2, len = this.realOffset_; i < len; i++, j++) {
+    let len = this.realOffset_;
+    for (let i = 2; i < len; i++) {
       bytes[j] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
+      j++;
     }
     if (this.bits_ > 8) {
       bytes[j] = Math.floor(
@@ -263,8 +265,10 @@ class Integer {
 
 function validateValueType(value) {
   if (value !== null) {
-    if ([Number, Boolean].indexOf(value.constructor) == -1) {
-      throw new Error('Expected Number, Boolean or Null; found ' + value.constructor);
+    //if ([Number, Boolean].indexOf(value.constructor) == -1) {
+      if (value.constructor != Number && value.constructor != Boolean) {
+      throw new Error(
+        'Expected Number, Boolean or Null; found ' + value.constructor);
     }
   }
 }
@@ -303,7 +307,8 @@ function validateType(theType) {
  * @private
  */
 function validateFloatType_(theType) {
-  if ([16,32,64].indexOf(theType.bits) == -1) {
+  //if ([16,32,64].indexOf(theType.bits) == -1) {
+  if (theType.bits != 16 && theType.bits != 32 && theType.bits != 64) {
     throw new Error('Bad float type.');
   }
 }
@@ -351,6 +356,15 @@ function validateIntType_(theType) {
  * @see https://github.com/rochars/byte-data
  */
 
+function roundToEven(n) {
+      var w = Math.floor(n), f = n - w;
+      if (f < 0.5)
+        return w;
+      if (f > 0.5)
+        return w + 1;
+      return w % 2 ? w + 1 : w;
+}
+
 /**
  * Pack a IEEE754 floating point number.
  * Derived from typedarray.js by Linden Research, MIT License.
@@ -380,7 +394,7 @@ function pack(buffer, index, num, ebits, fbits) {
   /** @type {number} */
   let exp = Math.min(Math.floor(Math.log(num) / Math.LN2), 1023);
   /** @type {number} */
-  let fraction = Math.round(num / Math.pow(2, exp) * Math.pow(2, fbits));
+  let fraction = roundToEven(num / Math.pow(2, exp) * Math.pow(2, fbits));
   // NaN
   if (num !== num) {
     fraction = Math.pow(2, fbits - 1);
@@ -394,14 +408,15 @@ function pack(buffer, index, num, ebits, fbits) {
       }
       // Overflow
       if (exp > bias) {
-        exp = (1 << ebits) - 1;
+        exp = roundToEven((1 << ebits)) - 1;
         fraction = 0;
       } else {
         exp = exp + bias;
-        fraction = fraction - Math.pow(2, fbits);
+        fraction = roundToEven(fraction) - Math.pow(2, fbits);
       }
     } else {
-      fraction = Math.round(num / Math.pow(2, 1 - bias - fbits));
+      //fraction = Math.round(num / Math.pow(2, 1 - bias - fbits));
+      fraction = roundToEven(num / Math.pow(2, 1 - bias - fbits));
       exp = 0;
     } 
   }
@@ -478,7 +493,8 @@ function packFloatBits_(buffer, index, ebits, fbits, sign, exp, fraction) {
     exp = Math.floor(exp / 2);
   }
   // the fraction
-  for (let i = fbits, len = bits.length; i > 0; i -= 1) {
+  let len = bits.length;
+  for (let i = fbits; i > 0; i -= 1) {
     bits[len + i] = (fraction % 2 ? 1 : 0);
     fraction = Math.floor(fraction / 2);
   }
@@ -528,6 +544,54 @@ function packFloatBits_(buffer, index, ebits, fbits, sign, exp, fraction) {
  * @extends {Integer}
  */
 class Packer extends Integer {
+  
+  constructor() {
+    super();
+    /**
+     * If TypedArrays are available or not
+     * @type {boolean}
+     */
+    this.TYPED = typeof Uint8Array === 'function';
+    /**
+     * Use a Typed Array to check if the host is BE or LE. This will impact
+     * on how 64-bit floating point numbers are handled.
+     * @type {boolean}
+     */
+    let BE_ENV = false;
+    if (this.TYPED) {
+      BE_ENV = new Uint8Array(new Uint32Array([1]).buffer)[0] === 0;
+    }
+    /**
+     * @type {number}
+     * @private
+     */
+    this.HIGH_ = BE_ENV ? 1 : 0;
+    /**
+     * @type {number}
+     * @private
+     */
+    this.LOW_ = BE_ENV ? 0 : 1;
+    /**
+     * @type {!Uint8Array|null}
+     */
+    let uInt8 = this.TYPED ? new Uint8Array(8) : null;
+    /**
+     * @type {!Uint32Array|null}
+     * @private
+     */
+    this.ui32_ = this.TYPED ? new Uint32Array(uInt8.buffer) : null;
+    /**
+     * @type {!Float32Array|null}
+     * @private
+     */
+    this.f32_ = this.TYPED ? new Float32Array(uInt8.buffer) : null;
+    /**
+     * @type {!Float64Array|null}
+     * @private
+     */
+    this.f64_ = this.TYPED ? new Float64Array(uInt8.buffer) : null;
+}
+
   /**
    * Set up the object to start serializing/deserializing a data type..
    * @param {!Object} theType The type definition.
@@ -565,8 +629,19 @@ class Packer extends Integer {
   }
 
   /**
+ * Read 1 32-bit float from bytes using a TypedArray.
+ * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
+ * @param {number=} i The index to read.
+ * @return {number}
+ * @private
+ */
+  read32FTyped_(bytes, i=0) {
+    this.ui32_[0] = super.read(bytes, i);
+    return this.f32_[0];
+  }
+
+  /**
    * Read 1 64-bit float from bytes.
-   * Thanks https://gist.github.com/kg/2192799
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
    * @param {number=} i The index to read.
    * @return {number}
@@ -574,6 +649,20 @@ class Packer extends Integer {
    */
   read64F_(bytes, i=0) {
     return unpack(bytes, i, 11, 52);
+  }
+
+  /**
+   * Read 1 64-bit float from bytes using a TypedArray.
+   * Thanks https://gist.github.com/kg/2192799
+   * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
+   * @param {number=} i The index to read.
+   * @return {number}
+   * @private
+   */
+  read64FTyped_(bytes, i=0) {
+    this.ui32_[this.HIGH_] = super.read(bytes, i);
+    this.ui32_[this.LOW_] = super.read(bytes, i + 4);
+    return this.f64_[0];
   }
 
   /**
@@ -601,6 +690,22 @@ class Packer extends Integer {
   }
 
   /**
+   * Write one 32-bit float as a binary value using a TypedArray.
+   * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number=} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  write32FTyped_(bytes, number, j=0) {
+    if (number !== number) {
+      return this.write32F_(bytes, number, j);
+    }
+    this.f32_[0] = number;
+    return super.write(bytes, this.ui32_[0], j);
+  }
+
+  /**
    * Write one 64-bit float as a binary value.
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
    * @param {number} number The number to write as bytes.
@@ -610,6 +715,23 @@ class Packer extends Integer {
    */
   write64F_(bytes, number, j=0) {
     return pack(bytes, j, number, 11, 52);
+  }
+
+  /**
+   * Write one 64-bit float as a binary value using a TypedArray.
+   * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
+   * @param {number} number The number to write as bytes.
+   * @param {number=} j The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @private
+   */
+  write64FTyped_(bytes, number, j=0) {
+    if (number !== number) {
+      return this.write64F_(bytes, number, j);
+    }
+    this.f64_[0] = number;
+    j = super.write(bytes, this.ui32_[this.HIGH_], j);
+    return super.write(bytes, this.ui32_[this.LOW_], j);
   }
 
   /**
@@ -623,11 +745,11 @@ class Packer extends Integer {
         this.read = this.read16F_;
         this.write = this.write16F_;
       } else if(theType.bits == 32) {
-        this.read = this.read32F_;
-        this.write = this.write32F_;
+        this.read = this.TYPED ? this.read32FTyped_ : this.read32F_;
+        this.write = this.TYPED ? this.write32FTyped_ : this.write32F_;
       } else {
-        this.read = this.read64F_;
-        this.write = this.write64F_;
+        this.read = this.TYPED ? this.read64FTyped_: this.read64F_;
+        this.write = this.TYPED ? this.write64FTyped_ : this.write64F_;
       }
     } else {
       this.read = super.read;
@@ -799,10 +921,16 @@ function unpack$1(buffer, index=0, len=undefined) {
  * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
  * @return {!Uint8Array} The packed string.
+ * @suppress {checkTypes}
  */
 function pack$1(str) {
   /** @type {!Uint8Array} */
-  let bytes = new Uint8Array(utf8BufferSize(str));
+  let bytes;
+  if (typeof Uint8Array != 'undefined') {
+    bytes = new Uint8Array(utf8BufferSize(str));
+  } else {
+    bytes = [];
+  }
   let bufferIndex = 0;
   for (let i = 0, len = str.length; i < len; i++) {
     /** @type {number} */
@@ -897,7 +1025,8 @@ function packString(str) {
 function packStringTo(str, buffer, index=0) {
   /** @type {!Uint8Array} */
   let bytes = packString(str);
-  for (let i = 0, len = bytes.length; i < len; i++) {
+  let len = bytes.length;
+  for (let i = 0; i < len; i++) {
     buffer[index++] = bytes[i];
   }
   return index;
@@ -961,7 +1090,8 @@ function packArray(values, theType) {
  */
 function packArrayTo(values, theType, buffer, index=0) {
   packer.setUp(theType);
-  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
+  let valuesLen = values.length;
+  for (let i = 0; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
@@ -1042,8 +1172,9 @@ function unpackArrayTo(
   if (theType.be) {
     endianness(buffer, packer.offset, index, end);
   }
-  for (let i = 0; index < end; index += packer.offset, i++) {
+  for (let i = 0; index < end; index += packer.offset) {
     output[i] = packer.read(buffer, index);
+    i++;
   }
   if (theType.be) {
     endianness(buffer, packer.offset, originalIndex, end);
