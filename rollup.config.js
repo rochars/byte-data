@@ -23,11 +23,8 @@ const shims = fs.readFileSync('./test/dist/shims.js', 'utf8');
 const license = '// https://github.com/rochars/byte-data\n'
 
 // GCC UMD wrapper
-const outputWrapper = license + "'use strict';" +
+const outputWrapper = license +
   shims +
-  ';if(typeof exports!=="undefined"){' +
-  '  var window={};' +
-  '}' +
   '%output%' +
   'var module=module||{};module.exports=exports;' +
   'var define=define||function(){};' +
