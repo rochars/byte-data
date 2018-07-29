@@ -8,6 +8,8 @@ https://github.com/rochars/byte-data
 
 **byte-data** is a JavaScript module for the serialization and deserialization of numbers and strings.
 
+## This document covers version 15.0.0, in alpha as of 2018-07-29.
+
 - **MIT licensed**
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node.js**
