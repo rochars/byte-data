@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>byte-data: browser tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="browser-runtime/mocha.css" rel="stylesheet" />
+    <link rel="stylesheet" href="browser-runtime/bootstrap.min.css">
+</head>
+<body>
+
+	<div class="container">
+		<h1><a href="https://github.com/rochars/byte-data">byte-data</a></h1>
+		<p>Pack and unpack binary data.<br>
+			Copyright (c) 2017-2018 Rafael da Silva Rocha.<br>
+			<a href="https://github.com/rochars/byte-data">https://github.com/rochars/byte-data</a></p>
+	</div>
+	
+	<!-- Load UMD, load types -->
+	<script src="../../dist/byte-data.es3.umd.js"></script>
+	<script src="browser-runtime/binary-data-types.min.js"></script>
+
+	<!-- Run the tests -->
+	<script>
+	    var buffer = [] 
+        console.log(byteData.pack(3.1415927410, BinaryDataTypes.float32).toString() == 
+	            [0xdb,0x0F,0x49,0x40].toString());
+	    console.log(byteData.unpack([0xdb,0x0F,0x49,0x40], BinaryDataTypes.float32).toFixed(10) ==
+	            '3.1415927410');
+	</script>
+
+</body>
+</html>

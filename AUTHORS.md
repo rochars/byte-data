@@ -1,1 +1,1 @@
-Rafael S. Rocha <rocha.rafaelsilva@gmail.com>
+Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>

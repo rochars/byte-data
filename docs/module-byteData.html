@@ -63,79 +63,6 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="~packer"><span class="type-signature">(inner) </span>packer<span class="type-signature"> :Packer</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line38">line 38</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Packer</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -938,7 +865,7 @@
 
     
 
-    <h4 class="name" id=".packString"><span class="type-signature">(static) </span>packString<span class="signature">(str)</span><span class="type-signature"> &rarr; (non-null) {Uint8Array}</span></h4>
+    <h4 class="name" id=".packString"><span class="type-signature">(static) </span>packString<span class="signature">(str)</span><span class="type-signature"> &rarr; {Uint8Array|Array.&lt;number>}</span></h4>
 
     
 
@@ -950,7 +877,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line57">line 57</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -1068,7 +995,7 @@
 
         
 <div class="param-desc">
-    The packed string.
+    The buffer with the packed string written.
 </div>
 
 
@@ -1080,6 +1007,9 @@
     <dd>
         
 <span class="param-type">Uint8Array</span>
+|
+
+<span class="param-type">Array.&lt;number></span>
 
 
     </dd>
@@ -1105,7 +1035,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line69">line 69</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -1656,7 +1586,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line163">line 163</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line165">line 165</a>
     </li></ul></dd>
     
 
@@ -1745,7 +1675,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;!number></span>
+<span class="param-type">!Array.&lt;number></span>
 
 
             
@@ -1940,7 +1870,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line190">line 190</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line194">line 194</a>
     </li></ul></dd>
     
 
@@ -2029,7 +1959,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;!number></span>
+<span class="param-type">!Array.&lt;number></span>
 
 
             
@@ -2230,7 +2160,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line208">line 208</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -2319,7 +2249,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;!number></span>
+<span class="param-type">!Array.&lt;number></span>
 
 
             
@@ -2384,7 +2314,7 @@
 <span class="param-type">TypedArray</span>
 |
 
-<span class="param-type">!Array.&lt;!number></span>
+<span class="param-type">!Array.&lt;number></span>
 
 
             
@@ -2524,7 +2454,7 @@
 
     
 
-    <h4 class="name" id=".unpackString"><span class="type-signature">(static) </span>unpackString<span class="signature">(buffer, index<span class="signature-attributes">opt</span>, len<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id=".unpackString"><span class="type-signature">(static) </span>unpackString<span class="signature">(buffer, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -2536,7 +2466,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main.js.html">main.js</a>, <a href="main.js.html#line48">line 48</a>
+        <a href="main.js.html">main.js</a>, <a href="main.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -2625,7 +2555,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;!number></span>
+<span class="param-type">!Array.&lt;number></span>
 
 
             
@@ -2676,14 +2606,14 @@
 
             
 
-            <td class="description last">The index to read.</td>
+            <td class="description last">The buffer index to start reading.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>len</code></td>
+                <td class="name"><code>end</code></td>
             
 
             <td class="type">
@@ -2711,7 +2641,7 @@
 
             
 
-            <td class="description last">The number of bytes to read.   If len is undefined will read until the end of the buffer.</td>
+            <td class="description last">The buffer index to stop reading.   If end is null will read until the end of the buffer.</td>
         </tr>
 
     
@@ -2769,7 +2699,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jul 26 2018 05:32:16 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jul 29 2018 12:56:22 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -17,19 +17,17 @@ import fs from 'fs';
 const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
 // Shims for the UMD
-const shims = fs.readFileSync('./test/dist/shims.js', 'utf8');
+const shims = fs.readFileSync('./shims.js', 'utf8');
 
 // Legal
 const license = '// https://github.com/rochars/byte-data\n'
 
 // GCC UMD wrapper
-const outputWrapper = license +
-  shims +
-  '%output%' +
-  'var module=module||{};module.exports=exports;' +
-  'var define=define||function(){};' +
-  'define(["exports"],function(e){return module.exports;});' +
-  'var byteData=exports;'
+const outputWrapper =
+  "var byteData=exports;" +
+  "typeof module!=='undefined'?module.exports=exports :" +
+  "typeof define==='function'&&define.amd?define(['exports'],exports) :" +
+  "typeof global!=='undefined'?global.byteData=exports:null;";
 
 export default [
   // ES6 bundle
@@ -46,25 +44,53 @@ export default [
       commonjs()
     ]
   },
-  // ES6 bundle, minified
+  // ES6 bundle
   {
-    input: 'dist/byte-data.js',
+    input: 'main.js',
     output: [
       {
-        file: 'dist/byte-data.min.js',
+        file: 'dist/byte-data.es6.min.js',
         format: 'es'
       },
     ],
     plugins: [
+      resolve(),
+      commonjs(),
+      terser()
+    ]
+  },
+  // UMD, minified
+  {
+    input: 'main.js',
+    output: [
+      {
+        file: 'dist/byte-data.es5.umd.js',
+        name: 'byteData',
+        format: 'cjs',
+        strict: false,
+        banner: 'var exports=exports||{};'
+      }
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      closure({
+        languageIn: 'ECMASCRIPT6',
+        languageOut: 'ECMASCRIPT5',
+        compilationLevel: 'ADVANCED',
+        warningLevel: 'VERBOSE',
+        outputWrapper: license + '%output%' + outputWrapper,
+        externs: [{src: externsFile + 'exports={};'}]
+      }),
       terser()
     ]
   },
   // UMD, shims included, minified
   {
-    input: 'dist/byte-data.js',
+    input: 'main.js',
     output: [
       {
-        file: 'dist/byte-data.umd.js',
+        file: 'dist/byte-data.es3.umd.js',
         name: 'byteData',
         format: 'cjs',
         strict: false,
@@ -79,32 +105,9 @@ export default [
         languageOut: 'ECMASCRIPT3',
         compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
-        outputWrapper: outputWrapper,
+        outputWrapper: license + shims + '%output%' + outputWrapper,
         externs: [{src: externsFile + 'exports={};'}]
       }),
-      terser()
-    ]
-  },
-  // CJS, minified
-  // This version is intended to run in Node.js. It does not
-  // include any dependency to ensure they are loaded from the
-  // ./node_modules folder.
-  {
-    input: 'dist/byte-data.js',
-    output: [
-      {
-        file: 'dist/byte-data.cjs.js',
-        name: 'byteData',
-        format: 'cjs',
-      }
-    ],
-    external: [
-      'endianness',
-      'utf8-buffer'
-    ],
-    plugins: [
-      resolve(),
-      commonjs(),
       terser()
     ]
   },

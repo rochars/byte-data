@@ -6,8 +6,8 @@
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
   "module": "./main.js",
-  "main": "./dist/byte-data.cjs.js",
-  "browser": "./dist/byte-data.umd.js",
+  "main": "./dist/byte-data.umd.js",
+  "browser": "./dist/byte-data.umd.es3.js",
   "es2015": "./dist/byte-data.js",
   "types": "./main.d.ts",
   "engines": {
@@ -56,6 +56,7 @@
     "dist",
     "externs",
     "lib",
+    "shims.js",
     "main.js",
     "main.d.ts",
     "LICENSE",
@@ -66,13 +67,11 @@
   "scripts": {
     "lint": "jshint main.js lib externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive -R dot",
-    "test-cjs": "node ./node_modules/mocha/bin/_mocha test/src --cjs --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/src --umd --recursive -R dot",
-    "test-umd-notypes": "node ./node_modules/mocha/bin/_mocha test/src --umd-notypes --recursive -R dot",
+    "test-es3": "node ./node_modules/mocha/bin/_mocha test/src --es3 --recursive -R dot",
     "test-esm": "node ./node_modules/mocha/bin/_mocha test/src --esm --recursive -R dot",
-    "test-esm-min": "node ./node_modules/mocha/bin/_mocha test/src --esm-min --recursive -R dot",
-    "test-tsc": "tsc ./test/dist/TypeScript/main.ts && node ./test/dist/TypeScript/main.js",
-    "test-dist": "npm run test-cjs && npm run test-umd && npm run test-umd-notypes && npm run test-esm && npm run test-esm-min",
+    "test-tsc": "tsc ./test/dist/TypeScript/main.ts && node -r esm ./test/dist/TypeScript/main.js",
+    "test-dist": "npm run test-umd && npm run test-es3 && npm run test-esm",
     "pack": "npm run test && rollup -c && npm run test-dist && npm run test-tsc",
     "doc": "./node_modules/.bin/jsdoc main.js -d docs -r README.md -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",
@@ -98,7 +97,9 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "endianness": "^7.0.3",
-    "utf8-buffer": "0.0.2"
+    "endianness": "^8.0.0",
+    "ieee754-buffer": "0.0.1",
+    "utf8-buffer": "^0.1.0",
+    "utf8-buffer-size": "0.0.4"
   }
 }

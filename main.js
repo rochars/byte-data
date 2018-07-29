@@ -30,32 +30,38 @@
 /** @module byteData */
 
 import endianness from 'endianness';
+import utf8BufferSize from 'utf8-buffer-size';
+import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import Packer from './lib/packer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
-import {pack as packUTF8, unpack as unpackUTF8} from './lib/utf8-buffer.js';
-
-/** @type {Packer} */
-let packer = new Packer();
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
- * @param {number=} index The index to read.
- * @param {?number=} len The number of bytes to read.
- *    If len is undefined will read until the end of the buffer.
+ * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
+ * @param {number=} index The buffer index to start reading.
+ * @param {?number=} end The buffer index to stop reading.
+ *    If end is null will read until the end of the buffer.
  * @return {string}
  */
-export function unpackString(buffer, index=0, len=undefined) {
-  return unpackUTF8(buffer, index, len);
+export function unpackString(buffer, index=0, end=null) {
+  return unpackUTF8(buffer, index, end);
 }
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The packed string.
+ * @return {!Uint8Array|Array<number>} The buffer with the packed string written.
  */
 export function packString(str) {
-  return packUTF8(str);
+  /** type {Uint8Array|Array<number>} */
+  let buffer;
+  if (typeof Uint8Array === 'function') {
+    buffer =  new Uint8Array(utf8BufferSize(str));
+  } else {
+    buffer = [];
+  }
+  packUTF8(str, buffer, 0);
+  return buffer;
 }
 
 /**
@@ -67,13 +73,7 @@ export function packString(str) {
  * @return {number} The next index to write in the buffer.
  */
 export function packStringTo(str, buffer, index=0) {
-  /** @type {!Uint8Array} */
-  let bytes = packString(str);
-  let len = bytes.length;
-  for (let i = 0; i < len; i++) {
-    buffer[index++] = bytes[i];
-  }
-  return index;
+  return packUTF8(str, buffer, index);
 }
 
 // Numbers
@@ -86,7 +86,7 @@ export function packStringTo(str, buffer, index=0) {
  * @throws {Error} If the value is not valid.
  */
 export function pack(value, theType) {
-  /** @type {!Array<!number>} */
+  /** @type {!Array<number>} */
   let output = [];
   packTo(value, theType, output);
   return output;
@@ -115,7 +115,7 @@ export function packTo(value, theType, buffer, index=0) {
  * @throws {Error} If any of the values are not valid.
  */
 export function packArray(values, theType) {
-  /** @type {!Array<!number>} */
+  /** @type {!Array<number>} */
   let output = [];
   packArrayTo(values, theType, output);
   return output;
@@ -133,6 +133,8 @@ export function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(values, theType, buffer, index=0) {
+  /** @type {Packer} */
+  let packer = new Packer();
   packer.setUp(theType);
   let valuesLen = values.length;
   for (let i = 0; i < valuesLen; i++) {
@@ -153,7 +155,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
 
 /**
  * Unpack a number from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read. Assumes zero if undefined.
  * @return {number}
@@ -161,6 +163,8 @@ export function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 export function unpack(buffer, theType, index=0) {
+  /** @type {Packer} */
+  let packer = new Packer();
   packer.setUp(theType);
   if ((packer.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
@@ -178,7 +182,7 @@ export function unpack(buffer, theType, index=0) {
 
 /**
  * Unpack an array of numbers from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to start reading.
  *   Assumes zero if undefined.
@@ -188,7 +192,7 @@ export function unpack(buffer, theType, index=0) {
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArray(buffer, theType, index=0, end=buffer.length) {
-  /** @type {!Array<!number>} */
+  /** @type {!Array<number>} */
   let output = [];
   unpackArrayTo(buffer, theType, output, index, end);
   return output;
@@ -196,9 +200,9 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
 
 /**
  * Unpack a array of numbers to a typed array.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {!TypedArray|!Array<!number>} output The output array.
+ * @param {!TypedArray|!Array<number>} output The output array.
  * @param {number=} index The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
@@ -207,6 +211,8 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
  */
 export function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
+  /** @type {Packer} */
+  let packer = new Packer();
   packer.setUp(theType);
   /** @type {number} */
   let originalIndex = index;

@@ -14,6 +14,10 @@ https://github.com/rochars/byte-data
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Use it in little-endian and big-endian hosts!**
 - **Less than 7KB minified!**
+- **Compatible with IE8+**
+- **NaN consistency across different browsers**
+- **Can be used where typed arrays can't**
+- **Use typed arrays when it's possible**
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)
@@ -92,6 +96,9 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 - **NaN** is packed as quiet NaN. Both **quiet NaN** and **signaling NaN** can be unpacked.
 - Support packing and unpacking **negative zeros**.
 - Support packing and unpacking **Infinity** and **negative Infinity**
+
+## Minifloats
+Currently only 16-bit.
 
 ### Signed integers
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).

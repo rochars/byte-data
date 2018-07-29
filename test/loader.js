@@ -7,21 +7,14 @@
 let byteData;
 let types = require("binary-data-types");
 
-// UMD bundle
+// UMDs
 if (process.argv[3] == '--umd') {
 	console.log('umd tests');
-	byteData = require('../dist/byte-data.umd.js');
-
-// UMD bundle using the polyfills
-} else if (process.argv[3] == '--umd-notypes') {
-	console.log('umd tests, polyfills');
+	byteData = require('../dist/byte-data.es5.umd.js');
+} else if (process.argv[3] == '--es3') {
+	console.log('es3 umd tests');
 	global.Uint8Array = undefined;
-	byteData = require('../dist/byte-data.umd.js');
-
-// CJS bundle
-} else if (process.argv[3] == '--cjs') {
-	console.log('cjs tests');
-	byteData = require('../dist/byte-data.cjs.js');
+	byteData = require('../dist/byte-data.es3.umd.js');
 
 // ES6 dists
 } else if (process.argv[3] == '--esm') {
@@ -29,11 +22,6 @@ if (process.argv[3] == '--umd') {
 	global.module = module;
 	console.log("esm");
 	byteData = require('../dist/byte-data.js');
-} else if (process.argv[3] == '--esm-min') {
-	require = require("esm")(module);
-	global.module = module;
-	console.log("esm min");
-	byteData = require('../dist/byte-data.min.js');
 
 // Source
 } else {

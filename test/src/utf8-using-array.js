@@ -558,6 +558,6 @@ describe('unpackString strings', function() {
     });
     it('unpackString string, index, len', function() {
         assert.deepEqual(
-            byteData.unpackString([97,98,99,100], 2, 1), "c");
+            byteData.unpackString([97,98,99,100], 2, 3), "cd");
     });
 });

@@ -13,7 +13,44 @@ var uInt24 = byteData.types.uInt24;
 var float32 = byteData.types.float32;
 var int32 = byteData.types.int32;
 
+describe('Emulate old browser with binary32 and binary64', function() {
+    var global = global || {};
+    var tmp = global.Uint8Array;
+    it('pack pi as 3.1415926535897931', function() {
+        global.Uint8Array = undefined;
+        assert.deepEqual(
+            byteData.pack(3.1415926535897931, byteData.types.float64), 
+            [0x18,0x2d,0x44,0x54,0xfb,0x21,0x09,0x40]);
+        global.Uint8Array = tmp;
+    });
+    it('unpack pi as 3.1415926535897931', function() {
+        global.Uint8Array = undefined;
+        assert.equal(
+            byteData.unpack(
+                [0x18,0x2d,0x44,0x54,0xfb,0x21,0x09,0x40],
+                byteData.types.float64).toFixed(15), 
+            '3.141592653589793');
+        global.Uint8Array = tmp;
+    });
+    it('pack pi as 3.1415927410', function() {
+        global.Uint8Array = undefined;
+        assert.deepEqual(
+            byteData.pack(3.1415927410, float32), 
+            [0xdb,0x0F,0x49,0x40]);
+        global.Uint8Array = tmp;
+    });
+    it('unpack pi as 3.1415927410', function() {
+        global.Uint8Array = undefined;
+        assert.equal(
+            byteData.unpack([0xdb,0x0F,0x49,0x40], float32).toFixed(10), 
+            '3.1415927410');
+        global.Uint8Array = tmp;
+    });
+});
+
+
 describe('interface', function() {
+
     // pack
     it('pack true uInt16 (1, 0)', function() {
         assert.deepEqual(
