@@ -32,7 +32,7 @@
 import endianness from 'endianness';
 import utf8BufferSize from 'utf8-buffer-size';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
-import Packer from './lib/packer.js';
+import NumberBuffer from './lib/number-buffer.js';
 import {validateNotUndefined, validateValueType} from './lib/validation.js';
 
 /**
@@ -133,9 +133,8 @@ export function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(values, theType, buffer, index=0) {
-  /** @type {Packer} */
-  let packer = new Packer();
-  packer.setUp(theType);
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType);
   let valuesLen = values.length;
   for (let i = 0; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
@@ -143,7 +142,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
     /** @type {number} */
     let len = index + packer.offset;
     while (index < len) {
-      index = packer.write(buffer, values[i], index);
+      index = packer.pack(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
@@ -163,9 +162,8 @@ export function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 export function unpack(buffer, theType, index=0) {
-  /** @type {Packer} */
-  let packer = new Packer();
-  packer.setUp(theType);
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType);
   if ((packer.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
@@ -173,7 +171,7 @@ export function unpack(buffer, theType, index=0) {
     endianness(buffer, packer.offset, index, index + packer.offset);
   }
   /** @type {number} */
-  let value = packer.read(buffer, index);
+  let value = packer.unpack(buffer, index);
   if (theType.be) {
     endianness(buffer, packer.offset, index, index + packer.offset);
   }
@@ -211,9 +209,8 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
  */
 export function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
-  /** @type {Packer} */
-  let packer = new Packer();
-  packer.setUp(theType);
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType);
   /** @type {number} */
   let originalIndex = index;
   while ((end - index) % packer.offset) {
@@ -223,7 +220,7 @@ export function unpackArrayTo(
     endianness(buffer, packer.offset, index, end);
   }
   for (let i = 0; index < end; index += packer.offset) {
-    output[i] = packer.read(buffer, index);
+    output[i] = packer.unpack(buffer, index);
     i++;
   }
   if (theType.be) {

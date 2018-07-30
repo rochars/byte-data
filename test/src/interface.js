@@ -199,13 +199,13 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(Infinity, byteData.types.uInt16);
         };
-        assert.throws(testFunc, /Integer overflow/);
+        assert.throws(testFunc, /Overflow/);
     });
     it('thows "Integer overflow" if packing -Infinity as a integer', function() {
         testFunc = function() {
             byteData.pack(-Infinity, byteData.types.int16);
         };
-        assert.throws(testFunc, /Integer overflow/);
+        assert.throws(testFunc, /Overflow/);
     });
     // pack NaN as integer
     it('thows error if packing NaN as a integer', function() {
@@ -242,13 +242,13 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
-        assert.throws(testFunc, /Integer overflow/);
+        assert.throws(testFunc, /Overflow/);
     });
     it("8-bit overflow, negative", function () {
         testFunc = function() {
             byteData.pack(-1, {"bits": 8});
         };
-        assert.throws(testFunc, /Integer overflow/);
+        assert.throws(testFunc, /Overflow/);
     });
     
     // Invalid types

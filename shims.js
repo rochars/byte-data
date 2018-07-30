@@ -1,5 +1,7 @@
 /*!
+ * @fileoverview Polyfills for old browsers.
  * @see https://github.com/inexorabletash/polyfill/blob/master/es5.js
+ * @see https://gist.github.com/jhermsmeier/9a34b06a107bbf5d2c91
  */
 //----------------------------------------------------------------------
 //

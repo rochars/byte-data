@@ -24,10 +24,10 @@ const license = '// https://github.com/rochars/byte-data\n'
 
 // GCC UMD wrapper
 const outputWrapper =
-  "var byteData=exports;" +
+  "var byteData;" +
   "typeof module!=='undefined'?module.exports=exports :" +
   "typeof define==='function'&&define.amd?define(['exports'],exports) :" +
-  "typeof global!=='undefined'?global.byteData=exports:null;";
+  "typeof global!=='undefined'?global.byteData=exports:byteData=exports;";
 
 export default [
   // ES6 bundle
@@ -44,7 +44,7 @@ export default [
       commonjs()
     ]
   },
-  // ES6 bundle
+  // ES6 bundle, minified
   {
     input: 'main.js',
     output: [

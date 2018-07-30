@@ -275,7 +275,7 @@ function pack(str, buffer, index=0) {
 }
 
 /*
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ * Copyright (c) 2018 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -299,115 +299,201 @@ function pack(str, buffer, index=0) {
  */
 
 /**
- * @fileoverview Pack and unpack two's complement ints and unsigned ints.
- * @see https://github.com/rochars/byte-data
+ * @fileoverview Pack and unpack unsigned ints.
+ * @see https://github.com/rochars/uint-buffer
  */
 
 /**
- * A class to pack and unpack two's complement ints and unsigned ints.
+ * @module UintBuffer
+ * @ignore
  */
-class Integer {
 
-  constructor() {
-    /**
-     * @type {number}
-     */
-    this.offset = 0;
-    /**
-     * @type {number}
-     */
-    this.realOffset_ = 0;
-    /**
-     * @type {number}
-     * @private
-     */
-    this.bits_ = 0;
-    /**
-     * @type {number}
-     * @private
-     */
-    this.lastByteMask_ = 0;
-    /**
-     * @type {number}
-     * @private
-     */
-    this.max_ = 0;
-    /**
-     * @type {number}
-     * @private
-     */
-    this.min_ = 0;
-  }
-
+/**
+ * A class to write and read unsigned ints to and from byte buffers.
+ */
+class UintBuffer {
+  
   /**
-   * Set up the object to start serializing/deserializing a data type..
-   * @param {!Object} theType The type definition.
+   * @param {number} bits The number of bits used by the integer.
    */
-  setUp(theType) {
+  constructor(bits) {
     /**
-     * The max number of bits used by the data.
+     * The number of bits used by one number.
      * @type {number}
-     * @private
      */
-    this.bits_ = theType.bits;
-    // Set the min and max values according to the number of bits
+    this.bits = bits;
+    /**
+     * The number of bytes used by one number.
+     * @type {number}
+     */
+    this.bytes = bits < 8 ? 1 : Math.ceil(bits / 8);
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.max = Math.pow(2, bits) - 1;
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.min = 0;
     /** @type {number} */
-    let max = Math.pow(2, this.bits_);
-    if (theType.signed) {
-      this.max_ = max / 2 -1;
-      this.min_ = -max / 2;
-    } else {
-      this.max_ = max - 1;
-      this.min_ = 0;
-    }
-    this.setLastByteMask_();
-    this.offset = this.bits_ < 8 ? 1 : Math.ceil(this.bits_ / 8);
-    this.realOffset_ = this.bits_ === 64 ? 4 : this.offset;
+    let r = 8 - ((((bits - 1) | 7) + 1) - bits);
+    /**
+     * @type {number}
+     * @private
+     */
+    this.lastByteMask_ = Math.pow(2, r > 0 ? r : 8) - 1;
   }
 
   /**
-   * Read one integer number from a byte buffer.
-   * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
-   * @param {number=} i The index to read.
-   * @return {number}
+   * Write one unsigned integer to a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number} num The number.
+   * @param {number=} index The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @throws {Error} If num is NaN.
+   * @throws {Error} On overflow.
    */
-  read(bytes, i=0) {
-    let num = 0;
-    for(let x = 0; x < this.realOffset_; x++) {
-      num += bytes[i + x] * Math.pow(256, x);
+  pack(buffer, num, index=0) {
+    if (num !== num) {
+      throw new Error('NaN');
     }
-    num = this.sign_(num);
-    this.overflow_(num);
+    this.overflow(num);
+    buffer[index] = (num < 0 ? num + Math.pow(2, this.bits) : num) & 255;
+    index++;
+    /** @type {number} */
+    let len = this.bytes;
+    for (let i = 2; i < len; i++) {
+      buffer[index] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
+      index++;
+    }
+    if (this.bits > 8) {
+      buffer[index] = Math.floor(
+          num / Math.pow(2, ((this.bytes - 1) * 8))) & this.lastByteMask_;
+      index++;
+    }
+    return index;
+  }
+  
+  /**
+   * Read one unsigned integer from a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number=} index The index to read.
+   * @return {number} The number.
+   * @throws {Error} On overflow.
+   */
+  unpack(buffer, index=0) {
+    /** @type {number} */
+    let num = this.unpackUnsafe(buffer, index);
+    this.overflow(num);
     return num; 
   }
 
   /**
-   * Write one integer number to a byte buffer.
-   * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
+   * Read one unsigned integer from a byte buffer.
+   * Does not check for overflows.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number} index The index to read.
+   * @return {number}
+   * @protected
+   */
+  unpackUnsafe(buffer, index) {
+    /** @type {number} */
+    let num = 0;
+    for(let x = 0; x < this.bytes; x++) {
+      num += buffer[index + x] * Math.pow(256, x);
+    }
+    return num;
+  }
+
+  /**
+   * Throws error in case of overflow.
    * @param {number} num The number.
-   * @param {number=} j The index being written in the byte buffer.
+   * @throws {Error} on overflow.
+   * @protected
+   */
+  overflow(num) {
+    if (num > this.max || num < this.min) {
+      throw new Error('Overflow');
+    }
+  }
+}
+
+/*
+ * Copyright (c) 2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+/**
+ * A class to write and read two's complement signed integers
+ * to and from byte buffers.
+ * @extends UintBuffer
+ */
+class TwosComplementBuffer extends UintBuffer {
+  
+  /**
+   * @param {number} bits The number of bits used by the integer.
+   */
+  constructor(bits) {
+    super(bits);
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.max = Math.pow(2, this.bits) / 2 - 1;
+    /**
+     * @type {number}
+     * @protected
+     */
+    this.min = -this.max - 1;
+  }
+
+  /**
+   * Write one two's complement signed integer to a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number} num The number.
+   * @param {number=} index The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @throws {Error} If num is NaN.
-   * @private
+   * @throws {Error} On overflow.
    */
-  write(bytes, num, j=0) {
-    if (num !== num) {
-      throw new Error('NaN');
-    }
-    this.overflow_(num);
-    bytes[j] = (num < 0 ? num + Math.pow(2, this.bits_) : num) & 255;
-    j++;
-    let len = this.realOffset_;
-    for (let i = 2; i < len; i++) {
-      bytes[j] = Math.floor(num / Math.pow(2, ((i - 1) * 8))) & 255;
-      j++;
-    }
-    if (this.bits_ > 8) {
-      bytes[j] = Math.floor(
-          num / Math.pow(2, ((this.realOffset_ - 1) * 8))) & this.lastByteMask_;
-      j++;
-    }
-    return j;
+  pack(buffer, num, index=0) {
+    return super.pack(buffer, num, index);
+  }
+
+  /**
+   * Read one two's complement signed integer from a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number=} index The index to read.
+   * @return {number}
+   * @throws {Error} On overflow.
+   */
+  unpack(buffer, index=0) {
+    /** @type {number} */
+    let num = super.unpackUnsafe(buffer, index);
+    num = this.sign_(num);
+    this.overflow(num);
+    return num; 
   }
 
   /**
@@ -417,32 +503,78 @@ class Integer {
    * @private
    */
   sign_(num) {
-    if (num > this.max_) {
-      num -= (this.max_ * 2) + 2;
+    if (num > this.max) {
+      num -= (this.max * 2) + 2;
     }
     return num;
   }
+}
 
+/*
+ * Copyright (c) 2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+/**
+ * A class to write and read two's complement ints and unsigned ints
+ * to and from byte buffers.
+ */
+class IntBuffer {
+  
   /**
-   * Trows error in case of overflow.
-   * @param {number} num The number.
-   * @throws {Error} on overflow.
-   * @private
-   */
-  overflow_(num) {
-    if (num > this.max_ || num < this.min_) {
-      throw new Error('Integer overflow');
+   * @param {number} bits The number of bits used by the integer.
+   **/
+  constructor(theType) {
+    /** @type {TwosComplementBuffer|UintBuffer} */
+    this.parser = null;
+    if (theType.signed) {
+      this.parser = new TwosComplementBuffer(theType.bits);
+    } else {
+      this.parser = new UintBuffer(theType.bits);
     }
   }
 
   /**
-   * Set the mask that should be used when writing the last byte.
-   * @private
+   * Write one unsigned integer to a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number} num The number.
+   * @param {number=} index The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @throws {Error} If num is NaN.
+   * @throws {Error} On overflow.
    */
-  setLastByteMask_() {
-    /** @type {number} */
-    let r = 8 - ((((this.bits_ - 1) | 7) + 1) - this.bits_);
-    this.lastByteMask_ = Math.pow(2, r > 0 ? r : 8) - 1;
+  pack(buffer, num, index=0) {
+    return this.parser.pack(buffer, num, index);
+  }
+
+  /**
+   * Read one unsigned integer from a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number=} index The index to read.
+   * @return {number} The number.
+   * @throws {Error} On overflow.
+   */
+  unpack(buffer, index=0) {
+    return this.parser.unpack(buffer, index);
   }
 }
 
@@ -755,12 +887,18 @@ function roundToEven(n) {
 
 /**
  * A class to pack and unpack integers and floating-point numbers.
- * @extends {Integer}
+ * Signed integers are two's complement.
+ * Floating point are IEEE 754 standard.
+ * @extends {IntBuffer}
  */
-class Packer extends Integer {
+class NumberBuffer extends IntBuffer {
   
-  constructor() {
-    super();
+  constructor(theType) {
+    validateType(theType);
+    theType.signed = theType.float ? false : theType.signed;
+    super(theType);
+    this.offset = this.parser.bytes;
+    this.parser.bytes = this.parser.bits === 64 ? 4 : this.parser.bytes;
     /**
      * If TypedArrays are available or not
      * @type {boolean}
@@ -769,22 +907,15 @@ class Packer extends Integer {
     /**
      * Use a Typed Array to check if the host is BE or LE. This will impact
      * on how 64-bit floating point numbers are handled.
-     * @type {boolean}
+     * @type {number}
+     * @private
      */
-    let BE_ENV = false;
-    if (this.TYPED) {
-      BE_ENV = new Uint8Array(new Uint32Array([1]).buffer)[0] === 0;
-    }
+    this.HIGH_ = this.beEnv_() ? 1 : 0;
     /**
      * @type {number}
      * @private
      */
-    this.HIGH_ = BE_ENV ? 1 : 0;
-    /**
-     * @type {number}
-     * @private
-     */
-    this.LOW_ = BE_ENV ? 0 : 1;
+    this.LOW_ = this.HIGH_ ? 0 : 1;
     /**
      * @type {!Uint8Array|null}
      */
@@ -804,19 +935,17 @@ class Packer extends Integer {
      * @private
      */
     this.f64_ = this.TYPED ? new Float64Array(uInt8.buffer) : null;
+    this.setReaderAndWriter_(theType);
   }
 
   /**
-   * Set up the object to start serializing/deserializing a data type..
-   * @param {!Object} theType The type definition.
-   * @throws {Error} If the type definition is not valid.
+   * Return true if typed arrays are available and env is BE.
+   * @return {boolean}
+   * @private
    */
-  setUp(theType) {
-    validateType(theType);
-    super.setUp({
-      bits: theType.bits,
-      signed: theType.float ? false : theType.signed});
-    this.setReaderAndWriter_(theType);
+  beEnv_() {
+    return this.TYPED ? new Uint8Array(
+      new Uint32Array([1]).buffer)[0] === 0 : false;
   }
 
   /**
@@ -843,14 +972,14 @@ class Packer extends Integer {
   }
 
   /**
- * Read 1 32-bit float from bytes using a TypedArray.
- * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
- * @param {number=} i The index to read.
- * @return {number}
- * @private
- */
+   * Read 1 32-bit float from bytes using a TypedArray.
+   * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
+   * @param {number=} i The index to read.
+   * @return {number}
+   * @private
+   */
   read32FTyped_(bytes, i=0) {
-    this.ui32_[0] = super.read(bytes, i);
+    this.ui32_[0] = super.unpack(bytes, i);
     return this.f32_[0];
   }
 
@@ -874,8 +1003,8 @@ class Packer extends Integer {
    * @private
    */
   read64FTyped_(bytes, i=0) {
-    this.ui32_[this.HIGH_] = super.read(bytes, i);
-    this.ui32_[this.LOW_] = super.read(bytes, i + 4);
+    this.ui32_[this.HIGH_] = super.unpack(bytes, i);
+    this.ui32_[this.LOW_] = super.unpack(bytes, i + 4);
     return this.f64_[0];
   }
 
@@ -916,7 +1045,7 @@ class Packer extends Integer {
       return this.write32F_(bytes, num, j);
     }
     this.f32_[0] = num;
-    return super.write(bytes, this.ui32_[0], j);
+    return super.pack(bytes, this.ui32_[0], j);
   }
 
   /**
@@ -944,8 +1073,8 @@ class Packer extends Integer {
       return this.write64F_(bytes, num, j);
     }
     this.f64_[0] = num;
-    j = super.write(bytes, this.ui32_[this.HIGH_], j);
-    return super.write(bytes, this.ui32_[this.LOW_], j);
+    j = super.pack(bytes, this.ui32_[this.HIGH_], j);
+    return super.pack(bytes, this.ui32_[this.LOW_], j);
   }
 
   /**
@@ -956,18 +1085,18 @@ class Packer extends Integer {
   setReaderAndWriter_(theType) {
     if (theType.float) {
       if (theType.bits == 16) {
-        this.read = this.read16F_;
-        this.write = this.write16F_;
+        this.unpack = this.read16F_;
+        this.pack = this.write16F_;
       } else if(theType.bits == 32) {
-        this.read = this.TYPED ? this.read32FTyped_ : this.read32F_;
-        this.write = this.TYPED ? this.write32FTyped_ : this.write32F_;
+        this.unpack = this.TYPED ? this.read32FTyped_ : this.read32F_;
+        this.pack = this.TYPED ? this.write32FTyped_ : this.write32F_;
       } else {
-        this.read = this.TYPED ? this.read64FTyped_ : this.read64F_;
-        this.write = this.TYPED ? this.write64FTyped_ : this.write64F_;
+        this.unpack = this.TYPED ? this.read64FTyped_ : this.read64F_;
+        this.pack = this.TYPED ? this.write64FTyped_ : this.write64F_;
       }
     } else {
-      this.read = super.read;
-      this.write = super.write;
+      this.unpack = super.unpack;
+      this.pack = super.pack;
     }
   }
 }
@@ -1094,9 +1223,8 @@ function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 function packArrayTo(values, theType, buffer, index=0) {
-  /** @type {Packer} */
-  let packer = new Packer();
-  packer.setUp(theType);
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType);
   let valuesLen = values.length;
   for (let i = 0; i < valuesLen; i++) {
     validateNotUndefined(values[i]);
@@ -1104,7 +1232,7 @@ function packArrayTo(values, theType, buffer, index=0) {
     /** @type {number} */
     let len = index + packer.offset;
     while (index < len) {
-      index = packer.write(buffer, values[i], index);
+      index = packer.pack(buffer, values[i], index);
     }
     if (theType.be) {
       endianness(
@@ -1124,9 +1252,8 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 function unpack$2(buffer, theType, index=0) {
-  /** @type {Packer} */
-  let packer = new Packer();
-  packer.setUp(theType);
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType);
   if ((packer.offset + index) > buffer.length) {
     throw Error('Bad buffer length.');
   }
@@ -1134,7 +1261,7 @@ function unpack$2(buffer, theType, index=0) {
     endianness(buffer, packer.offset, index, index + packer.offset);
   }
   /** @type {number} */
-  let value = packer.read(buffer, index);
+  let value = packer.unpack(buffer, index);
   if (theType.be) {
     endianness(buffer, packer.offset, index, index + packer.offset);
   }
@@ -1172,9 +1299,8 @@ function unpackArray(buffer, theType, index=0, end=buffer.length) {
  */
 function unpackArrayTo(
     buffer, theType, output, index=0, end=buffer.length) {
-  /** @type {Packer} */
-  let packer = new Packer();
-  packer.setUp(theType);
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType);
   /** @type {number} */
   let originalIndex = index;
   while ((end - index) % packer.offset) {
@@ -1184,7 +1310,7 @@ function unpackArrayTo(
     endianness(buffer, packer.offset, index, end);
   }
   for (let i = 0; index < end; index += packer.offset) {
-    output[i] = packer.read(buffer, index);
+    output[i] = packer.unpack(buffer, index);
     i++;
   }
   if (theType.be) {
