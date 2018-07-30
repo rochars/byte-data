@@ -27,7 +27,7 @@ https://github.com/rochars/byte-data
 - 32-bit IEEE single-precision floating point numbers
 - 64-bit IEEE double-precision floating point numbers
 - Little-endian and big-endian words
-- UTF-8 strings (1 to 4 bytes per character, with validation)
+- UTF-8 strings (1 to 4 bytes per character, invalid characters are replaced)
 
 ## Install
 ```
@@ -62,7 +62,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ### Browser
 Use **byte-data.umd.js** in the */dist* folder of this package:
 ```html
-<script src="./dist/byte-data.umd.js"></script>
+<script src="./dist/byte-data.es3.umd.js"></script>
 <script>
   // Pack a 32-bit floating point number
   var packed = byteData.pack(2.1474836, {bits: 32, float: true});
@@ -90,7 +90,7 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 - *null* and *false* are packed as 0
 - *true* is packed as 1
 - **For integers** packing NaN will throw a 'NaN' error (floating point numbers can be packed as NaN).
-- **For integers** packing Infinity or -Infinity will throw a 'Integer overflow' error (floating point numbers can be packed as Infinity and -Infinity).
+- **For integers** packing Infinity or -Infinity will throw a 'Overflow' error (floating point numbers can be packed as Infinity and -Infinity).
 
 ### Floating-point numbers
 - Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
@@ -109,7 +109,7 @@ Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_com
 **UTF-8 strings** with a max of 4 bytes per character are supported. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
 
 ### Overflow on integers
-Overflow on integers will throw a *"Integer overflow"* error.
+Overflow on integers will throw a *"Overflow"* error.
 
 ### Browser compatibility
 Should work in all modern browsers. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/ROADMAP.md).

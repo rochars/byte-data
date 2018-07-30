@@ -542,7 +542,7 @@ class IntBuffer {
   
   /**
    * @param {number} bits The number of bits used by the integer.
-   **/
+   */
   constructor(theType) {
     /** @type {TwosComplementBuffer|UintBuffer} */
     this.parser = null;

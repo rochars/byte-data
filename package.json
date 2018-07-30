@@ -8,6 +8,8 @@
   "module": "./main.js",
   "main": "./dist/byte-data.es5.umd.js",
   "browser": "./dist/byte-data.es3.umd.js",
+  "jsdelivr": "./dist/byte-data.es3.umd.js",
+  "unpkg": "./dist/byte-data.es3.umd.js",
   "es2015": "./dist/byte-data.js",
   "types": "./main.d.ts",
   "engines": {
