@@ -6,16 +6,17 @@ https://github.com/rochars/byte-data
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/docs/index.html) [![Tests](https://img.shields.io/badge/tests-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/test/dist/browser.html)  
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
-**byte-data** is a JavaScript module for the serialization and deserialization of numbers and strings.
+**byte-data** is a ES module for the serialization and deserialization of numbers and strings.
 
 ## This document covers version 15.0.0, in alpha as of 2018-07-31.
 
 - **MIT licensed**
+- **Type safe**
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Use it in little-endian and big-endian hosts!**
-- **Compatible with IE8+**
+- **Compatible with IE8+** (UMD dist)
 - **Less than 6kb minified!**
 - **NaN consistency across different browsers**
 - **Can be used where typed arrays can't**
@@ -114,7 +115,7 @@ Overflow on integers will throw a *"Overflow"* error.
 IE8+. Should work in all modern browsers.
 
 Cross-browser tests powered by  
-<a href="https://www.browserstack.com"><img src="https://github.com/rochars/byte-data/blob/master/docs/Browserstack-logo@2x.png" width="150px"/></a>
+<a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>
 
 ### Tests on big-endian systems
 Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
@@ -125,12 +126,10 @@ https://people.debian.org/~aurel32/qemu/powerpc/
 // Strings
 /**
  * Read a string of UTF-8 characters from a byte buffer.
- * @see https://encoding.spec.whatwg.org/#the-encoding
- * @see https://stackoverflow.com/a/34926911
- * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
- * @param {number=} index The index to read.
- * @param {?number=} len The number of bytes to read.
- *    If len is undefined will read until the end of the buffer.
+ * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
+ * @param {number=} index The buffer index to start reading.
+ * @param {?number=} end The buffer index to stop reading.
+ *    If end is null will read until the end of the buffer.
  * @return {string}
  */
 export function unpackString(buffer, index=0, len=null) {}

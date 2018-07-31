@@ -38,12 +38,10 @@ var theType = {
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
- * @see https://encoding.spec.whatwg.org/#the-encoding
- * @see https://stackoverflow.com/a/34926911
- * @param {!Uint8Array|!Array<!number>} buffer A byte buffer.
- * @param {number=} index The index to read.
- * @param {?number=} len The number of bytes to read.
- *    If len is undefined will read until the end of the buffer.
+ * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
+ * @param {number=} index The buffer index to start reading.
+ * @param {?number=} end The buffer index to stop reading.
+ *    If end is null will read until the end of the buffer.
  * @return {string}
  */
 function unpackString(buffer, index=0, len=null) {}
