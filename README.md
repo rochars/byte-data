@@ -111,7 +111,10 @@ Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_com
 Overflow on integers will throw a *"Overflow"* error.
 
 ### Browser compatibility
-Should work in all modern browsers. Cross-browser tests are on the [ROADMAP](https://github.com/rochars/byte-data/blob/master/ROADMAP.md).
+IE8+. Should work in all modern browsers.
+
+Cross-browser tests powered by  
+<a href="https://www.browserstack.com"><img src="https://github.com/rochars/byte-data/blob/master/docs/Browserstack-logo@2x.png" width="150px"/></a>
 
 ### Tests on big-endian systems
 Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
