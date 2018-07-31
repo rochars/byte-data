@@ -88,15 +88,13 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 ## About
 
 ### Unpacking and input buffer length
-- When unpacking a single value, a error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
+- When unpacking a single value, a *'Bad buffer length.'* error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
 - When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array**
 
-### *null*, *false*, *true*, *undefined*, *NaN*, *Infinity*, *-Infinity*
-- Packing *undefined* values throw *'Undefined value.'* error
+### *null*, *false*, *true*, *undefined*
+- Packing *undefined* values throw *'Undefined value'* error
 - *null* and *false* are packed as 0
 - *true* is packed as 1
-- **For integers** packing NaN will throw a 'NaN' error (floating point numbers can be packed as NaN).
-- **For integers** packing Infinity or -Infinity will throw a 'Overflow' error (floating point numbers can be packed as Infinity and -Infinity).
 
 ### Floating-point numbers
 - Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
@@ -108,14 +106,16 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 #### Minifloats
 Currently only 16-bit half-precision.
 
-### Signed integers
+### Integers
+Overflow on integers will throw a *"Overflow"* error.
+- packing NaN will throw a 'NaN' error.
+- packing Infinity or -Infinity will throw a 'Overflow' error.
+
+#### Signed integers
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
-### Overflow on integers
-Overflow on integers will throw a *"Overflow"* error.
-
 ### Strings
-**UTF-8 strings** with a 1 to 4 bytes per character can be packed and unpacked from byte buffers. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
+**UTF-8 strings** with 1 to 4 bytes per character can be packed and unpacked. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
 
 #### Reading strings from buffers
 Use **unpackString(buffer, index, end)**. The paramters **index** and **end** determine a slice of the buffer to read. So to read the first 4 bytes of a buffer:

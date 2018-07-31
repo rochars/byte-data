@@ -1152,7 +1152,7 @@ function unpack$2(buffer, theType, index=0) {
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
   if ((packer.offset + index) > buffer.length) {
-    throw Error('Bad buffer length.');
+    throw Error('Bad buffer length');
   }
   if (theType.be) {
     endianness(buffer, packer.offset, index, index + packer.offset);
