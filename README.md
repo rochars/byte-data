@@ -12,11 +12,11 @@ https://github.com/rochars/byte-data
 
 - **MIT licensed**
 - **Type safe**
+- **Compatible with IE6+** (UMD dist)
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Use it in little-endian and big-endian hosts!**
-- **Compatible with IE8+** (UMD dist)
 - **Less than 6kb minified!**
 - **NaN consistency across different browsers**
 - **Can be used where typed arrays can't**
@@ -112,7 +112,7 @@ Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_com
 Overflow on integers will throw a *"Overflow"* error.
 
 ### Browser compatibility
-IE8+. Should work in all modern browsers.
+IE6+. Should work in all modern browsers.
 
 Cross-browser tests powered by  
 <a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>
