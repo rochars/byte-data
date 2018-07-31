@@ -22,12 +22,17 @@
 
 	<!-- Run the tests -->
 	<script>
+	    try {
 	    var buffer = [] 
         console.log(byteData.pack(3.1415927410, BinaryDataTypes.float32).toString() == 
 	            [0xdb,0x0F,0x49,0x40].toString());
 	    console.log(byteData.unpack([0xdb,0x0F,0x49,0x40], BinaryDataTypes.float32).toFixed(10) ==
 	            '3.1415927410');
 	   	console.log(byteData.packString('abc'));
+	   	document.write('OK!');
+	   } catch (err) {
+	   	document.write('ERROR');
+	   }
 	</script>
 
 </body>
