@@ -44,7 +44,7 @@ var theType = {
  *    If end is null will read until the end of the buffer.
  * @return {string}
  */
-function unpackString(buffer, index=0, len=null) {}
+function unpackString(buffer, index=0, end=null) {}
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.

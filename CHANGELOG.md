@@ -4,8 +4,14 @@
 - Fix: throws error when packing NaN as integer
 - Fix: unpack binary16 Infinity, -Infinity and NaN
 - Fix: pack binary16 Infinity, -Infinity and NaN
+
+### unpackString(buffer, index=0, end=null)
 - unpackString() now returns a Uint8Array.
-- Only UMD and ES bundle dist files.
+- the parameters **index** and **end** determine a slice of the buffer to read. So to read the first 4 bytes of a buffer, you would use:
+```javascript
+let str = unpackString(buffer, 0, 3);
+// read from buffer[0], buffer[1], buffer[2], buffer[3]
+```
 
 ## v14.1.0 (2018-07-19)
 - Add countString(string) the API; returns the number of bytes needed to serialize a UTF-8 string.

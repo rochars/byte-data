@@ -12,7 +12,7 @@ https://github.com/rochars/byte-data
 
 - **MIT licensed**
 - **Type safe**
-- **Compatible with IE6+** (UMD dist)
+- **Compatible with IE6+**
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
@@ -35,13 +35,19 @@ npm install byte-data
 ```
 
 ## Use
+Some examples of byte-data being used in Node.js and in the browser. Check the [API](https://rochars.github.io/byte-data/docs/index.html) to see all the possible options.
 
 ### Node
 If you installed via [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com), **import byteData from byte-data**:
 ```javascript
 import * as byteData from 'byte-data';
 
-// Pack a usigned 8-bit unsigned integer
+// Pack a signed 16-bit integer to a existing byte buffer
+// Start writing on index '4' of the buffer
+packTo(1077, {bits: 16, signed: true}, buffer, 4);
+
+// Pack a usigned 8-bit unsigned integer, returns a
+// array with the number represented as bytes
 let packed = byteData.pack(128, {bits: 8});
 ```
 
@@ -99,20 +105,41 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 - Support packing and unpacking **negative zeros**.
 - Support packing and unpacking **Infinity** and **negative Infinity**
 
-## Minifloats
-Currently only 16-bit.
+#### Minifloats
+Currently only 16-bit half-precision.
 
 ### Signed integers
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
-### Strings
-**UTF-8 strings** with a max of 4 bytes per character are supported. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
-
 ### Overflow on integers
 Overflow on integers will throw a *"Overflow"* error.
 
+### Strings
+**UTF-8 strings** with a 1 to 4 bytes per character can be packed and unpacked from byte buffers. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
+
+#### Reading strings from buffers
+Use **unpackString(buffer, index, end)**. The paramters **index** and **end** determine a slice of the buffer to read. So to read the first 4 bytes of a buffer:
+```javascript
+let str = unpackString(buffer, 0, 3);
+// read from buffer[0], buffer[1], buffer[2], buffer[3]
+```
+
+If **index** and **end** are ommited unpackString(buffer) will read the entire buffer:
+```javascript
+let str = unpackString(buffer);
+```
+
+#### Writing strings to buffers
+There are two ways to do this:
+
+**packString(str)** will return a Uint8Array with the bytes of the string. If you are using the UMD distribution and Uint8Arrays are not available the function will return a regular Array.
+
+**packStringTo(str, buffer, index=0)** will write the string to the provided buffer (Uint8Array or Array), starting on the **index**. Index defaults to zero if ommited (start from the beginning of the buffer).
+
 ### Browser compatibility
-IE6+. Should work in all modern browsers.
+The UMD dist (**./dist/byte-data.umd.js**) is compatible with IE6+.
+
+If you are consuming this lib as a ES6 module the polyfills and shims are not included. They are in the **./scripts/** folder, included in the distribution, in case you need them.
 
 Cross-browser tests powered by  
 <a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>

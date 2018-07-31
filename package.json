@@ -65,10 +65,11 @@
   "scripts": {
     "lint": "jshint index.js lib externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive -R dot",
-    "test-umd": "node ./node_modules/mocha/bin/_mocha test/src --umd --recursive -R dot",
+    "test-esm": "node ./node_modules/mocha/bin/_mocha test/src --esm --recursive -R dot",
     "test-min": "node ./node_modules/mocha/bin/_mocha test/src --esm --recursive -R dot",
+    "test-umd": "node ./node_modules/mocha/bin/_mocha test/src --umd --recursive -R dot",
     "test-tsc": "tsc ./test/dist/TypeScript/main.ts && node -r esm ./test/dist/TypeScript/main.js",
-    "test-dist": "npm run test-umd && npm run test-min",
+    "test-dist": "npm run test-umd && npm run test-esm && npm run test-min",
     "pack": "npm run test && rollup -c && npm run test-dist && npm run test-tsc",
     "doc": "./node_modules/.bin/jsdoc index.js -d docs -r README.md -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",
