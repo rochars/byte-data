@@ -7,7 +7,7 @@
  * @see https://github.com/rochars/byte-data
  */
 
-import * as byteData from '../../../main.js'
+import * as byteData from '../../../index.js'
 
 let theType = {bits: 16}
 

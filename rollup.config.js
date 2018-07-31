@@ -17,7 +17,8 @@ import fs from 'fs';
 const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
 // Shims for the UMD
-const shims = fs.readFileSync('./shims.js', 'utf8');
+const polyfills = fs.readFileSync('./scripts/polyfills.js', 'utf8');
+const shims = fs.readFileSync('./scripts/shims.js', 'utf8');
 
 // Legal
 const license = '// https://github.com/rochars/byte-data\n'
@@ -30,6 +31,7 @@ const outputWrapper =
   "typeof global!=='undefined'?global.byteData=exports:byteData=exports;";
 
 export default [
+  /*
   // ES6 bundle
   {
     input: 'main.js',
@@ -43,13 +45,13 @@ export default [
       resolve(),
       commonjs()
     ]
-  },
+  },*/
   // ES6 bundle, minified
   {
-    input: 'main.js',
+    input: 'index.js',
     output: [
       {
-        file: 'dist/byte-data.es6.min.js',
+        file: 'dist/byte-data.min.js',
         format: 'es'
       },
     ],
@@ -59,7 +61,8 @@ export default [
       terser()
     ]
   },
-  // UMD, minified
+  /*
+  // UMD, ES5, minified
   {
     input: 'main.js',
     output: [
@@ -85,16 +88,18 @@ export default [
       terser()
     ]
   },
-  // UMD, shims included, minified
+  */
+  // UMD, ES3, polyfills and shims included, minified
   {
-    input: 'main.js',
+    input: 'index.js',
     output: [
       {
-        file: 'dist/byte-data.es3.umd.js',
+        file: 'dist/byte-data.umd.js',
         name: 'byteData',
         format: 'cjs',
         strict: false,
-        banner: 'var exports=exports||{};'
+        banner: 'var exports=exports||{};',
+        outro: shims
       }
     ],
     plugins: [
@@ -105,7 +110,7 @@ export default [
         languageOut: 'ECMASCRIPT3',
         compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
-        outputWrapper: license + shims + '%output%' + outputWrapper,
+        outputWrapper: license + polyfills + '%output%' + shims + outputWrapper,
         externs: [{src: externsFile + 'exports={};'}]
       }),
       terser()

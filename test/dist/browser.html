@@ -17,7 +17,7 @@
 	</div>
 
 	<!-- load shims -->
-	<script src="../../shims.js"></script>
+	<script src="browser-runtime/shims.js"></script>
 
 	<!-- Load Mocha -->
 	<div class="container">
@@ -28,7 +28,7 @@
 	<script>mocha.setup('bdd');</script>
 
 	<!-- Load UMD, load types -->
-	<script src="../../dist/byte-data.es5.umd.js"></script>
+	<script src="../../dist/byte-data.umd.js"></script>
 	<script src="browser-runtime/binary-data-types.min.js"></script>
 	<script>
 		byteData.types = BinaryDataTypes;

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--  Check if the lib is valid without any extra polyfill loaded -->
 <html>
 <head>
     <meta charset="utf-8">
@@ -8,7 +9,6 @@
     <link rel="stylesheet" href="browser-runtime/bootstrap.min.css">
 </head>
 <body>
-
 	<div class="container">
 		<h1><a href="https://github.com/rochars/byte-data">byte-data</a></h1>
 		<p>Pack and unpack binary data.<br>
@@ -17,7 +17,7 @@
 	</div>
 	
 	<!-- Load UMD, load types -->
-	<script src="../../dist/byte-data.es3.umd.js"></script>
+	<script src="../../dist/byte-data.umd.js"></script>
 	<script src="browser-runtime/binary-data-types.min.js"></script>
 
 	<!-- Run the tests -->
@@ -27,6 +27,7 @@
 	            [0xdb,0x0F,0x49,0x40].toString());
 	    console.log(byteData.unpack([0xdb,0x0F,0x49,0x40], BinaryDataTypes.float32).toFixed(10) ==
 	            '3.1415927410');
+	   	console.log(byteData.packString('abc'));
 	</script>
 
 </body>

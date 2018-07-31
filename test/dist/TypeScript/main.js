@@ -7,7 +7,7 @@ exports.__esModule = true;
  * @fileoverview TypeScript declaration tests.
  * @see https://github.com/rochars/byte-data
  */
-var byteData = require("../../../main.js");
+var byteData = require("../../../index.js");
 var theType = { bits: 16 };
 var arr = byteData.pack(1, theType);
 var num = byteData.unpack(arr, theType);

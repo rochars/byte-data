@@ -33,7 +33,7 @@ import endianness from 'endianness';
 import utf8BufferSize from 'utf8-buffer-size';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
-import {validateNotUndefined, validateValueType} from './lib/validation.js';
+import {validateValueType} from './lib/validation.js';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -50,16 +50,11 @@ export function unpackString(buffer, index=0, end=null) {
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array|Array<number>} The buffer with the packed string written.
- */
+ * @return {!Uint8Array} The buffer with the packed string written.
+ */ 
 export function packString(str) {
-  /** type {Uint8Array|Array<number>} */
-  let buffer;
-  if (typeof Uint8Array === 'function') {
-    buffer =  new Uint8Array(utf8BufferSize(str));
-  } else {
-    buffer = [];
-  }
+  /** @type {!Uint8Array} */
+  let buffer = new Uint8Array(utf8BufferSize(str));
   packUTF8(str, buffer, 0);
   return buffer;
 }
@@ -137,7 +132,6 @@ export function packArrayTo(values, theType, buffer, index=0) {
   let packer = new NumberBuffer(theType);
   let valuesLen = values.length;
   for (let i = 0; i < valuesLen; i++) {
-    validateNotUndefined(values[i]);
     validateValueType(values[i]);
     /** @type {number} */
     let len = index + packer.offset;

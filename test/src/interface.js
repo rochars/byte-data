@@ -226,7 +226,7 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
         };
-        assert.throws(testFunc, /Undefined value./);
+        assert.throws(testFunc, /Undefined value/);
     });
 
     // Bad buffer length on unpack
@@ -234,7 +234,7 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.unpack([1], {"bits": 16});
         };
-        assert.throws(testFunc, /Bad buffer length./);
+        assert.throws(testFunc, /Bad buffer length/);
     });
 
     // integer overflow
@@ -256,30 +256,30 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(2);
         };
-        assert.throws(testFunc, /Undefined type./);
+        assert.throws(testFunc, /Unsupported type/);
     });
     it("More than 64 bits", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 65});
         };
-        assert.throws(testFunc, /Bad type definition./);
+        assert.throws(testFunc, /Unsupported type/);
     });
     it("Less than 1 bit (0)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 0});
         };
-        assert.throws(testFunc, /Bad type definition./);
+        assert.throws(testFunc, /Unsupported type/);
     });
     it("Less than 1 bit (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": -1});
         };
-        assert.throws(testFunc, /Bad type definition./);
+        assert.throws(testFunc, /Unsupported type/);
     });
     it("17 float (-1)", function () {
         testFunc = function() {
             byteData.pack(2, {"bits": 17, "float": true});
         };
-        assert.throws(testFunc, /Bad float type./);
+        assert.throws(testFunc, /Unsupported type/);
     });
 });
