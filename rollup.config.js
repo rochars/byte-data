@@ -20,9 +20,6 @@ const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 const polyfills = fs.readFileSync('./scripts/polyfills.js', 'utf8');
 const shims = fs.readFileSync('./scripts/shims.js', 'utf8');
 
-// Legal
-const license = '// https://github.com/rochars/byte-data\n'
-
 // GCC UMD wrapper
 const outputWrapper =
   "var byteData;" +
@@ -31,10 +28,9 @@ const outputWrapper =
   "typeof global!=='undefined'?global.byteData=exports:byteData=exports;";
 
 export default [
-  /*
   // ES6 bundle
   {
-    input: 'main.js',
+    input: 'index.js',
     output: [
       {
         file: 'dist/byte-data.js',
@@ -45,10 +41,10 @@ export default [
       resolve(),
       commonjs()
     ]
-  },*/
+  },
   // ES6 bundle, minified
   {
-    input: 'index.js',
+    input: 'dist/byte-data.js',
     output: [
       {
         file: 'dist/byte-data.min.js',
@@ -56,42 +52,12 @@ export default [
       },
     ],
     plugins: [
-      resolve(),
-      commonjs(),
       terser()
     ]
   },
-  /*
-  // UMD, ES5, minified
-  {
-    input: 'main.js',
-    output: [
-      {
-        file: 'dist/byte-data.es5.umd.js',
-        name: 'byteData',
-        format: 'cjs',
-        strict: false,
-        banner: 'var exports=exports||{};'
-      }
-    ],
-    plugins: [
-      resolve(),
-      commonjs(),
-      closure({
-        languageIn: 'ECMASCRIPT6',
-        languageOut: 'ECMASCRIPT5',
-        compilationLevel: 'ADVANCED',
-        warningLevel: 'VERBOSE',
-        outputWrapper: license + '%output%' + outputWrapper,
-        externs: [{src: externsFile + 'exports={};'}]
-      }),
-      terser()
-    ]
-  },
-  */
   // UMD, ES3, polyfills and shims included, minified
   {
-    input: 'index.js',
+    input: 'dist/byte-data.js',
     output: [
       {
         file: 'dist/byte-data.umd.js',
@@ -103,14 +69,12 @@ export default [
       }
     ],
     plugins: [
-      resolve(),
-      commonjs(),
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT3',
         compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
-        outputWrapper: license + polyfills + '%output%' + shims + outputWrapper,
+        outputWrapper: polyfills + '%output%' + outputWrapper,
         externs: [{src: externsFile + 'exports={};'}]
       }),
       terser()

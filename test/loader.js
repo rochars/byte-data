@@ -13,6 +13,13 @@ if (process.argv[3] == '--umd') {
 	global.Uint8Array = undefined;
 	byteData = require('../dist/byte-data.umd.js');
 
+// ES6
+} else if (process.argv[3] == '--esm') {
+	require = require("esm")(module);
+	global.module = module;
+	console.log("esm");
+	byteData = require('../dist/byte-data.js');
+
 // ES6 min
 } else if (process.argv[3] == '--min') {
 	require = require("esm")(module);

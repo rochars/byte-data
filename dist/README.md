@@ -1,5 +1,8 @@
 # Distribution files
 
+## byte-data.js
+ES6 bundle with all the dependencies.
+
 ## byte-data.min.js
 ES6 bundle with all the dependencies, minified.
 
