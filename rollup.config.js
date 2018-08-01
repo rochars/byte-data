@@ -75,9 +75,11 @@ export default [
         compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
         outputWrapper: polyfills + '%output%' + outputWrapper,
+        assumeFunctionWrapper: true,
+        rewritePolyfills: true,
         externs: [{src: externsFile + 'exports={};'}]
       }),
-      terser()
+      terser({mangle:false})
     ]
   },
 ];

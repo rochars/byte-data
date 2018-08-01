@@ -8,4 +8,5 @@ See [CONTRIBUTING.md](https://github.com/rochars/byte-data/blob/master/CONTRIBUT
 
 ## Planned:
 - Include BE tests in the build process (now they need to be done manually)
-- Cross-browser tests
+- Include browser tests in the build process (now they need to be done manually)
+- Add a browser compatibility badge to README

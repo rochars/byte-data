@@ -133,9 +133,7 @@ There are two ways to do this:
 **packStringTo(str, buffer, index=0)** will write the string to the provided buffer (Uint8Array or Array), starting on the **index**. Index defaults to zero if ommited (start from the beginning of the buffer).
 
 ### Browser compatibility
-The UMD dist (**./dist/byte-data.umd.js**) is compatible with IE6+.
-
-If you are consuming this lib as a ES6 module the polyfills and shims are not included. They are in the **./scripts/** folder, included in the distribution, in case you need them.
+The UMD dist (**./dist/byte-data.umd.js**) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.
 
 Cross-browser tests powered by  
 <a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>
