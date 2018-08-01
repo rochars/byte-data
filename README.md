@@ -84,7 +84,7 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 ## About
 
 ### Unpacking and input buffer length
-- When unpacking a single value, a *'Bad buffer length.'* error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
+- When unpacking a single value, a *'Bad buffer length'* error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
 - When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array**
 
 ### *null*, *false*, *true*, *undefined*
@@ -260,7 +260,7 @@ export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.lengt
 ## Types
 Types are user-defined objects like this:
 ```javascript
-const float32 = {
+const binary32 = {
   bits: 32, // required
   signed: true, // optional, defaults to false
   float: true, // optional, defaults to false
