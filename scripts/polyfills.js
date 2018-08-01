@@ -27,8 +27,38 @@ if (!Object.defineProperty ||
   };
 }
 
+// ES 15.2.3.7 Object.defineProperties ( O, Properties )
+if (typeof Object.defineProperties !== "function") {
+  Object.defineProperties = function (o, properties) {
+    if (o !== Object(o)) { throw TypeError("Object.defineProperties called on non-object"); }
+    var name;
+    for (name in properties) {
+      if (Object.prototype.hasOwnProperty.call(properties, name)) {
+        Object.defineProperty(o, name, properties[name]);
+      }
+    }
+    return o;
+  };
+}
+
+// ES5 15.2.3.5 Object.create ( O [, Properties] )
+if (typeof Object.create !== "function") {
+  Object.create = function (prototype, properties) {
+    if (typeof prototype !== "object") { throw TypeError(); }
+    function Ctor() {}
+    Ctor.prototype = prototype;
+    var o = new Ctor();
+    if (prototype) { o.constructor = Ctor; }
+    if (properties !== undefined) {
+      if (properties !== Object(properties)) { throw TypeError(); }
+      Object.defineProperties(o, properties);
+    }
+    return o;
+  };
+}
+
 //see https://gist.github.com/jhermsmeier/9a34b06a107bbf5d2c91
-if (!Object.getOwnPropertyDescriptor) {
+if (typeof Object.getOwnPropertyDescriptor !== "function") {
   Object.getOwnPropertyDescriptor = function( object, key ) {
     
     var hasSupport =
