@@ -33,6 +33,7 @@
  * a Uint8Array if available. If not, a regular array is used.
  * @param {string} str The string to pack.
  * @return {!Uint8Array|Array<number>} The buffer with the string written.
+ * @suppress {checkTypes}
  */
 function packString(str) {
   var buffer;

@@ -542,11 +542,12 @@ class IntBuffer {
   
   /**
    * @param {number} bits The number of bits used by the integer.
+   * @param {boolean} signed True if the integer is signed.
    */
-  constructor(theType) {
+  constructor(bits, signed) {
     /** @type {TwosComplementBuffer|UintBuffer} */
-    this.parser = theType.signed ?
-      new TwosComplementBuffer(theType.bits) : new UintBuffer(theType.bits);
+    this.parser = signed ?
+      new TwosComplementBuffer(bits) : new UintBuffer(bits);
   }
 
   /**
@@ -889,7 +890,7 @@ class NumberBuffer extends IntBuffer {
   constructor(theType) {
     validateType(theType);
     theType.signed = theType.float ? false : theType.signed;
-    super(theType);
+    super(theType.bits, theType.signed);
     this.offset = this.parser.bytes;
     this.parser.bytes = this.parser.bits === 64 ? 4 : this.parser.bytes;
     this.setReaderAndWriter_(theType);
@@ -915,8 +916,6 @@ class NumberBuffer extends IntBuffer {
    * @private
    */
   read32F_(bytes, i=0) {
-    //this.ui32_[0] = super.unpack(bytes, i);
-    //return this.f32_[0];
     return unpack$1(bytes, i, 8, 23);
   }
 
@@ -929,9 +928,6 @@ class NumberBuffer extends IntBuffer {
    * @private
    */
   read64F_(bytes, i=0) {
-    //this.ui32_[this.HIGH_] = super.unpack(bytes, i);
-    //this.ui32_[this.LOW_] = super.unpack(bytes, i + 4);
-    //return this.f64_[0];
     return unpack$1(bytes, i, 11, 52);
   }
 
@@ -956,11 +952,7 @@ class NumberBuffer extends IntBuffer {
    * @private
    */
   write32F_(bytes, num, j=0) {
-    //if (num !== num) {
       return pack$1(bytes, j, num, 8, 23);
-    //}
-    //this.f32_[0] = num;
-    //return super.pack(bytes, this.ui32_[0], j);
   }
 
   /**
@@ -972,12 +964,7 @@ class NumberBuffer extends IntBuffer {
    * @private
    */
   write64F_(bytes, num, j=0) {
-    //if (num !== num) {
       return pack$1(bytes, j, num, 11, 52);
-    //}
-    //this.f64_[0] = num;
-    //j = super.pack(bytes, this.ui32_[this.HIGH_], j);
-    //return super.pack(bytes, this.ui32_[this.LOW_], j);
   }
 
   /**

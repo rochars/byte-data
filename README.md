@@ -44,7 +44,7 @@ import * as byteData from 'byte-data';
 
 // Pack a signed 16-bit integer to a existing byte buffer
 // Start writing on index '4' of the buffer
-packTo(1077, {bits: 16, signed: true}, buffer, 4);
+byteData.packTo(1077, {bits: 16, signed: true}, buffer, 4);
 
 // Pack a usigned 8-bit unsigned integer, returns a
 // array with the number represented as bytes
