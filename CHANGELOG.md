@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v15.0.0 (2018-07-31)
+## v15.0.0 (2018-08-01)
 - Fix: throws error when packing NaN as integer
 - Fix: unpack binary16 Infinity, -Infinity and NaN
 - Fix: pack binary16 Infinity, -Infinity and NaN
