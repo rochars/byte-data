@@ -6,20 +6,16 @@ https://github.com/rochars/byte-data
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/docs/index.html) [![Tests](https://img.shields.io/badge/tests-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/test/dist/browser.html)  
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/)
 
-**byte-data** is a ES module for the serialization and deserialization of numbers and strings.
-
-## This document covers version 15.0.0, in alpha as of 2018-07-31.
+**byte-data** is a ES module to pack and unpack numbers and strings to and from byte buffers.
 
 - **MIT licensed**
 - **Type safe**
-- **Compatible with IE6+**
-- **Use it out of the box in the browser**
+- **Compatible with IE6+ and all modern browsers that support ES3/ES5/ES6+**
 - **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
-- **Use it in little-endian and big-endian hosts!**
-- **Less than 6kb minified!**
-- **NaN consistency across different browsers**
+- **Tested in little-endian and big-endian machines!**
 - **Can be used where typed arrays can't**
+- **Less than 6kb minified!**
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)
@@ -68,7 +64,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ### Browser
 Use **byte-data.umd.js** in the */dist* folder of this package:
 ```html
-<script src="./dist/byte-data.es3.umd.js"></script>
+<script src="./dist/byte-data.umd.js"></script>
 <script>
   // Pack a 32-bit floating point number
   var packed = byteData.pack(2.1474836, {bits: 32, float: true});

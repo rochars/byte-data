@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## v15.0.0 (unreleased)
+## v15.0.0 (2018-07-31)
 - Fix: throws error when packing NaN as integer
 - Fix: unpack binary16 Infinity, -Infinity and NaN
 - Fix: pack binary16 Infinity, -Infinity and NaN
+- Compatible with IE6+ and all modern browsers that support ES3/ES5/ES6+
 
 ### unpackString(buffer, index=0, end=null)
 - unpackString() now returns a Uint8Array.
