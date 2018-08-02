@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v13.2.7 (2018-08-02)
+- Fix binary16 encoding and decoding.
+
 ## v13.2.6 (2018-07-13)
 - Fix es2015 field in package.json
 - Fix documentation issues.

@@ -8,17 +8,18 @@ https://github.com/rochars/byte-data
 
 **byte-data** is a JavaScript module for the serialization and deserialization of numbers and strings.
 
+### Version 13.x main differences from the latest release:
+- Typed Arrays are used to encode/decode 32 and 64-bit floats. This makes this version overall faster than 15.x, but results will depend on the environment implementation of Typed Arrays, wich may differ from one to context to another.
+- It only encode and decode ASCII characters; the current version includes support for UTF-8 characters.
+
 - **No dependencies**
 - **MIT-licensed**
 - **Use it out of the box in the browser**
 - **Use it out of the box in Node**
-- **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Use it in little-endian and big-endian hosts**
 - **Write to buffers**, option to define **start and end index to write**
 - **Read from buffers**, option to define **start and end index to read**
 - Use **typed arrays** or **arrays**
-- **Less than 2KB minified + compressed, less than 5KB minified**
-- Made with **[Closure Compiler](https://github.com/google/closure-compiler)** in mind (works great with others, too)
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)
@@ -29,30 +30,9 @@ https://github.com/rochars/byte-data
 - ASCII Strings (with validation)
 
 ## Install
-
-### NPM
 ```
 npm install byte-data
 ```
-
-### Yarn
-```
-yarn add byte-data
-```
-
-### GitHub
-This is not recommended as it will also include test and build assets in your installation. If this is what you want, you can:
-```
-git clone https://github.com/rochars/byte-data
-```
-
-And then import/require what you want from the *byte-data* folder:
-```
-const byteData = require('./byte-data/dist/byte-data.umd.js');
-```
-
-You can also download one of the files in the *./dist* folder:  
-https://github.com/rochars/byte-data/tree/master/dist
 
 ## Use
 
@@ -97,24 +77,6 @@ Or get it from the [jsDelivr](https://cdn.jsdelivr.net/npm/byte-data) CDN:
 Or get it from [unpkg](https://unpkg.com/byte-data):
 ```html
 <script src="https://unpkg.com/byte-data"></script>
-```
-
-Or load it as a module using [jspm](https://jspm.io):
-```html
-<script type="module">
-  import {pack} from 'https://dev.jspm.io/byte-data';
-  // Pack a 15-bit signed integer
-  pack(-1200, {bits: 16, signed: true});
-</script>
-```
-
-### ES bundle
-Import byteData from **byte-data.js** in the *./dist* folder of this package:
-```javascript
-import * as byteData from './dist/byte-data.js';
-
-// Pack a usigned 8-bit unsigned integer
-let packed = byteData.pack(128, {bits: 8});
 ```
 
 ## About
@@ -317,41 +279,8 @@ All types in **binary-data-types** are supported by byte-data. They are:
   - float64BE
 
 ## Tests on big-endian systems
-Tests in big-endian hosts are done with [QEMU](https://www.qemu.org/) using this PowerPC/Debian image:  
+Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
 https://people.debian.org/~aurel32/qemu/powerpc/
-
-## Distribution
-This library is a ES module also distributed as a CommonJS module, UMD module and a compiled script for browsers. It works out of the box in Node when installed with ```npm install byte-data```. It includes a [TypeScript](https://www.typescriptlang.org/) definition file: **./main.d.ts**.
-
-If you use the [Closure Compiler](https://github.com/google/closure-compiler), this package includes a externs file: **./externs/byte-data.js**.
-
-### If you are using this lib in a browser:
-
-You may load both **./dist/byte-data.umd.js** and **./dist/byte-data.min.js** in the browser with ```<script>``` tags. Ideally you should use **byte-data.min.js**. You can load it via the https://unpkg.com and https://www.jsdelivr.com/ CDNs:
-
-[unpkg](https://unpkg.com/byte-data):
-```html
-<script src="https://unpkg.com/byte-data"></script>
-```
-
-[jsDelivr](https://cdn.jsdelivr.net/npm/byte-data):
-```html
-<script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
-```
-
-### If you are using this lib as a dependency:
-
-- The **CommonJS** dist is **./dist/byte-data.cjs.js**. It is the dist file used by Node. It is served in the "main" field of package.json and is the source you are running when you **npm install byte-data**. It is not compiled or minified.
-
-- The **UMD** module is **./dist/byte-data.umd.js**. It is transpiled to ES5 and compatible with Node, AMD and browsers. It is served in the "browser" field of package.json.
-
-- The **browser-only** dist is **./dist/byte-data.min.js**. It is transpiled to ES5 and compiled. It is used in the "unpkg" and "jsdelivr" fields of package.json.
-
-- The **ES6 bundle** is **./dist/byte-data.js**, served as "es2015" in package.json. It is not compiled/minified.
-
-- **./main.js** is served as "module" in package.json. This should be the entry point for bundlers.
-
-If your module bundler is using "browser" as the entry point **your dist should work the same** but will be a larger file.
 
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.
