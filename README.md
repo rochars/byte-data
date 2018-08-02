@@ -12,6 +12,8 @@ https://github.com/rochars/byte-data
 - Typed Arrays are used to encode/decode 32 and 64-bit floats. This makes this version overall faster than 15.x, but results will depend on the environment implementation of Typed Arrays, wich may differ from one to context to another.
 - It only encode and decode ASCII characters; the current version includes support for UTF-8 characters.
 
+**This version (13.x) still receive updates and bug fixes.**
+
 - **No dependencies**
 - **MIT-licensed**
 - **Use it out of the box in the browser**
