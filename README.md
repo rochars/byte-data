@@ -19,9 +19,9 @@ https://github.com/rochars/byte-data
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)
-- 16-bit IEEE half-precision floating point numbers
-- 32-bit IEEE single-precision floating point numbers
-- 64-bit IEEE double-precision floating point numbers
+- 16-bit IEEE half-precision floating-point numbers
+- 32-bit IEEE single-precision floating-point numbers
+- 64-bit IEEE double-precision floating-point numbers
 - Little-endian and big-endian words
 - UTF-8 strings (1 to 4 bytes per character, invalid characters are replaced)
 
@@ -35,8 +35,8 @@ Use **byte-data.umd.js** in the */dist* folder of this package:
 ```html
 <script src="./dist/byte-data.umd.js"></script>
 <script>
-  // Pack a 32-bit floating point number
-  var packed = byteData.pack(2.1474836, {bits: 32, float: true});
+  // Pack a 32-bit floating-point number
+  var packed = byteData.pack(2.1474836, {bits: 32, fp: true});
 </script>
 ```
 
@@ -81,8 +81,8 @@ Or **require**:
 ```javascript
 const byteData = require('byte-data');
 
-// Pack a 32-bit floating point number
-let packed = byteData.pack(2.1474836, {bits: 32, float: true});
+// Pack a 32-bit floating-point number
+let packed = byteData.pack(2.1474836, {bits: 32, fp: true});
 ```
 
 ## About
@@ -159,7 +159,7 @@ Types are user-defined objects like this:
 const binary32 = {
   bits: 32, // required
   signed: true, // optional, defaults to false
-  fp: true, // optional, defaults to false
+  fp: true, // optional, defaults to false, true for floating-point numbers
   be: false // optional, defaults to false, true for big-endian
 }
 ```

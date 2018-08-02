@@ -641,7 +641,7 @@ function validateType(theType) {
 }
 
 /**
- * Validate the type definition of floating point numbers.
+ * Validate the type definition of floating-point numbers.
  * @param {!Object} theType The type definition.
  * @throws {Error} If the type definition is not valid.
  * @private
@@ -883,7 +883,7 @@ function roundToEven(n) {
 /**
  * A class to pack and unpack integers and floating-point numbers.
  * Signed integers are two's complement.
- * Floating point are IEEE 754 standard.
+ * Floating-point numbers are IEEE 754 standard.
  * @extends {IntBuffer}
  */
 class NumberBuffer extends IntBuffer {
