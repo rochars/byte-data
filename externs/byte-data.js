@@ -41,17 +41,16 @@ var theType = {
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
  * @param {?number=} end The buffer index to stop reading.
- *    If end is null will read until the end of the buffer.
+ *   If end is null will read until the end of the buffer.
  * @return {string}
  */
 function unpackString(buffer, index=0, end=null) {}
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The packed string.
- */
+ * @return {!Uint8Array} The buffer with the packed string written.
+ */ 
 function packString(str) {}
 
 /**
@@ -112,7 +111,7 @@ function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read. Assumes zero if undefined.
  * @return {number}
@@ -123,26 +122,34 @@ function unpack(buffer, theType, index=0) {}
 
 /**
  * Unpack an array of numbers from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   produce a empty output array. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-function unpackArray(buffer, theType, index=0, end=buffer.length) {}
+function unpackArray(
+	buffer, theType, index=0, end=buffer.length, safe=false) {}
 
 /**
  * Unpack a array of numbers to a typed array.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {!TypedArray|!Array<!number>} output The output array.
+ * @param {!TypedArray|!Array<number>} output The output array.
  * @param {number=} index The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
-function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {}
+function unpackArrayTo(
+	buffer, theType, output, index=0, end=buffer.length, safe=false) {}

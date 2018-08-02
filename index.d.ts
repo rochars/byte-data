@@ -21,7 +21,7 @@ export function unpackString(
  * @param {string} str The string to pack.
  * @param {Uint8Array|Array<number>} buffer The buffer to pack the string to.
  * @param {number=} index The buffer index to start writing.
- * @return {!Uint8Array|Array<number>} The buffer with the packed string written.
+ * @return {!Uint8Array|Array<number>} The buffer with the packed string.
  */
 export function packString(
 	str: string,
@@ -120,6 +120,9 @@ export function unpack(
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   produce a empty output array. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
@@ -127,7 +130,8 @@ export function unpackArray(
 	buffer: Uint8Array|Array<number>,
 	theType: object,
 	index?: number,
-	end?: number): Array<number>;
+	end?: number,
+	safe?: boolean): Array<number>;
 
 /**
  * Unpack a array of numbers to a typed array.
@@ -138,6 +142,9 @@ export function unpackArray(
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayTo(
@@ -145,4 +152,5 @@ export function unpackArrayTo(
 	theType: object,
 	output: ArrayBuffer|Array<number>,
 	index?: number,
-	end?: number): void;
+	end?: number,
+	safe?: boolean): void;

@@ -84,7 +84,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line83">line 83</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line85">line 85</a>
     </li></ul></dd>
     
 
@@ -318,7 +318,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line112">line 112</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line114">line 114</a>
     </li></ul></dd>
     
 
@@ -555,7 +555,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line130">line 130</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -877,7 +877,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line55">line 55</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -1032,7 +1032,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line70">line 70</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -1264,7 +1264,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line100">line 100</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -1583,7 +1583,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line158">line 158</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line160">line 160</a>
     </li></ul></dd>
     
 
@@ -1855,7 +1855,7 @@
 
     
 
-    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -1867,7 +1867,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line186">line 186</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line191">line 191</a>
     </li></ul></dd>
     
 
@@ -2075,6 +2075,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>safe</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If set to false, extra bytes in the end of  the array are ignored and input buffers with insufficient bytes will  produce a empty output array. Defaults to false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2145,7 +2178,7 @@
 
     
 
-    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, output, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, output, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2157,7 +2190,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line204">line 204</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -2399,6 +2432,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>safe</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If set to false, extra bytes in the end of  the array are ignored and input buffers with insufficient bytes will  write nothing to the output array. Defaults to false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2463,7 +2529,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line46">line 46</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -2696,7 +2762,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Aug 01 2018 13:15:14 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Aug 02 2018 18:56:20 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

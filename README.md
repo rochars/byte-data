@@ -30,38 +30,7 @@ https://github.com/rochars/byte-data
 npm install byte-data
 ```
 
-## Use
-Some examples of byte-data being used in Node.js and in the browser. Check the [API](https://rochars.github.io/byte-data/docs/index.html) to see all the possible options.
-
-### Node
-If you installed via [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com), **import byteData from byte-data**:
-```javascript
-import * as byteData from 'byte-data';
-
-// Pack a signed 16-bit integer to a existing byte buffer
-// Start writing on index '4' of the buffer
-byteData.packTo(1077, {bits: 16, signed: true}, buffer, 4);
-
-// Pack a usigned 8-bit unsigned integer, returns a
-// array with the number represented as bytes
-let packed = byteData.pack(128, {bits: 8});
-```
-
-Or **import** just what you need:
-```javascript
-import {pack} from 'byte-data';
-let packed = pack(128, {bits: 8});
-```
-
-Or **require**:
-```javascript
-const byteData = require('byte-data');
-
-// Pack a 32-bit floating point number
-let packed = byteData.pack(2.1474836, {bits: 32, float: true});
-```
-
-### Browser
+## Browser
 Use **byte-data.umd.js** in the */dist* folder of this package:
 ```html
 <script src="./dist/byte-data.umd.js"></script>
@@ -79,6 +48,35 @@ Or load it from the [jsDelivr](https://cdn.jsdelivr.net/npm/byte-data) CDN:
 Or load it from [unpkg](https://unpkg.com/byte-data):
 ```html
 <script src="https://unpkg.com/byte-data"></script>
+```
+
+## Node
+```javascript
+import * as byteData from 'byte-data';
+
+// Pack a signed 16-bit integer to a existing byte buffer
+// Start writing on index '4' of the buffer
+byteData.packTo(1077, {bits: 16, signed: true}, buffer, 4);
+
+// Pack a usigned 8-bit unsigned integer, returns a
+// array with the number represented as bytes
+let packed = byteData.pack(128, {bits: 8});
+```
+
+Or **import** just what you need:
+```javascript
+import {pack} from 'byte-data';
+
+// Pack a 8-bit unsigned integer
+let packed = pack(128, {bits: 8});
+```
+
+Or **require**:
+```javascript
+const byteData = require('byte-data');
+
+// Pack a 32-bit floating point number
+let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 ```
 
 ## About
@@ -150,17 +148,16 @@ https://people.debian.org/~aurel32/qemu/powerpc/
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
  * @param {?number=} end The buffer index to stop reading.
- *    If end is null will read until the end of the buffer.
+ *   If end is null will read until the end of the buffer.
  * @return {string}
  */
 export function unpackString(buffer, index=0, len=null) {}
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The packed string.
- */
+ * @return {!Uint8Array} The buffer with the packed string written.
+ */ 
 export function packString(str) {}
 
 /**
@@ -221,7 +218,7 @@ export function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read. Assumes zero if undefined.
  * @return {number}
@@ -232,29 +229,37 @@ export function unpack(buffer, theType, index=0) {}
 
 /**
  * Unpack an array of numbers from a byte buffer.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   generate a empty output array. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArray(buffer, theType, index=0, end=buffer.length) {}
+export function unpackArray(
+  buffer, theType, index=0, end=buffer.length, safe=false) {}
 
 /**
  * Unpack a array of numbers to a typed array.
- * @param {!Uint8Array|!Array<!number>} buffer The byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {!TypedArray|!Array<!number>} output The output array.
+ * @param {!TypedArray|!Array<number>} output The output array.
  * @param {number=} index The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayTo(buffer, theType, output, index=0, end=buffer.length) {}
+export function unpackArrayTo(
+  buffer, theType, output, index=0, end=buffer.length, safe=false) {}
 ```
 
 ## Types

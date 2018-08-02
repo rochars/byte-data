@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v15.1.0 (2018-08-02)
+- "safe mode" for unpack array; optional boolean argument 'safe' that defaults to false. If true, a error will be thrown if the input array have extra bytes or not sufficient bytes according to the data type. If false, inputs with insufficient length will generate empty ouputs and extra bytes in the end of the array will be ignored.
+```
+byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws 'Bad buffer length' error
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws 'Bad buffer length' error
+byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int
+```
+
 ## v15.0.0 (2018-08-01)
 - Fix: throws error when packing NaN as integer
 - Fix: unpack binary16 Infinity, -Infinity and NaN

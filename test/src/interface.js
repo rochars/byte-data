@@ -13,6 +13,25 @@ var uInt24 = byteData.types.uInt24;
 var float32 = byteData.types.float32;
 var int32 = byteData.types.int32;
 
+describe('safe mode', function() {
+    it('throws "Bad buffer size error" when on safe mode and input extra bytes', function() {
+        var f = function(){
+            var buffer = [255,255,255];
+            var r = byteData.unpackArray(buffer, byteData.types.uInt16, 0, buffer.length, true);
+            console.log(r);
+        }
+        assert.throws(f, /Bad buffer length/);
+    });
+    it('throws "Bad buffer size error" when on safe mode and input dont have enough bytes', function() {
+        var f = function(){
+            var buffer = [255];
+            var r = byteData.unpackArray(buffer, byteData.types.uInt16, 0, buffer.length, true);
+            console.log(r);
+        }
+        assert.throws(f, /Bad buffer length/);
+    });
+});
+
 describe('Emulate old browser with binary32 and binary64', function() {
     var global = global || {};
     var tmp = global.Uint8Array;
@@ -47,7 +66,6 @@ describe('Emulate old browser with binary32 and binary64', function() {
         global.Uint8Array = tmp;
     });
 });
-
 
 describe('interface', function() {
 

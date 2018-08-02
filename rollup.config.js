@@ -52,7 +52,12 @@ export default [
       },
     ],
     plugins: [
-      terser()
+      terser({
+          compress: {
+            dead_code: true,
+            unsafe: true
+          }
+      })
     ]
   },
   // UMD, ES3, polyfills and shims included, minified

@@ -35,6 +35,8 @@ import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
 import {validateValueType} from './lib/validation.js';
 
+const SIZE_ERR = 'Bad buffer length';
+
 /**
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
@@ -159,7 +161,7 @@ export function unpack(buffer, theType, index=0) {
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
   if ((packer.offset + index) > buffer.length) {
-    throw Error('Bad buffer length');
+    throw Error(SIZE_ERR);
   }
   if (theType.be) {
     endianness(buffer, packer.offset, index, index + packer.offset);
@@ -180,13 +182,17 @@ export function unpack(buffer, theType, index=0) {
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   produce a empty output array. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArray(buffer, theType, index=0, end=buffer.length) {
+export function unpackArray(
+    buffer, theType, index=0, end=buffer.length, safe=false) {
   /** @type {!Array<number>} */
   let output = [];
-  unpackArrayTo(buffer, theType, output, index, end);
+  unpackArrayTo(buffer, theType, output, index, end, safe);
   return output;
 }
 
@@ -199,16 +205,26 @@ export function unpackArray(buffer, theType, index=0, end=buffer.length) {
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayTo(
-    buffer, theType, output, index=0, end=buffer.length) {
+    buffer, theType, output, index=0, end=buffer.length, safe=false) {
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
   /** @type {number} */
   let originalIndex = index;
-  while ((end - index) % packer.offset) {
-      end--;
+  // fix the size of the input array if not in safe mode
+  if (safe) {
+    if ((end - index) % packer.offset) {
+      throw new Error(SIZE_ERR);
+    }
+  } else {
+    while ((end - index) % packer.offset) {
+        end--;
+    }
   }
   if (theType.be) {
     endianness(buffer, packer.offset, index, end);
