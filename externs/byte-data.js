@@ -32,8 +32,9 @@
 var theType = {
 	bits: 0,
 	signed: false,
-	float: false,
-	be: false
+	float: false, // using float is deprecated; use fp instead
+	fp: false,
+	be: false,
 };
 
 /**

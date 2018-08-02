@@ -604,7 +604,7 @@ class IntBuffer {
  * @see https://github.com/rochars/byte-data
  */
 
-const typeDefinition = 'Unsupported type';
+const TYPE_ERR = 'Unsupported type';
 
 /**
  * Validate that the value is not null or undefined.
@@ -630,9 +630,10 @@ function validateValueType(value) {
  */
 function validateType(theType) {
   if (!theType) {
-    throw new Error(typeDefinition);
+    throw new Error(TYPE_ERR);
   }
-  if (theType.float) {
+  theType.fp = theType.float || theType.fp;
+  if (theType.fp) {
     validateFloatType_(theType);
   } else {
     validateIntType_(theType);
@@ -647,7 +648,7 @@ function validateType(theType) {
  */
 function validateFloatType_(theType) {
   if (theType.bits != 16 && theType.bits != 32 && theType.bits != 64) {
-    throw new Error(typeDefinition);
+    throw new Error(TYPE_ERR);
   }
 }
 
@@ -659,7 +660,7 @@ function validateFloatType_(theType) {
  */
 function validateIntType_(theType) {
   if (theType.bits < 1 || theType.bits > 53) {
-    throw new Error(typeDefinition);
+    throw new Error(TYPE_ERR);
   }
 }
 
@@ -889,7 +890,7 @@ class NumberBuffer extends IntBuffer {
   
   constructor(theType) {
     validateType(theType);
-    theType.signed = theType.float ? false : theType.signed;
+    theType.signed = theType.fp ? false : theType.signed;
     super(theType.bits, theType.signed);
     this.offset = this.parser.bytes;
     this.parser.bytes = this.parser.bits === 64 ? 4 : this.parser.bytes;
@@ -973,7 +974,7 @@ class NumberBuffer extends IntBuffer {
    * @private
    */
   setReaderAndWriter_(theType) {
-    if (theType.float) {
+    if (theType.fp) {
       if (theType.bits == 16) {
         this.unpack = this.read16F_;
         this.pack = this.write16F_;

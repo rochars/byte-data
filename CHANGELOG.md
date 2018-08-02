@@ -9,6 +9,13 @@ byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
 byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int
 ```
 - unpackString() is deprecated and will not be present in future releases of byte-data.
+- type objects signature changed to use "fp" instead of "float"; using "float" still works, but is deprecated and will not work in future releases.
+```javascript
+// instead of 
+let f32 = {float: true, bits: 32};
+// you should use
+let f32 = {fp: true, bits: 32};
+```
 
 ## v15.0.0 (2018-08-01)
 - Fix: throws error when packing NaN as integer

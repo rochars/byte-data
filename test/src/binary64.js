@@ -10,8 +10,8 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var float64 = byteData.types.float64;
-var float64BE = byteData.types.float64BE;
+var float64 = {"bits": 64, "fp": true};
+var float64BE = {"bits": 64, "fp": true, "be": true};
 
 var Buffer = Buffer || false;
 

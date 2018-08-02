@@ -10,8 +10,8 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var float32 = byteData.types.float32;
-var float32BE = byteData.types.float32BE;
+var float32 = {"bits": 32, "fp": true};
+var float32BE = {"bits": 32, "fp": true, "be": true};
 
 describe('Binary32 numbers', function() {     
     // Zeros

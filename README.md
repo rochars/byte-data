@@ -159,14 +159,9 @@ Types are user-defined objects like this:
 const binary32 = {
   bits: 32, // required
   signed: true, // optional, defaults to false
-  float: true, // optional, defaults to false
+  fp: true, // optional, defaults to false
   be: false // optional, defaults to false, true for big-endian
 }
-```
-
-There is a standard set of types that can be installed:
-```
-npm install binary-data-types
 ```
 
 ### Tests on big-endian systems
