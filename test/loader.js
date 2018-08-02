@@ -24,7 +24,7 @@ if (process.argv[3] == '--umd') {
 } else if (process.argv[3] == '--min') {
 	require = require("esm")(module);
 	global.module = module;
-	console.log("esm");
+	console.log("min");
 	byteData = require('../dist/byte-data.min.js');
 
 // Source

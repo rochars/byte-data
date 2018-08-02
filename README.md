@@ -50,6 +50,12 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 <script src="https://unpkg.com/byte-data"></script>
 ```
 
+### Browser compatibility
+The UMD dist (**./dist/byte-data.umd.js**) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.
+
+Cross-browser tests powered by  
+<a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>
+
 ## Node
 ```javascript
 import * as byteData from 'byte-data';
@@ -81,14 +87,23 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 
 ## About
 
-### Unpacking and input buffer length
-- When unpacking a single value, a *'Bad buffer length'* error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
-- When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array**
-
-### *null*, *false*, *true*, *undefined*
+### Packing *null*, *false*, *true* and *undefined*
 - Packing *undefined* values throw *'Undefined value'* error
 - *null* and *false* are packed as 0
 - *true* is packed as 1
+
+### Unpacking and input buffer length
+- When unpacking a single value, a *'Bad buffer length'* error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
+- When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array** by default:
+```javascript
+byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int
+```
+You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insyfficient bytes in the input array or extra bytes in the end of the input array will throw a error**:
+```javascript
+byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws 'Bad buffer length' error
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws 'Bad buffer length' error
+```
 
 ### Floating-point numbers
 - Floating-point numbers are [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) standard.
@@ -101,7 +116,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});
 Currently only 16-bit half-precision.
 
 ### Integers
-Overflow on integers will throw a *"Overflow"* error.
+- Overflow on integers will throw a *"Overflow"* error.
 - packing NaN will throw a 'NaN' error.
 - packing Infinity or -Infinity will throw a 'Overflow' error.
 
@@ -109,7 +124,7 @@ Overflow on integers will throw a *"Overflow"* error.
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
 ### Strings
-**UTF-8 strings** with 1 to 4 bytes per character can be packed and unpacked. **BOM** is kept untouched. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
+**UTF-8 strings** with 1 to 4 bytes per character can be packed and unpacked. **BOM** is kept untouched if present. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
 
 #### Reading strings from buffers
 Use **unpackString(buffer, index, end)**. The paramters **index** and **end** determine a slice of the buffer to read. So to read the first 4 bytes of a buffer:
@@ -124,17 +139,35 @@ let str = unpackString(buffer);
 ```
 
 #### Writing strings to buffers
-There are two ways to do this:
+**packStringTo(str, buffer, index=0)** will write the string to the provided buffer (*Uint8Array* or *Array*), starting on the **index**. Index defaults to zero if ommited (start from the beginning of the buffer).
+```javascript
+let buffer = [];
+packStringTo(str, buffer);
+```
 
-**packString(str)** will return a Uint8Array with the bytes of the string. If you are using the UMD distribution and Uint8Arrays are not available the function will return a regular Array.
+##### Packing strings to Uint8Array
+If you need to calculate the buffer length you may use **utf8-buffer-size**:
+```javascript
+import utf8BufferSize from 'utf8-buffer-size';
+let buffer = new Uint8Array(utf8BufferSize(str));
+packStringTo(str, buffer);
+```
 
-**packStringTo(str, buffer, index=0)** will write the string to the provided buffer (Uint8Array or Array), starting on the **index**. Index defaults to zero if ommited (start from the beginning of the buffer).
+### Types
+Types are user-defined objects like this:
+```javascript
+const binary32 = {
+  bits: 32, // required
+  signed: true, // optional, defaults to false
+  float: true, // optional, defaults to false
+  be: false // optional, defaults to false, true for big-endian
+}
+```
 
-### Browser compatibility
-The UMD dist (**./dist/byte-data.umd.js**) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.
-
-Cross-browser tests powered by  
-<a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>
+There is a standard set of types that can be installed:
+```
+npm install binary-data-types
+```
 
 ### Tests on big-endian systems
 Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:  
@@ -151,14 +184,7 @@ https://people.debian.org/~aurel32/qemu/powerpc/
  *   If end is null will read until the end of the buffer.
  * @return {string}
  */
-export function unpackString(buffer, index=0, len=null) {}
-
-/**
- * Write a string of UTF-8 characters as a byte buffer.
- * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
- */ 
-export function packString(str) {}
+function unpackString(buffer, index=0, len=null) {}
 
 /**
  * Write a string of UTF-8 characters to a byte buffer.
@@ -168,7 +194,7 @@ export function packString(str) {}
  *   Assumes zero if undefined.
  * @return {number} The next index to write in the buffer.
  */
-export function packStringTo(str, buffer, index=0) {}
+function packStringTo(str, buffer, index=0) {}
 
 // Numbers
 /**
@@ -179,7 +205,7 @@ export function packStringTo(str, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function pack(value, theType) {}
+function pack(value, theType) {}
 
 /**
  * Pack a number to a byte buffer.
@@ -191,7 +217,7 @@ export function pack(value, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packTo(value, theType, buffer, index=0) {}
+function packTo(value, theType, buffer, index=0) {}
 
 /**
  * Pack an array of numbers as a byte buffer.
@@ -201,7 +227,7 @@ export function packTo(value, theType, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
-export function packArray(values, theType) {}
+function packArray(values, theType) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -214,7 +240,7 @@ export function packArray(values, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packArrayTo(values, theType, buffer, index=0) {}
+function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
@@ -225,7 +251,7 @@ export function packArrayTo(values, theType, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
  */
-export function unpack(buffer, theType, index=0) {}
+function unpack(buffer, theType, index=0) {}
 
 /**
  * Unpack an array of numbers from a byte buffer.
@@ -241,7 +267,7 @@ export function unpack(buffer, theType, index=0) {}
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArray(
+function unpackArray(
   buffer, theType, index=0, end=buffer.length, safe=false) {}
 
 /**
@@ -258,63 +284,9 @@ export function unpackArray(
  *   write nothing to the output array. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayTo(
+function unpackArrayTo(
   buffer, theType, output, index=0, end=buffer.length, safe=false) {}
 ```
-
-## Types
-Types are user-defined objects like this:
-```javascript
-const binary32 = {
-  bits: 32, // required
-  signed: true, // optional, defaults to false
-  float: true, // optional, defaults to false
-  be: false // optional, defaults to false, true for big-endian
-}
-```
-
-There is a standard set of types that can be installed:
-```
-npm install binary-data-types
-```
-All types in **binary-data-types** are supported by byte-data. They are:
-
-  - int2
-  - uInt2
-  - int4
-  - uInt4
-  - int8
-  - uInt8
-
-### little-endian
-  - int16
-  - uInt16
-  - float16
-  - int24
-  - uInt24
-  - int32
-  - uInt32
-  - float32
-  - int40
-  - uInt40
-  - int48
-  - uInt48
-  - float64
-
-### big-endian:
-  - int16BE
-  - uInt16BE
-  - float16BE
-  - int24BE
-  - uInt24BE
-  - int32BE
-  - uInt32BE
-  - float32BE
-  - int40BE
-  - uInt40BE
-  - int48BE
-  - uInt48BE
-  - float64BE
 
 ## Contributing
 **byte-data** welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.

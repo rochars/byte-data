@@ -22,11 +22,10 @@ export function unpackString(
  * @param {Uint8Array|Array<number>} buffer The buffer to pack the string to.
  * @param {number=} index The buffer index to start writing.
  * @return {!Uint8Array|Array<number>} The buffer with the packed string.
+ * @deprecated
  */
 export function packString(
-	str: string,
-	buffer?: Uint8Array|Array<number>,
-	index?: number): Uint8Array|Array<number>;
+	str: string): Uint8Array|Array<number>;
 
 /**
  * Write a string of UTF-8 characters to a byte buffer.

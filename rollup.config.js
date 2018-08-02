@@ -84,7 +84,13 @@ export default [
         rewritePolyfills: true,
         externs: [{src: externsFile + 'exports={};'}]
       }),
-      terser({mangle:false})
+      terser({
+        
+        compress: {
+          dead_code: true,
+          unsafe: true
+        }
+      })
     ]
   },
 ];

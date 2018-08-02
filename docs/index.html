@@ -74,7 +74,9 @@
   var packed = byteData.pack(2.1474836, {bits: 32, float: true});
 &lt;/script></code></pre><p>Or load it from the <a href="https://cdn.jsdelivr.net/npm/byte-data">jsDelivr</a> CDN:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script></code></pre><p>Or load it from <a href="https://unpkg.com/byte-data">unpkg</a>:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><h2>Node</h2><pre class="prettyprint source lang-javascript"><code>import * as byteData from 'byte-data';
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script></code></pre><h3>Browser compatibility</h3><p>The UMD dist (<strong>./dist/byte-data.umd.js</strong>) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.</p>
+<p>Cross-browser tests powered by<br><a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a></p>
+<h2>Node</h2><pre class="prettyprint source lang-javascript"><code>import * as byteData from 'byte-data';
 
 // Pack a signed 16-bit integer to a existing byte buffer
 // Start writing on index '4' of the buffer
@@ -90,14 +92,16 @@ let packed = pack(128, {bits: 8});</code></pre><p>Or <strong>require</strong>:</
 <pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
 
 // Pack a 32-bit floating point number
-let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h2>About</h2><h3>Unpacking and input buffer length</h3><ul>
-<li>When unpacking a single value, a <em>'Bad buffer length'</em> error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)</li>
-<li>When unpacking a array of values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong></li>
-</ul>
-<h3><em>null</em>, <em>false</em>, <em>true</em>, <em>undefined</em></h3><ul>
+let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h2>About</h2><h3>Packing <em>null</em>, <em>false</em>, <em>true</em> and <em>undefined</em></h3><ul>
 <li>Packing <em>undefined</em> values throw <em>'Undefined value'</em> error</li>
 <li><em>null</em> and <em>false</em> are packed as 0</li>
 <li><em>true</em> is packed as 1</li>
+</ul>
+<h3>Unpacking and input buffer length</h3><ul>
+<li>When unpacking a single value, a <em>'Bad buffer length'</em> error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)</li>
+<li>When unpacking a array of values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong> by default:<pre class="prettyprint source lang-javascript"><code>byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int</code></pre>You can unpack arrays in <strong>safe mode</strong> with the optional <em>safe</em> param set to <em>true</em>. <strong>In safe mode insyfficient bytes in the input array or extra bytes in the end of the input array will throw a error</strong>:<pre class="prettyprint source lang-javascript"><code>byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws 'Bad buffer length' error
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws 'Bad buffer length' error</code></pre></li>
 </ul>
 <h3>Floating-point numbers</h3><ul>
 <li>Floating-point numbers are <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE 754</a> standard.</li>
@@ -107,22 +111,29 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h2>
 <li>Support packing and unpacking <strong>Infinity</strong> and <strong>negative Infinity</strong></li>
 </ul>
 <h4>Minifloats</h4><p>Currently only 16-bit half-precision.</p>
-<h3>Integers</h3><p>Overflow on integers will throw a <em>&quot;Overflow&quot;</em> error.</p>
-<ul>
+<h3>Integers</h3><ul>
+<li>Overflow on integers will throw a <em>&quot;Overflow&quot;</em> error.</li>
 <li>packing NaN will throw a 'NaN' error.</li>
 <li>packing Infinity or -Infinity will throw a 'Overflow' error.</li>
 </ul>
 <h4>Signed integers</h4><p>Signed integers are <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two's complement</a>.</p>
-<h3>Strings</h3><p><strong>UTF-8 strings</strong> with 1 to 4 bytes per character can be packed and unpacked. <strong>BOM</strong> is kept untouched. Invalid characters are replaced with <em>Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)</em>.</p>
+<h3>Strings</h3><p><strong>UTF-8 strings</strong> with 1 to 4 bytes per character can be packed and unpacked. <strong>BOM</strong> is kept untouched if present. Invalid characters are replaced with <em>Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)</em>.</p>
 <h4>Reading strings from buffers</h4><p>Use <strong>unpackString(buffer, index, end)</strong>. The paramters <strong>index</strong> and <strong>end</strong> determine a slice of the buffer to read. So to read the first 4 bytes of a buffer:</p>
 <pre class="prettyprint source lang-javascript"><code>let str = unpackString(buffer, 0, 3);
 // read from buffer[0], buffer[1], buffer[2], buffer[3]</code></pre><p>If <strong>index</strong> and <strong>end</strong> are ommited unpackString(buffer) will read the entire buffer:</p>
-<pre class="prettyprint source lang-javascript"><code>let str = unpackString(buffer);</code></pre><h4>Writing strings to buffers</h4><p>There are two ways to do this:</p>
-<p><strong>packString(str)</strong> will return a Uint8Array with the bytes of the string. If you are using the UMD distribution and Uint8Arrays are not available the function will return a regular Array.</p>
-<p><strong>packStringTo(str, buffer, index=0)</strong> will write the string to the provided buffer (Uint8Array or Array), starting on the <strong>index</strong>. Index defaults to zero if ommited (start from the beginning of the buffer).</p>
-<h3>Browser compatibility</h3><p>The UMD dist (<strong>./dist/byte-data.umd.js</strong>) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.</p>
-<p>Cross-browser tests powered by<br><a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a></p>
-<h3>Tests on big-endian systems</h3><p>Use <a href="https://www.qemu.org/">QEMU</a> with this PowerPC/Debian image:<br>https://people.debian.org/~aurel32/qemu/powerpc/</p>
+<pre class="prettyprint source lang-javascript"><code>let str = unpackString(buffer);</code></pre><h4>Writing strings to buffers</h4><p><strong>packStringTo(str, buffer, index=0)</strong> will write the string to the provided buffer (<em>Uint8Array</em> or <em>Array</em>), starting on the <strong>index</strong>. Index defaults to zero if ommited (start from the beginning of the buffer).</p>
+<pre class="prettyprint source lang-javascript"><code>let buffer = [];
+packStringTo(str, buffer);</code></pre><h5>Packing strings to Uint8Array</h5><p>If you need to calculate the buffer length you may use <strong>utf8-buffer-size</strong>:</p>
+<pre class="prettyprint source lang-javascript"><code>import utf8BufferSize from 'utf8-buffer-size';
+let buffer = new Uint8Array(utf8BufferSize(str));
+packStringTo(str, buffer);</code></pre><h3>Types</h3><p>Types are user-defined objects like this:</p>
+<pre class="prettyprint source lang-javascript"><code>const binary32 = {
+  bits: 32, // required
+  signed: true, // optional, defaults to false
+  float: true, // optional, defaults to false
+  be: false // optional, defaults to false, true for big-endian
+}</code></pre><p>There is a standard set of types that can be installed:</p>
+<pre class="prettyprint source"><code>npm install binary-data-types</code></pre><h3>Tests on big-endian systems</h3><p>Use <a href="https://www.qemu.org/">QEMU</a> with this PowerPC/Debian image:<br>https://people.debian.org/~aurel32/qemu/powerpc/</p>
 <h2>API</h2><pre class="prettyprint source lang-javascript"><code>// Strings
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -132,14 +143,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, float: true});</code></pre><h2>
  *   If end is null will read until the end of the buffer.
  * @return {string}
  */
-export function unpackString(buffer, index=0, len=null) {}
-
-/**
- * Write a string of UTF-8 characters as a byte buffer.
- * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
- */ 
-export function packString(str) {}
+function unpackString(buffer, index=0, len=null) {}
 
 /**
  * Write a string of UTF-8 characters to a byte buffer.
@@ -149,7 +153,7 @@ export function packString(str) {}
  *   Assumes zero if undefined.
  * @return {number} The next index to write in the buffer.
  */
-export function packStringTo(str, buffer, index=0) {}
+function packStringTo(str, buffer, index=0) {}
 
 // Numbers
 /**
@@ -160,7 +164,7 @@ export function packStringTo(str, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function pack(value, theType) {}
+function pack(value, theType) {}
 
 /**
  * Pack a number to a byte buffer.
@@ -172,7 +176,7 @@ export function pack(value, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packTo(value, theType, buffer, index=0) {}
+function packTo(value, theType, buffer, index=0) {}
 
 /**
  * Pack an array of numbers as a byte buffer.
@@ -182,7 +186,7 @@ export function packTo(value, theType, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
-export function packArray(values, theType) {}
+function packArray(values, theType) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -195,7 +199,7 @@ export function packArray(values, theType) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
-export function packArrayTo(values, theType, buffer, index=0) {}
+function packArrayTo(values, theType, buffer, index=0) {}
 
 /**
  * Unpack a number from a byte buffer.
@@ -206,7 +210,7 @@ export function packArrayTo(values, theType, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
  */
-export function unpack(buffer, theType, index=0) {}
+function unpack(buffer, theType, index=0) {}
 
 /**
  * Unpack an array of numbers from a byte buffer.
@@ -222,7 +226,7 @@ export function unpack(buffer, theType, index=0) {}
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArray(
+function unpackArray(
   buffer, theType, index=0, end=buffer.length, safe=false) {}
 
 /**
@@ -239,54 +243,8 @@ export function unpackArray(
  *   write nothing to the output array. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
-export function unpackArrayTo(
-  buffer, theType, output, index=0, end=buffer.length, safe=false) {}</code></pre><h2>Types</h2><p>Types are user-defined objects like this:</p>
-<pre class="prettyprint source lang-javascript"><code>const binary32 = {
-  bits: 32, // required
-  signed: true, // optional, defaults to false
-  float: true, // optional, defaults to false
-  be: false // optional, defaults to false, true for big-endian
-}</code></pre><p>There is a standard set of types that can be installed:</p>
-<pre class="prettyprint source"><code>npm install binary-data-types</code></pre><p>All types in <strong>binary-data-types</strong> are supported by byte-data. They are:</p>
-<ul>
-<li>int2</li>
-<li>uInt2</li>
-<li>int4</li>
-<li>uInt4</li>
-<li>int8</li>
-<li>uInt8</li>
-</ul>
-<h3>little-endian</h3><ul>
-<li>int16</li>
-<li>uInt16</li>
-<li>float16</li>
-<li>int24</li>
-<li>uInt24</li>
-<li>int32</li>
-<li>uInt32</li>
-<li>float32</li>
-<li>int40</li>
-<li>uInt40</li>
-<li>int48</li>
-<li>uInt48</li>
-<li>float64</li>
-</ul>
-<h3>big-endian:</h3><ul>
-<li>int16BE</li>
-<li>uInt16BE</li>
-<li>float16BE</li>
-<li>int24BE</li>
-<li>uInt24BE</li>
-<li>int32BE</li>
-<li>uInt32BE</li>
-<li>float32BE</li>
-<li>int40BE</li>
-<li>uInt40BE</li>
-<li>int48BE</li>
-<li>uInt48BE</li>
-<li>float64BE</li>
-</ul>
-<h2>Contributing</h2><p><strong>byte-data</strong> welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.</p>
+function unpackArrayTo(
+  buffer, theType, output, index=0, end=buffer.length, safe=false) {}</code></pre><h2>Contributing</h2><p><strong>byte-data</strong> welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.</p>
 <p>See <a href="https://github.com/rochars/byte-data/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for details.</p>
 <h3>Style guide</h3><p><strong>byte-data</strong> code should follow the Google JavaScript Style Guide:<br>https://google.github.io/styleguide/jsguide.html</p>
 <h3>Code of conduct</h3><p>This project is bound by a code of conduct: The <a href="https://github.com/rochars/byte-data/blob/master/CODE_OF_CONDUCT.md">Contributor Covenant, version 1.4</a>, also available at https://<a href="http://www.contributor-covenant.org/version/1/4/code-of-conduct.html">www.contributor-covenant.org/version/1/4/code-of-conduct.html</a></p>
@@ -422,7 +380,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></article>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Aug 02 2018 18:56:20 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Aug 02 2018 20:24:23 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

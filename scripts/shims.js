@@ -24,6 +24,8 @@
 
 /**
  * @fileoverview Make the byte-data API compatible with old browsers.
+ *   packString() is deprecated; this should not be needed in future
+ *   releases of byte-data.
  * @see https://github.com/rochars/byte-data
  */
 
