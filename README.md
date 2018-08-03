@@ -320,7 +320,11 @@ https://google.github.io/styleguide/jsguide.html
 ### Code of conduct
 This project is bound by a code of conduct: The [Contributor Covenant, version 1.4](https://github.com/rochars/byte-data/blob/master/CODE_OF_CONDUCT.md), also available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting rocha.rafaelsilva@gmail.com.
+## Reporting issues
+Use the [GitHub issue tracker](https://github.com/rochars/byte-data/issues).
+
+### Reporting security issues
+Report security issues to this e-mail: rocha.rafaelsilva@gmail.com.
 
 ## Legal
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fbyte-data.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fbyte-data?ref=badge_large)
