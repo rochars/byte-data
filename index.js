@@ -132,18 +132,16 @@ export function packArray(values, theType) {
 export function packArrayTo(values, theType, buffer, index=0) {
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
-  let valuesLen = values.length;
-  for (let i = 0; i < valuesLen; i++) {
+  /** @type {number} */
+  let offset = packer.offset;
+  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateValueType(values[i]);
     /** @type {number} */
-    let len = index + packer.offset;
+    let len = index + offset;
     while (index < len) {
       index = packer.pack(buffer, values[i], index);
     }
-    if (theType.be) {
-      endianness(
-        buffer, packer.offset, index - packer.offset, index);
-    }
+    swap_(theType.be, buffer, offset, index - offset, index);
   }
   return index;
 }
@@ -160,17 +158,15 @@ export function packArrayTo(values, theType, buffer, index=0) {
 export function unpack(buffer, theType, index=0) {
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
-  if ((packer.offset + index) > buffer.length) {
+  /** @type {number} */
+  let offset = packer.offset;
+  if ((offset + index) > buffer.length) {
     throw Error(SIZE_ERR);
   }
-  if (theType.be) {
-    endianness(buffer, packer.offset, index, index + packer.offset);
-  }
+  swap_(theType.be, buffer, offset, index, index + offset);
   /** @type {number} */
   let value = packer.unpack(buffer, index);
-  if (theType.be) {
-    endianness(buffer, packer.offset, index, index + packer.offset);
-  }
+  swap_(theType.be, buffer, offset, index, index + offset);
   return value;
 }
 
@@ -217,21 +213,32 @@ export function unpackArrayTo(
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
   /** @type {number} */
-  let extra = (end - start) % packer.offset;
+  let offset = packer.offset;
+  /** @type {number} */
+  let extra = (end - start) % offset;
   if (extra && safe) {
     throw new Error(SIZE_ERR);
   }
   end -= extra;
-  if (theType.be) {
-    endianness(buffer, packer.offset, start, end);
-  }
-  /** @type {number} */
-  let i = 0;
-  for (let j = start; j < end; j += packer.offset) {
+  swap_(theType.be, buffer, offset, start, end);
+  for (let j = start, i = 0; j < end; j += offset, i++) {
     output[i] = packer.unpack(buffer, j);
-    i++;
   }
-  if (theType.be) {
-    endianness(buffer, packer.offset, start, end);
+  swap_(theType.be, buffer, offset, start, end);
+}
+
+/**
+ * Swap endianness in a slice of an array when flip == true.
+ * @param {boolean} flip True if should swap endianness.
+ * @param {!Uint8Array|!Array<number>} buffer The buffer.
+ * @param {number} offset The number of bytes each value use.
+ * @param {number} start The buffer index to start the swap.
+ * @param {number} end The buffer index to end the swap.
+ * @throws {Error} On bad buffer length for the swap.
+ * @private
+ */
+function swap_(flip, buffer, offset, start, end) {
+  if (flip) {
+    endianness(buffer, offset, start, end);
   }
 }
