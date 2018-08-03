@@ -974,7 +974,7 @@ function unpackString(buffer, index=0, end=null) {
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
+ * @return {!Uint8Array} The UTF-8 string bytes.
  */ 
 function packString(str) {
   /** @type {!Uint8Array} */
@@ -1088,7 +1088,7 @@ function unpack$2(buffer, theType, index=0) {
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to start reading.
+ * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
@@ -1100,10 +1100,10 @@ function unpack$2(buffer, theType, index=0) {
  * @throws {Error} If the type definition is not valid
  */
 function unpackArray(
-    buffer, theType, index=0, end=buffer.length, safe=false) {
+    buffer, theType, start=0, end=buffer.length, safe=false) {
   /** @type {!Array<number>} */
   let output = [];
-  unpackArrayTo(buffer, theType, output, index, end, safe);
+  unpackArrayTo(buffer, theType, output, start, end, safe);
   return output;
 }
 

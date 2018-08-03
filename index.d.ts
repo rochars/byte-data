@@ -19,10 +19,8 @@ export function unpackString(
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @param {Uint8Array|Array<number>} buffer The buffer to pack the string to.
- * @param {number=} index The buffer index to start writing.
- * @return {!Uint8Array|Array<number>} The buffer with the packed string.
- */
+ * @return {!Uint8Array} The UTF-8 string bytes.
+ */ 
 export function packString(
 	str: string): Uint8Array|Array<number>;
 
