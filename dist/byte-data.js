@@ -1183,7 +1183,7 @@ function unpackArray(
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {!TypedArray|!Array<number>} output The output array.
- * @param {number=} index The buffer index to start reading.
+ * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
@@ -1194,30 +1194,28 @@ function unpackArray(
  * @throws {Error} If the type definition is not valid
  */
 function unpackArrayTo(
-    buffer, theType, output, index=0, end=buffer.length, safe=false) {
+    buffer, theType, output, start=0, end=buffer.length, safe=false) {
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(theType);
   /** @type {number} */
-  let originalIndex = index;
-  // fix the size of the input array if not in safe mode
-  if (safe) {
-    if ((end - index) % packer.offset) {
+  let extra = (end - start) % packer.offset;
+  if (extra) {
+    if (safe) {
       throw new Error(SIZE_ERR);
     }
-  } else {
-    while ((end - index) % packer.offset) {
-        end--;
-    }
+    end -= extra;
   }
   if (theType.be) {
-    endianness(buffer, packer.offset, index, end);
+    endianness(buffer, packer.offset, start, end);
   }
+  /** @type {number} */
+  let index = start;
   for (let i = 0; index < end; index += packer.offset) {
     output[i] = packer.unpack(buffer, index);
     i++;
   }
   if (theType.be) {
-    endianness(buffer, packer.offset, originalIndex, end);
+    endianness(buffer, packer.offset, start, end);
   }
 }
 
