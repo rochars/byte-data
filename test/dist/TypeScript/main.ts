@@ -21,7 +21,7 @@ byteData.packStringTo(str, arrBuff, 0);
 
 // with arrays
 let output = [];
-byteData.pack(num, output);
+byteData.pack(num, theType);
 byteData.packArray([num], theType);
 byteData.packTo(num, theType, arr, 0);
 byteData.packArrayTo([num], theType, arr, 0);
@@ -33,7 +33,7 @@ console.log(output);
 // with Typed Arrays
 let buffer = new Uint8Array(2);
 let outputTyped = new Uint16Array(1);
-byteData.pack(num, buffer);
+byteData.pack(num, theType);
 byteData.packArray([num], theType);
 byteData.packTo(num, theType, outputTyped, 0);
 byteData.packArrayTo([num], theType, buffer, 0);

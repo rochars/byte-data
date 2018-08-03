@@ -130,10 +130,14 @@ export function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(values, theType, buffer, index=0) {
+  theType = theType || {};
+  /** @type {boolean} */
+  let fp = theType.fp || theType.float;
   /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(theType);
+  let packer = new NumberBuffer(
+    theType.bits, fp, theType.signed);
   /** @type {number} */
-  let offset = packer.offset;
+  let offset = offset_(theType.bits);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateValueType(values[i]);
     /** @type {number} */
@@ -156,18 +160,8 @@ export function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 export function unpack(buffer, theType, index=0) {
-  /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(theType);
-  /** @type {number} */
-  let offset = packer.offset;
-  if ((offset + index) > buffer.length) {
-    throw Error(SIZE_ERR);
-  }
-  swap_(theType.be, buffer, offset, index, index + offset);
-  /** @type {number} */
-  let value = packer.unpack(buffer, index);
-  swap_(theType.be, buffer, offset, index, index + offset);
-  return value;
+  return unpackArray(
+    buffer, theType, index, index + offset_(theType.bits), true)[0];
 }
 
 /**
@@ -210,13 +204,20 @@ export function unpackArray(
  */
 export function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
+  theType = theType || {};
+  /** @type {boolean} */
+  let fp = theType.fp || theType.float;
   /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(theType);
+  let packer = new NumberBuffer(
+    theType.bits, fp, theType.signed);
   /** @type {number} */
-  let offset = packer.offset;
+  let offset = offset_(theType.bits);
   /** @type {number} */
   let extra = (end - start) % offset;
-  if (extra && safe) {
+  if (safe && extra) {
+    throw new Error(SIZE_ERR);
+  }
+  if (safe && buffer.length < offset) {
     throw new Error(SIZE_ERR);
   }
   end -= extra;
@@ -241,4 +242,8 @@ function swap_(flip, buffer, offset, start, end) {
   if (flip) {
     endianness(buffer, offset, start, end);
   }
+}
+
+function offset_(bits) {
+  return bits < 8 ? 1 : Math.ceil(bits / 8);
 }

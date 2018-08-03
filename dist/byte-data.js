@@ -275,6 +275,270 @@ function pack(str, buffer, index=0) {
 }
 
 /*
+ * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+/**
+ * @fileoverview Functions to validate input.
+ * @see https://github.com/rochars/byte-data
+ */
+
+const TYPE_ERR = 'Unsupported type';
+
+/**
+ * Validate that the value is not null or undefined.
+ * @param {number} value The value.
+ * @throws {Error} If the value is not null, Number or Boolean.
+ */
+function validateValueType(value) {
+  if (value === undefined) {
+    throw new Error('Undefined value');
+  }
+  if (value !== null) {
+      if (value.constructor != Number && value.constructor != Boolean) {
+      throw new Error(
+        'Can\'t pack ' + value.constructor);
+    }
+  }
+}
+
+/**
+ * Validate the type definition of floating-point numbers.
+ * @param {number} bits The number of bits.
+ * @throws {Error} If the type definition is not valid.
+ * @private
+ */
+function validateFloatType(bits) {
+  if (!bits || bits !== 16 && bits !== 32 && bits !== 64) {
+    throw new Error(TYPE_ERR);
+  }
+}
+
+/**
+ * Validate the type definition of integers.
+ * @param {number} bits The number of bits.
+ * @throws {Error} If the type definition is not valid.
+ * @private
+ */
+function validateIntType(bits) {
+  if (!bits || bits < 1 || bits > 53) {
+    throw new Error(TYPE_ERR);
+  }
+}
+
+/*
+ * Copyright (c) 2018 Rafael da Silva Rocha.
+ * Copyright (c) 2013 DeNA Co., Ltd.
+ * Copyright (c) 2010, Linden Research, Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+/**
+ * @fileoverview Functions to pack and unpack IEEE 754 floating point numbers.
+ * @see https://github.com/rochars/ieee754-buffer
+ */
+
+/** @module ieee754Buffer */
+
+/**
+ * Pack a IEEE 754 floating point number.
+ * Derived from typedarray.js by Linden Research, MIT License.
+ * @see https://bitbucket.org/lindenlab/llsd/raw/7d2646cd3f9b4c806e73aebc4b32bd81e4047fdc/js/typedarray.js
+ * @param {!Uint8Array|!Array<number>} buffer The buffer.
+ * @param {number} index The index to write on the buffer.
+ * @param {number} num The number.
+ * @param {number} ebits The number of bits of the exponent.
+ * @param {number} fbits The number of bits of the fraction.
+ * @return {number} The next index to write on the buffer.
+ */
+function pack$1(buffer, index, num, ebits, fbits) {
+  /** @type {number} */
+  let bias = (1 << (ebits - 1)) - 1;
+  // Round overflows
+  if (Math.abs(num) > Math.pow(2, bias + 1) - ((ebits + fbits) * 2)) {
+    num = num < 0 ? -Infinity : Infinity;
+  }
+  /**
+   * sign, need this to handle negative zero
+   * @see http://cwestblog.com/2014/02/25/javascript-testing-for-negative-zero/
+   * @type {number}
+   */
+  let sign = (((num = +num) || 1 / num) < 0) ? 1 : num < 0 ? 1 : 0;
+  num = Math.abs(num);
+  /** @type {number} */
+  let exp = Math.min(Math.floor(Math.log(num) / Math.LN2), 1023);
+  /** @type {number} */
+  let fraction = roundToEven(num / Math.pow(2, exp) * Math.pow(2, fbits));
+  // NaN
+  if (num !== num) {
+    fraction = Math.pow(2, fbits - 1);
+    exp = (1 << ebits) - 1;
+  // Number
+  } else if (num !== 0) {
+    if (num >= Math.pow(2, 1 - bias)) {
+      if (fraction / Math.pow(2, fbits) >= 2) {
+        exp = exp + 1;
+        fraction = 1;
+      }
+      // Overflow
+      if (exp > bias) {
+        exp = (1 << ebits) - 1;
+        fraction = 0;
+      } else {
+        exp = exp + bias;
+        fraction = roundToEven(fraction) - Math.pow(2, fbits);
+      }
+    } else {
+      fraction = roundToEven(num / Math.pow(2, 1 - bias - fbits));
+      exp = 0;
+    } 
+  }
+  return packFloatBits_(buffer, index, ebits, fbits, sign, exp, fraction);
+}
+
+/**
+ * Unpack a IEEE 754 floating point number.
+ * Derived from IEEE754 by DeNA Co., Ltd., MIT License. 
+ * Adapted to handle NaN. Should port the solution to the original repo.
+ * @see https://github.com/kazuho/ieee754.js/blob/master/ieee754.js
+ * @param {!Uint8Array|!Array<number>} buffer The buffer.
+ * @param {number} index The index to read from the buffer.
+ * @param {number} ebits The number of bits of the exponent.
+ * @param {number} fbits The number of bits of the fraction.
+ * @return {number} The floating point number.
+ */
+function unpack$1(buffer, index, ebits, fbits) {
+  let exponentBias = (1 << (ebits - 1)) - 1;
+  let numBytes = Math.ceil((ebits + fbits) / 8);
+  /** @type {number} */
+  let eMax = (1 << ebits) - 1;
+  /** @type {number} */
+  let bias = Math.pow(2, -(8 * numBytes - 1 - ebits));
+  /** @type {number} */
+  let significand;
+  /** @type {string} */
+  let leftBits = "";
+  for (let i = numBytes - 1; i >= 0 ; i--) {
+    /** @type {string} */
+    let t = buffer[i + index].toString(2);
+    leftBits += "00000000".substring(t.length) + t;
+  }
+  /** @type {number} */
+  let sign = leftBits.charAt(0) == "1" ? -1 : 1;
+  leftBits = leftBits.substring(1);
+  /** @type {number} */
+  let exponent = parseInt(leftBits.substring(0, ebits), 2);
+  leftBits = leftBits.substring(ebits);
+  if (exponent == eMax) {
+    if (parseInt(leftBits, 2) !== 0) {
+      return NaN;
+    }
+    return sign * Infinity;  
+  } else if (exponent === 0) {
+    exponent += 1;
+    significand = parseInt(leftBits, 2);
+  } else {
+    significand = parseInt("1" + leftBits, 2);
+  }
+  return sign * significand * bias * Math.pow(2, exponent - exponentBias);
+}
+
+/**
+ * Pack a IEEE754 from its sign, exponent and fraction bits
+ * and place it in a byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer to write to.
+ * @param {number} index The buffer index to write.
+ * @param {number} ebits The number of bits of the exponent.
+ * @param {number} fbits The number of bits of the fraction.
+ * @param {number} sign The sign.
+ * @param {number} exp the exponent.
+ * @param {number} fraction The fraction.
+ * @return {number}
+ * @private
+ */
+function packFloatBits_(buffer, index, ebits, fbits, sign, exp, fraction) {
+  /** @type {!Array<number>} */
+  let bits = [];
+  // the sign
+  bits.push(sign);
+  // the exponent
+  for (let i = ebits; i > 0; i -= 1) {
+    bits[i] = (exp % 2 ? 1 : 0);
+    exp = Math.floor(exp / 2);
+  }
+  // the fraction
+  let len = bits.length;
+  for (let i = fbits; i > 0; i -= 1) {
+    bits[len + i] = (fraction % 2 ? 1 : 0);
+    fraction = Math.floor(fraction / 2);
+  }
+  // pack as bytes
+  /** @type {string} */
+  let str = bits.join('');
+  /** @type {number} */
+  let numBytes = Math.floor((ebits + fbits + 1) / 8) + index - 1;
+  /** @type {number} */
+  let k = index;
+  while (numBytes >= index) {
+    buffer[numBytes] = parseInt(str.substring(0, 8), 2);
+    str = str.substring(8);
+    numBytes--;
+    k++;
+  }
+  return k;
+}
+
+function roundToEven(n) {
+  var w = Math.floor(n), f = n - w;
+  if (f < 0.5) {
+    return w;
+  }
+  if (f > 0.5) {
+    return w + 1;
+  }
+  return w % 2 ? w + 1 : w;
+}
+
+/*
  * Copyright (c) 2018 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -511,352 +775,6 @@ class TwosComplementBuffer extends UintBuffer {
 }
 
 /*
- * Copyright (c) 2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
-/**
- * A class to write and read two's complement ints and unsigned ints
- * to and from byte buffers.
- */
-class IntBuffer {
-  
-  /**
-   * @param {number} bits The number of bits used by the integer.
-   * @param {boolean} signed True if the integer is signed.
-   */
-  constructor(bits, signed) {
-    /** @type {TwosComplementBuffer|UintBuffer} */
-    this.parser = signed ?
-      new TwosComplementBuffer(bits) : new UintBuffer(bits);
-  }
-
-  /**
-   * Write one unsigned integer to a byte buffer.
-   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
-   * @param {number} num The number.
-   * @param {number=} index The index being written in the byte buffer.
-   * @return {number} The next index to write on the byte buffer.
-   * @throws {Error} If num is NaN.
-   * @throws {Error} On overflow.
-   */
-  pack(buffer, num, index=0) {
-    return this.parser.pack(buffer, num, index);
-  }
-
-  /**
-   * Read one unsigned integer from a byte buffer.
-   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
-   * @param {number=} index The index to read.
-   * @return {number} The number.
-   * @throws {Error} On overflow.
-   */
-  unpack(buffer, index=0) {
-    return this.parser.unpack(buffer, index);
-  }
-}
-
-/*
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
-/**
- * @fileoverview Functions to validate input.
- * @see https://github.com/rochars/byte-data
- */
-
-const TYPE_ERR = 'Unsupported type';
-
-/**
- * Validate that the value is not null or undefined.
- * @param {number} value The value.
- * @throws {Error} If the value is not null, Number or Boolean.
- */
-function validateValueType(value) {
-  if (value === undefined) {
-    throw new Error('Undefined value');
-  }
-  if (value !== null) {
-      if (value.constructor != Number && value.constructor != Boolean) {
-      throw new Error(
-        'Can\'t pack ' + value.constructor);
-    }
-  }
-}
-
-/**
- * Validate the type definition.
- * @param {!Object} theType The type definition.
- * @throws {Error} If the type definition is not valid.
- */
-function validateType(theType) {
-  if (!theType) {
-    throw new Error(TYPE_ERR);
-  }
-  theType.fp = theType.float || theType.fp;
-  if (theType.fp) {
-    validateFloatType_(theType);
-  } else {
-    validateIntType_(theType);
-  }
-}
-
-/**
- * Validate the type definition of floating-point numbers.
- * @param {!Object} theType The type definition.
- * @throws {Error} If the type definition is not valid.
- * @private
- */
-function validateFloatType_(theType) {
-  if (theType.bits != 16 && theType.bits != 32 && theType.bits != 64) {
-    throw new Error(TYPE_ERR);
-  }
-}
-
-/**
- * Validate the type definition of integers.
- * @param {!Object} theType The type definition.
- * @throws {Error} If the type definition is not valid.
- * @private
- */
-function validateIntType_(theType) {
-  if (theType.bits < 1 || theType.bits > 53) {
-    throw new Error(TYPE_ERR);
-  }
-}
-
-/*
- * Copyright (c) 2018 Rafael da Silva Rocha.
- * Copyright (c) 2013 DeNA Co., Ltd.
- * Copyright (c) 2010, Linden Research, Inc
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
-/**
- * @fileoverview Functions to pack and unpack IEEE 754 floating point numbers.
- * @see https://github.com/rochars/ieee754-buffer
- */
-
-/** @module ieee754Buffer */
-
-/**
- * Pack a IEEE 754 floating point number.
- * Derived from typedarray.js by Linden Research, MIT License.
- * @see https://bitbucket.org/lindenlab/llsd/raw/7d2646cd3f9b4c806e73aebc4b32bd81e4047fdc/js/typedarray.js
- * @param {!Uint8Array|!Array<number>} buffer The buffer.
- * @param {number} index The index to write on the buffer.
- * @param {number} num The number.
- * @param {number} ebits The number of bits of the exponent.
- * @param {number} fbits The number of bits of the fraction.
- * @return {number} The next index to write on the buffer.
- */
-function pack$1(buffer, index, num, ebits, fbits) {
-  /** @type {number} */
-  let bias = (1 << (ebits - 1)) - 1;
-  // Round overflows
-  if (Math.abs(num) > Math.pow(2, bias + 1) - ((ebits + fbits) * 2)) {
-    num = num < 0 ? -Infinity : Infinity;
-  }
-  /**
-   * sign, need this to handle negative zero
-   * @see http://cwestblog.com/2014/02/25/javascript-testing-for-negative-zero/
-   * @type {number}
-   */
-  let sign = (((num = +num) || 1 / num) < 0) ? 1 : num < 0 ? 1 : 0;
-  num = Math.abs(num);
-  /** @type {number} */
-  let exp = Math.min(Math.floor(Math.log(num) / Math.LN2), 1023);
-  /** @type {number} */
-  let fraction = roundToEven(num / Math.pow(2, exp) * Math.pow(2, fbits));
-  // NaN
-  if (num !== num) {
-    fraction = Math.pow(2, fbits - 1);
-    exp = (1 << ebits) - 1;
-  // Number
-  } else if (num !== 0) {
-    if (num >= Math.pow(2, 1 - bias)) {
-      if (fraction / Math.pow(2, fbits) >= 2) {
-        exp = exp + 1;
-        fraction = 1;
-      }
-      // Overflow
-      if (exp > bias) {
-        exp = (1 << ebits) - 1;
-        fraction = 0;
-      } else {
-        exp = exp + bias;
-        fraction = roundToEven(fraction) - Math.pow(2, fbits);
-      }
-    } else {
-      fraction = roundToEven(num / Math.pow(2, 1 - bias - fbits));
-      exp = 0;
-    } 
-  }
-  return packFloatBits_(buffer, index, ebits, fbits, sign, exp, fraction);
-}
-
-/**
- * Unpack a IEEE 754 floating point number.
- * Derived from IEEE754 by DeNA Co., Ltd., MIT License. 
- * Adapted to handle NaN. Should port the solution to the original repo.
- * @see https://github.com/kazuho/ieee754.js/blob/master/ieee754.js
- * @param {!Uint8Array|!Array<number>} buffer The buffer.
- * @param {number} index The index to read from the buffer.
- * @param {number} ebits The number of bits of the exponent.
- * @param {number} fbits The number of bits of the fraction.
- * @return {number} The floating point number.
- */
-function unpack$1(buffer, index, ebits, fbits) {
-  let exponentBias = (1 << (ebits - 1)) - 1;
-  let numBytes = Math.ceil((ebits + fbits) / 8);
-  /** @type {number} */
-  let eMax = (1 << ebits) - 1;
-  /** @type {number} */
-  let bias = Math.pow(2, -(8 * numBytes - 1 - ebits));
-  /** @type {number} */
-  let significand;
-  /** @type {string} */
-  let leftBits = "";
-  for (let i = numBytes - 1; i >= 0 ; i--) {
-    /** @type {string} */
-    let t = buffer[i + index].toString(2);
-    leftBits += "00000000".substring(t.length) + t;
-  }
-  /** @type {number} */
-  let sign = leftBits.charAt(0) == "1" ? -1 : 1;
-  leftBits = leftBits.substring(1);
-  /** @type {number} */
-  let exponent = parseInt(leftBits.substring(0, ebits), 2);
-  leftBits = leftBits.substring(ebits);
-  if (exponent == eMax) {
-    if (parseInt(leftBits, 2) !== 0) {
-      return NaN;
-    }
-    return sign * Infinity;  
-  } else if (exponent === 0) {
-    exponent += 1;
-    significand = parseInt(leftBits, 2);
-  } else {
-    significand = parseInt("1" + leftBits, 2);
-  }
-  return sign * significand * bias * Math.pow(2, exponent - exponentBias);
-}
-
-/**
- * Pack a IEEE754 from its sign, exponent and fraction bits
- * and place it in a byte buffer.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer to write to.
- * @param {number} index The buffer index to write.
- * @param {number} ebits The number of bits of the exponent.
- * @param {number} fbits The number of bits of the fraction.
- * @param {number} sign The sign.
- * @param {number} exp the exponent.
- * @param {number} fraction The fraction.
- * @return {number}
- * @private
- */
-function packFloatBits_(buffer, index, ebits, fbits, sign, exp, fraction) {
-  /** @type {!Array<number>} */
-  let bits = [];
-  // the sign
-  bits.push(sign);
-  // the exponent
-  for (let i = ebits; i > 0; i -= 1) {
-    bits[i] = (exp % 2 ? 1 : 0);
-    exp = Math.floor(exp / 2);
-  }
-  // the fraction
-  let len = bits.length;
-  for (let i = fbits; i > 0; i -= 1) {
-    bits[len + i] = (fraction % 2 ? 1 : 0);
-    fraction = Math.floor(fraction / 2);
-  }
-  // pack as bytes
-  /** @type {string} */
-  let str = bits.join('');
-  /** @type {number} */
-  let numBytes = Math.floor((ebits + fbits + 1) / 8) + index - 1;
-  /** @type {number} */
-  let k = index;
-  while (numBytes >= index) {
-    buffer[numBytes] = parseInt(str.substring(0, 8), 2);
-    str = str.substring(8);
-    numBytes--;
-    k++;
-  }
-  return k;
-}
-
-function roundToEven(n) {
-  var w = Math.floor(n), f = n - w;
-  if (f < 0.5) {
-    return w;
-  }
-  if (f > 0.5) {
-    return w + 1;
-  }
-  return w % 2 ? w + 1 : w;
-}
-
-/*
  * Copyright (c) 2017-2018 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -884,110 +802,135 @@ function roundToEven(n) {
  * A class to pack and unpack integers and floating-point numbers.
  * Signed integers are two's complement.
  * Floating-point numbers are IEEE 754 standard.
- * @extends {IntBuffer}
  */
-class NumberBuffer extends IntBuffer {
+class NumberBuffer {
   
-  constructor(theType) {
-    validateType(theType);
-    theType.signed = theType.fp ? false : theType.signed;
-    super(theType.bits, theType.signed);
-    this.offset = this.parser.bytes;
-    this.parser.bytes = this.parser.bits === 64 ? 4 : this.parser.bytes;
-    this.setReaderAndWriter_(theType);
+  constructor(bits, fp, signed) {
+    if (fp) {
+      validateFloatType(bits);
+    } else {
+      validateIntType(bits);
+    }
+    /** @type {TwosComplementBuffer|UintBuffer} */
+    this.IntBuffer = signed ?
+      new TwosComplementBuffer(bits) : new UintBuffer(bits);
+    this.IntBuffer.bytes = this.IntBuffer.bytes === 8 ?
+      4 : this.IntBuffer.bytes;
+    if (fp) {
+      this.setFPReaderAndWriter_(bits);
+    }
   }
 
   /**
-   * Read 1 16-bit float from bytes.
+   * Read one number from a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number=} index The index to read.
+   * @return {number} The number.
+   * @throws {Error} On overflow.
+   */
+  unpack(buffer, index=0) {
+    return this.IntBuffer.unpack(buffer, index);
+  }
+
+  /**
+   * Write one number to a byte buffer.
+   * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
+   * @param {number} num The number.
+   * @param {number=} index The index being written in the byte buffer.
+   * @return {number} The next index to write on the byte buffer.
+   * @throws {Error} If num is NaN.
+   * @throws {Error} On overflow.
+   */
+  pack(buffer, num, index=0) {
+    return this.IntBuffer.pack(buffer, num, index);
+  }
+
+  /**
+   * Read one 16-bit float from a byte buffer.
    * @see https://stackoverflow.com/a/8796597
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
-   * @param {number=} i The index to read.
+   * @param {number=} index The index to read.
    * @return {number}
    * @private
    */
-  read16F_(bytes, i=0) {
-    return unpack$1(bytes, i, 5, 11);
+  read16F_(bytes, index=0) {
+    return unpack$1(bytes, index, 5, 11);
   }
 
   /**
-   * Read 1 32-bit float from bytes using a TypedArray.
+   * Read one 32-bit float from a byte buffer.
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
-   * @param {number=} i The index to read.
+   * @param {number=} index The index to read.
    * @return {number}
    * @private
    */
-  read32F_(bytes, i=0) {
-    return unpack$1(bytes, i, 8, 23);
+  read32F_(bytes, index=0) {
+    return unpack$1(bytes, index, 8, 23);
   }
 
   /**
-   * Read 1 64-bit float from bytes using a TypedArray.
+   * Read one 64-bit float from a byte buffer
    * Thanks https://gist.github.com/kg/2192799
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
-   * @param {number=} i The index to read.
+   * @param {number=} index The index to read.
    * @return {number}
    * @private
    */
-  read64F_(bytes, i=0) {
-    return unpack$1(bytes, i, 11, 52);
+  read64F_(bytes, index=0) {
+    return unpack$1(bytes, index, 11, 52);
   }
 
   /**
-   * Write one 16-bit float as a binary value.
+   * Write one 16-bit float to a byte buffer.
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
    * @param {number} num The number to write as bytes.
-   * @param {number=} j The index being written in the byte buffer.
+   * @param {number=} index The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  write16F_(bytes, num, j=0) {
-    return pack$1(bytes, j, num, 5, 11);
+  write16F_(bytes, num, index=0) {
+    return pack$1(bytes, index, num, 5, 11);
   }
 
   /**
-   * Write one 32-bit float as a binary value using a TypedArray.
+   * Write one 32-bit float to a byte buffer.
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
    * @param {number} num The number to write as bytes.
-   * @param {number=} j The index being written in the byte buffer.
+   * @param {number=} index The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  write32F_(bytes, num, j=0) {
-      return pack$1(bytes, j, num, 8, 23);
+  write32F_(bytes, num, index=0) {
+      return pack$1(bytes, index, num, 8, 23);
   }
 
   /**
-   * Write one 64-bit float as a binary value using a TypedArray.
+   * Write one 64-bit float to a byte buffer.
    * @param {!Uint8Array|!Array<number>} bytes An array of bytes.
    * @param {number} num The number to write as bytes.
-   * @param {number=} j The index being written in the byte buffer.
+   * @param {number=} index The index being written in the byte buffer.
    * @return {number} The next index to write on the byte buffer.
    * @private
    */
-  write64F_(bytes, num, j=0) {
-      return pack$1(bytes, j, num, 11, 52);
+  write64F_(bytes, num, index=0) {
+      return pack$1(bytes, index, num, 11, 52);
   }
 
   /**
-   * Set the functions to pack and unpack numbers.
-   * @param {!Object} theType The type definition.
+   * Set the methods to pack and unpack floating-point numbers.
+   * @param {number} bits The number of bits.
    * @private
    */
-  setReaderAndWriter_(theType) {
-    if (theType.fp) {
-      if (theType.bits == 16) {
-        this.unpack = this.read16F_;
-        this.pack = this.write16F_;
-      } else if(theType.bits == 32) {
-        this.unpack = this.read32F_;
-        this.pack = this.write32F_;
-      } else {
-        this.unpack = this.read64F_;
-        this.pack = this.write64F_;
-      }
+  setFPReaderAndWriter_(bits) {
+    if (bits === 16) {
+      this.unpack = this.read16F_;
+      this.pack = this.write16F_;
+    } else if(bits === 32) {
+      this.unpack = this.read32F_;
+      this.pack = this.write32F_;
     } else {
-      this.unpack = super.unpack;
-      this.pack = super.pack;
+      this.unpack = this.read64F_;
+      this.pack = this.write64F_;
     }
   }
 }
@@ -1111,20 +1054,22 @@ function packArray(values, theType) {
  * @throws {Error} If the value is not valid.
  */
 function packArrayTo(values, theType, buffer, index=0) {
+  theType = theType || {};
+  /** @type {boolean} */
+  let fp = theType.fp || theType.float;
   /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(theType);
-  let valuesLen = values.length;
-  for (let i = 0; i < valuesLen; i++) {
+  let packer = new NumberBuffer(
+    theType.bits, fp, theType.signed);
+  /** @type {number} */
+  let offset = offset_(theType.bits);
+  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
     validateValueType(values[i]);
     /** @type {number} */
-    let len = index + packer.offset;
+    let len = index + offset;
     while (index < len) {
       index = packer.pack(buffer, values[i], index);
     }
-    if (theType.be) {
-      endianness(
-        buffer, packer.offset, index - packer.offset, index);
-    }
+    swap_(theType.be, buffer, offset, index - offset, index);
   }
   return index;
 }
@@ -1139,20 +1084,8 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @throws {Error} On bad buffer length.
  */
 function unpack$2(buffer, theType, index=0) {
-  /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(theType);
-  if ((packer.offset + index) > buffer.length) {
-    throw Error(SIZE_ERR);
-  }
-  if (theType.be) {
-    endianness(buffer, packer.offset, index, index + packer.offset);
-  }
-  /** @type {number} */
-  let value = packer.unpack(buffer, index);
-  if (theType.be) {
-    endianness(buffer, packer.offset, index, index + packer.offset);
-  }
-  return value;
+  return unpackArray(
+    buffer, theType, index, index + offset_(theType.bits), true)[0];
 }
 
 /**
@@ -1195,26 +1128,48 @@ function unpackArray(
  */
 function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
+  theType = theType || {};
+  /** @type {boolean} */
+  let fp = theType.fp || theType.float;
   /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(theType);
+  let packer = new NumberBuffer(
+    theType.bits, fp, theType.signed);
   /** @type {number} */
-  let extra = (end - start) % packer.offset;
-  if (extra && safe) {
+  let offset = offset_(theType.bits);
+  /** @type {number} */
+  let extra = (end - start) % offset;
+  if (safe && extra) {
+    throw new Error(SIZE_ERR);
+  }
+  if (safe && buffer.length < offset) {
     throw new Error(SIZE_ERR);
   }
   end -= extra;
-  if (theType.be) {
-    endianness(buffer, packer.offset, start, end);
-  }
-  /** @type {number} */
-  let i = 0;
-  for (let j = start; j < end; j += packer.offset) {
+  swap_(theType.be, buffer, offset, start, end);
+  for (let j = start, i = 0; j < end; j += offset, i++) {
     output[i] = packer.unpack(buffer, j);
-    i++;
   }
-  if (theType.be) {
-    endianness(buffer, packer.offset, start, end);
+  swap_(theType.be, buffer, offset, start, end);
+}
+
+/**
+ * Swap endianness in a slice of an array when flip == true.
+ * @param {boolean} flip True if should swap endianness.
+ * @param {!Uint8Array|!Array<number>} buffer The buffer.
+ * @param {number} offset The number of bytes each value use.
+ * @param {number} start The buffer index to start the swap.
+ * @param {number} end The buffer index to end the swap.
+ * @throws {Error} On bad buffer length for the swap.
+ * @private
+ */
+function swap_(flip, buffer, offset, start, end) {
+  if (flip) {
+    endianness(buffer, offset, start, end);
   }
+}
+
+function offset_(bits) {
+  return bits < 8 ? 1 : Math.ceil(bits / 8);
 }
 
 export { unpackString, packString, packStringTo, pack$2 as pack, packTo, packArray, packArrayTo, unpack$2 as unpack, unpackArray, unpackArrayTo };

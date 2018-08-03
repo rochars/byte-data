@@ -270,9 +270,27 @@ describe('Errors', function() {
     });
     
     // Invalid types
-    it("More than 64 bits", function () {
+    it("undefined type", function () {
         testFunc = function() {
-            byteData.pack(2);
+            console.log(byteData.pack(2));
+        };
+        assert.throws(testFunc, /Unsupported type/);
+    });
+    it("type is a empty array", function () {
+        testFunc = function() {
+            console.log(byteData.pack(2, []));
+        };
+        assert.throws(testFunc, /Unsupported type/);
+    });
+    it("type is a empty object", function () {
+        testFunc = function() {
+            console.log(byteData.pack(2, {}));
+        };
+        assert.throws(testFunc, /Unsupported type/);
+    });
+    it("type is a number", function () {
+        testFunc = function() {
+            console.log(byteData.pack(2, 1));
         };
         assert.throws(testFunc, /Unsupported type/);
     });
