@@ -1199,19 +1199,17 @@ function unpackArrayTo(
   let packer = new NumberBuffer(theType);
   /** @type {number} */
   let extra = (end - start) % packer.offset;
-  if (extra) {
-    if (safe) {
-      throw new Error(SIZE_ERR);
-    }
-    end -= extra;
+  if (extra && safe) {
+    throw new Error(SIZE_ERR);
   }
+  end -= extra;
   if (theType.be) {
     endianness(buffer, packer.offset, start, end);
   }
   /** @type {number} */
-  let index = start;
-  for (let i = 0; index < end; index += packer.offset) {
-    output[i] = packer.unpack(buffer, index);
+  let i = 0;
+  for (let j = start; j < end; j += packer.offset) {
+    output[i] = packer.unpack(buffer, j);
     i++;
   }
   if (theType.be) {
