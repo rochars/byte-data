@@ -51,7 +51,6 @@ function unpackString(buffer, index=0, end=null) {}
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Uint8Array} The buffer with the packed string written.
- * @deprecated
  */ 
 function packString(str) {}
 

@@ -87,6 +87,22 @@ let packed = byteData.pack(2.1474836, {bits: 32, fp: true});
 
 ## About
 
+## pack and packTo
+**pack(num, theType)** will return a *Array* with the bytes of the passed value.
+```javascript
+let packed = pack(123, {bits: 16});
+```
+**packTo(num, theType, buffer, index)** will write the bytes of the number to the provided buffer (*Uint8Array* or *Array*), start writing on *index*.
+```javascript
+let buffer = new Uint8Array(4);
+packTo(402, {bits: 16}, buffer, 2);
+```
+*index* can be ommited and will default to **zero**:
+```javascript
+let buffer = new Uint8Array(4);
+packTo(402, {bits: 16}, buffer);
+```
+
 ### Packing *null*, *false*, *true* and *undefined*
 - Packing *undefined* values throw *'Undefined value'* error
 - *null* and *false* are packed as 0
@@ -145,8 +161,8 @@ let buffer = [];
 packStringTo(str, buffer);
 ```
 
-##### Packing strings to Uint8Array
-If you need to calculate the buffer length you may use **utf8-buffer-size**:
+##### Packing strings to Uint8Array buffers
+If you need to calculate the buffer length before writing you may use the **utf8-buffer-size** module:
 ```javascript
 import utf8BufferSize from 'utf8-buffer-size';
 let buffer = new Uint8Array(utf8BufferSize(str));
@@ -180,6 +196,13 @@ https://people.debian.org/~aurel32/qemu/powerpc/
  * @return {string}
  */
 function unpackString(buffer, index=0, len=null) {}
+
+/**
+ * Write a string of UTF-8 characters as a byte buffer.
+ * @param {string} str The string to pack.
+ * @return {!Uint8Array} The buffer with the packed string written.
+ */ 
+function packString(str) {}
 
 /**
  * Write a string of UTF-8 characters to a byte buffer.
