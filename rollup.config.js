@@ -22,10 +22,9 @@ const shims = fs.readFileSync('./scripts/shims.js', 'utf8');
 
 // GCC UMD wrapper
 const outputWrapper =
-  "var byteData;" +
   "typeof module!=='undefined'?module.exports=exports :" +
   "typeof define==='function'&&define.amd?define(['exports'],exports) :" +
-  "typeof global!=='undefined'?global.byteData=exports:byteData=exports;";
+  "typeof global!=='undefined'?global.byteData=exports:null; return exports;})();";
 
 export default [
   // ES6 bundle
@@ -35,7 +34,7 @@ export default [
       {
         file: 'dist/byte-data.js',
         format: 'es'
-      },
+      }
     ],
     plugins: [
       resolve(),
@@ -79,13 +78,14 @@ export default [
         languageOut: 'ECMASCRIPT3',
         compilationLevel: 'ADVANCED',
         warningLevel: 'VERBOSE',
-        outputWrapper: polyfills + '%output%' + outputWrapper,
+        outputWrapper: ';var byteData=(function(exports){' +
+          polyfills + '%output%' +
+          outputWrapper,
         assumeFunctionWrapper: true,
         rewritePolyfills: true,
         externs: [{src: externsFile + 'exports={};'}]
       }),
       terser({
-        
         compress: {
           dead_code: true,
           unsafe: true

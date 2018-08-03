@@ -10,7 +10,7 @@ https://github.com/rochars/byte-data
 
 - **MIT licensed**
 - **Type safe**
-- **Compatible with IE6+ and all modern browsers that support ES3/ES5/ES6+**
+- **Compatible with IE6+ and browsers that support ES3/ES5/ES6+**
 - **Use it out of the box in Node.js**
 - **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
 - **Tested in little-endian and big-endian machines!**
@@ -19,9 +19,9 @@ https://github.com/rochars/byte-data
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)
-- 16-bit IEEE half-precision floating-point numbers
-- 32-bit IEEE single-precision floating-point numbers
-- 64-bit IEEE double-precision floating-point numbers
+- 16-bit half-precision floating-point numbers
+- 32-bit single-precision floating-point numbers
+- 64-bit double-precision floating-point numbers
 - Little-endian and big-endian words
 - UTF-8 strings (1 to 4 bytes per character, invalid characters are replaced)
 

@@ -959,8 +959,6 @@ class NumberBuffer {
  *
  */
 
-const SIZE_ERR = 'Bad buffer length';
-
 /**
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
@@ -1055,11 +1053,9 @@ function packArray(values, theType) {
  */
 function packArrayTo(values, theType, buffer, index=0) {
   theType = theType || {};
-  /** @type {boolean} */
-  let fp = theType.fp || theType.float;
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, fp, theType.signed);
+    theType.bits, theType.fp || theType.float, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
@@ -1129,20 +1125,15 @@ function unpackArray(
 function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
   theType = theType || {};
-  /** @type {boolean} */
-  let fp = theType.fp || theType.float;
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, fp, theType.signed);
+    theType.bits, theType.fp || theType.float, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   /** @type {number} */
   let extra = (end - start) % offset;
-  if (safe && extra) {
-    throw new Error(SIZE_ERR);
-  }
-  if (safe && buffer.length < offset) {
-    throw new Error(SIZE_ERR);
+  if (safe && (extra || buffer.length < offset)) {
+    throw new Error('Bad buffer length');
   }
   end -= extra;
   swap_(theType.be, buffer, offset, start, end);
@@ -1168,6 +1159,11 @@ function swap_(flip, buffer, offset, start, end) {
   }
 }
 
+/**
+ * Get the byte offset of a type based on its number of bits.
+ * @param {number} bits The number of bits.
+ * @private
+ */
 function offset_(bits) {
   return bits < 8 ? 1 : Math.ceil(bits / 8);
 }
