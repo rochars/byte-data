@@ -109,16 +109,24 @@ packTo(402, {bits: 16}, buffer);
 - *true* is packed as 1
 
 ### Unpacking and input buffer length
-- When unpacking a single value, a *'Bad buffer length'* error is throw if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4)
-- When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array** by default:
+
+#### unpack(buffer, theType, index=)
+When unpacking a single value, a *'Bad buffer length'* error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the *index*.
+```javascript
+byteData.unpack([0xff], {bits: 16}, 0, 1, true); // throws a 'Bad buffer length' error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws a 'Bad buffer length' error
+```
+
+#### unpackArray(buffer, theType, start=, end=, safe=)
+When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array** by default:
 ```javascript
 byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
 byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int
 ```
 You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error**:
 ```javascript
-byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws 'Bad buffer length' error
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws 'Bad buffer length' error
+byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws a 'Bad buffer length' error
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws a 'Bad buffer length' error
 ```
 
 ### Floating-point numbers
@@ -200,7 +208,7 @@ function unpackString(buffer, index=0, len=null) {}
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
+ * @return {!Array<number>} The UTF-8 string bytes.
  */ 
 function packString(str) {}
 
@@ -275,7 +283,7 @@ function unpack(buffer, theType, index=0) {}
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to start reading.
+ * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
@@ -287,7 +295,7 @@ function unpack(buffer, theType, index=0) {}
  * @throws {Error} If the type definition is not valid
  */
 function unpackArray(
-  buffer, theType, index=0, end=buffer.length, safe=false) {}
+  buffer, theType, start=0, end=buffer.length, safe=false) {}
 
 /**
  * Unpack a array of numbers to a typed array.

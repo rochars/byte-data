@@ -9,8 +9,10 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var float64 = byteData.types.float64;
-var float64BE = byteData.types.float64BE;
+var float64 = {"bits": 64, "fp": true, "be": false};
+var float64BE = {"bits": 64, "fp": true, "be": true};
+var float32BE = {"bits": 32, "fp": true, "be": true};
+var float32 = {"bits": 32, "fp": true};
 
 describe('packArrayTo: LE', function() {
     
@@ -202,8 +204,8 @@ describe('pack to typed array: float32 LE', function() {
     var index = 0;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(2.147483647, byteData.types.float32, file, index);
-    index = byteData.packTo(214748364.7, byteData.types.float32, file, index);
+    index = byteData.packTo(2.147483647, float32, file, index);
+    index = byteData.packTo(214748364.7, float32, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -225,7 +227,7 @@ describe('pack to typed array: LE (write to the middle of array)', function() {
     var index = 4;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(214748364.7, byteData.types.float32, file, index);
+    index = byteData.packTo(214748364.7, float32, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -247,8 +249,8 @@ describe('pack to typed array: BE', function() {
     var index = 0;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(2.147483647, byteData.types.float32BE, file, index);
-    index = byteData.packTo(214748364.7, byteData.types.float32BE, file, index);
+    index = byteData.packTo(2.147483647, float32BE, file, index);
+    index = byteData.packTo(214748364.7, float32BE, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -270,7 +272,7 @@ describe('pack to typed array: BE (write to the middle of array)', function() {
     var index = 4;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(214748364.7, byteData.types.float32BE, file, index);
+    index = byteData.packTo(214748364.7, float32BE, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {

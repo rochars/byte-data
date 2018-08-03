@@ -140,37 +140,37 @@ describe('Binary32 numbers', function() {
     it('pack 214748364.7', function() {
         // struct.pack('f', 214748364.7) == '\xcd\xcc\x4c\x4d'
         assert.deepEqual(
-            byteData.pack(214748364.7, byteData.types.float32), 
+            byteData.pack(214748364.7, float32), 
             [205,204,76,77]);
     });
     it('unpack 214748364.7', function() {
         // struct.unpack('f', b'\xcd\xcc\x4c\x4d') == 214748368.0
         assert.deepEqual(
-            byteData.unpack([205,204,76,77], byteData.types.float32).toFixed(1), 
+            byteData.unpack([205,204,76,77], float32).toFixed(1), 
             '214748368.0');
     });
     it('pack 21474.83647', function() {
         // struct.pack('f', 21474.83647) == '\xac\xc5\xa7\x46'
         assert.deepEqual(
-            byteData.pack(21474.83647, byteData.types.float32), 
+            byteData.pack(21474.83647, float32), 
             [0xac,0xc5,0xa7,0x46]);
     });
     it('unpack 21474.83647', function() {
         // struct.unpack('f', b'\xac\xc5\xa7\x46') == 21474.8359375
         assert.deepEqual(
-            byteData.unpack([0xac,0xc5,0xa7,0x46], byteData.types.float32).toFixed(7),
+            byteData.unpack([0xac,0xc5,0xa7,0x46], float32).toFixed(7),
             '21474.8359375');
     });
     it('pack 214.7483647', function() {
         // struct.pack('f', 214.7483647) == b'\x95\xbf\x56\x43'
         assert.deepEqual(
-            byteData.pack(214.7483647, byteData.types.float32), 
+            byteData.pack(214.7483647, float32), 
             [0x95,0xbf,0x56,0x43]);
     });
     it('unpack 214.7483647', function() {
         // struct.unpack('f', b'\x95\xbf\x56\x43') == 214.7483673095703
         assert.deepEqual(
-            byteData.unpack([0x95,0xbf,0x56,0x43], byteData.types.float32).toFixed(13), 
+            byteData.unpack([0x95,0xbf,0x56,0x43], float32).toFixed(13), 
             '214.7483673095703');
     });
     it('should turn 4 bytes hex to 1 32-bit float', function() {
@@ -181,12 +181,12 @@ describe('Binary32 numbers', function() {
     });
     it('pack 0.9', function() {
         assert.deepEqual(
-            byteData.pack(0.9, byteData.types.float32), 
+            byteData.pack(0.9, float32), 
             [0x66,0x66,0x66,0x3f]);
     });
     it('unpack 0.9', function() {
         assert.deepEqual(
-            byteData.unpack([0x66,0x66,0x66,0x3f], byteData.types.float32).toFixed(1), 
+            byteData.unpack([0x66,0x66,0x66,0x3f], float32).toFixed(1), 
             '0.9');
     });
     it('should turn 8 bytes to 2 32-bit floats', function() {

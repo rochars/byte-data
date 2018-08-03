@@ -10,7 +10,9 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 var uInt24 = byteData.types.uInt24;
-var float32 = byteData.types.float32;
+var float16 = {"bits": 16, "fp": true};
+var float32 = {"bits": 32, "fp": true};
+var float64 = {"bits": 64, "fp": true};
 var int32 = byteData.types.int32;
 
 describe('safe mode', function() {
@@ -38,7 +40,7 @@ describe('Emulate old browser with binary32 and binary64', function() {
     it('pack pi as 3.1415926535897931', function() {
         global.Uint8Array = undefined;
         assert.deepEqual(
-            byteData.pack(3.1415926535897931, byteData.types.float64), 
+            byteData.pack(3.1415926535897931, float64), 
             [0x18,0x2d,0x44,0x54,0xfb,0x21,0x09,0x40]);
         global.Uint8Array = tmp;
     });
@@ -47,7 +49,7 @@ describe('Emulate old browser with binary32 and binary64', function() {
         assert.equal(
             byteData.unpack(
                 [0x18,0x2d,0x44,0x54,0xfb,0x21,0x09,0x40],
-                byteData.types.float64).toFixed(15), 
+                float64).toFixed(15), 
             '3.141592653589793');
         global.Uint8Array = tmp;
     });
@@ -92,7 +94,7 @@ describe('interface', function() {
     });
     it('pack float32 (2.1474836, 16)', function() {
         assert.deepEqual(
-            byteData.pack(2.1474836, byteData.types.float32),
+            byteData.pack(2.1474836, float32),
             [95,112,9,64]);
     });
     it('pack int4 (-1)', function() {
@@ -128,7 +130,7 @@ describe('interface', function() {
     });
     it('unpack float16', function() {
         assert.equal(
-            byteData.unpack([85, 53], byteData.types.float16).toFixed(5),
+            byteData.unpack([85, 53], float16).toFixed(5),
             0.33325);
     });
     it('unpack int2', function() {
@@ -153,7 +155,7 @@ describe('interface', function() {
             [0,0,0,128,255,255,255,127]);
     });
     it('packArray float32', function() {
-        assert.deepEqual(byteData.packArray([-1, 1], byteData.types.float32),
+        assert.deepEqual(byteData.packArray([-1, 1], float32),
             [0,0,128,191,0,0,128,63]);
     });
 
@@ -173,7 +175,7 @@ describe('interface', function() {
         assert.deepEqual(
                 byteData.unpackArray(
                         [0,0,0,0,0,0,240,63],
-                        byteData.types.float64
+                        float64
                     ),
                     [1]
              );
@@ -314,7 +316,7 @@ describe('Errors', function() {
     });
     it("17 float (-1)", function () {
         testFunc = function() {
-            byteData.pack(2, {"bits": 17, "float": true});
+            byteData.pack(2, {"bits": 17, "fp": true});
         };
         assert.throws(testFunc, /Unsupported type/);
     });

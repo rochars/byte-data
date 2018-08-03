@@ -30,7 +30,6 @@
 /** @module byteData */
 
 import endianness from 'endianness';
-import utf8BufferSize from 'utf8-buffer-size';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
 import {validateValueType} from './lib/validation.js';
@@ -50,11 +49,11 @@ export function unpackString(buffer, index=0, end=null) {
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
+ * @return {!Array<number>} The UTF-8 string bytes.
  */ 
 export function packString(str) {
-  /** @type {!Uint8Array} */
-  let buffer = new Uint8Array(utf8BufferSize(str));
+  /** @type {!Array<number>} */
+  let buffer = [];
   packUTF8(str, buffer, 0);
   return buffer;
 }
@@ -131,7 +130,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
   theType = theType || {};
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, theType.fp || theType.float, theType.signed);
+    theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
@@ -164,7 +163,7 @@ export function unpack(buffer, theType, index=0) {
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to start reading.
+ * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
@@ -176,10 +175,10 @@ export function unpack(buffer, theType, index=0) {
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArray(
-    buffer, theType, index=0, end=buffer.length, safe=false) {
+    buffer, theType, start=0, end=buffer.length, safe=false) {
   /** @type {!Array<number>} */
   let output = [];
-  unpackArrayTo(buffer, theType, output, index, end, safe);
+  unpackArrayTo(buffer, theType, output, start, end, safe);
   return output;
 }
 
@@ -203,7 +202,7 @@ export function unpackArrayTo(
   theType = theType || {};
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, theType.fp || theType.float, theType.signed);
+    theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   /** @type {number} */

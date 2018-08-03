@@ -1,7 +1,7 @@
 # CHANGELOG
 
-## v15.1.1 (unreleased)
-- Update documentation
+## v16.0.0 (unreleased)
+- packString(str) returns a Array; if another object is needed, use packStringTo(str, buffer).
 
 ## v15.1.0 (2018-08-03)
 - "safe mode" for unpack array; optional boolean argument 'safe' that defaults to false. If true, a error will be thrown if the input array have extra bytes or not sufficient bytes according to the data type. If false, inputs with insufficient length will generate empty ouputs and extra bytes in the end of the array will be ignored.

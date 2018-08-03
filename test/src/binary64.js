@@ -292,18 +292,18 @@ describe('Binary64 numbers', function() {
 
 
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
-        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0x7f], byteData.types.float64), 
+        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0x7f], float64), 
             [Infinity]); // 240 127 0xf0 0x7f
     });
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
-        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0xff], byteData.types.float64), 
+        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0xff], float64), 
             [-Infinity]); // 240 127 0xf0 0x7f
     });
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
         assert.ok(isNaN(
             byteData.unpackArray(
                 [0,0,0,0,0,0,248,127],
-                byteData.types.float64))); // 248 127 0xf8 0x7f
+                float64))); // 248 127 0xf8 0x7f
     });
 
     // big endian

@@ -173,37 +173,37 @@ describe('Binary16 numbers', function() {
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(100, byteData.types.float16),
+            byteData.pack(100, float16),
             [64, 86]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(500, byteData.types.float16),
+            byteData.pack(500, float16),
             [208, 95]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(1000, byteData.types.float16),
+            byteData.pack(1000, float16),
             [208, 99]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(10000, byteData.types.float16),
+            byteData.pack(10000, float16),
             [226, 112]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(30000, byteData.types.float16),
+            byteData.pack(30000, float16),
             [83, 119]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(40000, byteData.types.float16),
+            byteData.pack(40000, float16),
             [226, 120]);
     });
     it('pack 65504', function() {
         assert.deepEqual(
-            byteData.pack(65504, byteData.types.float16),
+            byteData.pack(65504, float16),
             [255, 123]);
     });
 

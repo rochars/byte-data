@@ -89,66 +89,6 @@ function swap(bytes, offset, index) {
  */
 
 /**
- * @fileoverview The utf8-buffer-size API.
- * @see https://github.com/rochars/utf8-buffer-size
- */
-
-/** @module utf8BufferSize */
-
-/**
- * Returns how many bytes are needed to serialize a UTF-8 string.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
- * @param {string} str The string to pack.
- * @return {number} The number of bytes needed to serialize the string.
- */
-function utf8BufferSize(str) {
-  /** @type {number} */
-  let bytes = 0;
-  for (let i = 0, len = str.length; i < len; i++) {
-    /** @type {number} */
-    let codePoint = str.codePointAt(i);
-    if (codePoint < 128) {
-      bytes++;
-    } else {
-      if (codePoint <= 2047) {
-        bytes++;
-      } else if(codePoint <= 65535) {
-        bytes+=2;
-      } else if(codePoint <= 1114111) {
-        i++;
-        bytes+=3;
-      }
-      bytes++;
-    }
-  }
-  return bytes;
-}
-
-/*
- * Copyright (c) 2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
-/**
  * @fileoverview Functions to serialize and deserialize UTF-8 strings.
  * @see https://github.com/rochars/utf8-buffer
  * @see https://encoding.spec.whatwg.org/#the-encoding
@@ -974,11 +914,11 @@ function unpackString(buffer, index=0, end=null) {
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
+ * @return {!Array<number>} The UTF-8 string bytes.
  */ 
 function packString(str) {
-  /** @type {!Uint8Array} */
-  let buffer = new Uint8Array(utf8BufferSize(str));
+  /** @type {!Array<number>} */
+  let buffer = [];
   pack(str, buffer, 0);
   return buffer;
 }
@@ -1055,7 +995,7 @@ function packArrayTo(values, theType, buffer, index=0) {
   theType = theType || {};
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, theType.fp || theType.float, theType.signed);
+    theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
@@ -1088,7 +1028,7 @@ function unpack$2(buffer, theType, index=0) {
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to start reading.
+ * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
@@ -1100,10 +1040,10 @@ function unpack$2(buffer, theType, index=0) {
  * @throws {Error} If the type definition is not valid
  */
 function unpackArray(
-    buffer, theType, index=0, end=buffer.length, safe=false) {
+    buffer, theType, start=0, end=buffer.length, safe=false) {
   /** @type {!Array<number>} */
   let output = [];
-  unpackArrayTo(buffer, theType, output, index, end, safe);
+  unpackArrayTo(buffer, theType, output, start, end, safe);
   return output;
 }
 
@@ -1127,7 +1067,7 @@ function unpackArrayTo(
   theType = theType || {};
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, theType.fp || theType.float, theType.signed);
+    theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   /** @type {number} */

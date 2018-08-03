@@ -23,7 +23,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 15.0
+ * @fileoverview Externs for byte-data 16.0
  * @see https://github.com/rochars/byte-data
  * @externs
  */
@@ -32,9 +32,8 @@
 var theType = {
 	bits: 0,
 	signed: false,
-	float: false, // using float is deprecated; use fp instead
 	fp: false,
-	be: false,
+	be: false
 };
 
 /**
@@ -50,7 +49,7 @@ function unpackString(buffer, index=0, end=null) {}
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The buffer with the packed string written.
+ * @return {!Array<number>} The UTF-8 string bytes.
  */ 
 function packString(str) {}
 
