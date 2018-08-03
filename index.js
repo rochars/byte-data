@@ -185,7 +185,8 @@ export function unpack(buffer, theType, index=0) {
  *   Assumes the buffer length if undefined.
  * @param {boolean=} safe If set to false, extra bytes in the end of
  *   the array are ignored and input buffers with insufficient bytes will
- *   produce a empty output array. Defaults to false.
+ *   output a empty array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
@@ -208,7 +209,8 @@ export function unpackArray(
  *   Assumes the buffer length if undefined.
  * @param {boolean=} safe If set to false, extra bytes in the end of
  *   the array are ignored and input buffers with insufficient bytes will
- *   write nothing to the output array. Defaults to false.
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayTo(

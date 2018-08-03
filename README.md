@@ -99,7 +99,7 @@ let packed = byteData.pack(2.1474836, {bits: 32, fp: true});
 byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
 byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int
 ```
-You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad Buffer length' error**:
+You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error**:
 ```javascript
 byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws 'Bad buffer length' error
 byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws 'Bad buffer length' error
@@ -258,7 +258,8 @@ function unpack(buffer, theType, index=0) {}
  *   Assumes the buffer length if undefined.
  * @param {boolean=} safe If set to false, extra bytes in the end of
  *   the array are ignored and input buffers with insufficient bytes will
- *   generate a empty output array. Defaults to false.
+ *   output a empty array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
@@ -276,7 +277,8 @@ function unpackArray(
  *   Assumes the buffer length if undefined.
  * @param {boolean=} safe If set to false, extra bytes in the end of
  *   the array are ignored and input buffers with insufficient bytes will
- *   write nothing to the output array. Defaults to false.
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error. Defaults to false.
  * @throws {Error} If the type definition is not valid
  */
 function unpackArrayTo(
