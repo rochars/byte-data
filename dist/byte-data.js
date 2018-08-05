@@ -934,11 +934,7 @@ function unpackString(buffer, index=0, end=null) {
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
-<<<<<<< HEAD
- * @return {!Uint8Array} The UTF-8 string bytes.
-=======
  * @return {!Array<number>} The UTF-8 string bytes.
->>>>>>> v16.x
  */ 
 function packString(str) {
   /** @type {!Array<number>} */
