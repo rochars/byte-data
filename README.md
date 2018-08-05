@@ -104,9 +104,9 @@ packTo(402, {bits: 16}, buffer);
 ```
 
 ### Packing *null*, *false*, *true* and *undefined*
-- Packing *undefined* values throw *'Undefined value'* error
-- *null* and *false* are packed as 0
+- Packing *undefined* or *null* values throw *'Argument is not a number'* error
 - *true* is packed as 1
+- *false* is packed as 0
 
 ### Unpacking and input buffer length
 
@@ -208,7 +208,7 @@ function unpackString(buffer, index=0, len=null) {}
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
- * @return {!Uint8Array} The UTF-8 string bytes.
+ * @return {!Array<number>} The UTF-8 string bytes.
  */ 
 function packString(str) {}
 

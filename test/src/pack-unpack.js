@@ -10,25 +10,50 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 
-var uInt2 = byteData.types.uInt2;
-var int2 = byteData.types.int2;
-var uInt4 = byteData.types.uInt4;
-var int4 = byteData.types.int4;
-var uInt8 = byteData.types.uInt8;
-var int8 = byteData.types.int8;
-var uInt16 = byteData.types.uInt16;
-var int16 = byteData.types.int16;
-var uInt24 = byteData.types.uInt24;
-var int24 = byteData.types.int24;
-var float32 = byteData.types.float32;
-var uInt32 = byteData.types.uInt32;
-var int32 = byteData.types.int32;
-var uInt40 = byteData.types.uInt40;
-var int40 = byteData.types.int40;
-var uInt48 = byteData.types.uInt48;
-var int48 = byteData.types.int48;
-var float64 = byteData.types.float64;
+var uInt2 = {"bits": 2};
+var int2 = {"bits": 2, "signed": true};
+
+var int4 = {"bits": 4, "signed": true};
+var uInt4 = {"bits": 4};
+
+var uInt32BE = {"bits": 32, "be": true};
+var uInt32 = {"bits": 32};
+var int32 = {"bits": 32, "signed": true};
+
+var uInt40BE = {"bits": 40, "be": true};
+var uInt40 = {"bits": 40};
+
+var uInt48BE = {"bits": 48, "be": true};
+var uInt48 = {"bits": 48};
+
 var uInt53 = {"bits": 53};
+var int53 = {"bits": 53, "signed": true};
+
+var int48BE = {"bits": 48, "signed": true, "be": true};
+var int48 = {"bits": 48, "signed": true};
+
+
+var uInt40 = {"bits": 40};
+var int40 = {"bits": 40, "signed": true};
+var uInt40BE = {"bits": 40, "be": true};
+var int40BE = {"bits": 40, "signed": true, "be": true};
+
+var int8 = {"bits": 8, "signed": true};
+var uInt8 = {"bits": 8};
+
+var int16 = {"bits": 16, "signed": true};
+var uInt16 = {"bits": 16};
+var int16BE = {"bits": 16, "signed": true, "be": true};
+var uInt16BE = {"bits": 16, "be": true};
+
+var int24 = {"bits": 24, "signed": true};
+var uInt24 = {"bits": 24};
+var int24BE = {"bits": 24, "signed": true, "be": true};
+var uInt24BE = {"bits": 24, "be": true};
+
+var float64 = {"bits": 64, "fp": true};
+var float32 = {"bits": 32, "fp": true};
+var float16 = {"bits": 16, "fp": true};
 
 describe('pack-unpack', function() {
     
@@ -390,44 +415,44 @@ describe('pack-unpack', function() {
 
     it('should turn 1 16-bit float to 2 byte and back (0.0006)',
             function() {
-        var bytes = byteData.packArray([0.0006], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([0.0006], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.deepEqual('0.0006', num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.0006)',
             function() {
-        var bytes = byteData.packArray([-0.0006], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([-0.0006], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.deepEqual('-0.0006', num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (0.0106)',
             function() {
-        var bytes = byteData.packArray([0.0106], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([0.0106], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.deepEqual('0.0106', num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.1006)',
             function() {
-        var bytes = byteData.packArray([-0.1006], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([-0.1006], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.deepEqual('-0.1006', num[0].toFixed(4));
     });
     it('should turn 1 16-bit float to 2 byte and back (0.00106)',
             function() {
-        var bytes = byteData.packArray([0.00106], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([0.00106], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.deepEqual('0.00106', num[0].toFixed(5));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.01006)',
             function() {
-        var bytes = byteData.packArray([-0.01006], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([-0.01006], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.deepEqual('-0.01006', num[0].toFixed(5));
     });
     it('should turn 1 16-bit float to 2 byte and back (-0.01006 vs -0.01005)',
             function() {
-        var bytes = byteData.packArray([-0.01006], byteData.types.float16);
-        var num = byteData.unpackArray(bytes, byteData.types.float16);
+        var bytes = byteData.packArray([-0.01006], {"bits": 16, "fp": true});
+        var num = byteData.unpackArray(bytes, {"bits": 16, "fp": true});
         assert.ok('-0.01005' != num[0].toFixed(5));
     });
 

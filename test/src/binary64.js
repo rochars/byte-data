@@ -11,9 +11,7 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 var float64 = {"bits": 64, "fp": true};
-var float64BE = {"bits": 64, "fp": true, "be": true};
-
-var Buffer = Buffer || false;
+var binary64BE = {"bits": 64, "fp": true, "be": true};
 
 describe('Binary64 numbers', function() {     
     // Zeros
@@ -292,24 +290,24 @@ describe('Binary64 numbers', function() {
 
 
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
-        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0x7f], byteData.types.float64), 
+        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0x7f], float64), 
             [Infinity]); // 240 127 0xf0 0x7f
     });
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
-        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0xff], byteData.types.float64), 
+        assert.deepEqual(byteData.unpackArray([0,0,0,0,0x00,0x00,0xf0,0xff], float64), 
             [-Infinity]); // 240 127 0xf0 0x7f
     });
     it('should turn 1 signed 32-bit float to 4 bytes (1)', function() {
         assert.ok(isNaN(
             byteData.unpackArray(
                 [0,0,0,0,0,0,248,127],
-                byteData.types.float64))); // 248 127 0xf8 0x7f
+                float64))); // 248 127 0xf8 0x7f
     });
 
     // big endian
     it('should turn 1 64-bit float to 8 bytes BE (pi)', function() {
         assert.deepEqual(
-            byteData.unpackArray([64, 9, 33, 251, 84, 68, 45, 24], float64BE),
+            byteData.unpackArray([64, 9, 33, 251, 84, 68, 45, 24], binary64BE),
             [3.141592653589793]);
     });
 });

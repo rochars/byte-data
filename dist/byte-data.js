@@ -89,66 +89,6 @@ function swap(bytes, offset, index) {
  */
 
 /**
- * @fileoverview The utf8-buffer-size API.
- * @see https://github.com/rochars/utf8-buffer-size
- */
-
-/** @module utf8BufferSize */
-
-/**
- * Returns how many bytes are needed to serialize a UTF-8 string.
- * @see https://encoding.spec.whatwg.org/#utf-8-encoder
- * @param {string} str The string to pack.
- * @return {number} The number of bytes needed to serialize the string.
- */
-function utf8BufferSize(str) {
-  /** @type {number} */
-  let bytes = 0;
-  for (let i = 0, len = str.length; i < len; i++) {
-    /** @type {number} */
-    let codePoint = str.codePointAt(i);
-    if (codePoint < 128) {
-      bytes++;
-    } else {
-      if (codePoint <= 2047) {
-        bytes++;
-      } else if(codePoint <= 65535) {
-        bytes+=2;
-      } else if(codePoint <= 1114111) {
-        i++;
-        bytes+=3;
-      }
-      bytes++;
-    }
-  }
-  return bytes;
-}
-
-/*
- * Copyright (c) 2018 Rafael da Silva Rocha.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
-/**
  * @fileoverview Functions to serialize and deserialize UTF-8 strings.
  * @see https://github.com/rochars/utf8-buffer
  * @see https://encoding.spec.whatwg.org/#the-encoding
@@ -307,18 +247,28 @@ const TYPE_ERR = 'Unsupported type';
 
 /**
  * Validate that the value is not null or undefined.
- * @param {number} value The value.
- * @throws {Error} If the value is not null, Number or Boolean.
+ * @param {*} value The value.y.
+ * @throws {Error} If the value is not Number or Boolean.
+ * @throws {Error} If the value is NaN, Infinity or -Infinity.
  */
-function validateValueType(value) {
-  if (value === undefined) {
-    throw new Error('Undefined value');
+function validateIsInt(value) {
+  validateIsNumber(value);
+  if (value !== value || value === Infinity || value === -Infinity) {
+    throwValueErr_('integer');
   }
-  if (value !== null) {
-      if (value.constructor != Number && value.constructor != Boolean) {
-      throw new Error(
-        'Can\'t pack ' + value.constructor);
-    }
+}
+
+/**
+ * Validate that the value is not null or undefined.
+ * @param {*} value The value.
+ * @throws {Error} If the value is not Number or Boolean.
+ */
+function validateIsNumber(value) {
+  if (value === undefined || value === null) {
+    throwValueErr_();
+  }
+  if (value.constructor != Number && value.constructor != Boolean) {
+    throwValueErr_();
   }
 }
 
@@ -330,7 +280,7 @@ function validateValueType(value) {
  */
 function validateFloatType(bits) {
   if (!bits || bits !== 16 && bits !== 32 && bits !== 64) {
-    throw new Error(TYPE_ERR);
+    throw new Error(TYPE_ERR + ': float, bits: ' + bits);
   }
 }
 
@@ -342,8 +292,18 @@ function validateFloatType(bits) {
  */
 function validateIntType(bits) {
   if (!bits || bits < 1 || bits > 53) {
-    throw new Error(TYPE_ERR);
+    throw new Error(TYPE_ERR + ': int, bits: ' + bits);
   }
+}
+
+/**
+ * Throw a error about the input value.
+ * @param {string} theType The name of the type the value was expected to be.
+ * @throws {Error} Always when called.
+ * @private
+ */
+function throwValueErr_(theType='valid number') {
+  throw new Error('Argument is not a ' + theType);
 }
 
 /*
@@ -901,7 +861,7 @@ class NumberBuffer {
    * @private
    */
   write32F_(bytes, num, index=0) {
-      return pack$1(bytes, index, num, 8, 23);
+    return pack$1(bytes, index, num, 8, 23);
   }
 
   /**
@@ -913,7 +873,7 @@ class NumberBuffer {
    * @private
    */
   write64F_(bytes, num, index=0) {
-      return pack$1(bytes, index, num, 11, 52);
+    return pack$1(bytes, index, num, 11, 52);
   }
 
   /**
@@ -974,11 +934,15 @@ function unpackString(buffer, index=0, end=null) {
 /**
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
+<<<<<<< HEAD
  * @return {!Uint8Array} The UTF-8 string bytes.
+=======
+ * @return {!Array<number>} The UTF-8 string bytes.
+>>>>>>> v16.x
  */ 
 function packString(str) {
-  /** @type {!Uint8Array} */
-  let buffer = new Uint8Array(utf8BufferSize(str));
+  /** @type {!Array<number>} */
+  let buffer = [];
   pack(str, buffer, 0);
   return buffer;
 }
@@ -1055,17 +1019,25 @@ function packArrayTo(values, theType, buffer, index=0) {
   theType = theType || {};
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, theType.fp || theType.float, theType.signed);
+    theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
-  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
-    validateValueType(values[i]);
-    /** @type {number} */
-    let len = index + offset;
-    while (index < len) {
-      index = packer.pack(buffer, values[i], index);
+  /** @type {Function} */
+  let validateInput = theType.fp ? validateIsNumber : validateIsInt;
+  /** @type {number} */
+  let i = 0;
+  try {
+    for (let valuesLen = values.length; i < valuesLen; i++) {
+      validateInput(values[i]);
+      /** @type {number} */
+      let len = index + offset;
+      while (index < len) {
+        index = packer.pack(buffer, values[i], index);
+      }
+      swap_(theType.be, buffer, offset, index - offset, index);
     }
-    swap_(theType.be, buffer, offset, index - offset, index);
+  } catch (e) {
+    throw new Error(e.message + ' at input index ' + i);
   }
   return index;
 }
@@ -1078,6 +1050,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
+ * @throws {Error} On overflow
  */
 function unpack$2(buffer, theType, index=0) {
   return unpackArray(
@@ -1098,6 +1071,7 @@ function unpack$2(buffer, theType, index=0) {
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
+ * @throws {Error} On overflow
  */
 function unpackArray(
     buffer, theType, start=0, end=buffer.length, safe=false) {
@@ -1121,13 +1095,14 @@ function unpackArray(
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @throws {Error} If the type definition is not valid
+ * @throws {Error} On overflow
  */
 function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
   theType = theType || {};
   /** @type {NumberBuffer} */
   let packer = new NumberBuffer(
-    theType.bits, theType.fp || theType.float, theType.signed);
+    theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
   /** @type {number} */
@@ -1136,11 +1111,17 @@ function unpackArrayTo(
     throw new Error('Bad buffer length');
   }
   end -= extra;
-  swap_(theType.be, buffer, offset, start, end);
-  for (let j = start, i = 0; j < end; j += offset, i++) {
-    output[i] = packer.unpack(buffer, j);
+  /** @type {number} */
+  let i = 0;
+  try {
+    swap_(theType.be, buffer, offset, start, end);
+    for (let j = start; j < end; j += offset, i++) {
+      output[i] = packer.unpack(buffer, j);
+    }
+    swap_(theType.be, buffer, offset, start, end);
+  } catch (e) {
+    throw new Error(e.message + ' at output index ' + i);
   }
-  swap_(theType.be, buffer, offset, start, end);
 }
 
 /**

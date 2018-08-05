@@ -9,10 +9,10 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var int24BE = byteData.types.int24BE;
-var int24 = byteData.types.int24;
-var uInt24BE = byteData.types.uInt24BE;
-var uInt24 = byteData.types.uInt24;
+var int24BE = {"bits": 24, "signed": true, "be": true};
+var int24 = {"bits": 24, "signed": true};
+var uInt24BE = {"bits": 24, "be": true};
+var uInt24 = {"bits": 24};
 
 describe('24-bit integers, signed', function() {
     it('pack 8388607 (max)', function() {

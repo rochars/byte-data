@@ -18,7 +18,6 @@ const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
 // Shims for the UMD
 const polyfills = fs.readFileSync('./scripts/polyfills.js', 'utf8');
-const shims = fs.readFileSync('./scripts/shims.js', 'utf8');
 
 // GCC UMD wrapper
 const outputWrapper =
@@ -68,8 +67,7 @@ export default [
         name: 'byteData',
         format: 'cjs',
         strict: false,
-        banner: 'var exports=exports||{};',
-        outro: shims
+        banner: 'var exports=exports||{};'
       }
     ],
     plugins: [

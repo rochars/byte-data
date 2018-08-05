@@ -11,28 +11,22 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 
-var uInt2 = byteData.types.uInt2;
-var int2 = byteData.types.int2;
-var uInt32BE = byteData.types.uInt32BE;
-var uInt32 = byteData.types.uInt32;
-var uInt40BE = byteData.types.uInt40BE;
-var uInt40 = byteData.types.uInt40;
-var uInt48BE = byteData.types.uInt48BE;
-var uInt48 = byteData.types.uInt48;
-var float64BE = byteData.types.float64BE;
+var uInt2 = {"bits": 2};
+var int2 = {"bits": 2, "signed": true};
+var int4 = {"bits": 4, "signed": true};
+var uInt4 = {"bits": 4};
+var uInt32BE = {"bits": 32, "be": true};
+var uInt32 = {"bits": 32};
+var uInt40BE = {"bits": 40, "be": true};
+var uInt40 = {"bits": 40};
+var uInt48BE = {"bits": 48, "be": true};
+var uInt48 = {"bits": 48};
 var uInt53 = {"bits": 53};
-var int53 = {bits: 53, signed: true};
-var uInt40 = byteData.types.uInt40;
-var uInt48BE = byteData.types.uInt48BE;
-var uInt48 = byteData.types.uInt48;
-var int48BE = byteData.types.int48BE;
-var int48 = byteData.types.int48;
-var uInt40BE = byteData.types.uInt40BE;
-var int40BE = byteData.types.int40BE;
-var int40 = byteData.types.int40;
-var uInt40 = byteData.types.uInt40;
-var int4 = byteData.types.int4;
-var uInt4 = byteData.types.uInt4;
+var int53 = {"bits": 53, "signed": true};
+var int48BE = {"bits": 48, "signed": true, "be": true};
+var int48 = {"bits": 48, "signed": true};
+var int40BE = {"bits": 40, "signed": true, "be": true};
+var int40 = {"bits": 40, "signed": true};
 
 describe('esoteric bit depths', function() {
     
@@ -370,27 +364,27 @@ describe('pack int2', function() {
 describe('pack int4', function() {
     it('should turn 2 4-bit signed int to 2 bytes (-8, 7)', function() {
         assert.deepEqual(
-            byteData.packArray([-8, 7], byteData.types.int4),
+            byteData.packArray([-8, 7], int4),
             [8, 7]);
     });
     it('should turn 1 4-bit signed int to 1 nibble (-1)', function() {
         assert.deepEqual(
-            byteData.packArray([-1], byteData.types.int4),
+            byteData.packArray([-1], int4),
             [15]);
     });
     it('should turn 1 4-bit signed int to 1 nibble (-1, 5)', function() {
         assert.deepEqual(
-            byteData.packArray([-1, 5], byteData.types.int4),
+            byteData.packArray([-1, 5], int4),
             [15, 5]);
     });
     it('should turn 1 4-bit signed int to 1 nibble hex (-1)', function() {
         assert.deepEqual(
-            byteData.packArray([-1], byteData.types.int4, 16),
+            byteData.packArray([-1], int4, 16),
             [15]);
     });
     it('should turn 1 4-bit signed int to 1 nibble hex (-8)', function() {
         assert.deepEqual(
-            byteData.packArray([-8], byteData.types.int4, 16),
+            byteData.packArray([-8], int4, 16),
             [8]);
     });
 });
@@ -400,39 +394,39 @@ describe('pack int40', function() {
     // 0
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([0], byteData.types.int40, 16),
+            byteData.packArray([0], int40, 16),
             [0,0,0,0,0]);
     });
     // min
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([-549755813888], byteData.types.int40, 16),
+            byteData.packArray([-549755813888], int40, 16),
             [0,0,0,0,128]);
     });
     // -125
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([-125], byteData.types.int40, 16),
+            byteData.packArray([-125], int40, 16),
             [131,255,255,255,255]);
     });
     // min + 1
     it('min + 1', function() {
         assert.deepEqual(
-            byteData.packArray([-549755813887], byteData.types.int40, 16),
+            byteData.packArray([-549755813887], int40, 16),
             [1,0,0,0,128]
         );
     });
     // min + 2
     it('min + 2', function() {
         assert.deepEqual(
-            byteData.packArray([-549755813886], byteData.types.int40, 16),
+            byteData.packArray([-549755813886], int40, 16),
             [2,0,0,0,128]
         );
     });
     // min + 3
     it('min + 3', function() {
         assert.deepEqual(
-            byteData.packArray([-549755813885], byteData.types.int40, 16),
+            byteData.packArray([-549755813885], int40, 16),
             [3,0,0,0,128]
         );
     });
@@ -440,21 +434,21 @@ describe('pack int40', function() {
     // -1
     it('-1', function() {
         assert.deepEqual(
-            byteData.packArray([-1], byteData.types.int40, 16),
+            byteData.packArray([-1], int40, 16),
             [255, 255, 255, 255, 255]
         );
     });
     // -2
     it('-2', function() {
         assert.deepEqual(
-            byteData.packArray([-2], byteData.types.int40, 16),
+            byteData.packArray([-2], int40, 16),
             [254, 255, 255, 255, 255]
         );
     });
     // -3
     it('-3', function() {
         assert.deepEqual(
-            byteData.packArray([-3], byteData.types.int40, 16),
+            byteData.packArray([-3], int40, 16),
             [253, 255, 255, 255, 255]
         );
     });
@@ -462,7 +456,7 @@ describe('pack int40', function() {
     // max
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([549755813887], byteData.types.int40, 16),
+            byteData.packArray([549755813887], int40, 16),
             [255,255,255,255,127]);
     });
 });
@@ -471,46 +465,46 @@ describe('48-bit to bytes', function() {
 
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([-140737488355328], byteData.types.int48, 16),
+            byteData.packArray([-140737488355328], int48, 16),
             [0,0,0,0,0,128]);
     });
     
     // 0
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([0], byteData.types.int48, 16),
+            byteData.packArray([0], int48, 16),
             [0,0,0,0,0,0]);
     });
     // min
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([-140737488355328], byteData.types.int48, 16),
+            byteData.packArray([-140737488355328], int48, 16),
             [0,0,0,0,0,128]);
     });
     // -125
     it('min', function() {
         assert.deepEqual(
-            byteData.packArray([-125], byteData.types.int48, 16),
+            byteData.packArray([-125], int48, 16),
             [131,255,255,255,255,255]);
     });
     // min + 1
     it('min + 1', function() {
         assert.deepEqual(
-            byteData.packArray([-140737488355327], byteData.types.int48, 16),
+            byteData.packArray([-140737488355327], int48, 16),
             [1,0,0,0,0,128]
         );
     });
     // min + 2
     it('min + 2', function() {
         assert.deepEqual(
-            byteData.packArray([-140737488355326], byteData.types.int48, 16),
+            byteData.packArray([-140737488355326], int48, 16),
             [2,0,0,0,0,128]
         );
     });
     // min + 3
     it('min + 3', function() {
         assert.deepEqual(
-            byteData.packArray([-140737488355325], byteData.types.int48, 16),
+            byteData.packArray([-140737488355325], int48, 16),
             [3,0,0,0,0,128]
         );
     });
@@ -518,21 +512,21 @@ describe('48-bit to bytes', function() {
     // -1
     it('-1', function() {
         assert.deepEqual(
-            byteData.packArray([-1], byteData.types.int48, 16),
+            byteData.packArray([-1], int48, 16),
             [255, 255, 255, 255, 255, 255]
         );
     });
     // -2
     it('-2', function() {
         assert.deepEqual(
-            byteData.packArray([-2], byteData.types.int48, 16),
+            byteData.packArray([-2], int48, 16),
             [254, 255, 255, 255, 255, 255]
         );
     });
     // -3
     it('-3', function() {
         assert.deepEqual(
-            byteData.packArray([-3], byteData.types.int48, 16),
+            byteData.packArray([-3], int48, 16),
             [253, 255, 255, 255, 255, 255]
         );
     });
@@ -592,17 +586,17 @@ describe('pack uInt2', function() {
 describe('pack uInt4', function() {    
     it('should turn 2 4-bit signed int to 2 nibbles (0s)', function() {
         assert.deepEqual(
-            byteData.packArray([0, 0], byteData.types.uInt4),
+            byteData.packArray([0, 0], uInt4),
             [0, 0]);
     });
     it('should turn 1 4-bit signed int to 1 nibble hex (7)', function() {
         assert.deepEqual(
-            byteData.packArray([7], byteData.types.uInt4, 16),
+            byteData.packArray([7], uInt4, 16),
             [7]);
     });
     it('should turn 1 4-bit signed int to 1 nibble bin (6)', function() {
         assert.deepEqual(
-            byteData.packArray([6], byteData.types.uInt4, 2),
+            byteData.packArray([6], uInt4, 2),
             [6]);
     });
 });
@@ -611,27 +605,27 @@ describe('pack uInt40', function() {
     
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([549755813887], byteData.types.uInt40, 16),
+            byteData.packArray([549755813887], uInt40, 16),
             [255,255,255,255,127]);
     });
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (949752813887)', function() {
         assert.deepEqual(
-            byteData.packArray([949752813887], byteData.types.uInt40, 16),
+            byteData.packArray([949752813887], uInt40, 16),
             [63, 217, 173, 33, 221]);
     });  
     it('should turn 1 unsigned 40-bit int to 5 bytes (hex) (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([1099511627775], byteData.types.uInt40, 16),
+            byteData.packArray([1099511627775], uInt40, 16),
             [255,255,255,255,255]);
     });
     it('should turn 1 unsigned 40-bit int to 5 bytes (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([1099511627775], byteData.types.uInt40),
+            byteData.packArray([1099511627775], uInt40),
             [255,255,255,255,255]);
     });
     it('should turn 1 unsigned 40-bit int to 5 bytes in a Uint8Array (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([1099511627775], byteData.types.uInt40),
+            byteData.packArray([1099511627775], uInt40),
             [255,255,255,255,255]);
     });
 });
@@ -641,22 +635,22 @@ describe('48-bit to bytes', function() {
     
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([120637438355317], byteData.types.uInt48, 16),
+            byteData.packArray([120637438355317], uInt48, 16),
             [117, 231, 168, 23, 184, 109]); 
     });
     it('should turn 1 signed 48-bit int to 6 bytes (hex) (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([140737488355327], byteData.types.uInt48),
+            byteData.packArray([140737488355327], uInt48),
             [255,255,255,255,255,127]); 
     });
     it('should turn 1 unsigned 48-bit int to 6 bytes (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([281474976710655], byteData.types.uInt48),
+            byteData.packArray([281474976710655], uInt48),
             [255,255,255,255,255,255]);
     });
     it('should turn 1 unsigned 48-bit int to 6 bytes (max range)', function() {
         assert.deepEqual(
-            byteData.packArray([281474976710655], byteData.types.uInt48),
+            byteData.packArray([281474976710655], uInt48),
             [255,255,255,255,255,255]);
     });
 
@@ -986,14 +980,14 @@ describe('48-bit from bytes', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [255,255,255,255,255,127], byteData.types.int48),
+                [255,255,255,255,255,127], int48),
             [140737488355327]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (min range)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [0,0,0,0,0,128], byteData.types.int48),
+                [0,0,0,0,0,128], int48),
             [-140737488355328]);
     });
 
@@ -1002,105 +996,105 @@ describe('48-bit from bytes', function() {
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [0,128,255,255,255,255], byteData.types.int48),
+                [0,128,255,255,255,255], int48),
             [-32768]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-65535)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [1,0,255,255,255,255], byteData.types.int48),
+                [1,0,255,255,255,255], int48),
             [-65535]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-1)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [255,255,255,255,255,255], byteData.types.int48),
+                [255,255,255,255,255,255], int48),
             [-1]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-2)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [254,255,255,255,255,255], byteData.types.int48),
+                [254,255,255,255,255,255], int48),
             [-2]);
     });
     it('should turn 5 bytes (hex) to 1 signed 48-bit int  (-3)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [253,255,255,255,255,255], byteData.types.int48),
+                [253,255,255,255,255,255], int48),
             [-3]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-10)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [246,255,255,255,255,255], byteData.types.int48),
+                [246,255,255,255,255,255], int48),
             [-10]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-100)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [156,255,255,255,255,255], byteData.types.int48),
+                [156,255,255,255,255,255], int48),
             [-100]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-1000)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [24,252,255,255,255,255], byteData.types.int48),
+                [24,252,255,255,255,255], int48),
             [-1000]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-10000)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [240,216,255,255,255,255], byteData.types.int48),
+                [240,216,255,255,255,255], int48),
             [-10000]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-100000)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [96, 121,254,255,255,255], byteData.types.int48),
+                [96, 121,254,255,255,255], int48),
             [-100000]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-1000000)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [192, 189,240,255,255,255], byteData.types.int48),
+                [192, 189,240,255,255,255], int48),
             [-1000000]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-32768)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [0,128,255,255,255,255], byteData.types.int48),
+                [0,128,255,255,255,255], int48),
             [-32768]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-32768)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [8,128,255,255,255,255], byteData.types.int48),
+                [8,128,255,255,255,255], int48),
             [-32760]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-12345)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [199,207,255,255,255,255], byteData.types.int48),
+                [199,207,255,255,255,255], int48),
             [-12345]);
     });
     it('should turn 6 bytes (hex) to 1 signed 48-bit int  (-12345)',
             function() {
         assert.deepEqual(
             byteData.unpackArray(
-                [0,0,0,0,128,255], byteData.types.int48),
+                [0,0,0,0,128,255], int48),
             [-549755813888]);
     });
 
@@ -1108,56 +1102,56 @@ describe('48-bit from bytes', function() {
     // 0
     it('min', function() {
         assert.deepEqual(
-            byteData.unpackArray([0,0,0,0,0,0], byteData.types.int48),
+            byteData.unpackArray([0,0,0,0,0,0], int48),
             [0]);
     });
     // min
     it('min', function() {
         assert.deepEqual(
-            byteData.unpackArray([0,0,0,0,0,128], byteData.types.int48),
+            byteData.unpackArray([0,0,0,0,0,128], int48),
             [-140737488355328]);
     });
     // -125
     it('min', function() {
         assert.deepEqual(
-            byteData.unpackArray([131,255,255,255,255,255], byteData.types.int48),
+            byteData.unpackArray([131,255,255,255,255,255], int48),
             [-125]);
     });
     // min + 1
     it('min + 1', function() {
         assert.deepEqual(
-            byteData.unpackArray([1,0,0,0,0,128], byteData.types.int48),
+            byteData.unpackArray([1,0,0,0,0,128], int48),
             [-140737488355327]);
     });
     // min + 2
     it('min + 2', function() {
         assert.deepEqual(
-            byteData.unpackArray([2,0,0,0,0,128], byteData.types.int48),
+            byteData.unpackArray([2,0,0,0,0,128], int48),
             [-140737488355326]);
     });
     // min + 3
     it('min + 3', function() {
         assert.deepEqual(
-            byteData.unpackArray([3,0,0,0,0,128], byteData.types.int48),
+            byteData.unpackArray([3,0,0,0,0,128], int48),
             [-140737488355325]);
     });
 
     // -1
     it('-1', function() {
         assert.deepEqual(
-            byteData.unpackArray([255, 255, 255, 255, 255, 255], byteData.types.int48),
+            byteData.unpackArray([255, 255, 255, 255, 255, 255], int48),
             [-1]);
     });
     // -2
     it('-2', function() {
         assert.deepEqual(
-            byteData.unpackArray([254, 255, 255, 255, 255, 255], byteData.types.int48),
+            byteData.unpackArray([254, 255, 255, 255, 255, 255], int48),
             [-2]);
     });
     // -3
     it('-3', function() {
         assert.deepEqual(
-            byteData.unpackArray([253, 255, 255, 255, 255, 255], byteData.types.int48),
+            byteData.unpackArray([253, 255, 255, 255, 255, 255], int48),
             [-3]);
     });
 
@@ -1210,62 +1204,62 @@ describe('unpack uInt2', function() {
 
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([0], byteData.types.uInt2),
+            byteData.unpackArray([0], uInt2),
             [0]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([1], byteData.types.uInt2),
+            byteData.unpackArray([1], uInt2),
             [1]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([2], byteData.types.uInt2),
+            byteData.unpackArray([2], uInt2),
             [2]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([3], byteData.types.uInt2),
+            byteData.unpackArray([3], uInt2),
             [3]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([0], byteData.types.uInt2),
+            byteData.unpackArray([0], uInt2),
             [0]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([1], byteData.types.uInt2),
+            byteData.unpackArray([1], uInt2),
             [1]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([2], byteData.types.uInt2),
+            byteData.unpackArray([2], uInt2),
             [2]);
     });
     it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([3], byteData.types.uInt2),
+            byteData.unpackArray([3], uInt2),
             [3]);
     });
     it('should turn 1 2-bit signed int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([0], byteData.types.uInt2),
+            byteData.unpackArray([0], uInt2),
             [0]);
     });
     it('should turn 1 2-bit signed int to 2 crumb (0s)', function() {
         assert.deepEqual(
-            byteData.unpackArray([1], byteData.types.uInt2),
+            byteData.unpackArray([1], uInt2),
             [1]);
     });
     it('should turn 1 2-bit unsigned int to 1 crumb hex (2)', function() {
         assert.deepEqual(
-            byteData.unpackArray([2], byteData.types.uInt2),
+            byteData.unpackArray([2], uInt2),
             [2]);
     });
     it('should turn 1 2-bit unsigned int to 1 crumb bin (1)', function() {
         assert.deepEqual(
-            byteData.unpackArray([1], byteData.types.uInt2),
+            byteData.unpackArray([1], uInt2),
             [1]);
     });
 });

@@ -9,8 +9,8 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var int8 = byteData.types.int8;
-var uInt8 = byteData.types.uInt8;
+var int8 = {"bits": 8, "signed": true};
+var uInt8 = {"bits": 8};
 
 describe('8-bit integers, signed', function() { 
     it('pack 255', function() {
