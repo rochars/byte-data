@@ -1046,6 +1046,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
+ * @throws {Error} On overflow
  */
 function unpack$2(buffer, theType, index=0) {
   return unpackArray(
@@ -1066,6 +1067,7 @@ function unpack$2(buffer, theType, index=0) {
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
+ * @throws {Error} On overflow
  */
 function unpackArray(
     buffer, theType, start=0, end=buffer.length, safe=false) {
@@ -1089,6 +1091,7 @@ function unpackArray(
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @throws {Error} If the type definition is not valid
+ * @throws {Error} On overflow
  */
 function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
@@ -1104,11 +1107,17 @@ function unpackArrayTo(
     throw new Error('Bad buffer length');
   }
   end -= extra;
-  swap_(theType.be, buffer, offset, start, end);
-  for (let j = start, i = 0; j < end; j += offset, i++) {
-    output[i] = packer.unpack(buffer, j);
+  /** @type {number} */
+  let i = 0;
+  try {
+    swap_(theType.be, buffer, offset, start, end);
+    for (let j = start; j < end; j += offset, i++) {
+      output[i] = packer.unpack(buffer, j);
+    }
+    swap_(theType.be, buffer, offset, start, end);
+  } catch (e) {
+    throw new Error(e.message + ' at output index ' + i);
   }
-  swap_(theType.be, buffer, offset, start, end);
 }
 
 /**

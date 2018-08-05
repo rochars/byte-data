@@ -332,6 +332,18 @@ describe('Errors', function() {
         };
         assert.throws(testFunc, /Overflow at input index 1/);
     });
+    it("4-bit overflow on unpack", function () {
+        testFunc = function() {
+            byteData.unpack([255], {"bits": 4});
+        };
+        assert.throws(testFunc, /Overflow at output index 0/);
+    });
+    it("4-bit overflow on unpack, output index = 1", function () {
+        testFunc = function() {
+            byteData.unpackArray([15, 255], {"bits": 4});
+        };
+        assert.throws(testFunc, /Overflow at output index 1/);
+    });
     
     // Invalid types
     it("undefined type", function () {

@@ -1,9 +1,9 @@
 # CHANGELOG
 
 ## v16.0.0 (unreleased)
-- packString(str) returns a Array; if another object is needed, use packStringTo(str, buffer).
-- null is not a valid value anymore; null values present in the input will cause a 'not a valid number' error
-- when using packArray() or packArrayTo(), error messages include the index of the input array that caused the error.
+- packString(str) returns a Array; if another type is needed for the output, use *packStringTo(str, buffer)*.
+- *null* is not a valid value anymore; *null* values present in the input will cause a 'not a valid number' error
+- Error messages are more informative and include the index of the input/output that caused the error.
 - type objects signature changed to use "fp" instead of "float":
 ```javascript
 // instead of 
