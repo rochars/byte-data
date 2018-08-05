@@ -556,11 +556,11 @@ describe('unpackString strings', function() {
     });
     it('unpackString string, index, len', function() {
         assert.deepEqual(
-            byteData.unpackString(new Uint8Array([97,98,99,100]), 1, 3), "bcd");
+            byteData.unpackString(new Uint8Array([97,98,99,100]), 1, 4), "bcd");
     });
     it('unpackString string, index, len', function() {
         assert.deepEqual(
-            byteData.unpackString(new Uint8Array([97,98,99,100]), 2, 3), "cd");
+            byteData.unpackString(new Uint8Array([97,98,99,100]), 2, 4), "cd");
     });
 });
 

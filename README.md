@@ -104,7 +104,7 @@ packTo(402, {bits: 16}, buffer);
 ```
 
 ### Packing *null*, *false*, *true* and *undefined*
-- Packing *undefined* or *null* values throw *'Argument is not a number'* error
+- Packing *undefined* or *null* values throw *'Argument is not a valid number'* error
 - *true* is packed as 1
 - *false* is packed as 0
 
@@ -113,15 +113,16 @@ packTo(402, {bits: 16}, buffer);
 #### unpack(buffer, theType, index=)
 When unpacking a single value, a *'Bad buffer length'* error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the *index*.
 ```javascript
-byteData.unpack([0xff], {bits: 16}, 0, 1, true); // throws a 'Bad buffer length' error
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws a 'Bad buffer length' error
+byteData.unpack([0xff], {bits: 16}, 0); // throws a 'Bad buffer length' error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2); // throws a 'Bad buffer length' error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1); // ok
 ```
 
 #### unpackArray(buffer, theType, start=, end=, safe=)
 When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array** by default:
 ```javascript
 byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3); // return a array with one 16-bit unsigned int
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 2); // return a array with one 16-bit unsigned int
 ```
 You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error**:
 ```javascript
@@ -141,8 +142,8 @@ Currently only 16-bit half-precision.
 
 ### Integers
 - Overflow on integers will throw a *"Overflow"* error.
-- packing NaN will throw a 'NaN' error.
-- packing Infinity or -Infinity will throw a 'Overflow' error.
+- packing NaN will throw a 'Argument is not a integer' error.
+- packing Infinity or -Infinity will throw a 'Argument is not a integer' error.
 
 #### Signed integers
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
@@ -151,9 +152,9 @@ Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_com
 **UTF-8 strings** with 1 to 4 bytes per character can be packed and unpacked. **BOM** is kept untouched if present. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
 
 #### Reading strings from buffers
-Use **unpackString(buffer, index, end)**. The paramters **index** and **end** determine a slice of the buffer to read. So to read the first 4 bytes of a buffer:
+Use **unpackString(buffer, index, end)**. The paramters **index** and **end** determine a slice of the buffer to read. **End is non-inclusive**. So to read the first 4 bytes of a buffer:
 ```javascript
-let str = unpackString(buffer, 0, 3);
+let str = unpackString(buffer, 0, 4);
 // read from buffer[0], buffer[1], buffer[2], buffer[3]
 ```
 
@@ -199,11 +200,11 @@ https://people.debian.org/~aurel32/qemu/powerpc/
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
- * @param {?number=} end The buffer index to stop reading.
- *   If end is null will read until the end of the buffer.
+ * @param {number=} end The buffer index to stop reading, non inclusive.
+ *   Assumes buffer length if undefined.
  * @return {string}
  */
-function unpackString(buffer, index=0, len=null) {}
+function unpackString(buffer, index=0, len=buffer.length) {}
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.

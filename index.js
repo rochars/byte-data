@@ -38,11 +38,11 @@ import {validateIsInt, validateIsNumber} from './lib/validation.js';
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
- * @param {?number=} end The buffer index to stop reading.
- *   If end is null will read until the end of the buffer.
+ * @param {number=} end The buffer index to stop reading, non inclusive.
+ *   Assumes buffer length if undefined.
  * @return {string}
  */
-export function unpackString(buffer, index=0, end=null) {
+export function unpackString(buffer, index=0, end=buffer.length) {
   return unpackUTF8(buffer, index, end);
 }
 

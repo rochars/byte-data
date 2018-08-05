@@ -40,11 +40,11 @@ var theType = {
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
- * @param {?number=} end The buffer index to stop reading.
- *   If end is null will read until the end of the buffer.
+ * @param {number=} end The buffer index to stop reading, non inclusive.
+ *   Assumes buffer length if undefined.
  * @return {string}
  */
-function unpackString(buffer, index=0, end=null) {}
+function unpackString(buffer, index=0, len=buffer.length) {}
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.

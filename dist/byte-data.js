@@ -105,11 +105,10 @@ function swap(bytes, offset, index) {
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} start The buffer index to start reading.
  * @param {?number=} end The buffer index to stop reading.
- *    If end is null will read until the end of the buffer.
+ *   Assumes the buffer length if undefined.
  * @return {string}
  */
-function unpack(buffer, start=0, end=null) {
-  end = end !== null ? end + 1 : buffer.length;
+function unpack(buffer, start=0, end=buffer.length) {
   /** @type {string} */
   let str = "";
   for(let index = start; index < end;) {
@@ -923,11 +922,11 @@ class NumberBuffer {
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
- * @param {?number=} end The buffer index to stop reading.
- *   If end is null will read until the end of the buffer.
+ * @param {number=} end The buffer index to stop reading, non inclusive.
+ *   Assumes buffer length if undefined.
  * @return {string}
  */
-function unpackString(buffer, index=0, end=null) {
+function unpackString(buffer, index=0, end=buffer.length) {
   return unpack(buffer, index, end);
 }
 

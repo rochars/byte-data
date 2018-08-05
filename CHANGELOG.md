@@ -1,8 +1,9 @@
 # CHANGELOG
 
 ## v16.0.0 (2018-08-05)
-- packString(str) returns a Array; if another type is needed for the output, use *packStringTo(str, buffer)*.
-- *null* is not a valid value anymore; *null* values present in the input will cause a 'not a valid number' error
+- *packString(str)* returns a Array; if another type is needed for the output, use *packStringTo(str, buffer)*.
+- *unpackString(buffer, start, end)* **end** param is now non-inclusive.
+- *null* is not a valid value anymore; *null* values present in the input will cause a 'not a valid number' error.
 - Error messages are more informative and include the index of the input/output that caused the error.
 - type objects signature changed to use "fp" instead of "float":
 ```javascript
@@ -11,7 +12,6 @@ let f32 = {float: true, bits: 32}; // will not work
 // you must use
 let f32 = {fp: true, bits: 32}; // will work
 ```
-
 
 ## v15.1.0 (2018-08-03)
 - "safe mode" for unpack array; optional boolean argument 'safe' that defaults to false. If true, a error will be thrown if the input array have extra bytes or not sufficient bytes according to the data type. If false, inputs with insufficient length will generate empty ouputs and extra bytes in the end of the array will be ignored.
