@@ -12,7 +12,7 @@
  * @return {string}
  */
 export function unpackString(
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	index?: number,
 	end?: number): string;
 
@@ -22,7 +22,7 @@ export function unpackString(
  * @return {!Array<number>} The UTF-8 string bytes.
  */ 
 export function packString(
-	str: string): Uint8Array|Array<number>;
+	str: string): number[];
 
 /**
  * Write a string of UTF-8 characters to a byte buffer.
@@ -34,7 +34,7 @@ export function packString(
  */
 export function packStringTo(
 	str: string,
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	index?: number): number;
 
 /**
@@ -47,7 +47,7 @@ export function packStringTo(
  */
 export function pack(
 	value: number,
-	theType: object): Array<number>;
+	theType: object): number[];
 
 /**
  * Pack a number to a byte buffer.
@@ -62,7 +62,7 @@ export function pack(
 export function packTo(
 	value: number,
 	theType: object,
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	index?: number): number;
 
 /**
@@ -74,8 +74,8 @@ export function packTo(
  * @throws {Error} If any of the values are not valid.
  */
 export function packArray(
-	values: Array<number>|ArrayBuffer,
-	theType: object): Array<number>;
+	values: number[]|ArrayBuffer,
+	theType: object): number[];
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -89,9 +89,9 @@ export function packArray(
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(
-	values: Array<number>|ArrayBuffer,
+	values: number[]|ArrayBuffer,
 	theType: object,
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	index?: number): number;
 
 /**
@@ -104,7 +104,7 @@ export function packArrayTo(
  * @throws {Error} On bad buffer length.
  */
 export function unpack(
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	theType: object,
 	index?: number): number;
 
@@ -124,11 +124,11 @@ export function unpack(
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArray(
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	theType: object,
 	start?: number,
 	end?: number,
-	safe?: boolean): Array<number>;
+	safe?: boolean): number[];
 
 /**
  * Unpack a array of numbers to a typed array.
@@ -146,9 +146,9 @@ export function unpackArray(
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayTo(
-	buffer: Uint8Array|Array<number>,
+	buffer: Uint8Array|number[],
 	theType: object,
-	output: ArrayBuffer|Array<number>,
+	output: any|number[],
 	start?: number,
 	end?: number,
 	safe?: boolean): void;

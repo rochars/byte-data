@@ -9,10 +9,10 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var int16BE = byteData.types.int16BE;
-var int16 = byteData.types.int16;
-var uInt16BE = byteData.types.uInt16BE;
-var uInt16 = byteData.types.uInt16;
+var int16BE = {"bits": 16, "signed": true, "be": true};
+var int16 = {"bits": 16, "signed": true};
+var uInt16BE = {"bits": 16, "be": true};
+var uInt16 = {"bits": 16};
 
 describe('16-bit integers, signed', function() { 
     // 0

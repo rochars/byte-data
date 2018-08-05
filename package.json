@@ -95,8 +95,8 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "endianness": "^8.0.0",
-    "ieee754-buffer": "0.0.1",
+    "endianness": "^8.0.2",
+    "ieee754-buffer": "0.0.2",
     "twos-complement-buffer": "0.0.1",
     "uint-buffer": "^0.1.0",
     "utf8-buffer": "^0.1.0"

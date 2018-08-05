@@ -247,18 +247,28 @@ const TYPE_ERR = 'Unsupported type';
 
 /**
  * Validate that the value is not null or undefined.
- * @param {number} value The value.
- * @throws {Error} If the value is not null, Number or Boolean.
+ * @param {*} value The value.y.
+ * @throws {Error} If the value is not Number or Boolean.
+ * @throws {Error} If the value is NaN, Infinity or -Infinity.
  */
-function validateValueType(value) {
-  if (value === undefined) {
-    throw new Error('Undefined value');
+function validateIsInt(value) {
+  validateIsNumber(value);
+  if (value !== value || value === Infinity || value === -Infinity) {
+    throwValueErr_('integer');
   }
-  if (value !== null) {
-      if (value.constructor != Number && value.constructor != Boolean) {
-      throw new Error(
-        'Can\'t pack ' + value.constructor);
-    }
+}
+
+/**
+ * Validate that the value is not null or undefined.
+ * @param {*} value The value.
+ * @throws {Error} If the value is not Number or Boolean.
+ */
+function validateIsNumber(value) {
+  if (value === undefined || value === null) {
+    throwValueErr_();
+  }
+  if (value.constructor != Number && value.constructor != Boolean) {
+    throwValueErr_();
   }
 }
 
@@ -270,7 +280,7 @@ function validateValueType(value) {
  */
 function validateFloatType(bits) {
   if (!bits || bits !== 16 && bits !== 32 && bits !== 64) {
-    throw new Error(TYPE_ERR);
+    throw new Error(TYPE_ERR + ': float, bits: ' + bits);
   }
 }
 
@@ -282,8 +292,18 @@ function validateFloatType(bits) {
  */
 function validateIntType(bits) {
   if (!bits || bits < 1 || bits > 53) {
-    throw new Error(TYPE_ERR);
+    throw new Error(TYPE_ERR + ': int, bits: ' + bits);
   }
+}
+
+/**
+ * Throw a error about the input value.
+ * @param {string} theType The name of the type the value was expected to be.
+ * @throws {Error} Always when called.
+ * @private
+ */
+function throwValueErr_(theType='valid number') {
+  throw new Error('Argument is not a ' + theType);
 }
 
 /*
@@ -841,7 +861,7 @@ class NumberBuffer {
    * @private
    */
   write32F_(bytes, num, index=0) {
-      return pack$1(bytes, index, num, 8, 23);
+    return pack$1(bytes, index, num, 8, 23);
   }
 
   /**
@@ -853,7 +873,7 @@ class NumberBuffer {
    * @private
    */
   write64F_(bytes, num, index=0) {
-      return pack$1(bytes, index, num, 11, 52);
+    return pack$1(bytes, index, num, 11, 52);
   }
 
   /**
@@ -998,14 +1018,22 @@ function packArrayTo(values, theType, buffer, index=0) {
     theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
-  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
-    validateValueType(values[i]);
-    /** @type {number} */
-    let len = index + offset;
-    while (index < len) {
-      index = packer.pack(buffer, values[i], index);
+  /** @type {Function} */
+  let validateInput = theType.fp ? validateIsNumber : validateIsInt;
+  /** @type {number} */
+  let i = 0;
+  try {
+    for (let valuesLen = values.length; i < valuesLen; i++) {
+      validateInput(values[i]);
+      /** @type {number} */
+      let len = index + offset;
+      while (index < len) {
+        index = packer.pack(buffer, values[i], index);
+      }
+      swap_(theType.be, buffer, offset, index - offset, index);
     }
-    swap_(theType.be, buffer, offset, index - offset, index);
+  } catch (e) {
+    throw new Error(e.message + ' at input index ' + i);
   }
   return index;
 }

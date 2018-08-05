@@ -32,7 +32,7 @@
 import endianness from 'endianness';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
-import {validateValueType} from './lib/validation.js';
+import {validateIsInt, validateIsNumber} from './lib/validation.js';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -133,14 +133,22 @@ export function packArrayTo(values, theType, buffer, index=0) {
     theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = offset_(theType.bits);
-  for (let i = 0, valuesLen = values.length; i < valuesLen; i++) {
-    validateValueType(values[i]);
-    /** @type {number} */
-    let len = index + offset;
-    while (index < len) {
-      index = packer.pack(buffer, values[i], index);
+  /** @type {Function} */
+  let validateInput = theType.fp ? validateIsNumber : validateIsInt;
+  /** @type {number} */
+  let i = 0;
+  try {
+    for (let valuesLen = values.length; i < valuesLen; i++) {
+      validateInput(values[i]);
+      /** @type {number} */
+      let len = index + offset;
+      while (index < len) {
+        index = packer.pack(buffer, values[i], index);
+      }
+      swap_(theType.be, buffer, offset, index - offset, index);
     }
-    swap_(theType.be, buffer, offset, index - offset, index);
+  } catch (e) {
+    throw new Error(e.message + ' at input index ' + i);
   }
   return index;
 }

@@ -13,6 +13,8 @@ var float64 = {"bits": 64, "fp": true, "be": false};
 var float64BE = {"bits": 64, "fp": true, "be": true};
 var float32BE = {"bits": 32, "fp": true, "be": true};
 var float32 = {"bits": 32, "fp": true};
+var uInt16 = {"bits": 16};
+var uInt16BE = {"bits": 16, "be": true};
 
 describe('packArrayTo: LE', function() {
     
@@ -23,7 +25,7 @@ describe('packArrayTo: LE', function() {
     var index = 0;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packArrayTo([65535, 765], byteData.types.uInt16, file, index);
+    index = byteData.packArrayTo([65535, 765], uInt16, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -45,7 +47,7 @@ describe('packArrayTo: LE (write to the middle of array)', function() {
     var index = 4;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packArrayTo([65535, 765], byteData.types.uInt16, file, index);
+    index = byteData.packArrayTo([65535, 765], uInt16, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -67,7 +69,7 @@ describe('packArrayTo: BE', function() {
     var index = 0;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packArrayTo([65535, 765], byteData.types.uInt16BE, file, index);
+    index = byteData.packArrayTo([65535, 765], uInt16BE, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -89,7 +91,7 @@ describe('packArrayTo: BE (write to the middle of array)', function() {
     var index = 4;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packArrayTo([65535, 765], byteData.types.uInt16BE, file, index);
+    index = byteData.packArrayTo([65535, 765], uInt16BE, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -113,8 +115,8 @@ describe('pack to typed array: LE', function() {
     var index = 0;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(65535, byteData.types.uInt16, file, index);
-    index = byteData.packTo(765, byteData.types.uInt16, file, index);
+    index = byteData.packTo(65535, uInt16, file, index);
+    index = byteData.packTo(765, uInt16, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -136,7 +138,7 @@ describe('pack to typed array: LE (write to the middle of array)', function() {
     var index = 2;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(765, byteData.types.uInt16, file, index);
+    index = byteData.packTo(765, uInt16, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -158,8 +160,8 @@ describe('pack to typed array: BE', function() {
     var index = 0;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(65535, byteData.types.uInt16BE, file, index);
-    index = byteData.packTo(765, byteData.types.uInt16BE, file, index);
+    index = byteData.packTo(65535, uInt16BE, file, index);
+    index = byteData.packTo(765, uInt16BE, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -181,7 +183,7 @@ describe('pack to typed array: BE (write to the middle of array)', function() {
     var index = 2;
 
     // Pack to the typed array passing an index to write
-    index = byteData.packTo(765, byteData.types.uInt16BE, file, index);
+    index = byteData.packTo(765, uInt16BE, file, index);
 
     // pack
     it('Check the packed 16-bit values', function() {
@@ -292,7 +294,7 @@ describe('unpackArray: LE', function() {
     var file = [255, 255, 253, 2, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
-    var output = byteData.unpackArray(file, byteData.types.uInt16, 0, 2);
+    var output = byteData.unpackArray(file, uInt16, 0, 2);
 
     // unpack
     it('Check the unpacked 16-bit values', function() {
@@ -309,7 +311,7 @@ describe('unpackArray: LE (read from the middle of array)', function() {
     var file = [255, 255, 253, 2, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
-    var output = byteData.unpackArray(file, byteData.types.uInt16, 2, 4);
+    var output = byteData.unpackArray(file, uInt16, 2, 4);
 
     // unpack
     it('Check the unpacked 16-bit values', function() {
@@ -326,7 +328,7 @@ describe('unpackArray: LE (read 2 values)', function() {
     var file = [255, 255, 253, 2, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
-    var output = byteData.unpackArray(file, byteData.types.uInt16, 0, 4);
+    var output = byteData.unpackArray(file, uInt16, 0, 4);
 
     // unpack
     it('Check the unpacked 16-bit values', function() {
@@ -373,7 +375,7 @@ describe('unpackArray: BE', function() {
     var file = [255, 255, 2, 253, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
-    var output = byteData.unpackArray(file, byteData.types.uInt16BE, 0, 2);
+    var output = byteData.unpackArray(file, uInt16BE, 0, 2);
 
     // unpack
     it('Check the unpacked 16-bit values', function() {
@@ -390,7 +392,7 @@ describe('unpackArray: BE (read from the middle of array)', function() {
     var file = [255, 255, 2, 253, 0, 0, 0, 0];
 
     // Pack to the typed array passing an index to write
-    var output = byteData.unpackArray(file, byteData.types.uInt16BE, 2, 4);
+    var output = byteData.unpackArray(file, uInt16BE, 2, 4);
 
     // unpack
     it('Check the unpacked 16-bit values', function() {
@@ -409,19 +411,19 @@ describe('unpackArrayTo: LE', function() {
 
     it('should unpack the values to the provided array', function() {
         var output = [0,0];
-        byteData.unpackArrayTo(file, byteData.types.uInt16, output);
+        byteData.unpackArrayTo(file, uInt16, output);
         assert.deepEqual(output, [65535, 0]);
     });
     it('should unpack the values to the provided array starting on the index', function() {
         var index = 0;
         var output = [0];
-        byteData.unpackArrayTo(file, byteData.types.uInt16, output, 2);
+        byteData.unpackArrayTo(file, uInt16, output, 2);
         assert.deepEqual(output, [0]);
     });
     it('should unpack the values to the provided array starting on the index', function() {
         var index = 0;
         var output = [0];
-        byteData.unpackArrayTo(file, byteData.types.uInt16, output, 1);
+        byteData.unpackArrayTo(file, uInt16, output, 1);
         assert.deepEqual(output, [255]);
     });
     it('Original buffer should be untouched', function() {
@@ -433,7 +435,7 @@ describe('unpackArrayTo: BE', function() {
 
     var file = [2, 253, 0, 0];
     var output = [0,0]
-    byteData.unpackArrayTo(file, byteData.types.uInt16BE, output);
+    byteData.unpackArrayTo(file, uInt16BE, output);
 
     it('Unpack the first value', function() {
         assert.deepEqual(output, [765, 0]);
@@ -453,7 +455,7 @@ describe('unpackFrom: LE', function() {
     var index = 0;
 
     // Unpack to the typed array passing an index to read
-    var value = byteData.unpack(file, byteData.types.uInt16, index);
+    var value = byteData.unpack(file, uInt16, index);
 
     // pack
     it('Unpack the first value', function() {
@@ -474,7 +476,7 @@ describe('unpackFrom: LE (read to the middle of array)', function() {
     var index = 2;
 
     // Unpack to the typed array passing an index to read
-    var value = byteData.unpack(file, byteData.types.uInt16, index);
+    var value = byteData.unpack(file, uInt16, index);
 
     // pack
     it('Unpack the second value', function() {
@@ -494,7 +496,7 @@ describe('unpackFrom: BE', function() {
     var index = 0;
 
     // Unpack to the typed array passing an index to read
-    var value = byteData.unpack(file, byteData.types.uInt16BE, index);
+    var value = byteData.unpack(file, uInt16BE, index);
 
     // unpack
     it('Unpack the first value', function() {
@@ -514,7 +516,7 @@ describe('unpackFrom: BE (read to the middle of array)', function() {
     var index = 2;
 
     // Unpack to the typed array passing an index to read
-    var value = byteData.unpack(file, byteData.types.uInt16BE, index);
+    var value = byteData.unpack(file, uInt16BE, index);
 
     // unpack
     it('Unpack the first value', function() {

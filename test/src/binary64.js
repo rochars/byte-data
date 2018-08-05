@@ -11,9 +11,7 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 var float64 = {"bits": 64, "fp": true};
-var float64BE = {"bits": 64, "fp": true, "be": true};
-
-var Buffer = Buffer || false;
+var binary64BE = {"bits": 64, "fp": true, "be": true};
 
 describe('Binary64 numbers', function() {     
     // Zeros
@@ -309,7 +307,7 @@ describe('Binary64 numbers', function() {
     // big endian
     it('should turn 1 64-bit float to 8 bytes BE (pi)', function() {
         assert.deepEqual(
-            byteData.unpackArray([64, 9, 33, 251, 84, 68, 45, 24], float64BE),
+            byteData.unpackArray([64, 9, 33, 251, 84, 68, 45, 24], binary64BE),
             [3.141592653589793]);
     });
 });

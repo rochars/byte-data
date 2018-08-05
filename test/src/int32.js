@@ -9,10 +9,10 @@
 
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
-var int32BE = byteData.types.int32BE;
-var int32 = byteData.types.int32;
-var uInt32BE = byteData.types.uInt32BE;
-var uInt32 = byteData.types.uInt32;
+var uInt32 = {"bits": 32};
+var int32 = {"bits": 32, "signed": true};
+var uInt32BE = {"bits": 32, "be": true};
+var int32BE = {"bits": 32, "signed": true, "be": true};
 
 describe('pack int32', function() {     
     it('pack 2147483647 (max)', function() {

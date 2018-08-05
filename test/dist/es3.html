@@ -21,7 +21,10 @@
 	<script>
         byteData.pack(3.1415927410, {"bits": 32, "float": true});
 	    byteData.unpack([0xdb,0x0F,0x49,0x40], {"bits": 32, "float": true});
+	    byteData.pack(3, {"bits": 24, "signed": true});
+	    byteData.unpack([0xdb,0x0F,0x49], {"bits": 24});
 	   	byteData.packString('abc');
+	   	byteData.unpackString([0x98]);
 	   	document.write('OK!');
 	</script>
 
