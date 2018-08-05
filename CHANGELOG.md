@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v16.0.0 (unreleased)
+## v16.0.0 (2018-08-05)
 - packString(str) returns a Array; if another type is needed for the output, use *packStringTo(str, buffer)*.
 - *null* is not a valid value anymore; *null* values present in the input will cause a 'not a valid number' error
 - Error messages are more informative and include the index of the input/output that caused the error.
