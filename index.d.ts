@@ -74,7 +74,7 @@ export function packTo(
  * @throws {Error} If any of the values are not valid.
  */
 export function packArray(
-	values: number[]|ArrayBuffer,
+	values: number[]|any,
 	theType: object): number[];
 
 /**
@@ -89,7 +89,7 @@ export function packArray(
  * @throws {Error} If the value is not valid.
  */
 export function packArrayTo(
-	values: number[]|ArrayBuffer,
+	values: number[]|any,
 	theType: object,
 	buffer: Uint8Array|number[],
 	index?: number): number;

@@ -2,6 +2,7 @@
 
 ## v16.0.1 (2018-08-06)
 - Faster floating-point parsing
+- Fix TypeScript declaration of packArrayTo and unpackArrayTo
 
 ## v16.0.0 (2018-08-05)
 - *packString(str)* returns a Array; if another type is needed for the output, use *packStringTo(str, buffer)*.
