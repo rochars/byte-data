@@ -44,7 +44,7 @@ var theType = {
  *   Assumes buffer length if undefined.
  * @return {string}
  */
-function unpackString(buffer, index=0, len=buffer.length) {}
+function unpackString(buffer, index=0, end=buffer.length) {}
 
 /**
  * Write a string of UTF-8 characters as a byte buffer.

@@ -16,7 +16,7 @@ import fs from 'fs';
 // Externs
 const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
 
-// Shims for the UMD
+// Polyfills for the UMD
 const polyfills = fs.readFileSync('./scripts/polyfills.js', 'utf8');
 
 // GCC UMD wrapper
@@ -58,7 +58,7 @@ export default [
       })
     ]
   },
-  // UMD, ES3, polyfills and shims included, minified
+  // UMD, ES3, polyfills included, minified
   {
     input: 'dist/byte-data.js',
     output: [

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v16.0.1 (2018-08-06)
+- Faster floating-point parsing
+
 ## v16.0.0 (2018-08-05)
 - *packString(str)* returns a Array; if another type is needed for the output, use *packStringTo(str, buffer)*.
 - *unpackString(buffer, start, end)* **end** param is now non-inclusive.
