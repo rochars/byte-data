@@ -243,19 +243,7 @@ function pack(str, buffer, index=0) {
  */
 
 const TYPE_ERR = 'Unsupported type';
-
-/**
- * Validate that the value is not null or undefined.
- * @param {*} value The value.y.
- * @throws {Error} If the value is not Number or Boolean.
- * @throws {Error} If the value is NaN, Infinity or -Infinity.
- */
-function validateIsInt(value) {
-  validateIsNumber(value);
-  if (value !== value || value === Infinity || value === -Infinity) {
-    throwValueErr_('integer');
-  }
-}
+const TYPE_NAN = 'Argument is not a valid number';
 
 /**
  * Validate that the value is not null or undefined.
@@ -264,10 +252,9 @@ function validateIsInt(value) {
  */
 function validateIsNumber(value) {
   if (value === undefined || value === null) {
-    throwValueErr_();
-  }
-  if (value.constructor != Number && value.constructor != Boolean) {
-    throwValueErr_();
+    throw new Error(TYPE_NAN);
+  } else if (value.constructor != Number && value.constructor != Boolean) {
+    throw new Error(TYPE_NAN);
   }
 }
 
@@ -293,16 +280,6 @@ function validateIntType(bits) {
   if (!bits || bits < 1 || bits > 53) {
     throw new Error(TYPE_ERR + ': int, bits: ' + bits);
   }
-}
-
-/**
- * Throw a error about the input value.
- * @param {string} theType The name of the type the value was expected to be.
- * @throws {Error} Always when called.
- * @private
- */
-function throwValueErr_(theType='valid number') {
-  throw new Error('Argument is not a ' + theType);
 }
 
 /*
@@ -784,18 +761,18 @@ class NumberBuffer {
    */
   constructor(bits, fp, signed) {
     /** @type {TwosComplementBuffer|UintBuffer|IEEE754Buffer} */
-    this.parser = null;
+    let parser;
     if (fp) {
       validateFloatType(bits);
-      this.parser = this.getFPParser_(bits);
+      parser = this.getFPParser_(bits);
     } else {
       validateIntType(bits);
-      this.parser = signed ?
-        new TwosComplementBuffer(bits) : new UintBuffer(bits);
-      this.parser.bytes = this.parser.bytes === 8 ? 4 : this.parser.bytes;
+      parser = signed ? new TwosComplementBuffer(bits) : new UintBuffer(bits);
     }
+    /** @type {TwosComplementBuffer|UintBuffer|IEEE754Buffer} */
+    this.parser = parser;
   }
-
+  
   /**
    * Read one number from a byte buffer.
    * @param {!Uint8Array|!Array<number>} buffer An array of bytes.
@@ -959,14 +936,12 @@ function packArrayTo(values, theType, buffer, index=0) {
   let packer = new NumberBuffer(
     theType.bits, theType.fp, theType.signed);
   /** @type {number} */
-  let offset = offset_(theType.bits);
-  /** @type {Function} */
-  let validateInput = theType.fp ? validateIsNumber : validateIsInt;
+  let offset = Math.ceil(theType.bits / 8);
   /** @type {number} */
   let i = 0;
   try {
     for (let valuesLen = values.length; i < valuesLen; i++) {
-      validateInput(values[i]);
+      validateIsNumber(values[i]);
       /** @type {number} */
       let len = index + offset;
       while (index < len) {
@@ -975,7 +950,14 @@ function packArrayTo(values, theType, buffer, index=0) {
       swap_(theType.be, buffer, offset, index - offset, index);
     }
   } catch (e) {
-    throw new Error(e.message + ' at input index ' + i);
+    /** @type {*} */
+    let value = values[i];
+    if (!theType.fp && (
+        value === Infinity || value === -Infinity || value !== value)) {
+      throw new Error('Argument is not a integer at input index ' + i);
+    } else {
+      throw new Error(e.message + ' at input index ' + i);
+    }
   }
   return index;
 }
@@ -992,7 +974,7 @@ function packArrayTo(values, theType, buffer, index=0) {
  */
 function unpack$1(buffer, theType, index=0) {
   return unpackArray(
-    buffer, theType, index, index + offset_(theType.bits), true)[0];
+    buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
 }
 
 /**
@@ -1042,7 +1024,7 @@ function unpackArrayTo(
   let packer = new NumberBuffer(
     theType.bits, theType.fp, theType.signed);
   /** @type {number} */
-  let offset = offset_(theType.bits);
+  let offset = Math.ceil(theType.bits / 8);
   /** @type {number} */
   let extra = (end - start) % offset;
   if (safe && (extra || buffer.length < offset)) {
@@ -1076,15 +1058,6 @@ function swap_(flip, buffer, offset, start, end) {
   if (flip) {
     endianness(buffer, offset, start, end);
   }
-}
-
-/**
- * Get the byte offset of a type based on its number of bits.
- * @param {number} bits The number of bits.
- * @private
- */
-function offset_(bits) {
-  return bits < 8 ? 1 : Math.ceil(bits / 8);
 }
 
 export { unpackString, packString, packStringTo, pack$1 as pack, packTo, packArray, packArrayTo, unpack$1 as unpack, unpackArray, unpackArrayTo };

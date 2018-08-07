@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v16.0.2 (2018-08-06)
+- Remove duplicate validation of integers
+- Include String.codePointAt() polyfill in scripts/polyfills
+- Use 'ArrayBufferView' type instead of 'any' to represent TypedArray in index.d.ts
+
 ## v16.0.1 (2018-08-06)
 - Faster floating-point parsing
 - Fix TypeScript declaration of packArrayTo and unpackArrayTo

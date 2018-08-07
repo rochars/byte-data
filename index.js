@@ -32,7 +32,7 @@
 import endianness from 'endianness';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
-import {validateIsInt, validateIsNumber} from './lib/validation.js';
+import {validateIsNumber} from './lib/validation.js';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -132,14 +132,12 @@ export function packArrayTo(values, theType, buffer, index=0) {
   let packer = new NumberBuffer(
     theType.bits, theType.fp, theType.signed);
   /** @type {number} */
-  let offset = offset_(theType.bits);
-  /** @type {Function} */
-  let validateInput = theType.fp ? validateIsNumber : validateIsInt;
+  let offset = Math.ceil(theType.bits / 8);
   /** @type {number} */
   let i = 0;
   try {
     for (let valuesLen = values.length; i < valuesLen; i++) {
-      validateInput(values[i]);
+      validateIsNumber(values[i]);
       /** @type {number} */
       let len = index + offset;
       while (index < len) {
@@ -148,7 +146,14 @@ export function packArrayTo(values, theType, buffer, index=0) {
       swap_(theType.be, buffer, offset, index - offset, index);
     }
   } catch (e) {
-    throw new Error(e.message + ' at input index ' + i);
+    /** @type {*} */
+    let value = values[i];
+    if (!theType.fp && (
+        value === Infinity || value === -Infinity || value !== value)) {
+      throw new Error('Argument is not a integer at input index ' + i);
+    } else {
+      throw new Error(e.message + ' at input index ' + i);
+    }
   }
   return index;
 }
@@ -165,7 +170,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
  */
 export function unpack(buffer, theType, index=0) {
   return unpackArray(
-    buffer, theType, index, index + offset_(theType.bits), true)[0];
+    buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
 }
 
 /**
@@ -215,7 +220,7 @@ export function unpackArrayTo(
   let packer = new NumberBuffer(
     theType.bits, theType.fp, theType.signed);
   /** @type {number} */
-  let offset = offset_(theType.bits);
+  let offset = Math.ceil(theType.bits / 8);
   /** @type {number} */
   let extra = (end - start) % offset;
   if (safe && (extra || buffer.length < offset)) {
@@ -249,13 +254,4 @@ function swap_(flip, buffer, offset, start, end) {
   if (flip) {
     endianness(buffer, offset, start, end);
   }
-}
-
-/**
- * Get the byte offset of a type based on its number of bits.
- * @param {number} bits The number of bits.
- * @private
- */
-function offset_(bits) {
-  return bits < 8 ? 1 : Math.ceil(bits / 8);
 }
