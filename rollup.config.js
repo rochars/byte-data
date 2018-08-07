@@ -80,7 +80,7 @@ export default [
           polyfills + '%output%' +
           outputWrapper,
         assumeFunctionWrapper: true,
-        rewritePolyfills: true,
+        rewritePolyfills: false,
         externs: [{src: externsFile + 'exports={};'}]
       }),
       terser({
