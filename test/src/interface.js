@@ -205,6 +205,19 @@ describe('unpackArray behaviour tests', function() {
 
 describe('Errors', function() {
     var testFunc;
+    // indexes on error messages
+    it('throws errors with correct index when packing', function() {
+        testFunc = function() {
+            byteData.packArray([0, '1'], uInt16);
+        };
+        assert.throws(testFunc, /Argument is not a valid number at input index 1/);
+    });
+    it('throws errors with correct index when unpacking', function() {
+        testFunc = function() {
+            byteData.packArray([15, 255], uInt4);
+        };
+        assert.throws(testFunc, /Overflow at input index 1/);
+    });
     // Integer error messages on invalid input
     it('thows error if packing something other than Number, Boolean or null', function() {
         testFunc = function() {
