@@ -1,7 +1,9 @@
 # CHANGELOG
 
 ## v16.0.3 (2018-08-09)
-- Enforce safe comparisons
+- Faster and safer packing and unpacking
+	- Refactor packArrayTo and unpackArrayTo to improve performance
+	- Enforce safe comparisons on input validation
 
 ## v16.0.2 (2018-08-06)
 - Remove duplicate validation of integers

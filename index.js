@@ -35,6 +35,19 @@ import NumberBuffer from './lib/number-buffer.js';
 import {validateIsNumber} from './lib/validation.js';
 
 /**
+ * Throw a value error.
+ * @throws {Error} A Error with a message based on the input params.
+ */
+function throwValueError_(e, value, i, fp) {
+  if (!fp && (
+      value === Infinity || value === -Infinity || value !== value)) {
+    throw new Error('Argument is not a integer at input index ' + i);
+  } else {
+    throw new Error(e.message + ' at input index ' + i);
+  }
+}
+
+/**
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
@@ -71,6 +84,87 @@ export function packStringTo(str, buffer, index=0) {
 }
 
 // Numbers
+/**
+ * Pack a array of numbers to a byte buffer.
+ * All other packing functions are interfaces to this function.
+ * @param {!Array<number>|!TypedArray} values The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number=} index The buffer index to start writing.
+ *   Assumes zero if undefined.
+ * @return {number} The next index to write.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+export function packArrayTo(values, theType, buffer, index=0) {
+  theType = theType || {};
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(theType.bits, theType.fp, theType.signed);
+  /** @type {number} */
+  let i = 0;
+  /** @type {number} */
+  let start = index;
+  try {
+    for (let valuesLen = values.length; i < valuesLen; i++) {
+      validateIsNumber(values[i]);
+      index = packer.pack(buffer, values[i], index);
+    }
+    if (theType.be) {
+      endianness(buffer, packer.offset, start, index);
+    }
+  } catch (e) {
+    throwValueError_(e, values[i], i, theType.fp);
+  }
+  return index;
+}
+
+/**
+ * Unpack a array of numbers to a typed array.
+ * All other unpacking functions are interfaces to this function.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {!TypedArray|!Array<number>} output The output array.
+ * @param {number=} start The buffer index to start reading.
+ *   Assumes zero if undefined.
+ * @param {number=} end The buffer index to stop reading.
+ *   Assumes the buffer length if undefined.
+ * @param {boolean=} safe If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error. Defaults to false.
+ * @throws {Error} If the type definition is not valid
+ * @throws {Error} On overflow
+ */
+export function unpackArrayTo(
+    buffer, theType, output, start=0, end=buffer.length, safe=false) {
+  theType = theType || {};
+  /** @type {NumberBuffer} */
+  let packer = new NumberBuffer(
+    theType.bits, theType.fp, theType.signed);
+  let offset = packer.offset;
+  /** @type {number} */
+  let extra = (end - start) % offset;
+  if (safe && (extra || buffer.length < offset)) {
+    throw new Error('Bad buffer length');
+  }
+  end -= extra;
+  /** @type {number} */
+  let index = 0;
+  try {
+    if (theType.be) {
+      endianness(buffer, offset, start, end);
+    }
+    for (let j = start; j < end; j += offset, index++) {
+      output[index] = packer.unpack(buffer, j);
+    }
+    if (theType.be) {
+      endianness(buffer, offset, start, end);
+    }
+  } catch (e) {
+    throw new Error(e.message + ' at output index ' + index);
+  }
+}
+
 /**
  * Pack a number as a byte buffer.
  * @param {number} value The number.
@@ -116,49 +210,6 @@ export function packArray(values, theType) {
 }
 
 /**
- * Pack a array of numbers to a byte buffer.
- * @param {!Array<number>|!TypedArray} values The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The buffer index to start writing.
- *   Assumes zero if undefined.
- * @return {number} The next index to write.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-export function packArrayTo(values, theType, buffer, index=0) {
-  theType = theType || {};
-  /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(
-    theType.bits, theType.fp, theType.signed);
-  /** @type {number} */
-  let offset = Math.ceil(theType.bits / 8);
-  /** @type {number} */
-  let i = 0;
-  try {
-    for (let valuesLen = values.length; i < valuesLen; i++) {
-      validateIsNumber(values[i]);
-      /** @type {number} */
-      let len = index + offset;
-      while (index < len) {
-        index = packer.pack(buffer, values[i], index);
-      }
-      swap_(theType.be, buffer, offset, index - offset, index);
-    }
-  } catch (e) {
-    /** @type {*} */
-    let value = values[i];
-    if (!theType.fp && (
-        value === Infinity || value === -Infinity || value !== value)) {
-      throw new Error('Argument is not a integer at input index ' + i);
-    } else {
-      throw new Error(e.message + ' at input index ' + i);
-    }
-  }
-  return index;
-}
-
-/**
  * Unpack a number from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
@@ -195,63 +246,4 @@ export function unpackArray(
   let output = [];
   unpackArrayTo(buffer, theType, output, start, end, safe);
   return output;
-}
-
-/**
- * Unpack a array of numbers to a typed array.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @param {!TypedArray|!Array<number>} output The output array.
- * @param {number=} start The buffer index to start reading.
- *   Assumes zero if undefined.
- * @param {number=} end The buffer index to stop reading.
- *   Assumes the buffer length if undefined.
- * @param {boolean=} safe If set to false, extra bytes in the end of
- *   the array are ignored and input buffers with insufficient bytes will
- *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error. Defaults to false.
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On overflow
- */
-export function unpackArrayTo(
-    buffer, theType, output, start=0, end=buffer.length, safe=false) {
-  theType = theType || {};
-  /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(
-    theType.bits, theType.fp, theType.signed);
-  /** @type {number} */
-  let offset = Math.ceil(theType.bits / 8);
-  /** @type {number} */
-  let extra = (end - start) % offset;
-  if (safe && (extra || buffer.length < offset)) {
-    throw new Error('Bad buffer length');
-  }
-  end -= extra;
-  /** @type {number} */
-  let i = 0;
-  try {
-    swap_(theType.be, buffer, offset, start, end);
-    for (let j = start; j < end; j += offset, i++) {
-      output[i] = packer.unpack(buffer, j);
-    }
-    swap_(theType.be, buffer, offset, start, end);
-  } catch (e) {
-    throw new Error(e.message + ' at output index ' + i);
-  }
-}
-
-/**
- * Swap endianness in a slice of an array when flip == true.
- * @param {boolean} flip True if should swap endianness.
- * @param {!Uint8Array|!Array<number>} buffer The buffer.
- * @param {number} offset The number of bytes each value use.
- * @param {number} start The buffer index to start the swap.
- * @param {number} end The buffer index to end the swap.
- * @throws {Error} On bad buffer length for the swap.
- * @private
- */
-function swap_(flip, buffer, offset, start, end) {
-  if (flip) {
-    endianness(buffer, offset, start, end);
-  }
 }
