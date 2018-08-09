@@ -251,9 +251,9 @@ const TYPE_NAN = 'Argument is not a valid number';
  * @throws {Error} If the value is not Number or Boolean.
  */
 function validateIsNumber(value) {
-  if (value === undefined || value === null) {
+  if (typeof value === 'undefined' || value === null) {
     throw new Error(TYPE_NAN);
-  } else if (value.constructor != Number && value.constructor != Boolean) {
+  } else if (value.constructor !== Number && value.constructor !== Boolean) {
     throw new Error(TYPE_NAN);
   }
 }

@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## v16.0.3 (2018-08-09)
+- Enforce safe comparisons
+
 ## v16.0.2 (2018-08-06)
 - Remove duplicate validation of integers
 - Include String.codePointAt() polyfill in scripts/polyfills
