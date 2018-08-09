@@ -214,7 +214,7 @@ describe('Errors', function() {
     });
     it('throws errors with correct index when unpacking', function() {
         testFunc = function() {
-            byteData.packArray([15, 255], uInt4);
+            byteData.unpackArray([15, 255], uInt4);
         };
         assert.throws(testFunc, /Overflow at input index 1/);
     });
@@ -331,7 +331,7 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
-        assert.throws(testFunc, /Overflow at input index 0/);
+        assert.throws(testFunc, /Overflow at input index 0: 256/);
     });
     it("8-bit overflow, negative", function () {
         testFunc = function() {
@@ -349,13 +349,25 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.unpack([255], {"bits": 4});
         };
-        assert.throws(testFunc, /Overflow at output index 0/);
+        assert.throws(testFunc, /Overflow at input index 0/);
     });
-    it("4-bit overflow on unpack, output index = 1", function () {
+    it("4-bit overflow on unpack, input index = 1", function () {
         testFunc = function() {
             byteData.unpackArray([15, 255], {"bits": 4});
         };
-        assert.throws(testFunc, /Overflow at output index 1/);
+        assert.throws(testFunc, /Overflow at input index 1: 255/);
+    });
+    it("4-bit overflow on unpack, input index = 1", function () {
+        testFunc = function() {
+            byteData.unpackArray([15, 1, 1, 255], {"bits": 4});
+        };
+        assert.throws(testFunc, /Overflow at input index 3: 255/);
+    });
+    it("9-bit overflow on unpack, input index = 1", function () {
+        testFunc = function() {
+            byteData.unpackArray([1, 0, 255, 255], {"bits": 9});
+        };
+        assert.throws(testFunc, /Overflow at input index 2: 255,255/);
     });
     
     // Invalid types

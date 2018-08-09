@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## v16.0.3 (2018-08-09)
+- Fix: input index on unpackArrayTo error messages
+- Error messages include the value that caused the error along with its index
 - Faster and safer packing and unpacking
 	- Refactor packArrayTo and unpackArrayTo to improve performance
 	- Enforce safe comparisons on input validation

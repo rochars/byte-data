@@ -43,7 +43,7 @@ function throwValueError_(e, value, i, fp) {
       value === Infinity || value === -Infinity || value !== value)) {
     throw new Error('Argument is not a integer at input index ' + i);
   } else {
-    throw new Error(e.message + ' at input index ' + i);
+    throw new Error(e.message + ' at input index ' + i + ': ' + value);
   }
 }
 
@@ -167,18 +167,19 @@ export function unpackArrayTo(
   end = getUnpackLen_(buffer, start, end, offset, safe);
   /** @type {number} */
   let index = 0;
+  let j = start;
   try {
     if (theType.be) {
       endianness(buffer, offset, start, end);
     }
-    for (let j = start; j < end; j += offset, index++) {
+    for (; j < end; j += offset, index++) {
       output[index] = packer.unpack(buffer, j);
     }
     if (theType.be) {
       endianness(buffer, offset, start, end);
     }
   } catch (e) {
-    throw new Error(e.message + ' at output index ' + index);
+    throwValueError_(e, buffer.slice(j, j + offset), j, theType.fp);
   }
 }
 
