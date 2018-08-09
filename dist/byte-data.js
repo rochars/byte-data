@@ -854,6 +854,25 @@ function throwValueError_(e, value, i, fp) {
 }
 
 /**
+ * Unpack a array of numbers to a typed array.
+ * All other unpacking functions are interfaces to this function.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
+ * @param {number=} start The buffer index to start reading.
+ * @param {number=} end The buffer index to stop reading.
+ * @param {number=} offset The number of bytes used by the type.
+ * @param {boolean=} safe True for size-safe buffer reading.
+ * @throws {Error} On bad buffer length, if safe.
+ */
+function getUnpackLen_(buffer, start, end, offset, safe) {
+  /** @type {number} */
+  let extra = (end - start) % offset;
+  if (safe && (extra || buffer.length < offset)) {
+    throw new Error('Bad buffer length');
+  }
+  return end - extra;
+}
+
+/**
  * Read a string of UTF-8 characters from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
  * @param {number=} index The buffer index to start reading.
@@ -945,15 +964,13 @@ function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
   theType = theType || {};
   /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(
-    theType.bits, theType.fp, theType.signed);
-  let offset = packer.offset;
+  let packer = new NumberBuffer(theType.bits, theType.fp, theType.signed);
   /** @type {number} */
-  let extra = (end - start) % offset;
-  if (safe && (extra || buffer.length < offset)) {
-    throw new Error('Bad buffer length');
-  }
-  end -= extra;
+  let offset = packer.offset;
+  // getUnpackLen_ will either fix the length of the input buffer
+  // according to the byte offset of the type (on unsafe mode) or
+  // throw a Error if the input buffer has a bad length (on safe mode)
+  end = getUnpackLen_(buffer, start, end, offset, safe);
   /** @type {number} */
   let index = 0;
   try {
@@ -972,6 +989,20 @@ function unpackArrayTo(
 }
 
 /**
+ * Pack a number to a byte buffer.
+ * @param {number} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array<number>} buffer The output buffer.
+ * @param {number=} index The buffer index to write. Assumes 0 if undefined.
+ * @return {number} The next index to write.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+function packTo(value, theType, buffer, index=0) {
+  return packArrayTo([value], theType, buffer, index);
+}
+
+/**
  * Pack a number as a byte buffer.
  * @param {number} value The number.
  * @param {!Object} theType The type definition.
@@ -987,20 +1018,6 @@ function pack$1(value, theType) {
 }
 
 /**
- * Pack a number to a byte buffer.
- * @param {number} value The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The buffer index to write. Assumes 0 if undefined.
- * @return {number} The next index to write.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-function packTo(value, theType, buffer, index=0) {
-  return packArrayTo([value], theType, buffer, index);
-}
-
-/**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array<number>|!TypedArray} values The values.
  * @param {!Object} theType The type definition.
@@ -1013,21 +1030,6 @@ function packArray(values, theType) {
   let output = [];
   packArrayTo(values, theType, output);
   return output;
-}
-
-/**
- * Unpack a number from a byte buffer.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to read. Assumes zero if undefined.
- * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {Error} On overflow
- */
-function unpack$1(buffer, theType, index=0) {
-  return unpackArray(
-    buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
 }
 
 /**
@@ -1054,4 +1056,19 @@ function unpackArray(
   return output;
 }
 
-export { unpackString, packString, packStringTo, packArrayTo, unpackArrayTo, pack$1 as pack, packTo, packArray, unpack$1 as unpack, unpackArray };
+/**
+ * Unpack a number from a byte buffer.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} index The buffer index to read. Assumes zero if undefined.
+ * @return {number}
+ * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
+ * @throws {Error} On overflow
+ */
+function unpack$1(buffer, theType, index=0) {
+  return unpackArray(
+    buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
+}
+
+export { unpackString, packString, packStringTo, packArrayTo, unpackArrayTo, packTo, pack$1 as pack, packArray, unpackArray, unpack$1 as unpack };

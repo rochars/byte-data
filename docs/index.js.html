@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayTo">unpackArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li><li data-type='method'><a href="module-byteData.html#~throwValueError_">throwValueError_</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byteData.html">byteData</a><ul class='methods'><li data-type='method'><a href="module-byteData.html#.pack">pack</a></li><li data-type='method'><a href="module-byteData.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byteData.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.packString">packString</a></li><li data-type='method'><a href="module-byteData.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byteData.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byteData.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byteData.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byteData.html#.unpackArrayTo">unpackArrayTo</a></li><li data-type='method'><a href="module-byteData.html#.unpackString">unpackString</a></li><li data-type='method'><a href="module-byteData.html#~getUnpackLen_">getUnpackLen_</a></li><li data-type='method'><a href="module-byteData.html#~throwValueError_">throwValueError_</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -84,6 +84,25 @@ function throwValueError_(e, value, i, fp) {
   } else {
     throw new Error(e.message + ' at input index ' + i);
   }
+}
+
+/**
+ * Unpack a array of numbers to a typed array.
+ * All other unpacking functions are interfaces to this function.
+ * @param {!Uint8Array|!Array&lt;number>} buffer The byte buffer.
+ * @param {number=} start The buffer index to start reading.
+ * @param {number=} end The buffer index to stop reading.
+ * @param {number=} offset The number of bytes used by the type.
+ * @param {boolean=} safe True for size-safe buffer reading.
+ * @throws {Error} On bad buffer length, if safe.
+ */
+function getUnpackLen_(buffer, start, end, offset, safe) {
+  /** @type {number} */
+  let extra = (end - start) % offset;
+  if (safe &amp;&amp; (extra || buffer.length &lt; offset)) {
+    throw new Error('Bad buffer length');
+  }
+  return end - extra;
 }
 
 /**
@@ -178,15 +197,13 @@ export function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
   theType = theType || {};
   /** @type {NumberBuffer} */
-  let packer = new NumberBuffer(
-    theType.bits, theType.fp, theType.signed);
-  let offset = packer.offset;
+  let packer = new NumberBuffer(theType.bits, theType.fp, theType.signed);
   /** @type {number} */
-  let extra = (end - start) % offset;
-  if (safe &amp;&amp; (extra || buffer.length &lt; offset)) {
-    throw new Error('Bad buffer length');
-  }
-  end -= extra;
+  let offset = packer.offset;
+  // getUnpackLen_ will either fix the length of the input buffer
+  // according to the byte offset of the type (on unsafe mode) or
+  // throw a Error if the input buffer has a bad length (on safe mode)
+  end = getUnpackLen_(buffer, start, end, offset, safe);
   /** @type {number} */
   let index = 0;
   try {
@@ -205,6 +222,20 @@ export function unpackArrayTo(
 }
 
 /**
+ * Pack a number to a byte buffer.
+ * @param {number} value The value.
+ * @param {!Object} theType The type definition.
+ * @param {!Uint8Array|!Array&lt;number>} buffer The output buffer.
+ * @param {number=} index The buffer index to write. Assumes 0 if undefined.
+ * @return {number} The next index to write.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} If the value is not valid.
+ */
+export function packTo(value, theType, buffer, index=0) {
+  return packArrayTo([value], theType, buffer, index);
+}
+
+/**
  * Pack a number as a byte buffer.
  * @param {number} value The number.
  * @param {!Object} theType The type definition.
@@ -220,20 +251,6 @@ export function pack(value, theType) {
 }
 
 /**
- * Pack a number to a byte buffer.
- * @param {number} value The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array&lt;number>} buffer The output buffer.
- * @param {number=} index The buffer index to write. Assumes 0 if undefined.
- * @return {number} The next index to write.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-export function packTo(value, theType, buffer, index=0) {
-  return packArrayTo([value], theType, buffer, index);
-}
-
-/**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array&lt;number>|!TypedArray} values The values.
  * @param {!Object} theType The type definition.
@@ -246,21 +263,6 @@ export function packArray(values, theType) {
   let output = [];
   packArrayTo(values, theType, output);
   return output;
-}
-
-/**
- * Unpack a number from a byte buffer.
- * @param {!Uint8Array|!Array&lt;number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to read. Assumes zero if undefined.
- * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {Error} On overflow
- */
-export function unpack(buffer, theType, index=0) {
-  return unpackArray(
-    buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
 }
 
 /**
@@ -286,6 +288,21 @@ export function unpackArray(
   unpackArrayTo(buffer, theType, output, start, end, safe);
   return output;
 }
+
+/**
+ * Unpack a number from a byte buffer.
+ * @param {!Uint8Array|!Array&lt;number>} buffer The byte buffer.
+ * @param {!Object} theType The type definition.
+ * @param {number=} index The buffer index to read. Assumes zero if undefined.
+ * @return {number}
+ * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
+ * @throws {Error} On overflow
+ */
+export function unpack(buffer, theType, index=0) {
+  return unpackArray(
+    buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
+}
 </code></pre>
         </article>
     </section>
@@ -298,7 +315,7 @@ export function unpackArray(
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Aug 09 2018 12:21:34 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Aug 09 2018 12:46:00 GMT-0300 (Hora oficial do Brasil) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
