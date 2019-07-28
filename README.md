@@ -1,6 +1,6 @@
 # byte-data
 Pack and unpack binary data.  
-Copyright (c) 2017-2018 Rafael da Silva Rocha.  
+Copyright (c) 2017-2019 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/docs/index.html) [![Tests](https://img.shields.io/badge/tests-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/test/dist/browser.html)  
@@ -339,7 +339,7 @@ Report security issues to this e-mail: rocha.rafaelsilva@gmail.com.
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Frochars%2Fbyte-data.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Frochars%2Fbyte-data?ref=badge_large)
 
 ### LICENSE
-Copyright (c) 2017-2018 Rafael da Silva Rocha.
+Copyright (c) 2017-2019 Rafael da Silva Rocha.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

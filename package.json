@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "16.0.3",
+  "version": "16.0.4",
   "description": "Serialization and deserialization of numbers and strings.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -81,7 +81,7 @@
     "codecov": "^3.5.0",
     "docdash": "^0.4.0",
     "esm": "^3.2.25",
-    "google-closure-compiler": "^20180610.0.2",
+    "google-closure-compiler": "^20190709.0.0",
     "jsdoc": "^3.6.3",
     "jshint": "^2.10.2",
     "mocha": "^5.2.0",
@@ -93,7 +93,7 @@
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-terser": "^1.0.1",
     "terser": "^3.17.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.5.3"
   },
   "dependencies": {
     "endianness": "^8.0.2",
