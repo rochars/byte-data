@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ * Copyright (c) 2017-2019 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -23,7 +23,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 16.0
+ * @fileoverview Externs for byte-data 17.0
  * @see https://github.com/rochars/byte-data
  * @externs
  */

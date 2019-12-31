@@ -200,9 +200,7 @@ describe('unpackString UTF-8 strings, 4 bytes', function() {
         // 輸 CJK COMPATIBILITY IDEOGRAPH-2F9DF (U+2F9DF) f0 af a7 9f
         var chars = '\ufeff輸';
         assert.deepEqual(
-            new Uint8Array([
-                0xEF,0xBB,0xBF,
-                240,175,167,159]),
+            [0xEF,0xBB,0xBF,240,175,167,159],
             byteData.packString(chars));
     });
 });
@@ -211,10 +209,9 @@ describe('unpackString UTF-8 strings, 4 bytes', function() {
         // 輸   CJK COMPATIBILITY IDEOGRAPH-2F9DF (U+2F9DF) f0 af a7 9f
         var chars = '輸\ufeff輸';
         assert.deepEqual(
-            new Uint8Array([
-                240,175,167,159,
+            [240,175,167,159,
                 0xEF,0xBB,0xBF,
-                240,175,167,159]),
+                240,175,167,159],
             byteData.packString(chars));
     });
 });
@@ -223,40 +220,40 @@ describe('packString UTF-8 strings, 4 bytes', function() {
         // 輸 CJK COMPATIBILITY IDEOGRAPH-2F9DF (U+2F9DF) f0 af a7 9f
         var chars = '輸';
         assert.deepEqual(
-            new Uint8Array([240,175,167,159]),
+            [240,175,167,159],
             byteData.packString(chars));
     });
     it('pack 輸輸 as a byte array', function() {
         var chars = '輸輸';
         assert.deepEqual(
-            new Uint8Array([
+            [
                 240,175,167,159,
-                240,175,167,159]),
+                240,175,167,159],
             byteData.packString(chars));
     });
     it('pack 輸輸笠߹~$ as a byte array', function() {
         var chars = '輸輸笠߹~$';
         assert.deepEqual(
-            new Uint8Array([
+            [
                 240,175,167,159,
                 240,175,167,159,
                 239, 167, 184,
                 223, 185,
                 126,
-                36]),
+                36],
             byteData.packString(chars));
     });
     it('pack 輸輸笠߹~$輸 as a byte array', function() {
         var chars = '輸輸笠߹~$輸';
         assert.deepEqual(
-            new Uint8Array([
+            [
                 240,175,167,159,
                 240,175,167,159,
                 239, 167, 184,
                 223, 185,
                 126,
                 36,
-                240,175,167,159]),
+                240,175,167,159],
             byteData.packString(chars));
     });
 });
@@ -265,38 +262,38 @@ describe('packString UTF-8 strings, 3 bytes', function() {
         // CJK COMPATIBILITY IDEOGRAPH-F9F8 (U+F9F8) ef a7 b8
         var chars = '笠';
         assert.deepEqual(
-            new Uint8Array([239, 167, 184]),
+            [239, 167, 184],
             byteData.packString(chars));
     });
     it('pack 笠笠 as a byte array', function() {
         var chars = '笠笠';
         assert.deepEqual(
-            new Uint8Array([
+            [
                 239, 167, 184,
-                239, 167, 184]),
+                239, 167, 184],
             byteData.packString(chars));
     });
     it('pack 笠笠߹~$ as a byte array', function() {
         var chars = '笠笠߹~$';
         assert.deepEqual(
-            new Uint8Array([
+            [
                 239, 167, 184,
                 239, 167, 184,
                 223, 185,
                 126,
-                36]),
+                36],
             byteData.packString(chars));
     });
     it('pack 笠笠߹~$笠 as a byte array', function() {
         var chars = '笠笠߹~$笠';
         assert.deepEqual(
-            new Uint8Array([
+            [
                 239, 167, 184,
                 239, 167, 184,
                 223, 185,
                 126,
                 36,
-                239, 167, 184]),
+                239, 167, 184],
             byteData.packString(chars));
     });
 });
@@ -304,25 +301,25 @@ describe('packString UTF-8 strings, 2 bytes', function() {
     it('pack ߹ as a byte array', function() {
         var chars = '߹'; // NKO EXCLAMATION MARK (U+07F9)
         assert.deepEqual(
-            new Uint8Array([223, 185]),
+            [223, 185],
             byteData.packString(chars));
     });
     it('pack ߹߹ as a byte array', function() {
         var chars = '߹߹';
         assert.deepEqual(
-            new Uint8Array([223, 185, 223, 185]),
+            [223, 185, 223, 185],
             byteData.packString(chars));
     });
     it('pack ߹߹~$ as a byte array', function() {
         var chars = '߹߹~$';
         assert.deepEqual(
-            new Uint8Array([223, 185, 223, 185, 126, 36]),
+            [223, 185, 223, 185, 126, 36],
             byteData.packString(chars));
     });
     it('pack ߹߹~$߹ as a byte array', function() {
         var chars = '߹߹~$߹';
         assert.deepEqual(
-            new Uint8Array([223, 185, 223, 185, 126, 36, 223, 185]),
+            [223, 185, 223, 185, 126, 36, 223, 185],
             byteData.packString(chars));
     });
 });
@@ -330,35 +327,35 @@ describe('packString UTF-8 strings, 1 byte', function() {
     it('pack ~ as a byte array', function() {
         var chars = '~'; // TILDE (U+007E)  7e
         assert.deepEqual(
-            new Uint8Array([126]),
+            [126],
             byteData.packString(chars));
     });
     it('pack ~~ as a byte array', function() {
         var chars = '~~';
        assert.deepEqual(
-            new Uint8Array([126, 126]),
+            [126, 126],
             byteData.packString(chars));
     });
     it('pack ~~$ as a byte array', function() {
         var chars = '~~$';
         assert.deepEqual(
-            new Uint8Array([126, 126, 36]),
+            [126, 126, 36],
             byteData.packString(chars));
     });
     it('pack ~~$~ as a byte array', function() {
         var chars = '~~$~';
-        assert.deepEqual(new Uint8Array([126, 126, 36, 126]),
+        assert.deepEqual([126, 126, 36, 126],
             byteData.packString(chars));
     });
 });
 describe('packString ASCII strings', function() {
     it('pack $ as a byte array', function() {
         var chars = '$';
-        assert.deepEqual(new Uint8Array([36]), byteData.packString(chars));
+        assert.deepEqual([36], byteData.packString(chars));
     });
     it('pack $$ as a byte array', function() {
         var chars = '$$';
-        assert.deepEqual(new Uint8Array([36, 36]), byteData.packString(chars));
+        assert.deepEqual([36, 36], byteData.packString(chars));
     });
 });
 
@@ -532,7 +529,7 @@ describe('unpackString ASCII strings', function() {
 describe('packString strings', function() {
     it('should turn a string to a byte array', function() {
         assert.deepEqual(
-            byteData.packString("abcd"), new Uint8Array([97,98,99,100]));
+            byteData.packString("abcd"), [97,98,99,100]);
     });
     it('should packString a string to a buffer', function() {
         var buffer = new Uint8Array(12);

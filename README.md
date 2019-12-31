@@ -6,16 +6,11 @@ https://github.com/rochars/byte-data
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/docs/index.html) [![Tests](https://img.shields.io/badge/tests-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/test/dist/browser.html)  
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1974/badge)](https://bestpractices.coreinfrastructure.org/projects/1974)
 
-**byte-data** is a module to pack and unpack numbers and strings to and from byte buffers, on any browser or environment, including IE6.
+**byte-data** JavaScript binary parser for any browser or environment.
 
 - **MIT licensed**
-- **Type safe**
-- **Compatible with IE6+ and any browsers with ES3/ES5/ES6+ support**
-- **Use it out of the box in Node.js**
-- **Use it out of the box with [TypeScript](https://www.typescriptlang.org/)**
+- **Compatible with IE6+ and any environment with ES3/ES5/ES6+ support**
 - **Tested in little-endian and big-endian machines!**
-- **Can be used where typed arrays can't**
-- **Less than 6kb minified!**
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)

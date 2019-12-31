@@ -1,11 +1,11 @@
 {
   "name": "byte-data",
-  "version": "16.0.4",
-  "description": "Serialization and deserialization of numbers and strings.",
+  "version": "17.0.0",
+  "description": "JavaScript binary parser for any browser or environment.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
   "license": "MIT",
-  "main": "./dist/byte-data.umd.js",
+  "main": "./dist/byte-data.js",
   "module": "./index.js",
   "types": "./index.d.ts",
   "engines": {
@@ -66,12 +66,10 @@
   "scripts": {
     "lint": "jshint index.js lib externs",
     "test": "nyc ./node_modules/mocha/bin/_mocha test/src --recursive -R dot",
-    "test-esm": "node ./node_modules/mocha/bin/_mocha test/src --esm --recursive -R dot",
-    "test-min": "node ./node_modules/mocha/bin/_mocha test/src --min --recursive -R dot",
     "test-umd": "node ./node_modules/mocha/bin/_mocha test/src --umd --recursive -R dot",
     "test-es3": "node ./node_modules/mocha/bin/_mocha test/src --es3 --recursive -R dot",
     "test-tsc": "tsc ./test/dist/TypeScript/main.ts && node -r esm ./test/dist/TypeScript/main.js",
-    "test-dist": "npm run test-esm && npm run test-umd && npm run test-es3 && npm run test-min && npm run test-tsc",
+    "test-dist": "npm run test-umd && npm run test-es3 && npm run test-tsc",
     "pack": "npm run test && rollup -c && npm run test-dist",
     "doc": "./node_modules/.bin/jsdoc -c .jsdocrc index.js -d docs -r README.md -t node_modules/docdash",
     "build": "npm run lint && npm run pack && npm run doc",

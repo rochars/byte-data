@@ -8,10 +8,7 @@ This will lint the sources, test the sources, compile the dist files, test every
 
 There **should** be no warnings during the build.
 
-The dist files are created in the *dist/* folder:
-- ./dist/byte-data.js (ES6)
-- ./dist/byte-data.min.js (ES6)
-- ./dist/byte-data.umd.js (ES3)
+The dist files are created in the *dist/* folder.
 
 The API documentation is created in the *docs/* folder.
 
@@ -25,4 +22,4 @@ Use [QEMU](https://www.qemu.org/) with this PowerPC/Debian image:
 https://people.debian.org/~aurel32/qemu/powerpc/
 
 ## Compilation
-**byte-data** UMD dist uses [Google Closure Compiler](https://github.com/google/closure-compiler-js) with compilation level set to ADVANCED, so properties that have not been exported will be renamed (and likely result in errors in the compiled browser version).
+**byte-data** UMD dist uses [Google Closure Compiler](https://github.com/google/closure-compiler-js) with compilation level set to ADVANCED, so properties that have not been exported will be renamed (and likely result in errors).

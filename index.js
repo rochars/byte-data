@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Rafael da Silva Rocha.
+ * Copyright (c) 2017-2019 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -23,48 +23,16 @@
  */
 
 /**
- * @fileoverview Functions to read and write numbers and strings as bytes.
+ * @fileoverview JavaScript binary parser for any browser or environment.
  * @see https://github.com/rochars/byte-data
  */
 
-/** @module byteData */
+/** @module byte-data */
 
 import endianness from 'endianness';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
 import {validateIsNumber} from './lib/validation.js';
-
-/**
- * Throw a value error.
- * @throws {Error} A Error with a message based on the input params.
- */
-function throwValueError_(e, value, i, fp) {
-  if (!fp && (
-      value === Infinity || value === -Infinity || value !== value)) {
-    throw new Error('Argument is not a integer at input index ' + i);
-  } else {
-    throw new Error(e.message + ' at input index ' + i + ': ' + value);
-  }
-}
-
-/**
- * Unpack a array of numbers to a typed array.
- * All other unpacking functions are interfaces to this function.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {number=} start The buffer index to start reading.
- * @param {number=} end The buffer index to stop reading.
- * @param {number=} offset The number of bytes used by the type.
- * @param {boolean=} safe True for size-safe buffer reading.
- * @throws {Error} On bad buffer length, if safe.
- */
-function getUnpackLen_(buffer, start, end, offset, safe) {
-  /** @type {number} */
-  let extra = (end - start) % offset;
-  if (safe && (extra || buffer.length < offset)) {
-    throw new Error('Bad buffer length');
-  }
-  return end - extra;
-}
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -264,4 +232,38 @@ export function unpackArray(
 export function unpack(buffer, theType, index=0) {
   return unpackArray(
     buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
+}
+
+/**
+ * Throw a value error.
+ * @throws {Error} A Error with a message based on the input params.
+ * @private
+ */
+function throwValueError_(e, value, i, fp) {
+  if (!fp && (
+      value === Infinity || value === -Infinity || value !== value)) {
+    throw new Error('Argument is not a integer at input index ' + i);
+  } else {
+    throw new Error(e.message + ' at input index ' + i + ': ' + value);
+  }
+}
+
+/**
+ * Unpack a array of numbers to a typed array.
+ * All other unpacking functions are interfaces to this function.
+ * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
+ * @param {number=} start The buffer index to start reading.
+ * @param {number=} end The buffer index to stop reading.
+ * @param {number=} offset The number of bytes used by the type.
+ * @param {boolean=} safe True for size-safe buffer reading.
+ * @throws {Error} On bad buffer length, if safe.
+ * @private
+ */
+function getUnpackLen_(buffer, start, end, offset, safe) {
+  /** @type {number} */
+  let extra = (end - start) % offset;
+  if (safe && (extra || buffer.length < offset)) {
+    throw new Error('Bad buffer length');
+  }
+  return end - extra;
 }
