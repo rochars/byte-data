@@ -1,11 +1,11 @@
 # CHANGELOG
 
-## 17.0.0 (unreleased)
+## 17.0.0 (2019-12-31)
 - New package structure:
 	* dist file is "./dist/byte-data.js", a UMD served as "main"
 	* ES6 source is "./index.js", served as "module"
 
-## v16.0.4 (2019-12-31)
+## v16.0.4 (unreleased)
 - Fix: TypeScript declaration included in package.json
 - Update dependencies to their latest versions
 
