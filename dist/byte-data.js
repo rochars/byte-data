@@ -110,7 +110,7 @@ function swap(bytes, offset, index) {
  */
 function unpack(buffer, start=0, end=buffer.length) {
   /** @type {string} */
-  let str = "";
+  let str = '';
   for(let index = start; index < end;) {
     /** @type {number} */
     let lowerBoundary = 0x80;
@@ -283,7 +283,7 @@ function validateIntType(bits) {
 }
 
 /*
- * Copyright (c) 2018 Rafael da Silva Rocha.
+ * Copyright (c) 2018-2019 Rafael da Silva Rocha.
  * Copyright (c) 2013 DeNA Co., Ltd.
  * Copyright (c) 2010, Linden Research, Inc
  *
@@ -316,8 +316,7 @@ function validateIntType(bits) {
  */
 
 /** 
- * @module IEEE754Buffer
- * @ignore
+ * @module ieee754-buffer
  */
 
 /**
@@ -331,12 +330,40 @@ class IEEE754Buffer {
    * @param {number} fbits The fraction bits.
    */
   constructor(ebits, fbits) {
+    /**
+     * @type {number}
+     * @private
+     */
     this.ebits = ebits;
+    /**
+     * @type {number}
+     * @private
+     */
     this.fbits = fbits;
+    /**
+     * @type {number}
+     * @private
+     */
     this.bias = (1 << (ebits - 1)) - 1;
+    /**
+     * @type {number}
+     * @private
+     */
     this.numBytes = Math.ceil((ebits + fbits) / 8);
+    /**
+     * @type {number}
+     * @private
+     */
     this.biasP2 = Math.pow(2, this.bias + 1);
+    /**
+     * @type {number}
+     * @private
+     */
     this.ebitsFbits = (ebits + fbits);
+    /**
+     * @type {number}
+     * @private
+     */
     this.fbias = Math.pow(2, -(8 * this.numBytes - 1 - ebits));
   }
 
@@ -362,7 +389,7 @@ class IEEE754Buffer {
     /** @type {number} */
     let exp = Math.min(Math.floor(Math.log(num) / Math.LN2), 1023);
     /** @type {number} */
-    let fraction = this.roundToEven(num / Math.pow(2, exp) * Math.pow(2, this.fbits));
+    let fraction = roundToEven(num / Math.pow(2, exp) * Math.pow(2, this.fbits));
     // NaN
     if (num !== num) {
       fraction = Math.pow(2, this.fbits - 1);
@@ -380,10 +407,10 @@ class IEEE754Buffer {
           fraction = 0;
         } else {
           exp = exp + this.bias;
-          fraction = this.roundToEven(fraction) - Math.pow(2, this.fbits);
+          fraction = roundToEven(fraction) - Math.pow(2, this.fbits);
         }
       } else {
-        fraction = this.roundToEven(num / Math.pow(2, 1 - this.bias - this.fbits));
+        fraction = roundToEven(num / Math.pow(2, 1 - this.bias - this.fbits));
         exp = 0;
       } 
     }
@@ -472,17 +499,25 @@ class IEEE754Buffer {
     }
     return k;
   }
+}
 
-  roundToEven(n) {
-    var w = Math.floor(n), f = n - w;
-    if (f < 0.5) {
-      return w;
-    }
-    if (f > 0.5) {
-      return w + 1;
-    }
-    return w % 2 ? w + 1 : w;
+/**
+ * Round a number to its nearest even value.
+ * @param {number} n The number.
+ * @return {number}
+ * @private
+ */
+function roundToEven(n) {
+  /** @type {number} */
+  let w = Math.floor(n);
+  let f = n - w;
+  if (f < 0.5) {
+    return w;
   }
+  if (f > 0.5) {
+    return w + 1;
+  }
+  return w % 2 ? w + 1 : w;
 }
 
 /*
