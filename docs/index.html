@@ -47,12 +47,12 @@
 
     <section class="readme">
         <article><h1>byte-data</h1>
-<p>Pack and unpack binary data.<br>
+<p>JavaScript binary parser for any browser or environment.<br>
 Copyright (c) 2017-2019 Rafael da Silva Rocha.<br>
 https://github.com/rochars/byte-data</p>
 <p><a href="https://www.npmjs.com/package/byte-data"><img src="https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge" alt="NPM version"></a> <a href="https://rochars.github.io/byte-data/docs/index.html"><img src="https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge" alt="Docs"></a> <a href="https://rochars.github.io/byte-data/test/dist/browser.html"><img src="https://img.shields.io/badge/tests-online-blue.svg?style=for-the-badge" alt="Tests"></a><br>
 <a href="https://codecov.io/gh/rochars/byte-data"><img src="https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square" alt="Codecov"></a> <a href="https://travis-ci.org/rochars/byte-data"><img src="https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square" alt="Unix Build"></a> <a href="https://ci.appveyor.com/project/rochars/byte-data"><img src="https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&amp;logo=appveyor" alt="Windows Build"></a> <a href="https://scrutinizer-ci.com/g/rochars/byte-data/"><img src="https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&amp;logo=scrutinizer" alt="Scrutinizer"></a> <a href="https://bestpractices.coreinfrastructure.org/projects/1974"><img src="https://bestpractices.coreinfrastructure.org/projects/1974/badge" alt="CII Best Practices"></a></p>
-<p><strong>byte-data</strong> JavaScript binary parser for any browser or environment.</p>
+<p><strong>byte-data</strong> is JavaScript binary parser for any browser or environment.</p>
 <ul>
 <li><strong>MIT licensed</strong></li>
 <li><strong>Compatible with IE6+ and any environment with ES3/ES5/ES6+ support</strong></li>
@@ -71,8 +71,8 @@ https://github.com/rochars/byte-data</p>
 <pre class="prettyprint source"><code>npm install byte-data
 </code></pre>
 <h2>Browser</h2>
-<p>Use <strong>byte-data.umd.js</strong> in the <em>/dist</em> folder of this package:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;./dist/byte-data.umd.js&quot;>&lt;/script>
+<p>Use the <strong>byte-data.js</strong> file in the <em>/dist</em> folder:</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;./dist/byte-data.js&quot;>&lt;/script>
 &lt;script>
   // Pack a 32-bit floating-point number
   var packed = byteData.pack(2.1474836, {bits: 32, fp: true});
@@ -85,11 +85,11 @@ https://github.com/rochars/byte-data</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script>
 </code></pre>
 <h3>Browser compatibility</h3>
-<p>The UMD dist (<strong>./dist/byte-data.umd.js</strong>) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.</p>
+<p>The UMD dist (<strong>./dist/byte-data.js</strong>) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.</p>
 <p>Cross-browser tests powered by<br>
 <a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a></p>
 <h2>Node</h2>
-<pre class="prettyprint source lang-javascript"><code>import * as byteData from 'byte-data';
+<pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
 
 // Pack a signed 16-bit integer to a existing byte buffer
 // Start writing on index '4' of the buffer
@@ -99,17 +99,17 @@ byteData.packTo(1077, {bits: 16, signed: true}, buffer, 4);
 // array with the number represented as bytes
 let packed = byteData.pack(128, {bits: 8});
 </code></pre>
-<p>Or <strong>import</strong> just what you need:</p>
-<pre class="prettyprint source lang-javascript"><code>import {pack} from 'byte-data';
-
-// Pack a 8-bit unsigned integer
-let packed = pack(128, {bits: 8});
-</code></pre>
-<p>Or <strong>require</strong>:</p>
-<pre class="prettyprint source lang-javascript"><code>const byteData = require('byte-data');
+<p>Or <strong>import</strong>:</p>
+<pre class="prettyprint source lang-javascript"><code>import * as byteData from 'byte-data';
 
 // Pack a 32-bit floating-point number
 let packed = byteData.pack(2.1474836, {bits: 32, fp: true});
+</code></pre>
+<p>Or <strong>import</strong> just what you need:</p>
+<pre class="prettyprint source lang-javascript"><code>import { pack } from 'byte-data';
+
+// Pack a 8-bit unsigned integer
+let packed = pack(128, {bits: 8});
 </code></pre>
 <h2>About</h2>
 <h2>pack and packTo</h2>
@@ -133,18 +133,29 @@ packTo(402, {bits: 16}, buffer);
 <h3>Unpacking and input buffer length</h3>
 <h4>unpack(buffer, theType, index=)</h4>
 <p>When unpacking a single value, a <em>'Bad buffer length'</em> error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the <em>index</em>.</p>
-<pre class="prettyprint source lang-javascript"><code>byteData.unpack([0xff], {bits: 16}, 0); // throws a 'Bad buffer length' error
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2); // throws a 'Bad buffer length' error
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1); // ok
+<pre class="prettyprint source lang-javascript"><code>// throws a 'Bad buffer length' error
+byteData.unpack([0xff], {bits: 16}, 0);
+
+// throws a 'Bad buffer length' error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2);
+
+// ok
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1); 
 </code></pre>
 <h4>unpackArray(buffer, theType, start=, end=, safe=)</h4>
 <p>When unpacking a array of values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong> by default:</p>
-<pre class="prettyprint source lang-javascript"><code>byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 2); // return a array with one 16-bit unsigned int
+<pre class="prettyprint source lang-javascript"><code>// return a empty array
+byteData.unpackArray([0xff], {bits: 16}, 0, 1);
+
+// return a array with one 16-bit unsigned int
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 2);
 </code></pre>
 <p>You can unpack arrays in <strong>safe mode</strong> with the optional <em>safe</em> param set to <em>true</em>. <strong>In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error</strong>:</p>
-<pre class="prettyprint source lang-javascript"><code>byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws a 'Bad buffer length' error
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws a 'Bad buffer length' error
+<pre class="prettyprint source lang-javascript"><code>// throws a 'Bad buffer length' error
+byteData.unpackArray([0xff], {bits: 16}, 0, 1, true);
+
+// throws a 'Bad buffer length' error
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true);
 </code></pre>
 <h3>Floating-point numbers</h3>
 <ul>

@@ -1,12 +1,12 @@
 # byte-data
-Pack and unpack binary data.  
+JavaScript binary parser for any browser or environment.  
 Copyright (c) 2017-2019 Rafael da Silva Rocha.  
 https://github.com/rochars/byte-data
 
 [![NPM version](https://img.shields.io/npm/v/byte-data.svg?style=for-the-badge)](https://www.npmjs.com/package/byte-data) [![Docs](https://img.shields.io/badge/docs-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/docs/index.html) [![Tests](https://img.shields.io/badge/tests-online-blue.svg?style=for-the-badge)](https://rochars.github.io/byte-data/test/dist/browser.html)  
 [![Codecov](https://img.shields.io/codecov/c/github/rochars/byte-data.svg?style=flat-square)](https://codecov.io/gh/rochars/byte-data) [![Unix Build](https://img.shields.io/travis/rochars/byte-data.svg?style=flat-square)](https://travis-ci.org/rochars/byte-data) [![Windows Build](https://img.shields.io/appveyor/ci/rochars/byte-data.svg?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/rochars/byte-data) [![Scrutinizer](https://img.shields.io/scrutinizer/g/rochars/byte-data.svg?style=flat-square&logo=scrutinizer)](https://scrutinizer-ci.com/g/rochars/byte-data/) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1974/badge)](https://bestpractices.coreinfrastructure.org/projects/1974)
 
-**byte-data** JavaScript binary parser for any browser or environment.
+**byte-data** is JavaScript binary parser for any browser or environment.
 
 - **MIT licensed**
 - **Compatible with IE6+ and any environment with ES3/ES5/ES6+ support**
@@ -26,9 +26,9 @@ npm install byte-data
 ```
 
 ## Browser
-Use **byte-data.umd.js** in the */dist* folder of this package:
+Use the **byte-data.js** file in the */dist* folder:
 ```html
-<script src="./dist/byte-data.umd.js"></script>
+<script src="./dist/byte-data.js"></script>
 <script>
   // Pack a 32-bit floating-point number
   var packed = byteData.pack(2.1474836, {bits: 32, fp: true});
@@ -46,14 +46,14 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 ```
 
 ### Browser compatibility
-The UMD dist (**./dist/byte-data.umd.js**) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.
+The UMD dist (**./dist/byte-data.js**) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.
 
 Cross-browser tests powered by  
 <a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>
 
 ## Node
 ```javascript
-import * as byteData from 'byte-data';
+const byteData = require('byte-data');
 
 // Pack a signed 16-bit integer to a existing byte buffer
 // Start writing on index '4' of the buffer
@@ -64,20 +64,20 @@ byteData.packTo(1077, {bits: 16, signed: true}, buffer, 4);
 let packed = byteData.pack(128, {bits: 8});
 ```
 
-Or **import** just what you need:
+Or **import**:
 ```javascript
-import {pack} from 'byte-data';
-
-// Pack a 8-bit unsigned integer
-let packed = pack(128, {bits: 8});
-```
-
-Or **require**:
-```javascript
-const byteData = require('byte-data');
+import * as byteData from 'byte-data';
 
 // Pack a 32-bit floating-point number
 let packed = byteData.pack(2.1474836, {bits: 32, fp: true});
+```
+
+Or **import** just what you need:
+```javascript
+import { pack } from 'byte-data';
+
+// Pack a 8-bit unsigned integer
+let packed = pack(128, {bits: 8});
 ```
 
 ## About
@@ -108,21 +108,32 @@ packTo(402, {bits: 16}, buffer);
 #### unpack(buffer, theType, index=)
 When unpacking a single value, a *'Bad buffer length'* error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the *index*.
 ```javascript
-byteData.unpack([0xff], {bits: 16}, 0); // throws a 'Bad buffer length' error
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2); // throws a 'Bad buffer length' error
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1); // ok
+// throws a 'Bad buffer length' error
+byteData.unpack([0xff], {bits: 16}, 0);
+
+// throws a 'Bad buffer length' error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2);
+
+// ok
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1); 
 ```
 
 #### unpackArray(buffer, theType, start=, end=, safe=)
 When unpacking a array of values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array** by default:
 ```javascript
-byteData.unpackArray([0xff], {bits: 16}, 0, 1); // return a empty array
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 2); // return a array with one 16-bit unsigned int
+// return a empty array
+byteData.unpackArray([0xff], {bits: 16}, 0, 1);
+
+// return a array with one 16-bit unsigned int
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 2);
 ```
 You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error**:
 ```javascript
-byteData.unpackArray([0xff], {bits: 16}, 0, 1, true); // throws a 'Bad buffer length' error
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true); // throws a 'Bad buffer length' error
+// throws a 'Bad buffer length' error
+byteData.unpackArray([0xff], {bits: 16}, 0, 1, true);
+
+// throws a 'Bad buffer length' error
+byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true);
 ```
 
 ### Floating-point numbers
