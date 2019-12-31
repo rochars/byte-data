@@ -30,7 +30,7 @@ var buffer = new Uint8Array(2);
 var outputTyped = new Uint16Array(1);
 byteData.pack(num, theType);
 byteData.packArray([num], theType);
-byteData.packTo(num, theType, outputTyped, 0);
+byteData.packTo(num, theType, buffer, 0);
 byteData.packArrayTo([num], theType, buffer, 0);
 byteData.unpack(buffer, theType, 0);
 byteData.unpackArray(buffer, theType, 0, buffer.length);

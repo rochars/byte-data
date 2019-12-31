@@ -9,9 +9,14 @@
 
 import closure from 'rollup-plugin-closure-compiler-js';
 import {terser} from 'rollup-plugin-terser';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import fs from 'fs';
+
+/**
+ * A lot of extras are necessary to ensure the module works properly
+ * in all browsers (including IE6)!
+ */
 
 // Externs
 const externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
@@ -60,7 +65,7 @@ export default [
   },
   // UMD, ES3, polyfills included, minified
   {
-    input: 'dist/byte-data.js',
+    input: 'index.js',
     output: [
       {
         file: 'dist/byte-data.umd.js',
@@ -71,6 +76,8 @@ export default [
       }
     ],
     plugins: [
+      resolve(),
+      commonjs(),
       closure({
         languageIn: 'ECMASCRIPT6',
         languageOut: 'ECMASCRIPT3',

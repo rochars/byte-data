@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v16.0.4 (2019-12-31)
+- Fix: TypeScript declaration included in package.json
+- Update dependencies to their latest versions
+
 ## v16.0.3 (2018-08-09)
 - Fix: input index on unpackArrayTo error messages
 - Error messages include the value that caused the error along with its index

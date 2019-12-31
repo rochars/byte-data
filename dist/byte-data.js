@@ -1107,4 +1107,4 @@ function unpack$1(buffer, theType, index=0) {
     buffer, theType, index, index + Math.ceil(theType.bits / 8), true)[0];
 }
 
-export { unpackString, packString, packStringTo, packArrayTo, unpackArrayTo, packTo, pack$1 as pack, packArray, unpackArray, unpack$1 as unpack };
+export { pack$1 as pack, packArray, packArrayTo, packString, packStringTo, packTo, unpack$1 as unpack, unpackArray, unpackArrayTo, unpackString };
