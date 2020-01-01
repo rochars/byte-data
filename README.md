@@ -25,7 +25,7 @@ https://github.com/rochars/byte-data
 npm install byte-data
 ```
 
-## Browser
+## In the Browser
 Use the **byte-data.js** file in the */dist* folder:
 ```html
 <script src="./dist/byte-data.js"></script>
@@ -38,15 +38,29 @@ Use the **byte-data.js** file in the */dist* folder:
 Or load it from the [jsDelivr](https://cdn.jsdelivr.net/npm/byte-data) CDN:
 ```html
 <script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
+<script>
+  var packed = byteData.pack(2.1474836, {bits: 32, fp: true});
+</script>
 ```
 
 Or load it from [unpkg](https://unpkg.com/byte-data):
 ```html
 <script src="https://unpkg.com/byte-data"></script>
+<script>
+  var packed = byteData.pack(2.1474836, {bits: 32, fp: true});
+</script>
 ```
 
 ### Browser compatibility
-The UMD dist (**./dist/byte-data.js**) is transpiled to ES3 and compatible with IE6+. Should work in all modern browsers that support ES3/ES5/ES6+.
+This module is distributed as a minified UMD transpiled to ES3 and compatible with IE6+. It should work in all modern browsers and environments that support ES3/ES5/ES6+. It is located in the *dist/* folder.
+
+The UMD is bundled with some polyfills so no extra work should be necessary to load this module in any browser. The polyfills used in the compilation are distributed with the package in the *scripts/* folder.
+
+If you are not using a package manager to install this module, you can get the it via CDNs:
+```html
+<script src="https://cdn.jsdelivr.net/npm/byte-data"></script>
+<script src="https://unpkg.com/byte-data"></script>
+```
 
 Cross-browser tests powered by  
 <a href="https://www.browserstack.com"><img src="https://rochars.github.io/byte-data/docs/Browserstack-logo@2x.png" width="150px"/></a>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2019 Rafael da Silva Rocha.
+ * Copyright (c) 2019 Rafael da Silva Rocha.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -30,70 +30,54 @@
 import fs from 'fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import closure from 'rollup-plugin-closure-compiler-js';
-import {terser} from 'rollup-plugin-terser';
+import compiler from '@ampproject/rollup-plugin-closure-compiler';
 
 /**
- * A lot of extras are necessary to ensure the module works properly
- * in all browsers (including IE6)!
+ * Some extra steps are necessary to ensure the module
+ * works properly in all browsers
  */
 
-// Externs are loaded as a string to allow items
-// to be dinamycally included
-let externsFile = fs.readFileSync('./externs/byte-data.js', 'utf8');
-externsFile += 'exports={};'
-
 // Polyfills for the UMD to work anywhere
-const polyfills = fs.readFileSync('./scripts/polyfills.js', 'utf8');
+let polyfills = fs.readFileSync('./scripts/polyfills.min.js', 'utf8');
 
 // A custom UMD wrapper
-const outputWrapper =
+let outputHeader = 
+'/*! https://github.com/rochars/byte-data\n' +
+'Copyright (c) 2019 Rafael da Silva Rocha */\n' + polyfills +
+';var byteData=(function(exports){var exports=exports||{};';
+
+let outputFooter =
   "typeof module!=='undefined'?module.exports=exports :" +
   "typeof define==='function'&&define.amd?define(['exports'],exports) :" +
   "typeof global!=='undefined'?global.byteData=exports:null;"+
   "return exports;})();";
 
 export default [
-  // Compiles a ES3 UMD, polyfills included.
-  // Rollup initially generates this as a CommonJS module;
-  // UMD wrapper and polyfills are included later.
   {
     input: 'index.js',
+    // bundle the module as CommonJS; the rest of the
+    // UMD wrapper is added after compilation
     output: [
       {
         file: 'dist/byte-data.js',
         name: 'byteData',
         format: 'cjs',
-        strict: false,
-        banner: 'var exports=exports||{};'
-      }
+        strict: false
+      },
     ],
     plugins: [
       resolve(),
       commonjs(),
-      // compile with gcc using polyfills to keep
-      // it working in older environments.
-      // The UMD wrapper is included here.
-      closure({
-        languageIn: 'ECMASCRIPT6',
-        languageOut: 'ECMASCRIPT3',
-        compilationLevel: 'ADVANCED',
-        warningLevel: 'VERBOSE',
-        outputWrapper: ';var byteData=(function(exports){' +
-          polyfills + '%output%' +
-          outputWrapper,
-        assumeFunctionWrapper: true,
-        rewritePolyfills: false,
-        externs: [{src: externsFile}]
+      // use closure compiler to transpile/compile then
+      // add the rest of the UMD header and footer  
+      compiler({
+        language_in: 'ECMASCRIPT6',
+        language_out: 'ECMASCRIPT3',
+        compilation_level: 'ADVANCED',
+        warning_level: 'QUIET',
+        outputWrapper: outputHeader + '%output%' + outputFooter,
+        externs: ['externs/byte-data.js']
       }),
-      // minify the output, now with a UMD wrapper
-      // and polyfills.
-      terser({
-        compress: {
-          dead_code: true,
-          unsafe: true
-        }
-      })
     ]
-  },
+  }
 ];
