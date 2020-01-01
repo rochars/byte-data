@@ -32,7 +32,6 @@
 import endianness from 'endianness';
 import {pack as packUTF8, unpack as unpackUTF8} from 'utf8-buffer';
 import NumberBuffer from './lib/number-buffer.js';
-import {validateIsNumber} from './lib/validation.js';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -272,4 +271,18 @@ function getUnpackLen_(buffer, start, end, offset, safe) {
     throw new Error('Bad buffer length');
   }
   return end - extra;
+}
+
+/**
+ * Validate that the value is not null or undefined.
+ * @param {*} value The value.
+ * @throws {Error} If the value is not Number or Boolean.
+ */
+function validateIsNumber(value) {
+  let TYPE_NAN = 'Argument is not a valid number';
+  if (typeof value === 'undefined' || value === null) {
+    throw new Error(TYPE_NAN);
+  } else if (value.constructor !== Number && value.constructor !== Boolean) {
+    throw new Error(TYPE_NAN);
+  }
 }

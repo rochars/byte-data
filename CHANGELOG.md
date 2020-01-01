@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 18.0.0 (2020-01-02)
+- Use RangeError and TypeError instead of just Error
+
 ## 17.0.0 (2019-12-31)
 - Packing *true* or *false* result in a "Argument is not a valid number" error
 - New package structure:
