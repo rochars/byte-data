@@ -74,15 +74,19 @@ describe('Emulate old browser with binary32 and binary64', function() {
 describe('interface', function() {
 
     // pack
-    it('pack true uInt16 (1, 0)', function() {
-        assert.deepEqual(
-            byteData.pack(true, uInt16),
-            [1, 0]);
+    it('pack true uInt16 (1, 0) should raise a NaN error', function() {
+        assert.throws(
+            function() {
+                byteData.pack(true, uInt16);
+            },
+            /Argument is not a valid number at input index 0: true/);
     });
-    it('pack false uInt16 (0, 0)', function() {
-        assert.deepEqual(
-            byteData.pack(false, uInt16),
-            [0, 0]);
+    it('pack false uInt16 (0, 0) should raise a NaN error', function() {
+        assert.throws(
+            function() {
+                byteData.pack(false, uInt16);
+            },
+            /Argument is not a valid number at input index 0: false/);
     });
     //it('pack null uInt16 (0, 0)', function() {
     //    assert.deepEqual(

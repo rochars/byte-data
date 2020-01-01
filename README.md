@@ -99,9 +99,13 @@ packTo(402, {bits: 16}, buffer);
 ```
 
 ### Packing *null*, *false*, *true* and *undefined*
-- Packing *undefined* or *null* values throw *'Argument is not a valid number'* error
-- *true* is packed as 1
-- *false* is packed as 0
+Packing the following values
+- *undefined*
+- *null*
+- *true*
+- *false*
+
+will values throw a *'Argument is not a valid number'* error.
 
 ### Unpacking and input buffer length
 

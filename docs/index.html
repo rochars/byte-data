@@ -125,11 +125,14 @@ packTo(402, {bits: 16}, buffer, 2);
 packTo(402, {bits: 16}, buffer);
 </code></pre>
 <h3>Packing <em>null</em>, <em>false</em>, <em>true</em> and <em>undefined</em></h3>
+<p>Packing the following values</p>
 <ul>
-<li>Packing <em>undefined</em> or <em>null</em> values throw <em>'Argument is not a valid number'</em> error</li>
-<li><em>true</em> is packed as 1</li>
-<li><em>false</em> is packed as 0</li>
+<li><em>undefined</em></li>
+<li><em>null</em></li>
+<li><em>true</em></li>
+<li><em>false</em></li>
 </ul>
+<p>will values throw a <em>'Argument is not a valid number'</em> error.</p>
 <h3>Unpacking and input buffer length</h3>
 <h4>unpack(buffer, theType, index=)</h4>
 <p>When unpacking a single value, a <em>'Bad buffer length'</em> error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the <em>index</em>.</p>

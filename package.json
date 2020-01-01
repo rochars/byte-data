@@ -97,8 +97,8 @@
   "dependencies": {
     "endianness": "^8.0.2",
     "ieee754-buffer": "^1.0.1",
-    "twos-complement-buffer": "0.0.1",
-    "uint-buffer": "^0.1.0",
+    "twos-complement-buffer": "^1.0.0",
+    "uint-buffer": "^1.0.0",
     "utf8-buffer": "^1.0.0"
   }
 }

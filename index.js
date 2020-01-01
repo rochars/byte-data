@@ -244,7 +244,13 @@ function throwValueError_(e, value, i, fp) {
       value === Infinity || value === -Infinity || value !== value)) {
     throw new Error('Argument is not a integer at input index ' + i);
   } else {
-    throw new Error(e.message + ' at input index ' + i + ': ' + value);
+    if (e instanceof RangeError) {
+      throw new Error('Overflow at input index ' + i + ': ' + value);
+    } else if (e instanceof TypeError) {
+      throw new Error('Argument is not a valid number at input index ' + i + ': ' + value);
+    } else {
+      throw new Error(e.message + ' at input index ' + i + ': ' + value);
+    }
   }
 }
 

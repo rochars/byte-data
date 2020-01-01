@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## 17.0.0 (2019-12-31)
+- Packing *true* or *false* result in a "Argument is not a valid number" error
 - New package structure:
 	* dist file is "./dist/byte-data.js", a UMD served as "main"
 	* ES6 source is "./index.js", served as "module"
