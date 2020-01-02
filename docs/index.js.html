@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byte-data.html">byte-data</a><ul class='methods'><li data-type='method'><a href="module-byte-data.html#.pack">pack</a></li><li data-type='method'><a href="module-byte-data.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byte-data.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byte-data.html#.packString">packString</a></li><li data-type='method'><a href="module-byte-data.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byte-data.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byte-data.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byte-data.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byte-data.html#.unpackArrayTo">unpackArrayTo</a></li><li data-type='method'><a href="module-byte-data.html#.unpackString">unpackString</a></li><li data-type='method'><a href="module-byte-data.html#~validateIsNumber">validateIsNumber</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-byte-data.html">byte-data</a><ul class='methods'><li data-type='method'><a href="module-byte-data.html#.pack">pack</a></li><li data-type='method'><a href="module-byte-data.html#.packArray">packArray</a></li><li data-type='method'><a href="module-byte-data.html#.packArrayTo">packArrayTo</a></li><li data-type='method'><a href="module-byte-data.html#.packString">packString</a></li><li data-type='method'><a href="module-byte-data.html#.packStringTo">packStringTo</a></li><li data-type='method'><a href="module-byte-data.html#.packTo">packTo</a></li><li data-type='method'><a href="module-byte-data.html#.unpack">unpack</a></li><li data-type='method'><a href="module-byte-data.html#.unpackArray">unpackArray</a></li><li data-type='method'><a href="module-byte-data.html#.unpackArrayTo">unpackArrayTo</a></li><li data-type='method'><a href="module-byte-data.html#.unpackString">unpackString</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -136,7 +136,10 @@ export function packArrayTo(values, theType, buffer, index=0) {
   let start = index;
   try {
     for (let valuesLen = values.length; i &lt; valuesLen; i++) {
-      validateIsNumber(values[i]);
+      // Only numbers can be packed
+      if (typeof values[i] !== 'number') {
+        throw new TypeError();
+      }
       index = packer.pack(buffer, values[i], index);
     }
     if (theType.be) {
@@ -278,23 +281,17 @@ export function unpack(buffer, theType, index=0) {
 }
 
 /**
- * Throw a value error.
- * @throws {Error} A Error with a message based on the input params.
+ * Throw a error with information about the problem.
+ * @param {!Object} e The Error object that is being raised.
+ * @param {*} value The value that caused the error.
+ * @param {number} index The index of the value that caused the error.
+ * @throws {Error} A Error with a message.
  * @private
  */
-function throwValueError_(e, value, i, fp) {
-  if (!fp &amp;&amp; (
-      value === Infinity || value === -Infinity || value !== value)) {
-    throw new Error('Argument is not a integer at input index ' + i);
-  } else {
-    if (e instanceof RangeError) {
-      throw new Error('Overflow at input index ' + i + ': ' + value);
-    } else if (e instanceof TypeError) {
-      throw new Error('Argument is not a valid number at input index ' + i + ': ' + value);
-    } else {
-      throw new Error(e.message + ' at input index ' + i + ': ' + value);
-    }
-  }
+function throwValueError_(err, value, index) {
+  err.message = err.constructor.name +
+    ' at index ' + index + ': ' + value;
+  throw err;
 }
 
 /**
@@ -315,20 +312,6 @@ function getUnpackLen_(buffer, start, end, offset, safe) {
     throw new Error('Bad buffer length');
   }
   return end - extra;
-}
-
-/**
- * Validate that the value is not null or undefined.
- * @param {*} value The value.
- * @throws {Error} If the value is not Number or Boolean.
- */
-function validateIsNumber(value) {
-  let TYPE_NAN = 'Argument is not a valid number';
-  if (typeof value === 'undefined' || value === null) {
-    throw new Error(TYPE_NAN);
-  } else if (value.constructor !== Number &amp;&amp; value.constructor !== Boolean) {
-    throw new Error(TYPE_NAN);
-  }
 }
 </code></pre>
         </article>

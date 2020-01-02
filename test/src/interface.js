@@ -79,14 +79,14 @@ describe('interface', function() {
             function() {
                 byteData.pack(true, uInt16);
             },
-            /Argument is not a valid number at input index 0: true/);
+            /TypeError at index 0: true/);
     });
     it('pack false uInt16 (0, 0) should raise a NaN error', function() {
         assert.throws(
             function() {
                 byteData.pack(false, uInt16);
             },
-            /Argument is not a valid number at input index 0: false/);
+            /TypeError at index 0: false/);
     });
     //it('pack null uInt16 (0, 0)', function() {
     //    assert.deepEqual(
@@ -214,13 +214,13 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.packArray([0, '1'], uInt16);
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 1/);
+        assert.throws(testFunc, /TypeError at index 1/);
     });
     it('throws errors with correct index when unpacking', function() {
         testFunc = function() {
             byteData.unpackArray([15, 255], uInt4);
         };
-        assert.throws(testFunc, /Overflow at input index 1/);
+        assert.throws(testFunc, /RangeError at index 1/);
     });
     // Integer error messages on invalid input
     it('thows error if packing something other than Number, Boolean or null', function() {
@@ -233,49 +233,49 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 0/);
+        assert.throws(testFunc, /TypeError at index 0/);
     });
     it("null value", function () {
         testFunc = function() {
             byteData.pack(null, {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 0/);
+        assert.throws(testFunc, /TypeError at index 0/);
     });
     it("string value", function () {
         testFunc = function() {
             byteData.pack('c', {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 0/);
+        assert.throws(testFunc, /TypeError at index 0/);
     });
     it("undefined value, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, undefined], {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 1/);
+        assert.throws(testFunc, /TypeError at index 1/);
     });
     it("Infinity value, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, Infinity], {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a integer at input index 1/);
+        assert.throws(testFunc, /RangeError at index 1: Infinity/);
     });
     it("-Infinity value, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, -Infinity], {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a integer at input index 1/);
+        assert.throws(testFunc, /RangeError at index 1: -Infinity/);
     });
     it("NaN value, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, NaN], {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a integer at input index 1/);
+        assert.throws(testFunc, /TypeError at index 1: NaN/);
     });
     it("char, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, 'a'], {"bits": 8});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 1/);
+        assert.throws(testFunc, /TypeError at index 1/);
     });
 
     // Floating-point error messages on invalid input
@@ -289,31 +289,31 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(undefined, {"bits": 32, "fp": true});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 0/);
+        assert.throws(testFunc, /TypeError at index 0/);
     });
     it("null value", function () {
         testFunc = function() {
             byteData.pack(null, {"bits": 32, "fp": true});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 0/);
+        assert.throws(testFunc, /TypeError at index 0/);
     });
     it("string value", function () {
         testFunc = function() {
             byteData.pack('c', {"bits": 32, "fp": true});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 0/);
+        assert.throws(testFunc, /TypeError at index 0/);
     });
     it("undefined value, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, undefined], {"bits": 32, "fp": true});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 1/);
+        assert.throws(testFunc, /TypeError at index 1/);
     });
     it("char, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, 'a'], {"bits": 32, "fp": true});
         };
-        assert.throws(testFunc, /Argument is not a valid number at input index 1/);
+        assert.throws(testFunc, /TypeError at index 1/);
     });
     
     // Bad buffer length on unpack
@@ -335,43 +335,43 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.pack(256, {"bits": 8});
         };
-        assert.throws(testFunc, /Overflow at input index 0: 256/);
+        assert.throws(testFunc, /RangeError at index 0: 256/);
     });
     it("8-bit overflow, negative", function () {
         testFunc = function() {
             byteData.pack(-1, {"bits": 8});
         };
-        assert.throws(testFunc, /Overflow at input index 0/);
+        assert.throws(testFunc, /RangeError at index 0/);
     });
     it("8-bit overflow, negative, index 2", function () {
         testFunc = function() {
             byteData.packArray([1, -1], {"bits": 8});
         };
-        assert.throws(testFunc, /Overflow at input index 1/);
+        assert.throws(testFunc, /RangeError at index 1/);
     });
     it("4-bit overflow on unpack", function () {
         testFunc = function() {
             byteData.unpack([255], {"bits": 4});
         };
-        assert.throws(testFunc, /Overflow at input index 0/);
+        assert.throws(testFunc, /RangeError at index 0/);
     });
     it("4-bit overflow on unpack, input index = 1", function () {
         testFunc = function() {
             byteData.unpackArray([15, 255], {"bits": 4});
         };
-        assert.throws(testFunc, /Overflow at input index 1: 255/);
+        assert.throws(testFunc, /RangeError at index 1: 255/);
     });
     it("4-bit overflow on unpack, input index = 1", function () {
         testFunc = function() {
             byteData.unpackArray([15, 1, 1, 255], {"bits": 4});
         };
-        assert.throws(testFunc, /Overflow at input index 3: 255/);
+        assert.throws(testFunc, /RangeError at index 3: 255/);
     });
     it("9-bit overflow on unpack, input index = 1", function () {
         testFunc = function() {
             byteData.unpackArray([1, 0, 255, 255], {"bits": 9});
         };
-        assert.throws(testFunc, /Overflow at input index 2: 255,255/);
+        assert.throws(testFunc, /RangeError at index 2: 255,255/);
     });
     
     // Invalid types
