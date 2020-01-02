@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 18.0.1 (2020-01-02)
+- Fix throwValueError_ docstring
+
 ## 18.0.0 (2020-01-02)
 - Use RangeError and TypeError instead of just Error
 
