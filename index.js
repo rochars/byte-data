@@ -93,10 +93,6 @@ export function packArrayTo(values, theType, buffer, index=0) {
   let start = index;
   try {
     for (let valuesLen = values.length; i < valuesLen; i++) {
-      // Only numbers can be packed
-      if (typeof values[i] !== 'number') {
-        throw new TypeError();
-      }
       index = packer.pack(buffer, values[i], index);
     }
     if (theType.be) {
