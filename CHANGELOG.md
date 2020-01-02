@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 18.0.2 (2020-01-02)
+- Fix externs file
+- Fix docstrings for better integration with Closure Compiler
+
 ## 18.0.1 (2020-01-02)
 - Fix throwValueError_ docstring
 

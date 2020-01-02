@@ -74,7 +74,7 @@ export default [
         language_in: 'ECMASCRIPT6',
         language_out: 'ECMASCRIPT3',
         compilation_level: 'ADVANCED',
-        warning_level: 'QUIET',
+        warning_level: 'VERBOSE',
         outputWrapper: outputHeader + '%output%' + outputFooter,
         externs: ['externs/byte-data.js']
       }),

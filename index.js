@@ -74,7 +74,8 @@ export function packStringTo(str, buffer, index=0) {
  * Pack a array of numbers to a byte buffer.
  * All other packing functions are interfaces to this function.
  * @param {!Array<number>|!TypedArray} values The value.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to start writing.
  *   Assumes zero if undefined.
@@ -108,7 +109,8 @@ export function packArrayTo(values, theType, buffer, index=0) {
  * Unpack a array of numbers to a typed array.
  * All other unpacking functions are interfaces to this function.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @param {!TypedArray|!Array<number>} output The output array.
  * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
@@ -153,7 +155,8 @@ export function unpackArrayTo(
 /**
  * Pack a number to a byte buffer.
  * @param {number} value The value.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to write. Assumes 0 if undefined.
  * @return {number} The next index to write.
@@ -168,7 +171,8 @@ export function packTo(value, theType, buffer, index=0) {
 /**
  * Pack a number as a byte buffer.
  * @param {number} value The number.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow.
@@ -184,7 +188,8 @@ export function pack(value, theType) {
 /**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array<number>|!TypedArray} values The values.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow.
@@ -200,7 +205,8 @@ export function packArray(values, theType) {
 /**
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
@@ -224,7 +230,8 @@ export function unpackArray(
 /**
  * Unpack a number from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
+ * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+    The type definition.
  * @param {number=} index The buffer index to read. Assumes zero if undefined.
  * @return {number}
  * @throws {Error} If the type definition is not valid
