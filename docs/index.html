@@ -154,7 +154,7 @@ packTo(402, {bits: 16}, buffer);
 <li><em>true</em></li>
 <li><em>false</em></li>
 </ul>
-<p>will values throw a <em>'Argument is not a valid number'</em> error.</p>
+<p>will values throw a <em>TypeError</em>.</p>
 <h3>Unpacking and input buffer length</h3>
 <h4>unpack(buffer, theType, index=)</h4>
 <p>When unpacking a single value, a <em>'Bad buffer length'</em> error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the <em>index</em>.</p>
@@ -194,9 +194,9 @@ byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true);
 <p>Currently only 16-bit half-precision.</p>
 <h3>Integers</h3>
 <ul>
-<li>Overflow on integers will throw a <em>&quot;Overflow&quot;</em> error.</li>
-<li>packing NaN will throw a 'Argument is not a integer' error.</li>
-<li>packing Infinity or -Infinity will throw a 'Argument is not a integer' error.</li>
+<li>Overflow on integers will throw a <em>RangeError</em>.</li>
+<li>packing NaN will throw a <em>TypeError</em>.</li>
+<li>packing Infinity or -Infinity will throw a <em>RangeError</em>.</li>
 </ul>
 <h4>Signed integers</h4>
 <p>Signed integers are <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two's complement</a>.</p>
@@ -269,7 +269,8 @@ function packStringTo(str, buffer, index=0) {}
  * @param {!Object} theType The type definition.
  * @return {!Array&lt;number>} The packed value.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 function pack(value, theType) {}
 
@@ -281,7 +282,8 @@ function pack(value, theType) {}
  * @param {number=} index The buffer index to write. Assumes 0 if undefined.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 function packTo(value, theType, buffer, index=0) {}
 
@@ -291,12 +293,14 @@ function packTo(value, theType, buffer, index=0) {}
  * @param {!Object} theType The type definition.
  * @return {!Array&lt;number>} The packed values.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values are not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 function packArray(values, theType) {}
 
 /**
  * Pack a array of numbers to a byte buffer.
+ * All other packing functions are interfaces to this function.
  * @param {!Array&lt;number>|!TypedArray} values The value.
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array&lt;number>} buffer The output buffer.
@@ -304,7 +308,8 @@ function packArray(values, theType) {}
  *   Assumes zero if undefined.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 function packArrayTo(values, theType, buffer, index=0) {}
 
@@ -316,6 +321,7 @@ function packArrayTo(values, theType, buffer, index=0) {}
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
+ * @throws {RangeError} On overflow
  */
 function unpack(buffer, theType, index=0) {}
 
@@ -333,16 +339,18 @@ function unpack(buffer, theType, index=0) {}
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
+ * @throws {RangeError} On overflow
  */
 function unpackArray(
   buffer, theType, start=0, end=buffer.length, safe=false) {}
 
 /**
  * Unpack a array of numbers to a typed array.
+ * All other unpacking functions are interfaces to this function.
  * @param {!Uint8Array|!Array&lt;number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {!TypedArray|!Array&lt;number>} output The output array.
- * @param {number=} index The buffer index to start reading.
+ * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
  * @param {number=} end The buffer index to stop reading.
  *   Assumes the buffer length if undefined.
@@ -351,6 +359,7 @@ function unpackArray(
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @throws {Error} If the type definition is not valid
+ * @throws {RangeError} On overflow
  */
 function unpackArrayTo(
   buffer, theType, output, index=0, end=buffer.length, safe=false) {}

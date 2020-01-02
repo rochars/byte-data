@@ -80,7 +80,8 @@ export function packStringTo(str, buffer, index=0) {
  *   Assumes zero if undefined.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 export function packArrayTo(values, theType, buffer, index=0) {
   theType = theType || {};
@@ -122,7 +123,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @throws {Error} If the type definition is not valid
- * @throws {Error} On overflow
+ * @throws {RangeError} On overflow
  */
 export function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
@@ -161,7 +162,8 @@ export function unpackArrayTo(
  * @param {number=} index The buffer index to write. Assumes 0 if undefined.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 export function packTo(value, theType, buffer, index=0) {
   return packArrayTo([value], theType, buffer, index);
@@ -173,7 +175,8 @@ export function packTo(value, theType, buffer, index=0) {
  * @param {!Object} theType The type definition.
  * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 export function pack(value, theType) {
   /** @type {!Array<number>} */
@@ -188,7 +191,8 @@ export function pack(value, theType) {
  * @param {!Object} theType The type definition.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values are not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 export function packArray(values, theType) {
   /** @type {!Array<number>} */
@@ -211,7 +215,7 @@ export function packArray(values, theType) {
  *   will throw a 'Bad buffer length' error. Defaults to false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
- * @throws {Error} On overflow
+ * @throws {RangeError} On overflow
  */
 export function unpackArray(
     buffer, theType, start=0, end=buffer.length, safe=false) {
@@ -229,7 +233,7 @@ export function unpackArray(
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
- * @throws {Error} On overflow
+ * @throws {RangeError} On overflow
  */
 export function unpack(buffer, theType, index=0) {
   return unpackArray(
@@ -241,7 +245,7 @@ export function unpack(buffer, theType, index=0) {
  * @param {!Object} e The Error object that is being raised.
  * @param {*} value The value that caused the error.
  * @param {number} index The index of the value that caused the error.
- * @throws {Error} A Error with a message.
+ * @throws {RangeError|TypeError|Error} A Error with a message.
  * @private
  */
 function throwValueError_(err, value, index) {
