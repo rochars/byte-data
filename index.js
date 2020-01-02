@@ -99,7 +99,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
       endianness(buffer, packer.offset, start, index);
     }
   } catch (e) {
-    throwValueError_(e, values[i], i, theType.fp);
+    throwValueError_(e, values[i], i);
   }
   return index;
 }
@@ -146,7 +146,7 @@ export function unpackArrayTo(
       endianness(buffer, offset, start, end);
     }
   } catch (e) {
-    throwValueError_(e, buffer.slice(j, j + offset), j, theType.fp);
+    throwValueError_(e, buffer.slice(j, j + offset), j);
   }
 }
 
