@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 18.0.3 (2020-01-02)
+- Fix docstrings for better integration with Closure Compiler
+
 ## 18.0.2 (2020-01-02)
 - Fix externs file
 - Fix docstrings for better integration with Closure Compiler

@@ -86,7 +86,7 @@ export function packStringTo(str, buffer, index=0) {
  */
 export function packArrayTo(values, theType, buffer, index=0) {
   theType = theType || {};
-  /** @type {NumberBuffer} */
+  /** @type {Object} */
   let packer = new NumberBuffer(theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let i = 0;
@@ -126,7 +126,7 @@ export function packArrayTo(values, theType, buffer, index=0) {
 export function unpackArrayTo(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {
   theType = theType || {};
-  /** @type {NumberBuffer} */
+  /** @type {Object} */
   let packer = new NumberBuffer(theType.bits, theType.fp, theType.signed);
   /** @type {number} */
   let offset = packer.offset;
