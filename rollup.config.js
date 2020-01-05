@@ -38,7 +38,7 @@ import compiler from '@ampproject/rollup-plugin-closure-compiler';
  */
 
 // Polyfills for the UMD to work anywhere
-let polyfills = fs.readFileSync('./scripts/polyfills.min.js', 'utf8');
+let polyfills = fs.readFileSync('./scripts/polyfills.js', 'utf8');
 
 // A custom UMD wrapper
 let outputHeader = 
@@ -77,6 +77,13 @@ export default [
         warning_level: 'VERBOSE',
         outputWrapper: outputHeader + '%output%' + outputFooter,
         externs: ['externs/byte-data.js']
+      }),
+      // use closure compiler again to minify everything
+      compiler({
+        language_in: 'ECMASCRIPT6',
+        language_out: 'ECMASCRIPT6',
+        compilation_level: 'SIMPLE',
+        warning_level: 'QUIET'
       }),
     ]
   }

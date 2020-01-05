@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 18.0.4 (2020-01-04)
+- Remove unecessary polyfills
+- Use only polyfills that do not pollute the global scope
+
 ## 18.0.3 (2020-01-02)
 - Fix docstrings for better integration with Closure Compiler
 
