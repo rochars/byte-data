@@ -198,7 +198,7 @@ byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true);
 <li>packing NaN will throw a <em>TypeError</em>.</li>
 <li>packing Infinity or -Infinity will throw a <em>RangeError</em>.</li>
 </ul>
-<p>To avoid RangeError, set the optional <em>clamp</em> param to true when packing:</p>
+<p>To clamp integers on overflow and avoid <em>RangeError</em>, set the optional <em>clamp</em> param to true:</p>
 <pre class="prettyprint source lang-javascript"><code>// Set clamp to true; values will be packed
 // as their max and min values on overflow
 pack(value, theType, true);

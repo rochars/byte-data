@@ -169,7 +169,7 @@ Currently only 16-bit half-precision.
 - packing NaN will throw a *TypeError*.
 - packing Infinity or -Infinity will throw a *RangeError*.
 
-To avoid RangeError, set the optional *clamp* param to true when packing:
+To clamp integers on overflow and avoid *RangeError*, set the optional *clamp* param to true:
 ```javascript
 // Set clamp to true; values will be packed
 // as their max and min values on overflow

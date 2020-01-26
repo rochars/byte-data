@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 18.1.0 (2020-01-05)
+## 18.1.0 (2020-01-26)
 - Add optional boolean param 'clamp' to all packing functions; when set to true, overflows on integers will be clamped instead of throwing a RangeError. Default is false.
 
 ## 18.0.4 (2020-01-04)
