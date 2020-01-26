@@ -81,7 +81,7 @@
 
     
 
-    <h4 class="name" id=".pack"><span class="type-signature">(static) </span>pack<span class="signature">(value, theType)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".pack"><span class="type-signature">(static) </span>pack<span class="signature">(value, theType<span class="signature-attributes">non-null</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line181">line 181</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line189">line 189</a>
     </li></ul></dd>
     
 
@@ -159,6 +159,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -184,6 +186,14 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -207,10 +217,51 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">The type definition.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
         </tr>
 
     
@@ -345,7 +396,7 @@
 
     
 
-    <h4 class="name" id=".packArray"><span class="type-signature">(static) </span>packArray<span class="signature">(values, theType)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".packArray"><span class="type-signature">(static) </span>packArray<span class="signature">(values, theType<span class="signature-attributes">non-null</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -357,7 +408,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line198">line 198</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line207">line 207</a>
     </li></ul></dd>
     
 
@@ -423,6 +474,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -451,6 +504,14 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -474,10 +535,51 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last">The type definition.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
         </tr>
 
     
@@ -612,7 +714,7 @@
 
     
 
-    <h4 class="name" id=".packArrayTo"><span class="type-signature">(static) </span>packArrayTo<span class="signature">(values, theType, buffer, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".packArrayTo"><span class="type-signature">(static) </span>packArrayTo<span class="signature">(values, theType, buffer, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -624,7 +726,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line87">line 87</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line89">line 89</a>
     </li></ul></dd>
     
 
@@ -833,6 +935,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -976,7 +1111,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line53">line 53</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line54">line 54</a>
     </li></ul></dd>
     
 
@@ -1134,7 +1269,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line68">line 68</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -1357,7 +1492,7 @@
 
     
 
-    <h4 class="name" id=".packTo"><span class="type-signature">(static) </span>packTo<span class="signature">(value, theType, buffer, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".packTo"><span class="type-signature">(static) </span>packTo<span class="signature">(value, theType, buffer, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1369,7 +1504,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line167">line 167</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -1575,6 +1710,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1706,7 +1874,7 @@
 
     
 
-    <h4 class="name" id=".unpack"><span class="type-signature">(static) </span>unpack<span class="signature">(buffer, theType, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".unpack"><span class="type-signature">(static) </span>unpack<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1718,7 +1886,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line241">line 241</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line252">line 252</a>
     </li></ul></dd>
     
 
@@ -1893,6 +2061,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2020,7 +2221,7 @@
 
     
 
-    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -2032,7 +2233,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line222">line 222</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line232">line 232</a>
     </li></ul></dd>
     
 
@@ -2273,6 +2474,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2373,7 +2607,7 @@
 
     
 
-    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType, output, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType, output, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2385,7 +2619,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line126">line 126</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -2660,6 +2894,39 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2754,7 +3021,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line44">line 44</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line45">line 45</a>
     </li></ul></dd>
     
 

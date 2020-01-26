@@ -62,14 +62,15 @@ byteData.packStringTo = function(str, buffer, index=0) {};
 /**
  * Pack a number as a byte buffer.
  * @param {number} value The number.
- * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+ * @param {!{bits:number, fp: boolean, signed: boolean, be: boolean}} theType
     The type definition.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow.
  * @throws {TypeError} If input is not valid.
  */
-byteData.pack = function(value, theType) {};
+byteData.pack = function(value, theType, clamp=false) {};
 
 /**
  * Pack a number to a byte buffer.
@@ -78,24 +79,26 @@ byteData.pack = function(value, theType) {};
     The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to write. Assumes 0 if undefined.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow.
  * @throws {TypeError} If input is not valid.
  */
-byteData.packTo = function(value, theType, buffer, index=0) {};
+byteData.packTo = function(value, theType, buffer, index=0, clamp=false) {};
 
 /**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array<number>|!TypedArray} values The values.
- * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+ * @param {!{bits:number, fp: boolean, signed: boolean, be: boolean}} theType
     The type definition.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow.
  * @throws {TypeError} If input is not valid.
  */
-byteData.packArray = function(values, theType) {};
+byteData.packArray = function(values, theType, clamp=false) {};
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -106,30 +109,33 @@ byteData.packArray = function(values, theType) {};
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to start writing.
  *   Assumes zero if undefined.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow.
  * @throws {TypeError} If input is not valid.
  */
-byteData.packArrayTo = function(values, theType, buffer, index=0) {};
+byteData.packArrayTo = function(values, theType, buffer, index=0,
+	clamp=false) {};
 
 /**
  * Unpack a number from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+ * @param {!{bits:number, fp: boolean, signed: boolean, be: boolean}} theType
     The type definition.
  * @param {number=} index The buffer index to read. Assumes zero if undefined.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
  * @throws {RangeError} On overflow
  */
-byteData.unpack = function(buffer, theType, index=0) {};
+byteData.unpack = function(buffer, theType, index=0, clamp=false) {};
 
 /**
  * Unpack an array of numbers from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param { {bits:number, fp: boolean, signed: boolean, be: boolean} } theType
+ * @param {!{bits:number, fp: boolean, signed: boolean, be: boolean}} theType
     The type definition.
  * @param {number=} start The buffer index to start reading.
  *   Assumes zero if undefined.
@@ -139,12 +145,13 @@ byteData.unpack = function(buffer, theType, index=0) {};
  *   the array are ignored and input buffers with insufficient bytes will
  *   output a empty array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
 byteData.unpackArray = function(
-	buffer, theType, start=0, end=buffer.length, safe=false) {};
+	buffer, theType, start=0, end=buffer.length, safe=false, clamp=false) {};
 
 /**
  * Unpack a array of numbers to a typed array.
@@ -161,8 +168,10 @@ byteData.unpackArray = function(
  *   the array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
 byteData.unpackArrayTo = function(
-	buffer, theType, output, start=0, end=buffer.length, safe=false) {};
+	buffer, theType, output, start=0, end=buffer.length,
+	safe=false, clamp=false) {};

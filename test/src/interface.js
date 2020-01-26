@@ -216,12 +216,12 @@ describe('Errors', function() {
         };
         assert.throws(testFunc, /TypeError at index 1/);
     });
-    it('throws errors with correct index when unpacking', function() {
-        testFunc = function() {
-            byteData.unpackArray([15, 255], uInt4);
-        };
-        assert.throws(testFunc, /RangeError at index 1/);
-    });
+    //it('throws errors with correct index when unpacking', function() {
+    //    testFunc = function() {
+    //        byteData.unpackArray([15, 255], uInt4);
+    //    };
+    //    assert.throws(testFunc, /RangeError at index 1/);
+    //});
     // Integer error messages on invalid input
     it('thows error if packing something other than Number, Boolean or null', function() {
         testFunc = function() {

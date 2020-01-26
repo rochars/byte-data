@@ -41,13 +41,15 @@ export function packStringTo(
  * Pack a number as a byte buffer.
  * @param {number} value The number.
  * @param {!Object} theType The type definition.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
  */
 export function pack(
 	value: number,
-	theType: object): number[];
+	theType: object,
+	clamp?: boolean): number[];
 
 /**
  * Pack a number to a byte buffer.
@@ -55,6 +57,7 @@ export function pack(
  * @param {!Object} theType The type definition.
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to write. Assumes 0 if undefined.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
@@ -63,19 +66,22 @@ export function packTo(
 	value: number,
 	theType: object,
 	buffer: Uint8Array|number[],
-	index?: number): number;
+	index?: number,
+	clamp?: boolean): number;
 
 /**
  * Pack an array of numbers as a byte buffer.
  * @param {!Array<number>|!TypedArray} values The values.
  * @param {!Object} theType The type definition.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If any of the values are not valid.
  */
 export function packArray(
 	values: number[]|ArrayBufferView,
-	theType: object): number[];
+	theType: object,
+	clamp?: boolean): number[];
 
 /**
  * Pack a array of numbers to a byte buffer.
@@ -84,6 +90,7 @@ export function packArray(
  * @param {!Uint8Array|!Array<number>} buffer The output buffer.
  * @param {number=} index The buffer index to start writing.
  *   Assumes zero if undefined.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
  * @throws {Error} If the value is not valid.
@@ -92,13 +99,15 @@ export function packArrayTo(
 	values: number[]|ArrayBufferView,
 	theType: object,
 	buffer: Uint8Array|number[],
-	index?: number): number;
+	index?: number,
+	clamp?: boolean): number;
 
 /**
  * Unpack a number from a byte buffer.
  * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
  * @param {!Object} theType The type definition.
  * @param {number=} index The buffer index to read. Assumes zero if undefined.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
@@ -106,7 +115,8 @@ export function packArrayTo(
 export function unpack(
 	buffer: Uint8Array|number[],
 	theType: object,
-	index?: number): number;
+	index?: number,
+	clamp?: boolean): number;
 
 /**
  * Unpack an array of numbers from a byte buffer.
@@ -120,6 +130,7 @@ export function unpack(
  *   the array are ignored and input buffers with insufficient bytes will
  *   output a empty array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  */
@@ -128,7 +139,8 @@ export function unpackArray(
 	theType: object,
 	start?: number,
 	end?: number,
-	safe?: boolean): number[];
+	safe?: boolean,
+	clamp?: boolean): number[];
 
 /**
  * Unpack a array of numbers to a typed array.
@@ -143,6 +155,7 @@ export function unpackArray(
  *   the array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error. Defaults to false.
+ * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
  * @throws {Error} If the type definition is not valid
  */
 export function unpackArrayTo(
@@ -151,4 +164,5 @@ export function unpackArrayTo(
 	output: ArrayBufferView|number[],
 	start?: number,
 	end?: number,
-	safe?: boolean): void;
+	safe?: boolean,
+	clamp?: boolean): void;
