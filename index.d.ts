@@ -5,10 +5,9 @@
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
- * @param {!Uint8Array|!Array<number>} buffer A byte buffer.
- * @param {number=} index The buffer index to start reading.
- * @param {number=} end The buffer index to stop reading, non inclusive.
- *   Assumes buffer length if undefined.
+ * @param {!(Uint8Array|Array<number>)} buffer A byte buffer.
+ * @param {number} [index=0] The buffer index to start reading.
+ * @param {number} [end=buffer.length] The index to stop reading, non inclusive.
  * @return {string}
  */
 export function unpackString(
@@ -20,16 +19,15 @@ export function unpackString(
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The UTF-8 string bytes.
- */ 
+ */
 export function packString(
 	str: string): number[];
 
 /**
  * Write a string of UTF-8 characters to a byte buffer.
  * @param {string} str The string to pack.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The buffer index to start writing.
- *   Assumes zero if undefined.
+ * @param {!(Uint8Array|Array<number>)} buffer The output buffer.
+ * @param {number} [index=0] The buffer index to start writing.
  * @return {number} The next index to write in the buffer.
  */
 export function packStringTo(
@@ -37,63 +35,19 @@ export function packStringTo(
 	buffer: Uint8Array|number[],
 	index?: number): number;
 
-/**
- * Pack a number as a byte buffer.
- * @param {number} value The number.
- * @param {!Object} theType The type definition.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
- * @return {!Array<number>} The packed value.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-export function pack(
-	value: number,
-	theType: object,
-	clamp?: boolean): number[];
-
-/**
- * Pack a number to a byte buffer.
- * @param {number} value The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The buffer index to write. Assumes 0 if undefined.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
- * @return {number} The next index to write.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
- */
-export function packTo(
-	value: number,
-	theType: object,
-	buffer: Uint8Array|number[],
-	index?: number,
-	clamp?: boolean): number;
-
-/**
- * Pack an array of numbers as a byte buffer.
- * @param {!Array<number>|!TypedArray} values The values.
- * @param {!Object} theType The type definition.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
- * @return {!Array<number>} The packed values.
- * @throws {Error} If the type definition is not valid.
- * @throws {Error} If any of the values are not valid.
- */
-export function packArray(
-	values: number[]|ArrayBufferView,
-	theType: object,
-	clamp?: boolean): number[];
-
+// Numbers
 /**
  * Pack a array of numbers to a byte buffer.
- * @param {!Array<number>|!TypedArray} values The value.
- * @param {!Object} theType The type definition.
- * @param {!Uint8Array|!Array<number>} buffer The output buffer.
- * @param {number=} index The buffer index to start writing.
- *   Assumes zero if undefined.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
+ * All other packing functions are interfaces to this function.
+ * @param {!(Array<number>|TypedArray)} values The values to pack.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {!(Uint8Array|Array<number>)} buffer The buffer to write on.
+ * @param {number} [index=0] The buffer index to start writing.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {Error} If the value is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
  */
 export function packArrayTo(
 	values: number[]|ArrayBufferView,
@@ -103,36 +57,93 @@ export function packArrayTo(
 	clamp?: boolean): number;
 
 /**
- * Unpack a number from a byte buffer.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @param {number=} index The buffer index to read. Assumes zero if undefined.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
- * @return {number}
+ * Unpack a array of numbers from a byte buffer to a array or a typed array.
+ * All other unpacking functions are interfaces to this function.
+ * @param {!(Uint8Array|Array<number>)} buffer The byte buffer.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {!(TypedArray|Array<number>)} output The output array or typed array.
+ * @param {number} [start=0] The buffer index to start reading.
+ * @param {number} [end=buffer.length] The buffer index to stop reading.
+ * @param {boolean} [safe=false] If set to false, extra bytes in the end of
+ *   the array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
+ * @throws {RangeError} On overflow
  */
-export function unpack(
+export function unpackArrayTo(
 	buffer: Uint8Array|number[],
 	theType: object,
+	output: ArrayBufferView|number[],
+	start?: number,
+	end?: number,
+	safe?: boolean,
+	clamp?: boolean): void;
+
+/**
+ * Pack a number to a byte buffer.
+ * @param {number} value The value.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {!(Uint8Array|Array<number>)} buffer The byte buffer to write on.
+ * @param {number} [index=0] The buffer index to write.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
+ * @return {number} The next index to write.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
+ */
+export function packTo(
+	value: number,
+	theType: object,
+	buffer: Uint8Array|number[],
 	index?: number,
 	clamp?: boolean): number;
 
 /**
- * Unpack an array of numbers from a byte buffer.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @param {number=} start The buffer index to start reading.
- *   Assumes zero if undefined.
- * @param {number=} end The buffer index to stop reading.
- *   Assumes the buffer length if undefined.
- * @param {boolean=} safe If set to false, extra bytes in the end of
+ * Pack a number as a array of bytes.
+ * @param {number} value The number to pack.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
+ * @return {!Array<number>} The packed value.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
+ */
+export function pack(
+	value: number,
+	theType: object,
+	clamp?: boolean): number[];
+
+/**
+ * Pack a array of numbers as a array of bytes.
+ * @param {!(Array<number>|TypedArray)} values The values to pack.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
+ * @return {!Array<number>} The packed values.
+ * @throws {Error} If the type definition is not valid.
+ * @throws {RangeError} On overflow.
+ * @throws {TypeError} If input is not valid.
+ */
+export function packArray(
+	values: number[]|ArrayBufferView,
+	theType: object,
+	clamp?: boolean): number[];
+
+/**
+ * Unpack a array of numbers from a byte buffer.
+ * @param {!(Uint8Array|Array<number>)} buffer The byte buffer.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {number} [start=0] The buffer index to start reading.
+ * @param {number} [end=buffer.length] The buffer index to stop reading.
+ * @param {boolean} [safe=false] If set to false, extra bytes in the end of
  *   the array are ignored and input buffers with insufficient bytes will
  *   output a empty array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error. Defaults to false.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
+ *   will throw a 'Bad buffer length' error.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
+ * @throws {RangeError} On overflow
  */
 export function unpackArray(
 	buffer: Uint8Array|number[],
@@ -143,26 +154,18 @@ export function unpackArray(
 	clamp?: boolean): number[];
 
 /**
- * Unpack a array of numbers to a typed array.
- * @param {!Uint8Array|!Array<number>} buffer The byte buffer.
- * @param {!Object} theType The type definition.
- * @param {!TypedArray|!Array<number>} output The output array.
- * @param {number=} start The buffer index to start reading.
- *   Assumes zero if undefined.
- * @param {number=} end The buffer index to stop reading.
- *   Assumes the buffer length if undefined.
- * @param {boolean=} safe If set to false, extra bytes in the end of
- *   the array are ignored and input buffers with insufficient bytes will
- *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error. Defaults to false.
- * @param {boolean=} clamp True to clamp ints on overflow. Default is false.
+ * Unpack a number from a byte buffer.
+ * @param {!(Uint8Array|Array<number>)} buffer The byte buffer.
+ * @param {!{bits:number, fp: (boolean|undefined), signed: (boolean|undefined), be: (boolean|undefined)}} theType The type definition.
+ * @param {number} [index=0] The buffer index to read.
+ * @param {boolean} [clamp=false] True to clamp ints on overflow.
+ * @return {number}
  * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
+ * @throws {RangeError} On overflow
  */
-export function unpackArrayTo(
+export function unpack(
 	buffer: Uint8Array|number[],
 	theType: object,
-	output: ArrayBufferView|number[],
-	start?: number,
-	end?: number,
-	safe?: boolean,
-	clamp?: boolean): void;
+	index?: number,
+	clamp?: boolean): number;

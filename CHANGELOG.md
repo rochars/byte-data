@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 18.1.1 (2020-01-26)
+- Fix type definitions in docstrings to ease integration with Closure Compiler:
+  * The only required attribute in the type definition is the number of bits
+- Add the default value of optional parameters to docstrings
+
 ## 18.1.0 (2020-01-26)
 - Add optional boolean param 'clamp' to all packing functions; when set to true, overflows on integers will be clamped instead of throwing a RangeError. Default is false.
 

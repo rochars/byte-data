@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line189">line 189</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -133,7 +133,7 @@
 
 
 <div class="description">
-    Pack a number as a byte buffer.
+    Pack a number as a array of bytes.
 </div>
 
 
@@ -162,6 +162,8 @@
         <th>Attributes</th>
         
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -196,8 +198,12 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The number.</td>
+            <td class="description last">The number to pack.</td>
         </tr>
 
     
@@ -226,6 +232,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The type definition.</td>
@@ -260,8 +270,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -396,7 +412,7 @@
 
     
 
-    <h4 class="name" id=".packArray"><span class="type-signature">(static) </span>packArray<span class="signature">(values, theType<span class="signature-attributes">non-null</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".packArray"><span class="type-signature">(static) </span>packArray<span class="signature">(values<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -408,7 +424,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line207">line 207</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -448,7 +464,7 @@
 
 
 <div class="description">
-    Pack an array of numbers as a byte buffer.
+    Pack a array of numbers as a array of bytes.
 </div>
 
 
@@ -478,6 +494,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -494,7 +512,7 @@
             <td class="type">
             
                 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 |
 
 <span class="param-type">TypedArray</span>
@@ -514,8 +532,12 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The values.</td>
+            <td class="description last">The values to pack.</td>
         </tr>
 
     
@@ -544,6 +566,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The type definition.</td>
@@ -578,8 +604,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -714,7 +746,7 @@
 
     
 
-    <h4 class="name" id=".packArrayTo"><span class="type-signature">(static) </span>packArrayTo<span class="signature">(values, theType, buffer, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".packArrayTo"><span class="type-signature">(static) </span>packArrayTo<span class="signature">(values<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, buffer<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -726,7 +758,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line89">line 89</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line88">line 88</a>
     </li></ul></dd>
     
 
@@ -796,6 +828,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -812,7 +846,7 @@
             <td class="type">
             
                 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 |
 
 <span class="param-type">TypedArray</span>
@@ -832,8 +866,12 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The value.</td>
+            <td class="description last">The values to pack.</td>
         </tr>
 
     
@@ -863,6 +901,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">The type definition.</td>
         </tr>
@@ -880,7 +922,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -897,8 +939,12 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The output buffer.</td>
+            <td class="description last">The buffer to write on.</td>
         </tr>
 
     
@@ -930,8 +976,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to start writing.  Assumes zero if undefined.</td>
+            <td class="description last">The buffer index to start writing.</td>
         </tr>
 
     
@@ -963,8 +1015,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -1111,7 +1169,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line54">line 54</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
@@ -1257,7 +1315,7 @@
 
     
 
-    <h4 class="name" id=".packStringTo"><span class="type-signature">(static) </span>packStringTo<span class="signature">(str, buffer, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".packStringTo"><span class="type-signature">(static) </span>packStringTo<span class="signature">(str, buffer<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1269,7 +1327,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line69">line 69</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -1339,6 +1397,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1372,6 +1432,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">The string to pack.</td>
         </tr>
@@ -1389,7 +1453,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -1405,6 +1469,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The output buffer.</td>
@@ -1439,8 +1507,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to start writing.  Assumes zero if undefined.</td>
+            <td class="description last">The buffer index to start writing.</td>
         </tr>
 
     
@@ -1492,7 +1566,7 @@
 
     
 
-    <h4 class="name" id=".packTo"><span class="type-signature">(static) </span>packTo<span class="signature">(value, theType, buffer, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".packTo"><span class="type-signature">(static) </span>packTo<span class="signature">(value, theType<span class="signature-attributes">non-null</span>, buffer<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1504,7 +1578,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line174">line 174</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -1574,6 +1648,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1607,6 +1683,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">The value.</td>
         </tr>
@@ -1638,6 +1718,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">The type definition.</td>
         </tr>
@@ -1655,7 +1739,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -1672,8 +1756,12 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The output buffer.</td>
+            <td class="description last">The byte buffer to write on.</td>
         </tr>
 
     
@@ -1705,8 +1793,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to write. Assumes 0 if undefined.</td>
+            <td class="description last">The buffer index to write.</td>
         </tr>
 
     
@@ -1738,8 +1832,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -1874,7 +1974,7 @@
 
     
 
-    <h4 class="name" id=".unpack"><span class="type-signature">(static) </span>unpack<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id=".unpack"><span class="type-signature">(static) </span>unpack<span class="signature">(buffer<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1886,7 +1986,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line252">line 252</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line259">line 259</a>
     </li></ul></dd>
     
 
@@ -1956,6 +2056,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1975,7 +2077,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -1991,6 +2093,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The byte buffer.</td>
@@ -2022,6 +2128,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The type definition.</td>
@@ -2056,8 +2166,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to read. Assumes zero if undefined.</td>
+            <td class="description last">The buffer index to read.</td>
         </tr>
 
     
@@ -2089,8 +2205,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -2221,7 +2343,7 @@
 
     
 
-    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer, theType<span class="signature-attributes">non-null</span>, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+    <h4 class="name" id=".unpackArray"><span class="type-signature">(static) </span>unpackArray<span class="signature">(buffer<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
 
     
 
@@ -2233,7 +2355,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line232">line 232</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line237">line 237</a>
     </li></ul></dd>
     
 
@@ -2273,7 +2395,7 @@
 
 
 <div class="description">
-    Unpack an array of numbers from a byte buffer.
+    Unpack a array of numbers from a byte buffer.
 </div>
 
 
@@ -2303,6 +2425,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -2322,7 +2446,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -2338,6 +2462,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The byte buffer.</td>
@@ -2369,6 +2497,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The type definition.</td>
@@ -2403,8 +2535,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to start reading.  Assumes zero if undefined.</td>
+            <td class="description last">The buffer index to start reading.</td>
         </tr>
 
     
@@ -2436,8 +2574,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>buffer.length</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to stop reading.  Assumes the buffer length if undefined.</td>
+            <td class="description last">The buffer index to stop reading.</td>
         </tr>
 
     
@@ -2469,8 +2613,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">If set to false, extra bytes in the end of  the array are ignored and input buffers with insufficient bytes will  output a empty array. If safe is set to true the function  will throw a 'Bad buffer length' error. Defaults to false.</td>
+            <td class="description last">If set to false, extra bytes in the end of  the array are ignored and input buffers with insufficient bytes will  output a empty array. If safe is set to true the function  will throw a 'Bad buffer length' error.</td>
         </tr>
 
     
@@ -2502,8 +2652,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -2607,7 +2763,7 @@
 
     
 
-    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer, theType, output, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".unpackArrayTo"><span class="type-signature">(static) </span>unpackArrayTo<span class="signature">(buffer<span class="signature-attributes">non-null</span>, theType<span class="signature-attributes">non-null</span>, output<span class="signature-attributes">non-null</span>, start<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>, safe<span class="signature-attributes">opt</span>, clamp<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2619,7 +2775,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line131">line 131</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -2659,7 +2815,7 @@
 
 
 <div class="description">
-    Unpack a array of numbers to a typed array.All other unpacking functions are interfaces to this function.
+    Unpack a array of numbers from a byte buffer to a array or a typed array.All other unpacking functions are interfaces to this function.
 </div>
 
 
@@ -2689,6 +2845,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -2708,7 +2866,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -2724,6 +2882,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">The byte buffer.</td>
@@ -2756,6 +2918,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">The type definition.</td>
         </tr>
@@ -2773,7 +2939,7 @@
 <span class="param-type">TypedArray</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -2790,8 +2956,12 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">The output array.</td>
+            <td class="description last">The output array or typed array.</td>
         </tr>
 
     
@@ -2823,8 +2993,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to start reading.  Assumes zero if undefined.</td>
+            <td class="description last">The buffer index to start reading.</td>
         </tr>
 
     
@@ -2856,8 +3032,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>buffer.length</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to stop reading.  Assumes the buffer length if undefined.</td>
+            <td class="description last">The buffer index to stop reading.</td>
         </tr>
 
     
@@ -2889,8 +3071,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">If set to false, extra bytes in the end of  the array are ignored and input buffers with insufficient bytes will  write nothing to the output array. If safe is set to true the function  will throw a 'Bad buffer length' error. Defaults to false.</td>
+            <td class="description last">If set to false, extra bytes in the end of  the array are ignored and input buffers with insufficient bytes will  write nothing to the output array. If safe is set to true the function  will throw a 'Bad buffer length' error.</td>
         </tr>
 
     
@@ -2922,8 +3110,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
 
-            <td class="description last">True to clamp ints on overflow. Default is false.</td>
+            <td class="description last">True to clamp ints on overflow.</td>
         </tr>
 
     
@@ -3009,7 +3203,7 @@
 
     
 
-    <h4 class="name" id=".unpackString"><span class="type-signature">(static) </span>unpackString<span class="signature">(buffer, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id=".unpackString"><span class="type-signature">(static) </span>unpackString<span class="signature">(buffer<span class="signature-attributes">non-null</span>, index<span class="signature-attributes">opt</span>, end<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
 
@@ -3021,7 +3215,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line45">line 45</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -3091,6 +3285,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -3110,7 +3306,7 @@
 <span class="param-type">Uint8Array</span>
 |
 
-<span class="param-type">!Array.&lt;number></span>
+<span class="param-type">Array.&lt;number></span>
 
 
             
@@ -3126,6 +3322,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">A byte buffer.</td>
@@ -3160,6 +3360,12 @@
             
 
             
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
 
             <td class="description last">The buffer index to start reading.</td>
         </tr>
@@ -3193,8 +3399,14 @@
             
 
             
+                <td class="default">
+                
+                    <code>buffer.length</code>
+                
+                </td>
+            
 
-            <td class="description last">The buffer index to stop reading, non inclusive.  Assumes buffer length if undefined.</td>
+            <td class="description last">The index to stop reading, non inclusive.</td>
         </tr>
 
     
