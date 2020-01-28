@@ -157,7 +157,7 @@ packTo(402, {bits: 16}, buffer);
 <p>will values throw a <em>TypeError</em>.</p>
 <h3>Unpacking and input buffer length</h3>
 <p>When unpacking values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong> by default.</p>
-<p>You can unpack arrays in <strong>safe mode</strong> with the optional <em>safe</em> param set to <em>true</em>. <strong>In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error</strong>:</p>
+<p>You can unpack in <strong>safe mode</strong> with the optional <em>safe</em> param set to <em>true</em>. <strong>In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error</strong>:</p>
 <pre class="prettyprint source lang-javascript"><code>// throws a 'Bad buffer length' error
 byteData.unpackArrayTo([0xff], theType, output, 0, buffer.length, true);
 

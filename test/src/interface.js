@@ -283,15 +283,15 @@ describe('Errors', function() {
     });
     
     // Bad buffer length on unpack
-    it("Bad buffer length on unpack, missing a byte", function () {
+    it("Bad buffer length on unpack, missing a byte, safe mode", function () {
         testFunc = function() {
-            byteData.unpack([1], {"bits": 16});
+            byteData.unpack([1], {"bits": 16}, 0, true);
         };
         assert.throws(testFunc, /Bad buffer length/);
     });
-    it("Bad buffer length on unpack, zero bytes", function () {
+    it("Bad buffer length on unpack, zero bytes, safe mode", function () {
         testFunc = function() {
-            byteData.unpack([], {"bits": 16});
+            byteData.unpack([], {"bits": 16}, 0, true);
         };
         assert.throws(testFunc, /Bad buffer length/);
     });

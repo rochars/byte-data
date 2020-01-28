@@ -122,10 +122,9 @@ Packing the following values
 will values throw a *TypeError*.
 
 ### Unpacking and input buffer length
-
 When unpacking values, **extra bytes in the end of the buffer are ignored** and **insufficient bytes will return a empty array** by default.
 
-You can unpack arrays in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error**:
+You can unpack in **safe mode** with the optional *safe* param set to *true*. **In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error**:
 ```javascript
 // throws a 'Bad buffer length' error
 byteData.unpackArrayTo([0xff], theType, output, 0, buffer.length, true);
