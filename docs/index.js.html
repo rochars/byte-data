@@ -128,6 +128,7 @@ export function packStringTo(str, buffer, index=0) {
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 export function packArrayTo(values, theType, buffer, index=0, clamp=false) {
   theType = theType || {};
@@ -208,6 +209,7 @@ export function unpackArrayTo(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 export function packTo(value, theType, buffer, index=0, clamp=false) {
   return packArrayTo([value], theType, buffer, index, clamp);
@@ -225,6 +227,7 @@ export function packTo(value, theType, buffer, index=0, clamp=false) {
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 export function pack(value, theType, clamp=false) {
   /** @type {!Array&lt;number>} */
@@ -268,6 +271,7 @@ export function unpack(buffer, theType, index=0, safe=false) {
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 export function packArray(values, theType, clamp=false) {
   /** @type {!Array&lt;number>} */

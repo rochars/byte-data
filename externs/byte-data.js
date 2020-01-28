@@ -72,6 +72,7 @@ byteData.packStringTo = function(str, buffer, index=0) {};
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 byteData.packArrayTo = function(values, theType, buffer, index=0,
     clamp=false) {};
@@ -111,6 +112,7 @@ byteData.unpackArrayTo = function(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 byteData.packTo = function(value, theType, buffer, index=0, clamp=false) {};
 
@@ -126,6 +128,7 @@ byteData.packTo = function(value, theType, buffer, index=0, clamp=false) {};
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 byteData.pack = function(value, theType, clamp=false) {};
 
@@ -159,6 +162,7 @@ byteData.unpack = function(buffer, theType, index=0, safe=false) {};
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 byteData.packArray = function(values, theType, clamp=false) {};
 

@@ -148,8 +148,7 @@ Currently only 16-bit half-precision.
 
 ### Integers
 - Overflow on integers will throw a *RangeError*.
-- packing NaN will throw a *TypeError*.
-- packing Infinity or -Infinity will throw a *RangeError*.
+- Packing values other than integers will throw a *TypeError*.
 
 To clamp integers on overflow and avoid *RangeError*, set the optional *clamp* param to true:
 ```javascript
@@ -252,6 +251,7 @@ function packStringTo(str, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 function packArrayTo(values, theType, buffer, index=0, clamp=false) {}
 
@@ -290,6 +290,7 @@ function unpackArrayTo(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 function packTo(value, theType, buffer, index=0, clamp=false) {}
 
@@ -305,6 +306,7 @@ function packTo(value, theType, buffer, index=0, clamp=false) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 function pack(value, theType, clamp=false) {}
 
@@ -338,6 +340,7 @@ function unpack(buffer, theType, index=0, safe=false) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 function packArray(values, theType, clamp=false) {}
 

@@ -48,6 +48,7 @@ export function packStringTo(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 export function packArrayTo(
   values: number[]|ArrayBufferView|ArrayLike<number>,
@@ -90,6 +91,7 @@ export function unpackArrayTo(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 export function packTo(
   value: number,
@@ -107,6 +109,7 @@ export function packTo(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 export function pack(
   value: number,
@@ -141,6 +144,7 @@ export function unpack(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 export function packArray(
   values: number[]|ArrayBufferView|ArrayLike<number>,

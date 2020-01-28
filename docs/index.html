@@ -182,8 +182,7 @@ byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1, true);
 <h3>Integers</h3>
 <ul>
 <li>Overflow on integers will throw a <em>RangeError</em>.</li>
-<li>packing NaN will throw a <em>TypeError</em>.</li>
-<li>packing Infinity or -Infinity will throw a <em>RangeError</em>.</li>
+<li>Packing values other than integers will throw a <em>TypeError</em>.</li>
 </ul>
 <p>To clamp integers on overflow and avoid <em>RangeError</em>, set the optional <em>clamp</em> param to true:</p>
 <pre class="prettyprint source lang-javascript"><code>// Set clamp to true; values will be packed
@@ -270,6 +269,7 @@ function packStringTo(str, buffer, index=0) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 function packArrayTo(values, theType, buffer, index=0, clamp=false) {}
 
@@ -308,6 +308,7 @@ function unpackArrayTo(
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 function packTo(value, theType, buffer, index=0, clamp=false) {}
 
@@ -323,6 +324,7 @@ function packTo(value, theType, buffer, index=0, clamp=false) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'value' is not a number.
+ * @throws {TypeError} If 'value' is not a int and type is int.
  */
 function pack(value, theType, clamp=false) {}
 
@@ -356,6 +358,7 @@ function unpack(buffer, theType, index=0, safe=false) {}
  * @throws {Error} If the type definition is not valid.
  * @throws {RangeError} On overflow if clamp is set to false.
  * @throws {TypeError} If 'values' is not a array of numbers.
+ * @throws {TypeError} If 'values' is not a array of ints and type is int.
  */
 function packArray(values, theType, clamp=false) {}
 

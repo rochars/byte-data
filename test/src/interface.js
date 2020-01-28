@@ -223,13 +223,13 @@ describe('Errors', function() {
         testFunc = function() {
             byteData.packArray([0, Infinity], {"bits": 8});
         };
-        assert.throws(testFunc, /RangeError at index 1: Infinity/);
+        assert.throws(testFunc, /TypeError at index 1: Infinity/);
     });
     it("-Infinity value, index 1", function () {
         testFunc = function() {
             byteData.packArray([0, -Infinity], {"bits": 8});
         };
-        assert.throws(testFunc, /RangeError at index 1: -Infinity/);
+        assert.throws(testFunc, /TypeError at index 1: -Infinity/);
     });
     it("NaN value, index 1", function () {
         testFunc = function() {

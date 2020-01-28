@@ -1,9 +1,13 @@
 # CHANGELOG
 
 ## 19.0.0 (2020-01-28)
+### API Changes:
 - Remove *clamp* optional param from unpacking functions
-- Does not clamp or check for overflows while unpacking
 - Add *safe* optional param to unpack()
+- packing values other than integers will throw a *TypeError* if type is not integer.
+- Does not clamp or check for overflows while unpacking
+
+### Other changes
 - Zero dependencies
 
 ## 18.1.1 (2020-01-26)
