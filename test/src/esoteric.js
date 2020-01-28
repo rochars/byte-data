@@ -11,18 +11,12 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 
-var uInt2 = {"bits": 2};
-var int2 = {"bits": 2, "signed": true};
-var int4 = {"bits": 4, "signed": true};
-var uInt4 = {"bits": 4};
 var uInt32BE = {"bits": 32, "be": true};
 var uInt32 = {"bits": 32};
 var uInt40BE = {"bits": 40, "be": true};
 var uInt40 = {"bits": 40};
 var uInt48BE = {"bits": 48, "be": true};
 var uInt48 = {"bits": 48};
-var uInt53 = {"bits": 53};
-var int53 = {"bits": 53, "signed": true};
 var int48BE = {"bits": 48, "signed": true, "be": true};
 var int48 = {"bits": 48, "signed": true};
 var int40BE = {"bits": 40, "signed": true, "be": true};
@@ -30,362 +24,12 @@ var int40 = {"bits": 40, "signed": true};
 
 describe('esoteric bit depths', function() {
     
-    it('uInt5 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {bits: 5}),
-            [1]);
-    });
-    it('uInt5 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 5}),
-            [1]);
-    });
-
-    it('uInt6 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 6}),
-            [1]);
-    });
-    it('uInt6 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 6}),
-            [1]);
-    });
-
-    it('uInt7 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 7}),
-            [1]);
-    });
-    it('uInt7 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 7}),
-            [1]);
-    });
-
-    it('uInt3 to hex', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 3}),
-            [1]);
-    });
-    it('uInt3 to bin', function() {
-        assert.deepEqual(byteData.pack(1, {"bits": 3}),
-            [1]);
-    });
-
-    it('int7 to bytes to int7', function() {
-        var ntype = {"bits": 7, "signed": true};
-        var buffer = byteData.packArray([-1, 5], ntype);
-        assert.deepEqual(
-            [-1, 5],
-            byteData.unpackArray(buffer, ntype));
-    });
-    
-    it('int11 to bytes to int11', function() {
-        var ntype = {"bits": 11, "signed": true};
-        var buffer = byteData.packArray([-1024, 1023], ntype);
-        assert.deepEqual(
-            [-1024, 1023],
-            byteData.unpackArray(buffer, ntype));
-    });
-    
     it('int16 to bytes to int16', function() {
         var ntype = {"bits": 16, "signed": true};
         var buffer = byteData.packArray([-1024, 1023], ntype);
         assert.deepEqual(
             [-1024, 1023],
             byteData.unpackArray(buffer, ntype));
-    });
-
-    it('int11 to bytes to int11', function() {
-        var ntype = {"bits": 11, "signed": true};
-        var buffer = byteData.packArray([-1023, 1023], ntype);
-        assert.deepEqual(
-            [-1023, 1023],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int11 to bytes to int11', function() {
-        var ntype = {"bits": 11, "signed": true};
-        var buffer = byteData.packArray([-1022, 1023], ntype);
-        assert.deepEqual(
-            [-1022, 1023],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('uInt12 to bytes to uInt12', function() {
-        var ntype = {"bits": 12};
-        var buffer = byteData.packArray([0, 4095], ntype);
-        assert.deepEqual(
-            [0, 4095],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int12 to bytes to int12', function() {
-        var ntype = {"bits": 12, "signed": true};
-        var buffer = byteData.packArray([-2048, 2047], ntype);
-        assert.deepEqual(
-            [-2048, 2047],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-    it('uInt13 to bytes to uInt13', function() {
-        var ntype = {"bits": 13};
-        var buffer = byteData.packArray([0, 8191], ntype);
-        assert.deepEqual(
-            [0, 8191],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int13 to bytes to int13', function() {
-        var ntype = {"bits": 13, "signed": true};
-        var buffer = byteData.packArray([-4096, 4095], ntype);
-        assert.deepEqual(
-            [-4096, 4095],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-    it('uInt14 to bytes to uInt14', function() {
-        var ntype = {"bits": 14};
-        var buffer = byteData.packArray([0, 16383], ntype);
-        assert.deepEqual(
-            [0, 16383],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int14 to bytes to int14', function() {
-        var ntype = {"bits": 14, "signed": true};
-        var buffer = byteData.packArray([-8192, 8191], ntype);
-        assert.deepEqual(
-            [-8192, 8191],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-
-    it('uInt15 to bytes to uInt15', function() {
-        var ntype = {"bits": 15};
-        var buffer = byteData.packArray([0, 32767], ntype);
-        assert.deepEqual(
-            [0, 32767],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int15 to bytes to int15', function() {
-        var ntype = {"bits": 15, "signed": true};
-        var buffer = byteData.packArray([-16384, 16383], ntype);
-        assert.deepEqual(
-            [-16384, 16383],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-
-    it('uInt17 to bytes to uInt17', function() {
-        var ntype = {"bits": 17};
-        var buffer = byteData.packArray([0, 131071], ntype);
-        assert.deepEqual(
-            [0, 131071],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int17 to bytes to int17', function() {
-        var ntype = {"bits": 17, "signed": true};
-        var buffer = byteData.packArray([-65536, 65535], ntype);
-        assert.deepEqual(
-            [-65536, 65535],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-
-    it('uInt18 to bytes to uInt18', function() {
-        var ntype = {"bits": 18};
-        var buffer = byteData.packArray([0, 262143], ntype);
-        assert.deepEqual(
-            [0, 262143],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int18 to bytes to int18', function() {
-        var ntype = {"bits": 18, "signed": true};
-        var buffer = byteData.packArray([-131072, 131071], ntype);
-        assert.deepEqual(
-            [-131072, 131071],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-    it('uInt19 to bytes to uInt19', function() {
-        var ntype = {"bits": 19};
-        var buffer = byteData.packArray([0, 524287], ntype);
-        assert.deepEqual(
-            [0, 524287],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int19 to bytes to int19', function() {
-        var ntype = {"bits": 19, "signed": true};
-        var buffer = byteData.packArray([-262144, 262143], ntype);
-        assert.deepEqual(
-            [-262144, 262143],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-
-    it('uInt20 to bytes to uInt20', function() {
-        var ntype = {"bits": 20};
-        var buffer = byteData.packArray([0, 1048575], ntype);
-        assert.deepEqual(
-            [0, 1048575],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int20 to bytes to int20', function() {
-        var ntype = {"bits": 20, "signed": true};
-        var buffer = byteData.packArray([-524288, 524287], ntype);
-        assert.deepEqual(
-            [-524288, 524287],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-
-    it('uInt21 to bytes to uInt21', function() {
-        var ntype = {"bits": 21};
-        var buffer = byteData.packArray([0, 2097151], ntype);
-        assert.deepEqual(
-            [0, 2097151],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int21 to bytes to int21', function() {
-        var ntype = {"bits": 21, "signed": true};
-        var buffer = byteData.packArray([-1048576, 1048575], ntype);
-        assert.deepEqual(
-            [-1048576, 1048575],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-
-    it('uInt22 to bytes to uInt22', function() {
-        var ntype = {"bits": 22};
-        var buffer = byteData.packArray([0, 4194303], ntype);
-        assert.deepEqual(
-            [0, 4194303],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int22 to bytes to int22', function() {
-        var ntype = {"bits": 22, "signed": true};
-        var buffer = byteData.packArray([-2097152, 2097151], ntype);
-        assert.deepEqual(
-            [-2097152, 2097151],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int22 to bytes to int22', function() {
-        var ntype = {"bits": 22, "signed": true};
-        var buffer = byteData.packArray([-2097151, 2097151], ntype);
-        assert.deepEqual(
-            [-2097151, 2097151],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int22 to bytes to int22', function() {
-        var ntype = {"bits": 22, "signed": true};
-        var buffer = byteData.packArray([-1, 1], ntype);
-        assert.deepEqual(
-            [-1, 1],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int22 to bytes to int22', function() {
-        var ntype = {"bits": 22, "signed": true};
-        var buffer = byteData.packArray([0], ntype);
-        assert.deepEqual(
-            [0],
-            byteData.unpackArray(buffer, ntype));
-    });
-
-    it('uInt23 to bytes to uInt23', function() {
-        var ntype = {"bits": 23};
-        var buffer = byteData.packArray([0, 8388607], ntype);
-        assert.deepEqual(
-            [0, 8388607],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int23 to bytes to int23', function() {
-        var ntype = {"bits": 23, "signed": true};
-        var buffer = byteData.packArray([-4194304, 4194303], ntype);
-        assert.deepEqual(
-            [-4194304, 4194303],
-            byteData.unpackArray(buffer, ntype));
-    });
-    it('int23 to bytes to int23', function() {
-        var ntype = {"bits": 23, "signed": true};
-        var buffer = byteData.packArray([-4194303, 4194303], ntype);
-        assert.deepEqual(
-            byteData.unpackArray(buffer, ntype),
-            [-4194303, 4194303]);
-    });
-    it('int23 to bytes to int23', function() {
-        var ntype = {"bits": 23, "signed": true};
-        var buffer = byteData.packArray([-4194302, 4194303], ntype);
-        assert.deepEqual(
-            byteData.unpackArray(buffer, ntype),
-            [-4194302, 4194303]);
-    });
-    it('int23 to bytes to int23', function() {
-        var ntype = {"bits": 23, "signed": true};
-        var buffer = byteData.packArray([-4194301, 4194303], ntype);
-        assert.deepEqual(
-            byteData.unpackArray(buffer, ntype),
-            [-4194301, 4194303]);
-    });
-    it('int23 to bytes to int23', function() {
-        var ntype = {"bits": 23, "signed": true};
-        var buffer = byteData.packArray([-4194300, 4194303], ntype);
-        assert.deepEqual(
-            byteData.unpackArray(buffer, ntype),
-            [-4194300, 4194303]);
-    });
-});
-
-
-
-describe('pack int2', function() {   
-    
-    it('should turn 2 2-bit signed int to 2 crumb (-2)', function() {
-        assert.deepEqual(
-            byteData.packArray([-2], int2, 2),
-            [2]);
-    });
-    it('should turn 2 2-bit signed int to 2 crumb (-1)', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int2, 2),
-            [3]);
-    });
-    it('should turn 2 2-bit signed int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.packArray([0], int2, 2),
-            [0]);
-    });
-    it('should turn 2 2-bit signed int to 2 bytes (-2)', function() {
-        assert.deepEqual(
-            byteData.packArray([-2], int2),
-            [2]);
-    });
-    it('should turn 1 2-bit signed int to 1 crumb (-1)', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int2),
-            [3]);
-    });
-    it('should turn 1 2-bit signed int to 1 crumb hex (-1)', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int2, 16),
-            [3]);
-    });
-});
-
-describe('pack int4', function() {
-    it('should turn 2 4-bit signed int to 2 bytes (-8, 7)', function() {
-        assert.deepEqual(
-            byteData.packArray([-8, 7], int4),
-            [8, 7]);
-    });
-    it('should turn 1 4-bit signed int to 1 nibble (-1)', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int4),
-            [15]);
-    });
-    it('should turn 1 4-bit signed int to 1 nibble (-1, 5)', function() {
-        assert.deepEqual(
-            byteData.packArray([-1, 5], int4),
-            [15, 5]);
-    });
-    it('should turn 1 4-bit signed int to 1 nibble hex (-1)', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int4, 16),
-            [15]);
-    });
-    it('should turn 1 4-bit signed int to 1 nibble hex (-8)', function() {
-        assert.deepEqual(
-            byteData.packArray([-8], int4, 16),
-            [8]);
     });
 });
 
@@ -532,75 +176,6 @@ describe('48-bit to bytes', function() {
     });
 });
 
-describe('53-bit signed integers to bytes', function() { 
-    
-    it('pack int53 0', function() {
-        assert.deepEqual(
-            byteData.packArray([0], int53),
-            [0,0,0,0,0,0,0]);
-    });
-    it('pack int53 min', function() {
-        assert.deepEqual(
-            byteData.packArray([-4503599627370496], int53, 16),
-            [0, 0, 0, 0, 0, 0, 16]); 
-    });
-    it('pack int53 min', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int53, 2),
-            [255, 255, 255, 255,
-            255, 255, 31]); 
-    });
-    it('pack int53 min', function() {
-        assert.deepEqual(
-            byteData.packArray([-1], int53, 16),
-            [255, 255, 255, 255,
-            255, 255, 31]); 
-    });
-});
-
-describe('pack uInt2', function() {   
-    
-    // 2-bit
-    it('should turn 2 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.packArray([0], uInt2),
-            [0]);
-    });
-    it('should turn 2 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.packArray([1], uInt2),
-            [1]);
-    });
-    it('should turn 2 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.packArray([2], uInt2),
-            [2]);
-    });
-    it('should turn 2 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.packArray([3], uInt2),
-            [3]);
-    });
-});
-
-describe('pack uInt4', function() {    
-    it('should turn 2 4-bit signed int to 2 nibbles (0s)', function() {
-        assert.deepEqual(
-            byteData.packArray([0, 0], uInt4),
-            [0, 0]);
-    });
-    it('should turn 1 4-bit signed int to 1 nibble hex (7)', function() {
-        assert.deepEqual(
-            byteData.packArray([7], uInt4, 16),
-            [7]);
-    });
-    it('should turn 1 4-bit signed int to 1 nibble bin (6)', function() {
-        assert.deepEqual(
-            byteData.packArray([6], uInt4, 2),
-            [6]);
-    });
-});
-
 describe('pack uInt40', function() { 
     
     it('should turn 5 bytes (hex) to 1 signed 40-bit int  (max range)', function() {
@@ -629,7 +204,6 @@ describe('pack uInt40', function() {
             [255,255,255,255,255]);
     });
 });
-
 
 describe('48-bit to bytes', function() { 
     
@@ -698,21 +272,6 @@ describe('48-bit to bytes', function() {
             [109, 184, 23, 168, 231, 117, 
             0, 0, 0, 0, 0, 1, 
             0, 0, 0, 0, 0, 1]);
-    });
-});
-
-
-describe('53-bit to bytes', function() { 
-    
-    it('should turn 1 unsigned 53-bit int to 7 bytes (hex) (max range)', function() {
-        assert.deepEqual(
-            byteData.packArray([9007199254740991], uInt53, 16),
-            [255, 255, 255, 255, 255, 255, 31]); 
-    });
-    it('should turn 1 unsigned 53-bit int to 7 bytes (0)', function() {
-        assert.deepEqual(
-            byteData.packArray([0], uInt53),
-            [0,0,0,0,0,0,0]);
     });
 });
 
@@ -791,56 +350,6 @@ describe('unpack LE and BE', function() {
             [120637438355317, 1, 1]);
     });    
 });
-
-describe('unpack int2', function() {   
-
-    it('should turn 1 2-bit signed int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([2], int2),
-            [-2]);
-    });
-    it('should turn 1 2-bit signed int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([3], int2),
-            [-1]);
-    });
-    it('should turn 1 2-bit signed int to 2 bytes (-2)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([2], int2),
-            [-2]);
-    });
-    it('should turn 1 2-bit signed int to 1 crumb (-1)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([3], int2),
-            [-1]);
-    });
-    it('should turn 1 2-bit signed int to 1 crumb hex (-1)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([3], int2),
-            [-1]);
-    });
-});
-
-
-describe('unpack int4', function() { 
-
-    it('should turn 1 nibble to a 4-bit int', function() {
-        assert.deepEqual(
-            byteData.unpackArray([15], int4),
-            [-1]);
-    });
-    it('should turn 1 nibble to a 4-bit int', function() {
-        assert.deepEqual(
-            byteData.unpackArray([15], int4),
-            [-1]);
-    });
-    it('should turn 1 nibble to a 4-bit int', function() {
-        assert.deepEqual(
-            byteData.unpackArray([15], int4),
-            [-1]);
-    });
-});
-
 
 describe('40-bit from bytes', function() {
     
@@ -972,7 +481,6 @@ describe('40-bit from bytes', function() {
             [65535]);
     });
 });
-
 
 describe('48-bit from bytes', function() {
     
@@ -1155,146 +663,7 @@ describe('48-bit from bytes', function() {
             [-3]);
     });
 
-
-
-
-    // Should pack anything between 9 and 16 bits to 2 bytes
-    it('should handle 11-bit as 16-bit (0)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0, 0], {"bits": 11}),
-            [0]);
-    });
-    it('should handle 11-bit as 16-bit (2000)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([208, 7], {"bits": 11}),
-            [2000]);
-    });
-    it('should handle 11-bit as 16-bit (2047)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([255, 7], {"bits": 11}),
-            [2047]);
-    });
-    it('should handle 12-bit as 16-bit (2047)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([255, 7], {"bits": 12}),
-            [2047]);
-    });
-    it('should handle 13-bit as 16-bit (2047)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([255, 7], {"bits": 13}),
-            [2047]);
-    });
-    it('should handle 14-bit as 16-bit (2047)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([255, 7], {"bits": 14}),
-            [2047]);
-    });
-    it('should handle 15-bit as 16-bit (2047)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([255, 7], {"bits": 15}),
-            [2047]);
-    });
-
 });
-
-
-
-
-describe('unpack uInt2', function() {   
-
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0], uInt2),
-            [0]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([1], uInt2),
-            [1]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([2], uInt2),
-            [2]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([3], uInt2),
-            [3]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0], uInt2),
-            [0]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([1], uInt2),
-            [1]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([2], uInt2),
-            [2]);
-    });
-    it('should turn 1 2-bit unsigned int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([3], uInt2),
-            [3]);
-    });
-    it('should turn 1 2-bit signed int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0], uInt2),
-            [0]);
-    });
-    it('should turn 1 2-bit signed int to 2 crumb (0s)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([1], uInt2),
-            [1]);
-    });
-    it('should turn 1 2-bit unsigned int to 1 crumb hex (2)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([2], uInt2),
-            [2]);
-    });
-    it('should turn 1 2-bit unsigned int to 1 crumb bin (1)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([1], uInt2),
-            [1]);
-    });
-});
-
-
-
-describe('unpack uInt4', function() { 
-    
-    it('should turn 1 nibble to a 4-bit uInt', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0], uInt4),
-            [0]);
-    });
-    it('should turn 1 nibble to a 4-bit uInt', function() {
-        assert.deepEqual(
-            byteData.unpackArray([15], uInt4),
-            [15]);
-    });
-    it('should turn 2 nibbles to a 4-bit uInts', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0,1], uInt4),
-            [0,1]);
-    });
-    it('should turn 1 nibble to a 4-bit uInt', function() {
-        assert.deepEqual(
-            byteData.unpackArray([15], uInt4),
-            [15]);
-    });
-    it('should turn 1 nibble to a 4-bit uInt', function() {
-        assert.deepEqual(
-            byteData.unpackArray([15], uInt4),
-            [15]);
-    });
-});
-
 
 describe('unpack uInt40', function() {
 
@@ -1323,7 +692,6 @@ describe('unpack uInt40', function() {
                 [255,127,0,0,0,255,255], uInt40),
             [32767]);
     });
-
     it('should turn 5 bytes (hex) to 1 unsigned 40-bit int  (549755813887)',
             function() {
         assert.deepEqual(
@@ -1384,8 +752,6 @@ describe('unpack uInt40', function() {
     });
 });
 
-
-
 describe('unpack uInt48', function() {
     
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (max range)',
@@ -1408,7 +774,6 @@ describe('unpack uInt48', function() {
                 [255,255,255,255,255], uInt48),
             []);
     });
-
     // 40 bit tests should work the same with 48-bit
     it('should turn 6 bytes (hex) to 1 unsigned 48-bit int  (65535)',
             function() {
@@ -1495,20 +860,3 @@ describe('unpack uInt48', function() {
             [32767]);
     });
 });
-
-
-
-describe('53-bit from bytes', function() { 
-    
-    it('should turn 1 unsigned 53-bit int to 7 bytes (hex) (max range)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([255, 255, 255, 255, 255, 255, 31], uInt53),
-            [9007199254740991]); 
-    });
-    it('should turn 1 unsigned 53-bit int to 7 bytes (0)', function() {
-        assert.deepEqual(
-            byteData.unpackArray([0,0,0,0,0,0,0], uInt53),
-            [0]);
-    });
-});
-

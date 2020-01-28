@@ -10,47 +10,29 @@
 var byteData = byteData || require('../../test/loader.js');
 var assert = assert || require('assert');
 
-var uInt2 = {"bits": 2};
-var int2 = {"bits": 2, "signed": true};
-
-var int4 = {"bits": 4, "signed": true};
-var uInt4 = {"bits": 4};
-
 var uInt32BE = {"bits": 32, "be": true};
 var uInt32 = {"bits": 32};
 var int32 = {"bits": 32, "signed": true};
-
 var uInt40BE = {"bits": 40, "be": true};
 var uInt40 = {"bits": 40};
-
 var uInt48BE = {"bits": 48, "be": true};
 var uInt48 = {"bits": 48};
-
-var uInt53 = {"bits": 53};
-var int53 = {"bits": 53, "signed": true};
-
 var int48BE = {"bits": 48, "signed": true, "be": true};
 var int48 = {"bits": 48, "signed": true};
-
-
 var uInt40 = {"bits": 40};
 var int40 = {"bits": 40, "signed": true};
 var uInt40BE = {"bits": 40, "be": true};
 var int40BE = {"bits": 40, "signed": true, "be": true};
-
 var int8 = {"bits": 8, "signed": true};
 var uInt8 = {"bits": 8};
-
 var int16 = {"bits": 16, "signed": true};
 var uInt16 = {"bits": 16};
 var int16BE = {"bits": 16, "signed": true, "be": true};
 var uInt16BE = {"bits": 16, "be": true};
-
 var int24 = {"bits": 24, "signed": true};
 var uInt24 = {"bits": 24};
 var int24BE = {"bits": 24, "signed": true, "be": true};
 var uInt24BE = {"bits": 24, "be": true};
-
 var float64 = {"bits": 64, "fp": true};
 var float32 = {"bits": 32, "fp": true};
 var float16 = {"bits": 16, "fp": true};
@@ -86,22 +68,6 @@ describe('pack-unpack', function() {
         var bytes = byteData.packArray([0.123456789876543], float64);
         var num = byteData.unpackArray(bytes, float64);
         assert.ok(0.123456789876544 != num[0]);
-    });
-
-    
-    // 53-bit
-    it('53 bit uInt to-from (max range)',
-            function() {
-        var bytes = byteData.packArray([9007199254740991], uInt53);
-        var num = byteData.unpackArray(bytes, uInt53);
-        assert.equal(9007199254740991, num[0]);
-    });
-    it('53 bit uInt to-from (max range, check rounding)',
-            function() {
-        var bytes = byteData.packArray([9007199254740991], uInt53);
-        var num = byteData.unpackArray(bytes, uInt53);
-        assert.ok(9007199254740990 != num[0]);
-        assert.ok(9007199254740992 != num[0]);
     });
     
     // 48-bit
@@ -489,59 +455,6 @@ describe('pack-unpack', function() {
     it('should turn 1 8-bit signed int to 1 byte (-1)', function() {
         var bytes = byteData.packArray([-1], int8);
         var num = byteData.unpackArray(bytes, int8);
-        assert.deepEqual([-1], num);
-    });
-
-    // 8-bit / 1 byte unsigned
-    it('should turn 1 4-bit unsigned int to 1 nibbles and back (0s)',
-            function() {
-        var bytes = byteData.packArray([0], uInt4);
-        var num = byteData.unpackArray(bytes, uInt4);
-        assert.deepEqual([0], num);
-    });
-    it('should turn 1 4-bit unsigned int to 1 nibbles and back (max)',
-            function() {
-        var bytes = byteData.packArray([15], uInt4);
-        var num = byteData.unpackArray(bytes, uInt4);
-        assert.deepEqual([15], num);
-    });
-    it('should turn 1 4-bit unsigned int to 1 nibble and back (1)',
-            function() {
-        var bytes = byteData.packArray([1], uInt4);
-        var num = byteData.unpackArray(bytes, uInt4);
-        assert.deepEqual([1], num);
-    });
-    // 4-bit / 1 byte signed
-    it('should turn 1 4-bit signed int to 1 nibbles (0s)', function() {
-        var bytes = byteData.packArray([0], int4);
-        var num = byteData.unpackArray(bytes, int4);
-        assert.deepEqual([0], num);
-    });
-    it('should turn 2 4-bit signed int to 2 nibbles (-8, 7)', function() {
-        var bytes = byteData.packArray([-8, 7], int4);
-        var num = byteData.unpackArray(bytes, int4);
-        assert.deepEqual([-8, 7], num);
-    });
-    it('should turn 1 4-bit signed int to a nibble (-1)', function() {
-        var bytes = byteData.packArray([-1], int4);
-        var num = byteData.unpackArray(bytes, int4);
-        assert.deepEqual([-1], num);
-    });
-
-    // 2-bit / 1 byte signed
-    it('should turn 1 2-bit signed int to 1 crumb (0s)', function() {
-        var crumbs = byteData.packArray([0], int2);
-        var num = byteData.unpackArray(crumbs, int2);
-        assert.deepEqual([0], num);
-    });
-    it('should turn 2 2-bit signed int to 2 crumb (-2, 1)', function() {
-        var crumbs = byteData.packArray([-2, 1], int2);
-        var num = byteData.unpackArray(crumbs, int2);
-        assert.deepEqual([-2, 1], num);
-    });
-    it('should turn 1 2-bit signed int to a crumb (-1)', function() {
-        var crumbs = byteData.packArray([-1], int2);
-        var num = byteData.unpackArray(crumbs, int2);
         assert.deepEqual([-1], num);
     });
 });

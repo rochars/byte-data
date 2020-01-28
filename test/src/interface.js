@@ -14,10 +14,6 @@ var float16 = {"bits": 16, "fp": true};
 var float32 = {"bits": 32, "fp": true};
 var float64 = {"bits": 64, "fp": true};
 var int32 = {"bits": 32, "signed": true};
-var uInt2 = {"bits": 2};
-var int2 = {"bits": 2, "signed": true};
-var int4 = {"bits": 4, "signed": true};
-var uInt4 = {"bits": 4};
 var uInt32BE = {"bits": 32, "be": true};
 var uInt32 = {"bits": 32};
 var uInt40BE = {"bits": 40, "be": true};
@@ -25,8 +21,6 @@ var uInt40 = {"bits": 40};
 var uInt24 = {"bits": 24};
 var uInt48BE = {"bits": 48, "be": true};
 var uInt48 = {"bits": 48};
-var uInt53 = {"bits": 53};
-var int53 = {"bits": 53, "signed": true};
 var int48BE = {"bits": 48, "signed": true, "be": true};
 var int48 = {"bits": 48, "signed": true};
 var int40BE = {"bits": 40, "signed": true, "be": true};
@@ -88,11 +82,6 @@ describe('interface', function() {
             },
             /TypeError at index 0: false/);
     });
-    //it('pack null uInt16 (0, 0)', function() {
-    //    assert.deepEqual(
-    //        byteData.pack(null, uInt16),
-    //        [0, 0]);
-    //});
     it('pack uInt16 (65535, 16)', function() {
         assert.deepEqual(
             byteData.pack(65535, uInt16),
@@ -102,14 +91,6 @@ describe('interface', function() {
         assert.deepEqual(
             byteData.pack(2.1474836, float32),
             [95,112,9,64]);
-    });
-    it('pack int4 (-1)', function() {
-        assert.deepEqual(byteData.pack(-1, int4),
-            [15]);
-    });
-    it('pack uInt4 (15)', function() {
-        assert.deepEqual(byteData.pack(15, uInt4),
-            [15]);
     });
     it('pack uInt8 (254)', function() {
         assert.deepEqual(byteData.pack(254, uInt8),
@@ -139,12 +120,6 @@ describe('interface', function() {
             byteData.unpack([85, 53], float16).toFixed(5),
             0.33325);
     });
-    it('unpack int2', function() {
-        assert.equal(byteData.unpack([3], int2), -1);
-    });
-    it('unpack uInt2', function() {
-        assert.equal(byteData.unpack([3], uInt2), 3);
-    });
     it('unpack uInt16', function() {
         assert.equal(
             byteData.unpack([255,255], uInt16),
@@ -172,9 +147,6 @@ describe('interface', function() {
         assert.deepEqual(byteData.unpackArray(
             [255, 255, 0, 0], uInt16),
             [65535, 0]);
-    });
-    it('unpackArray uInt2', function() {
-        assert.deepEqual(byteData.unpackArray([3], uInt2), [3]);
     });
     it('unpackArray float64', function() {
         assert.deepEqual(
@@ -215,12 +187,6 @@ describe('Errors', function() {
             byteData.packArray([0, '1'], uInt16);
         };
         assert.throws(testFunc, /TypeError at index 1/);
-    });
-    it('throws errors with correct index when unpacking', function() {
-        testFunc = function() {
-            byteData.unpackArray([15, 255], uInt4);
-        };
-        assert.throws(testFunc, /RangeError at index 1/);
     });
     // Integer error messages on invalid input
     it('thows error if packing something other than Number, Boolean or null', function() {
@@ -348,30 +314,6 @@ describe('Errors', function() {
             byteData.packArray([1, -1], {"bits": 8});
         };
         assert.throws(testFunc, /RangeError at index 1/);
-    });
-    it("4-bit overflow on unpack", function () {
-        testFunc = function() {
-            byteData.unpack([255], {"bits": 4});
-        };
-        assert.throws(testFunc, /RangeError at index 0/);
-    });
-    it("4-bit overflow on unpack, input index = 1", function () {
-        testFunc = function() {
-            byteData.unpackArray([15, 255], {"bits": 4});
-        };
-        assert.throws(testFunc, /RangeError at index 1: 255/);
-    });
-    it("4-bit overflow on unpack, input index = 1", function () {
-        testFunc = function() {
-            byteData.unpackArray([15, 1, 1, 255], {"bits": 4});
-        };
-        assert.throws(testFunc, /RangeError at index 3: 255/);
-    });
-    it("9-bit overflow on unpack, input index = 1", function () {
-        testFunc = function() {
-            byteData.unpackArray([1, 0, 255, 255], {"bits": 9});
-        };
-        assert.throws(testFunc, /RangeError at index 2: 255,255/);
     });
     
     // Invalid types

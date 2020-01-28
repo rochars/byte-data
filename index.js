@@ -141,19 +141,14 @@ export function unpackArrayTo(
   end = getUnpackLen_(buffer, start, end, offset, safe);
   /** @type {number} */
   let index = 0;
-  let j = start;
-  try {
-    if (theType.be) {
-      endianness(buffer, offset, start, end);
-    }
-    for (; j < end; j += offset, index++) {
-      output[index] = packer.unpack(buffer, j);
-    }
-    if (theType.be) {
-      endianness(buffer, offset, start, end);
-    }
-  } catch (e) {
-    throwValueError_(e, buffer.slice(j, j + offset), j);
+  if (theType.be) {
+    endianness(buffer, offset, start, end);
+  }
+  for (let j = start; j < end; j += offset, index++) {
+    output[index] = packer.unpack(buffer, j);
+  }
+  if (theType.be) {
+    endianness(buffer, offset, start, end);
   }
 }
 
