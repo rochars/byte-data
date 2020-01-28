@@ -46,8 +46,8 @@ export function packStringTo(
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'values' is not a array of numbers.
  */
 export function packArrayTo(
   values: number[]|ArrayBufferView|ArrayLike<number>,
@@ -68,8 +68,8 @@ export function packArrayTo(
  *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error on the aforementioned cases.
- * @throws {Error} If the type definition is not valid
- * @throws {RangeError} On overflow
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} On bad input buffer length if on safe mode.
  */
 export function unpackArrayTo(
   buffer: Uint8Array|number[],
@@ -88,8 +88,8 @@ export function unpackArrayTo(
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'value' is not a number.
  */
 export function packTo(
   value: number,
@@ -105,8 +105,8 @@ export function packTo(
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'value' is not a number.
  */
 export function pack(
   value: number,
@@ -123,9 +123,8 @@ export function pack(
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {RangeError} On overflow
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} On bad input buffer length if on safe mode.
  */
 export function unpack(
   buffer: Uint8Array|number[],
@@ -140,8 +139,8 @@ export function unpack(
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'values' is not a array of numbers.
  */
 export function packArray(
   values: number[]|ArrayBufferView|ArrayLike<number>,
@@ -159,8 +158,8 @@ export function packArray(
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {!Array<number>}
- * @throws {Error} If the type definition is not valid
- * @throws {RangeError} On overflow
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} On bad input buffer length if on safe mode.
  */
 export function unpackArray(
   buffer: Uint8Array|number[],

@@ -70,8 +70,8 @@ byteData.packStringTo = function(str, buffer, index=0) {};
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'values' is not a array of numbers.
  */
 byteData.packArrayTo = function(values, theType, buffer, index=0,
     clamp=false) {};
@@ -91,8 +91,8 @@ byteData.packArrayTo = function(values, theType, buffer, index=0,
  *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error on the aforementioned cases.
- * @throws {Error} If the type definition is not valid
- * @throws {RangeError} On overflow
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} On bad input buffer length if on safe mode.
  */
 byteData.unpackArrayTo = function(
     buffer, theType, output, start=0, end=buffer.length, safe=false) {};
@@ -109,8 +109,8 @@ byteData.unpackArrayTo = function(
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {number} The next index to write.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'value' is not a number.
  */
 byteData.packTo = function(value, theType, buffer, index=0, clamp=false) {};
 
@@ -124,8 +124,8 @@ byteData.packTo = function(value, theType, buffer, index=0, clamp=false) {};
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array<number>} The packed value.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'value' is not a number.
  */
 byteData.pack = function(value, theType, clamp=false) {};
 
@@ -142,9 +142,8 @@ byteData.pack = function(value, theType, clamp=false) {};
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {RangeError} On overflow
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} On bad input buffer length if on safe mode.
  */
 byteData.unpack = function(buffer, theType, index=0, safe=false) {};
 
@@ -158,8 +157,8 @@ byteData.unpack = function(buffer, theType, index=0, safe=false) {};
  * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array<number>} The packed values.
  * @throws {Error} If the type definition is not valid.
- * @throws {RangeError} On overflow.
- * @throws {TypeError} If input is not valid.
+ * @throws {RangeError} On overflow if clamp is set to false.
+ * @throws {TypeError} If 'values' is not a array of numbers.
  */
 byteData.packArray = function(values, theType, clamp=false) {};
 
@@ -177,8 +176,8 @@ byteData.packArray = function(values, theType, clamp=false) {};
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {!Array<number>}
- * @throws {Error} If the type definition is not valid
- * @throws {RangeError} On overflow
+ * @throws {Error} If the type definition is not valid.
+ * @throws {Error} On bad input buffer length if on safe mode.
  */
 byteData.unpackArray = function (
   buffer, theType, start=0, end=buffer.length, safe=false) {};
