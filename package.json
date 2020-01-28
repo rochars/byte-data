@@ -1,6 +1,6 @@
 {
   "name": "byte-data",
-  "version": "18.1.1",
+  "version": "19.0.0",
   "description": "JavaScript binary parser for any browser or environment.",
   "homepage": "https://github.com/rochars/byte-data",
   "author": "Rafael da Silva Rocha <rocha.rafaelsilva@gmail.com>",
@@ -91,9 +91,5 @@
     "rollup": "^1.27.14",
     "typescript": "^3.7.4"
   },
-  "dependencies": {
-    "endianness": "^8.0.2",
-    "ieee754-buffer": "^2.0.0",
-    "utf8-buffer": "^1.0.0"
-  }
+  "dependencies": {}
 }

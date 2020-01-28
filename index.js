@@ -29,10 +29,10 @@
 
 /** @module byte-data */
 
-import endianness from 'endianness';
-import { pack as packUTF8, unpack as unpackUTF8 } from 'utf8-buffer';
+import { endianness } from './lib/endianness';
+import { pack as packUTF8, unpack as unpackUTF8 } from './lib/utf8-parser';
 import { IntParser } from './lib/int-parser';
-import { IEEE754Buffer } from 'ieee754-buffer';
+import { FloatParser } from './lib/float-parser';
 
 /**
  * Read a string of UTF-8 characters from a byte buffer.
@@ -308,11 +308,11 @@ function getParser_(bits, fp, signed, clamp) {
     validateIntType(bits);
   }
   if (fp && bits === 16) {
-    return new IEEE754Buffer(5, 11);
+    return new FloatParser(5, 11);
   } else if (fp && bits == 32) {
-    return new IEEE754Buffer(8, 23);
+    return new FloatParser(8, 23);
   } else if(fp && bits == 64) {
-    return new IEEE754Buffer(11, 52);
+    return new FloatParser(11, 52);
   }
   return new IntParser(bits, signed, clamp);
 }
