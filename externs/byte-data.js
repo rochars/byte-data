@@ -88,9 +88,9 @@ byteData.packArrayTo = function(values, theType, buffer, index=0,
  * @param {number} [start=0] The buffer index to start reading.
  * @param {number} [end=buffer.length] The buffer index to stop reading.
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
- *   the array are ignored and input buffers with insufficient bytes will
+ *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error.
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
@@ -137,12 +137,16 @@ byteData.pack = function(value, theType, clamp=false) {};
  *   signed: (boolean|undefined),
  *   be: (boolean|undefined)}} theType The type definition.
  * @param {number} [index=0] The buffer index to read.
+ * @param {boolean} [safe=false] If set to false, extra bytes in the end of
+ *   the input array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
  * @throws {RangeError} On overflow
  */
-byteData.unpack = function(buffer, theType, index=0) {};
+byteData.unpack = function(buffer, theType, index=0, safe=false) {};
 
 /**
  * Pack a array of numbers as a array of bytes.
@@ -169,9 +173,9 @@ byteData.packArray = function(values, theType, clamp=false) {};
  * @param {number} [start=0] The buffer index to start reading.
  * @param {number} [end=buffer.length] The buffer index to stop reading.
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
- *   the array are ignored and input buffers with insufficient bytes will
- *   output a empty array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error.
+ *   the input array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow

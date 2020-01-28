@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 19.0.0 (2020-01-28)
+- Remove *clamp* optional param from unpacking functions
+- Does not clamp or check for overflows while unpacking
+- Add *safe* optional param to unpack()
+- Zero dependencies
+
 ## 18.1.1 (2020-01-26)
 - Fix type definitions in docstrings to ease integration with Closure Compiler:
   * The only required attribute in the type definition is the number of bits

@@ -104,7 +104,7 @@ https://github.com/rochars/byte-data</p>
 </code></pre>
 <h3>Browser compatibility</h3>
 <p>This module is distributed as a minified UMD transpiled to ES3 and compatible with IE6+. It should work in all modern browsers and environments that support ES3/ES5/ES6+. It is located in the <em>dist/</em> folder.</p>
-<p>The UMD is bundled with some polyfills so no extra work should be necessary to load this module in any browser. The polyfills used in the compilation are distributed with the package in the <em>scripts/</em> folder. The polyfills are for the <em>defineProperty</em> and <em>getOwnPropertyDescriptor</em> properties of <em>Object</em>, and are not used in case those properties are already defined.</p>
+<p>The polyfills used in the compilation are distributed with the package in the <em>scripts/</em> folder. The polyfills are for the <em>defineProperty</em> and <em>getOwnPropertyDescriptor</em> properties of <em>Object</em>, and are not used in case those properties are already defined.</p>
 <p>If you are not using a package manager to install this module, you can get the it via CDNs:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script>
 &lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script>
@@ -291,9 +291,9 @@ function packArrayTo(values, theType, buffer, index=0, clamp=false) {}
  * @param {number} [start=0] The buffer index to start reading.
  * @param {number} [end=buffer.length] The buffer index to stop reading.
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
- *   the array are ignored and input buffers with insufficient bytes will
+ *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error.
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
@@ -340,12 +340,16 @@ function pack(value, theType, clamp=false) {}
  *   signed: (boolean|undefined),
  *   be: (boolean|undefined)}} theType The type definition.
  * @param {number} [index=0] The buffer index to read.
+ * @param {boolean} [safe=false] If set to false, extra bytes in the end of
+ *   the input array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
  * @throws {RangeError} On overflow
  */
-function unpack(buffer, theType, index=0) {}
+function unpack(buffer, theType, index=0, safe=false) {}
 
 /**
  * Pack a array of numbers as a array of bytes.
@@ -372,9 +376,9 @@ function packArray(values, theType, clamp=false) {}
  * @param {number} [start=0] The buffer index to start reading.
  * @param {number} [end=buffer.length] The buffer index to stop reading.
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
- *   the array are ignored and input buffers with insufficient bytes will
- *   output a empty array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error.
+ *   the input array are ignored and input buffers with insufficient bytes will
+ *   write nothing to the output array. If safe is set to true the function
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow

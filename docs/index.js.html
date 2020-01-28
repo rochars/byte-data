@@ -166,7 +166,7 @@ export function packArrayTo(values, theType, buffer, index=0, clamp=false) {
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
  *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error on the mentioned cases.
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
@@ -244,7 +244,7 @@ export function pack(value, theType, clamp=false) {
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
  *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error on the mentioned cases.
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {number}
  * @throws {Error} If the type definition is not valid
  * @throws {Error} On bad buffer length.
@@ -289,7 +289,7 @@ export function packArray(values, theType, clamp=false) {
  * @param {boolean} [safe=false] If set to false, extra bytes in the end of
  *   the input array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
- *   will throw a 'Bad buffer length' error on the mentioned cases.
+ *   will throw a 'Bad buffer length' error on the aforementioned cases.
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
