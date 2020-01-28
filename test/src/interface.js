@@ -108,6 +108,12 @@ describe('interface', function() {
         assert.deepEqual(byteData.pack(-2, int8),
             [254]);
     });
+    it("throws a TypeError if packString value is a number", function () {
+        testFunc = function() {
+            byteData.packString(1);
+        };
+        assert.throws(testFunc, TypeError);
+    });
 
     // unpack
     it('unpack uInt16', function() {

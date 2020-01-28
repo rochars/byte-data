@@ -194,7 +194,7 @@ packArrayTo(values, theType, buffer, index, true);
 <h4>Signed integers</h4>
 <p>Signed integers are <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two's complement</a>.</p>
 <h3>Strings</h3>
-<p><strong>UTF-8 strings</strong> with 1 to 4 bytes per character can be packed and unpacked. <strong>BOM</strong> is kept untouched if present. Invalid characters are replaced with <em>Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)</em>.</p>
+<p><strong>UTF-8 strings</strong> with 1 to 4 bytes per character can be packed and unpacked. <strong>BOM</strong> is kept untouched if present. Invalid characters are replaced with <em>Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)</em>. Packing values other than strings with <em>packString()</em> or <em>packStringTo()</em> will throw a <strong>TypeError</strong>.</p>
 <h4>Reading strings from buffers</h4>
 <p>Use <strong>unpackString(buffer, index, end)</strong>. The paramters <strong>index</strong> and <strong>end</strong> determine a slice of the buffer to read. <strong>End is non-inclusive</strong>. So to read the first 4 bytes of a buffer:</p>
 <pre class="prettyprint source lang-javascript"><code>let str = unpackString(buffer, 0, 4);
@@ -205,14 +205,12 @@ packArrayTo(values, theType, buffer, index, true);
 </code></pre>
 <h4>Writing strings to buffers</h4>
 <p><strong>packStringTo(str, buffer, index=0)</strong> will write the string to the provided buffer (<em>Uint8Array</em> or <em>Array</em>), starting on the <strong>index</strong>. Index defaults to zero if ommited (start from the beginning of the buffer).</p>
-<pre class="prettyprint source lang-javascript"><code>let buffer = [];
-packStringTo(str, buffer);
-</code></pre>
-<h5>Packing strings to Uint8Array buffers</h5>
-<p>If you need to calculate the buffer length before writing you may use the <strong>utf8-buffer-size</strong> module:</p>
-<pre class="prettyprint source lang-javascript"><code>import utf8BufferSize from 'utf8-buffer-size';
-let buffer = new Uint8Array(utf8BufferSize(str));
-packStringTo(str, buffer);
+<pre class="prettyprint source lang-javascript"><code>// Will write the string to the buffer, array or Uint8Array
+let buffer = [];
+packStringTo(str, buffer, 0);
+
+// Will return the bytes of the string in a array
+let strBytes = packString(str);
 </code></pre>
 <h3>Types</h3>
 <p>Types are user-defined objects like this:</p>
@@ -241,6 +239,7 @@ function unpackString(buffer, index=0, len=buffer.length) {}
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array&lt;number>} The UTF-8 string bytes.
+ * @throws {TypeError} If 'str' is not a string.
  */
 function packString(str) {}
 
@@ -250,6 +249,7 @@ function packString(str) {}
  * @param {!(Uint8Array|Array&lt;number>)} buffer The output buffer.
  * @param {number} [index=0] The buffer index to start writing.
  * @return {number} The next index to write in the buffer.
+ * @throws {TypeError} If 'str' is not a string.
  */
 function packStringTo(str, buffer, index=0) {}
 

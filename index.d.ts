@@ -19,6 +19,7 @@ export function unpackString(
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The UTF-8 string bytes.
+ * @throws {TypeError} If 'str' is not a string.
  */
 export function packString(
   str: string): number[];
@@ -29,6 +30,7 @@ export function packString(
  * @param {!(Uint8Array|Array<number>)} buffer The output buffer.
  * @param {number} [index=0] The buffer index to start writing.
  * @return {number} The next index to write in the buffer.
+ * @throws {TypeError} If 'str' is not a string.
  */
 export function packStringTo(
   str: string,

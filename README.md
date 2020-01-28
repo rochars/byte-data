@@ -163,7 +163,7 @@ packArrayTo(values, theType, buffer, index, true);
 Signed integers are [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement).
 
 ### Strings
-**UTF-8 strings** with 1 to 4 bytes per character can be packed and unpacked. **BOM** is kept untouched if present. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*.
+**UTF-8 strings** with 1 to 4 bytes per character can be packed and unpacked. **BOM** is kept untouched if present. Invalid characters are replaced with *Unicode Character 'REPLACEMENT CHARACTER' (U+FFFD)*. Packing values other than strings with *packString()* or *packStringTo()* will throw a **TypeError**.
 
 #### Reading strings from buffers
 Use **unpackString(buffer, index, end)**. The paramters **index** and **end** determine a slice of the buffer to read. **End is non-inclusive**. So to read the first 4 bytes of a buffer:
@@ -180,16 +180,12 @@ let str = unpackString(buffer);
 #### Writing strings to buffers
 **packStringTo(str, buffer, index=0)** will write the string to the provided buffer (*Uint8Array* or *Array*), starting on the **index**. Index defaults to zero if ommited (start from the beginning of the buffer).
 ```javascript
+// Will write the string to the buffer, array or Uint8Array
 let buffer = [];
-packStringTo(str, buffer);
-```
+packStringTo(str, buffer, 0);
 
-##### Packing strings to Uint8Array buffers
-If you need to calculate the buffer length before writing you may use the **utf8-buffer-size** module:
-```javascript
-import utf8BufferSize from 'utf8-buffer-size';
-let buffer = new Uint8Array(utf8BufferSize(str));
-packStringTo(str, buffer);
+// Will return the bytes of the string in a array
+let strBytes = packString(str);
 ```
 
 ### Types
@@ -223,6 +219,7 @@ function unpackString(buffer, index=0, len=buffer.length) {}
  * Write a string of UTF-8 characters as a byte buffer.
  * @param {string} str The string to pack.
  * @return {!Array<number>} The UTF-8 string bytes.
+ * @throws {TypeError} If 'str' is not a string.
  */
 function packString(str) {}
 
@@ -232,6 +229,7 @@ function packString(str) {}
  * @param {!(Uint8Array|Array<number>)} buffer The output buffer.
  * @param {number} [index=0] The buffer index to start writing.
  * @return {number} The next index to write in the buffer.
+ * @throws {TypeError} If 'str' is not a string.
  */
 function packStringTo(str, buffer, index=0) {}
 
