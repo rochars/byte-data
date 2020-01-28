@@ -68,6 +68,7 @@ https://github.com/rochars/byte-data</p>
 <li><strong>MIT licensed</strong></li>
 <li><strong>Compatible with IE6+ and any environment with ES3/ES5/ES6+ support</strong></li>
 <li><strong>Tested in little-endian and big-endian machines!</strong></li>
+<li><strong>Zero dependencies</strong></li>
 </ul>
 <h2>Pack/unpack:</h2>
 <ul>
@@ -103,7 +104,7 @@ https://github.com/rochars/byte-data</p>
 </code></pre>
 <h3>Browser compatibility</h3>
 <p>This module is distributed as a minified UMD transpiled to ES3 and compatible with IE6+. It should work in all modern browsers and environments that support ES3/ES5/ES6+. It is located in the <em>dist/</em> folder.</p>
-<p>The UMD is bundled with some polyfills so no extra work should be necessary to load this module in any browser. The polyfills used in the compilation are distributed with the package in the <em>scripts/</em> folder.</p>
+<p>The UMD is bundled with some polyfills so no extra work should be necessary to load this module in any browser. The polyfills used in the compilation are distributed with the package in the <em>scripts/</em> folder. The polyfills are for the <em>defineProperty</em> and <em>getOwnPropertyDescriptor</em> properties of <em>Object</em>, and are not used in case those properties are already defined.</p>
 <p>If you are not using a package manager to install this module, you can get the it via CDNs:</p>
 <pre class="prettyprint source lang-html"><code>&lt;script src=&quot;https://cdn.jsdelivr.net/npm/byte-data&quot;>&lt;/script>
 &lt;script src=&quot;https://unpkg.com/byte-data&quot;>&lt;/script>

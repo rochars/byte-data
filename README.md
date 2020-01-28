@@ -11,6 +11,7 @@ https://github.com/rochars/byte-data
 - **MIT licensed**
 - **Compatible with IE6+ and any environment with ES3/ES5/ES6+ support**
 - **Tested in little-endian and big-endian machines!**
+- **Zero dependencies**
 
 ## Pack/unpack:
 - Integers, unsigned and signed (two's complement)
@@ -54,7 +55,7 @@ Or load it from [unpkg](https://unpkg.com/byte-data):
 ### Browser compatibility
 This module is distributed as a minified UMD transpiled to ES3 and compatible with IE6+. It should work in all modern browsers and environments that support ES3/ES5/ES6+. It is located in the *dist/* folder.
 
-The UMD is bundled with some polyfills so no extra work should be necessary to load this module in any browser. The polyfills used in the compilation are distributed with the package in the *scripts/* folder.
+The polyfills used in the compilation are distributed with the package in the *scripts/* folder. The polyfills are for the *defineProperty* and *getOwnPropertyDescriptor* properties of *Object*, and are not used in case those properties are already defined.
 
 If you are not using a package manager to install this module, you can get the it via CDNs:
 ```html
