@@ -98,7 +98,7 @@ export function unpackString(buffer, index=0, end=buffer.length) {
 export function packString(str) {
   /** @type {!Array&lt;number>} */
   let buffer = [];
-  packUTF8(str, buffer, 0);
+  packUTF8(str, buffer);
   return buffer;
 }
 
