@@ -4,7 +4,8 @@
 ### API Changes:
 - Remove *clamp* optional param from unpacking functions
 - Add *safe* optional param to unpack()
-- packing values other than integers will throw a *TypeError* if type is not integer.
+- packing values other than integer will throw a *TypeError* if type is integer.
+- packing values other than string will throw a *TypeError* if type is string.
 - Does not clamp or check for overflows while unpacking
 
 ### Other changes
