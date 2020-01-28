@@ -23,7 +23,7 @@
  */
 
 /**
- * @fileoverview Externs for byte-data 18.1
+ * @fileoverview Externs for byte-data 19.0
  * @see https://github.com/rochars/byte-data
  * @externs
  */
@@ -91,13 +91,11 @@ byteData.packArrayTo = function(values, theType, buffer, index=0,
  *   the array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
 byteData.unpackArrayTo = function(
-    buffer, theType, output, start=0, end=buffer.length,
-    safe=false, clamp=false) {};
+    buffer, theType, output, start=0, end=buffer.length, safe=false) {};
 
 /**
  * Pack a number to a byte buffer.
@@ -132,6 +130,21 @@ byteData.packTo = function(value, theType, buffer, index=0, clamp=false) {};
 byteData.pack = function(value, theType, clamp=false) {};
 
 /**
+ * Unpack a number from a byte buffer.
+ * @param {!(Uint8Array|Array<number>)} buffer The byte buffer.
+ * @param {!{bits:number,
+ *   fp: (boolean|undefined),
+ *   signed: (boolean|undefined),
+ *   be: (boolean|undefined)}} theType The type definition.
+ * @param {number} [index=0] The buffer index to read.
+ * @return {number}
+ * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
+ * @throws {RangeError} On overflow
+ */
+byteData.unpack = function(buffer, theType, index=0) {};
+
+/**
  * Pack a array of numbers as a array of bytes.
  * @param {!(Array<number>|TypedArray)} values The values to pack.
  * @param {!{bits:number,
@@ -159,26 +172,9 @@ byteData.packArray = function(values, theType, clamp=false) {};
  *   the array are ignored and input buffers with insufficient bytes will
  *   output a empty array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array<number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
-byteData.unpackArray = function(
-    buffer, theType, start=0, end=buffer.length, safe=false, clamp=false) {};
-
-/**
- * Unpack a number from a byte buffer.
- * @param {!(Uint8Array|Array<number>)} buffer The byte buffer.
- * @param {!{bits:number,
- *   fp: (boolean|undefined),
- *   signed: (boolean|undefined),
- *   be: (boolean|undefined)}} theType The type definition.
- * @param {number} [index=0] The buffer index to read.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
- * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {RangeError} On overflow
- */
-byteData.unpack = function(buffer, theType, index=0, clamp=false) {};
+byteData.unpackArray = function (
+  buffer, theType, start=0, end=buffer.length, safe=false) {};

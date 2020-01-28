@@ -167,28 +167,26 @@ export function packArrayTo(values, theType, buffer, index=0, clamp=false) {
  *   the array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
 export function unpackArrayTo(
-    buffer, theType, output, start=0, end=buffer.length,
-    safe=false, clamp=false) {
+    buffer, theType, output, start=0, end=buffer.length, safe=false) {
   theType = theType || {};
   /** @type {!Object} */
-  let packer = getParser_(theType.bits, theType.fp, theType.signed, clamp);
+  let packer = getParser_(theType.bits, theType.fp, theType.signed, false);
   /** @type {number} */
   let offset = Math.ceil(theType.bits / 8);
-  // getUnpackLen_ will either fix the length of the input buffer
-  // according to the byte offset of the type (on unsafe mode) or
-  // throw a Error if the input buffer has a bad length (on safe mode)
+  // getUnpackLen_ will adjust the end index according to the size
+  // of the input buffer and the byte offset.
   end = getUnpackLen_(buffer, start, end, offset, safe);
   /** @type {number} */
   let index = 0;
+  let j = start;
   if (theType.be) {
     endianness(buffer, offset, start, end);
   }
-  for (let j = start; j &lt; end; j += offset, index++) {
+  for (; j &lt; end; j += offset, index++) {
     output[index] = packer.unpack(buffer, j);
   }
   if (theType.be) {
@@ -236,6 +234,26 @@ export function pack(value, theType, clamp=false) {
 }
 
 /**
+ * Unpack a number from a byte buffer.
+ * @param {!(Uint8Array|Array&lt;number>)} buffer The byte buffer.
+ * @param {!{bits:number,
+ *   fp: (boolean|undefined),
+ *   signed: (boolean|undefined),
+ *   be: (boolean|undefined)}} theType The type definition.
+ * @param {number} [index=0] The buffer index to read.
+ * @return {number}
+ * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
+ * @throws {RangeError} On overflow
+ */
+export function unpack(buffer, theType, index=0) {
+  let output = [];
+  unpackArrayTo(buffer, theType, output,
+    index, index + Math.ceil(theType.bits / 8), true);
+  return output[0];
+}
+
+/**
  * Pack a array of numbers as a array of bytes.
  * @param {!(Array&lt;number>|TypedArray)} values The values to pack.
  * @param {!{bits:number,
@@ -268,37 +286,16 @@ export function packArray(values, theType, clamp=false) {
  *   the array are ignored and input buffers with insufficient bytes will
  *   output a empty array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
 export function unpackArray(
-    buffer, theType, start=0, end=buffer.length, safe=false, clamp=false) {
+    buffer, theType, start=0, end=buffer.length, safe=false) {
   /** @type {!Array&lt;number>} */
   let output = [];
-  unpackArrayTo(buffer, theType, output, start, end, safe, clamp);
+  unpackArrayTo(buffer, theType, output, start, end, safe);
   return output;
-}
-
-/**
- * Unpack a number from a byte buffer.
- * @param {!(Uint8Array|Array&lt;number>)} buffer The byte buffer.
- * @param {!{bits:number,
- *   fp: (boolean|undefined),
- *   signed: (boolean|undefined),
- *   be: (boolean|undefined)}} theType The type definition.
- * @param {number} [index=0] The buffer index to read.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
- * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {RangeError} On overflow
- */
-export function unpack(buffer, theType, index=0, clamp=false) {
-  return unpackArray(
-    buffer, theType, index, index + Math.ceil(theType.bits / 8),
-    true, clamp)[0];
 }
 
 /**
@@ -316,8 +313,8 @@ function throwValueError_(err, value, index) {
 }
 
 /**
- * Unpack a array of numbers to a typed array.
- * All other unpacking functions are interfaces to this function.
+ * Adjust the end index according to the input buffer length and the
+ * type offset.
  * @param {!(Uint8Array|Array&lt;number>)} buffer The byte buffer.
  * @param {number} start The buffer index to start reading.
  * @param {number} end The buffer index to stop reading.
@@ -340,7 +337,7 @@ function getUnpackLen_(buffer, start, end, offset, safe) {
  * @param {number} bits The number of bits.
  * @param {boolean|undefined} fp True for fp numbers, false otherwise.
  * @param {boolean|undefined} signed True for signed ints, false otherwise.
- * @param {boolean|undefined} clamp True to clamp ints on overflow, false otherwise.
+ * @param {boolean|undefined} clamp True to clamp integers, false otherwise.
  * @return {!Object}
  * @private
  */

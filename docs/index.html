@@ -156,31 +156,23 @@ packTo(402, {bits: 16}, buffer);
 </ul>
 <p>will values throw a <em>TypeError</em>.</p>
 <h3>Unpacking and input buffer length</h3>
-<h4>unpack(buffer, theType, index=)</h4>
-<p>When unpacking a single value, a <em>'Bad buffer length'</em> error is raised if the number of bytes is not sufficient (Ex: unpack a 32-bit number, but provide a input buffer with length smaller than 4) or if there are not enough bytes after the <em>index</em>.</p>
-<pre class="prettyprint source lang-javascript"><code>// throws a 'Bad buffer length' error
-byteData.unpack([0xff], {bits: 16}, 0);
-
-// throws a 'Bad buffer length' error
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2);
-
-// ok
-byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1); 
-</code></pre>
-<h4>unpackArray(buffer, theType, start=, end=, safe=)</h4>
-<p>When unpacking a array of values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong> by default:</p>
-<pre class="prettyprint source lang-javascript"><code>// return a empty array
-byteData.unpackArray([0xff], {bits: 16}, 0, 1);
-
-// return a array with one 16-bit unsigned int
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 2);
-</code></pre>
+<p>When unpacking values, <strong>extra bytes in the end of the buffer are ignored</strong> and <strong>insufficient bytes will return a empty array</strong> by default.</p>
 <p>You can unpack arrays in <strong>safe mode</strong> with the optional <em>safe</em> param set to <em>true</em>. <strong>In safe mode insufficient bytes in the input array or extra bytes in the end of the input array will cause a 'Bad buffer length' error</strong>:</p>
 <pre class="prettyprint source lang-javascript"><code>// throws a 'Bad buffer length' error
-byteData.unpackArray([0xff], {bits: 16}, 0, 1, true);
+byteData.unpackArrayTo([0xff], theType, output, 0, buffer.length, true);
 
 // throws a 'Bad buffer length' error
-byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true);
+byteData.unpackArrayTo(
+  [0xff, 0xff, 0xff], theType, output, 0, buffer.length, true);
+
+// throws a 'Bad buffer length' error
+byteData.unpack([0xff], {bits: 16}, 0, true);
+
+// throws a 'Bad buffer length' error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 2, true);
+
+// do not throw error
+byteData.unpack([0xff, 0xff, 0xff], {bits: 16}, 1, true); 
 </code></pre>
 <h3>Floating-point numbers</h3>
 <ul>
@@ -204,7 +196,6 @@ byteData.unpackArray([0xff, 0xff, 0xff], {bits: 16}, 0, 3, true);
 pack(value, theType, true);
 packTo(value, theType, buffer, index, true);
 packArrayTo(values, theType, buffer, index, true);
-packArray(values, theType, true);
 </code></pre>
 <h4>Signed integers</h4>
 <p>Signed integers are <a href="https://en.wikipedia.org/wiki/Two%27s_complement">two's complement</a>.</p>
@@ -302,13 +293,11 @@ function packArrayTo(values, theType, buffer, index=0, clamp=false) {}
  *   the array are ignored and input buffers with insufficient bytes will
  *   write nothing to the output array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
 function unpackArrayTo(
-  buffer, theType, output, index=0, end=buffer.length,
-  safe=false, clamp=false) {}
+  buffer, theType, output, index=0, end=buffer.length, safe=false) {}
 
 /**
  * Pack a number to a byte buffer.
@@ -343,6 +332,21 @@ function packTo(value, theType, buffer, index=0, clamp=false) {}
 function pack(value, theType, clamp=false) {}
 
 /**
+ * Unpack a number from a byte buffer.
+ * @param {!(Uint8Array|Array&lt;number>)} buffer The byte buffer.
+ * @param {!{bits:number,
+ *   fp: (boolean|undefined),
+ *   signed: (boolean|undefined),
+ *   be: (boolean|undefined)}} theType The type definition.
+ * @param {number} [index=0] The buffer index to read.
+ * @return {number}
+ * @throws {Error} If the type definition is not valid
+ * @throws {Error} On bad buffer length.
+ * @throws {RangeError} On overflow
+ */
+function unpack(buffer, theType, index=0) {}
+
+/**
  * Pack a array of numbers as a array of bytes.
  * @param {!(Array&lt;number>|TypedArray)} values The values to pack.
  * @param {!{bits:number,
@@ -370,29 +374,11 @@ function packArray(values, theType, clamp=false) {}
  *   the array are ignored and input buffers with insufficient bytes will
  *   output a empty array. If safe is set to true the function
  *   will throw a 'Bad buffer length' error.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
  * @return {!Array&lt;number>}
  * @throws {Error} If the type definition is not valid
  * @throws {RangeError} On overflow
  */
-function unpackArray(
-  buffer, theType, start=0, end=buffer.length, safe=false, clamp=false) {}
-
-/**
- * Unpack a number from a byte buffer.
- * @param {!(Uint8Array|Array&lt;number>)} buffer The byte buffer.
- * @param {!{bits:number,
- *   fp: (boolean|undefined),
- *   signed: (boolean|undefined),
- *   be: (boolean|undefined)}} theType The type definition.
- * @param {number} [index=0] The buffer index to read.
- * @param {boolean} [clamp=false] True to clamp ints on overflow.
- * @return {number}
- * @throws {Error} If the type definition is not valid
- * @throws {Error} On bad buffer length.
- * @throws {RangeError} On overflow
- */
-function unpack(buffer, theType, index=0, clamp=false) {}
+function unpackArray(buffer, theType, start=0, end=buffer.length, safe=false) {}
 </code></pre>
 <h2>Contributing</h2>
 <p><strong>byte-data</strong> welcomes all contributions from anyone willing to work in good faith with other contributors and the community. No contribution is too small and all contributions are valued.</p>
