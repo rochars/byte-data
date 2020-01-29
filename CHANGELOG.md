@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 19.0.1 (2020-01-29)
+Fix: Ensure original buffer is never touched when unpacking big-endian
+
 ## 19.0.0 (2020-01-28)
 ### API Changes:
 - Remove *clamp* optional param from unpacking functions
